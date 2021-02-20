@@ -28,12 +28,15 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfo,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfoCollaborate
 
+from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive
 
 __all__ = ['MultiEnv', 'MultiAgentAccelEnv', 'MultiWaveAttenuationPOEnv',
            'MultiTrafficLightGridPOEnv', 'MultiAgentHighwayPOEnv',
            'MultiAgentHighwayPOEnvNegative',
            'MultiAgentHighwayPOEnvLocalReward',
            'MultiAgentHighwayPOEnvCollaborate',
+            
+           'CCMultiAgentHighwayPOEnvMerge4Arrive',
 
            'MultiAgentHighwayPOEnvDistanceMergeInfo',
            'MultiAgentHighwayPOEnvDistanceMergeInfoNegative',
