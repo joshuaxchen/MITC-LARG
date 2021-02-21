@@ -32,9 +32,7 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         KernelVehicle.__init__(self, master_kernel, sim_params)
 
-        self.__ids = []  # ids of all vehicles
-        self.__human_ids = []  # ids of human-driven vehicles
-        self.__controlled_ids = []  # ids of flow-controlled vehicles
+        self.__ids = []  # ids of all vehicles self.__human_ids = []  # ids of human-driven vehicles self.__controlled_ids = []  # ids of flow-controlled vehicles
         self.__controlled_lc_ids = []  # ids of flow lc-controlled vehicles
         self.__rl_ids = []  # ids of rl-controlled vehicles
         self.__observed_ids = []  # ids of the observed vehicles
@@ -103,6 +101,10 @@ class TraCIVehicle(KernelVehicle):
                 self.num_vehicles += 1
                 if typ['acceleration_controller'][0] == RLController:
                     self.num_rl_vehicles += 1
+        if hasattr(vehicles, '__customInflows'):
+            self.__customInflows = vehicles.__customInflows
+        else:
+            self.__customInflows = None
 
     def update(self, reset):
         """See parent class.
@@ -121,6 +123,7 @@ class TraCIVehicle(KernelVehicle):
             specifies whether the simulator was reset in the last simulation
             step
         """
+
         vehicle_obs = {}
         for veh_id in self.__ids:
             vehicle_obs[veh_id] = \
@@ -264,6 +267,10 @@ class TraCIVehicle(KernelVehicle):
 
         # make sure the rl vehicle list is still sorted
         self.__rl_ids.sort()
+        if self.__customInflows is not None:
+            self.__customInflows.spawnVehicles(self.sim_step, self)
+            departed_ids = [self.get_type(i) for i in self.get_departed_ids()]
+            self.__customInflows.handleDeparted(departed_ids)
 
     def _add_departed(self, veh_id, veh_type):
         """Add a vehicle that entered the network from an inflow or reset.

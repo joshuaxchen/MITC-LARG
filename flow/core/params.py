@@ -1110,13 +1110,13 @@ class CustomInflows:
                 self.__counts[i][v] += 1
 
     
-    def handleArrived(self, arrived):
+    def handleDeparted(self, departed):
         counts = {}
-        for a in arrived:
-            if a in counts:
-                counts[a] += 1
+        for d in departed:
+            if d in counts:
+                counts[d] += 1
             else:
-                counts[a] = 1
+                counts[d] = 1
         for c in self.__counts:
             for t in c:
                 if t in counts:
