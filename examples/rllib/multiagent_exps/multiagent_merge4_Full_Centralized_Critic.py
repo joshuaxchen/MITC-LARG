@@ -13,7 +13,7 @@ except ImportError:
 from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy,KLCoeffMixin, \
     ppo_surrogate_loss as tf_loss
 from ray import tune
-from ray.tune.registry import register_env
+from ray.tune.registry import register_env, register_trainable
 from ray.tune import run_experiments
 
 from flow.controllers import RLController, SimCarFollowingController
@@ -32,8 +32,7 @@ from copy import deepcopy
 
 from ray.rllib.agents.ppo.ppo_torch_policy import PPOTorchPolicy, \
     KLCoeffMixin as TorchKLCoeffMixin, ppo_surrogate_loss as torch_loss
-from ray.rllib.evaluation.postprocessing import compute_advantages, \
-    Postprocessing
+from ray.rllib.evaluation.postprocessing import compute_advantages
 from ray.rllib.examples.env.two_step_game import TwoStepGame
 from ray.rllib.examples.models.centralized_critic_models import \
     CentralizedCriticModel, TorchCentralizedCriticModel
@@ -48,8 +47,19 @@ from ray.rllib.utils.test_utils import check_learning_achieved
 from ray.rllib.utils.tf_ops import explained_variance, make_tf_callable
 from ray.rllib.utils.torch_ops import convert_to_torch_tensor
 from ray.rllib.agents.ppo.ppo import PPOTrainer
-# SET UP PARAMETERS FOR THE SIMULATION
 
+from models.cc_transformer import CCPPOPolicy
+
+register_trainable(
+        'CcTransformer',
+        PPOTrainer.with_updates(
+            name="CCPPOTrainer", get_policy_class=lambda c: CCPPOPolicy
+        ),
+)
+
+from utils.loader import load_envs, load_models, load_algorithms
+load_models(os.getcwd())  # Load models
+# SET UP PARAMETERS FOR THE SIMULATION
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
@@ -57,7 +67,7 @@ N_ROLLOUTS = 10
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 10
+N_CPUS = 0
 NUM_RL = 10
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -148,7 +158,7 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
-        render=False,
+        render=True,
     ),
 
     # environment related parameters (see flow.core.params.EnvParams)
@@ -176,146 +186,6 @@ flow_params = dict(
 )
 
 
-# Centralized Critic Training
-class CentralizedValueMixin:
-    """Add method to evaluate the central value function from the model."""
-
-    def __init__(self):
-        if self.config["framework"] != "torch":
-            self.compute_central_vf = make_tf_callable(self.get_session())(
-                self.model.central_value_function)
-        else:
-            self.compute_central_vf = self.model.central_value_function
-
-def centralized_critic_postprocessing(policy,
-                                      sample_batch,
-                                      other_agent_batches=None,
-                                      episode=None):
-    pytorch = policy.config["framework"] == "torch"
-    if (pytorch and hasattr(policy, "compute_central_vf")) or \
-            (not pytorch and policy.loss_initialized()):
-        assert other_agent_batches is not None
-        [(_, opponent_batch)] = list(other_agent_batches.values())
-
-        # also record the opponent obs and actions in the trajectory
-        sample_batch[OPPONENT_OBS] = opponent_batch[SampleBatch.CUR_OBS]
-        sample_batch[OPPONENT_ACTION] = opponent_batch[SampleBatch.ACTIONS]
-
-        # overwrite default VF prediction with the central VF
-        if args.torch:
-            sample_batch[SampleBatch.VF_PREDS] = policy.compute_central_vf(
-                convert_to_torch_tensor(
-                    sample_batch[SampleBatch.CUR_OBS], policy.device),
-                convert_to_torch_tensor(
-                    sample_batch[OPPONENT_OBS], policy.device),
-                convert_to_torch_tensor(
-                    sample_batch[OPPONENT_ACTION], policy.device)) \
-                .cpu().detach().numpy()
-        else:
-            sample_batch[SampleBatch.VF_PREDS] = policy.compute_central_vf(
-                sample_batch[SampleBatch.CUR_OBS], sample_batch[OPPONENT_OBS],
-                sample_batch[OPPONENT_ACTION])
-    else:
-        # Policy hasn't been initialized yet, use zeros.
-        sample_batch[OPPONENT_OBS] = np.zeros_like(
-            sample_batch[SampleBatch.CUR_OBS])
-        sample_batch[OPPONENT_ACTION] = np.zeros_like(
-            sample_batch[SampleBatch.ACTIONS])
-        sample_batch[SampleBatch.VF_PREDS] = np.zeros_like(
-            sample_batch[SampleBatch.REWARDS], dtype=np.float32)
-
-    completed = sample_batch["dones"][-1]
-    if completed:
-        last_r = 0.0
-    else:
-        last_r = sample_batch[SampleBatch.VF_PREDS][-1]
-
-    train_batch = compute_advantages(
-        sample_batch,
-        last_r,
-        policy.config["gamma"],
-        policy.config["lambda"],
-        use_gae=policy.config["use_gae"])
-    return train_batch
-
-# Copied from PPO but optimizing the central value function.
-def loss_with_central_critic(policy, model, dist_class, train_batch):
-    CentralizedValueMixin.__init__(policy)
-    func = tf_loss if not policy.config["framework"] == "torch" else torch_loss
-
-    vf_saved = model.value_function
-    model.value_function = lambda: policy.model.central_value_function(
-        train_batch[SampleBatch.CUR_OBS], train_batch[OPPONENT_OBS],
-        train_batch[OPPONENT_ACTION])
-
-    policy._central_value_out = model.value_function()
-    loss = func(policy, model, dist_class, train_batch)
-
-    model.value_function = vf_saved
-
-    return loss
-
-def setup_tf_mixins(policy, obs_space, action_space, config):
-    # Copied from PPOTFPolicy (w/o ValueNetworkMixin).
-    KLCoeffMixin.__init__(policy, config)
-    EntropyCoeffSchedule.__init__(policy, config["entropy_coeff"],
-                                  config["entropy_coeff_schedule"])
-    LearningRateSchedule.__init__(policy, config["lr"], config["lr_schedule"])
-
-
-def setup_torch_mixins(policy, obs_space, action_space, config):
-    # Copied from PPOTorchPolicy  (w/o ValueNetworkMixin).
-    TorchKLCoeffMixin.__init__(policy, config)
-    TorchEntropyCoeffSchedule.__init__(policy, config["entropy_coeff"],
-                                       config["entropy_coeff_schedule"])
-    TorchLR.__init__(policy, config["lr"], config["lr_schedule"])
-
-
-def central_vf_stats(policy, train_batch, grads):
-    # Report the explained variance of the central value function.
-    return {
-        "vf_explained_var": explained_variance(
-            train_batch[Postprocessing.VALUE_TARGETS],
-            policy._central_value_out),
-    }
-
-CCPPOTFPolicy = PPOTFPolicy.with_updates(
-    name="CCPPOTFPolicy",
-    postprocess_fn=centralized_critic_postprocessing,
-    loss_fn=loss_with_central_critic,
-    before_loss_init=setup_tf_mixins,
-    grad_stats_fn=central_vf_stats,
-    mixins=[
-        LearningRateSchedule, EntropyCoeffSchedule, KLCoeffMixin,
-        CentralizedValueMixin
-    ])
-
-CCPPOTorchPolicy = PPOTorchPolicy.with_updates(
-    name="CCPPOTorchPolicy",
-    postprocess_fn=centralized_critic_postprocessing,
-    loss_fn=loss_with_central_critic,
-    before_init=setup_torch_mixins,
-    mixins=[
-        TorchLR, TorchEntropyCoeffSchedule, TorchKLCoeffMixin,
-        CentralizedValueMixin
-    ])
-
-
-def get_policy_class(config):
-    if config["framework"] == "torch":
-        return CCPPOTorchPolicy
-
-
-CCTrainer = PPOTrainer.with_updates(
-    name="CCPPOTrainer",
-    default_policy=CCPPOTFPolicy,
-    get_policy_class=get_policy_class,
-)
-
-ModelCatalog.register_custom_model(
-        "cc_model", CentralizedCriticModel)
-
-
 # SET UP EXPERIMENT
 
 def setup_exps(flow_params):
@@ -335,7 +205,7 @@ def setup_exps(flow_params):
     dict
         training configuration parameters
     """
-    alg_run = 'CCTrainer'
+    alg_run = 'CcTransformer'
     agent_cls = get_agent_class(alg_run)
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
@@ -345,7 +215,7 @@ def setup_exps(flow_params):
     config['gamma'] = 0.998  # discount rate
     #config['model'].update({'fcnet_hiddens': [100, 50, 25]})
     config["model"] = {
-            "custom_model":"cc_model",}
+            "custom_model":"cc_transformer",}
     config["framework"] = "tf"
     #config['lr'] = tune.grid_search([5e-4, 1e-4])
     config['lr_schedule'] = [
@@ -384,6 +254,7 @@ def setup_exps(flow_params):
 
     # multiagent configuration
     temp_env = create_env()
+    '''
     policy_graphs = {'av': (PPOTFPolicy,
                             temp_env.observation_space,
                             temp_env.action_space,
@@ -399,7 +270,7 @@ def setup_exps(flow_params):
             'policies_to_train': ['av']
         }
     })
-
+    '''
     return alg_run, env_name, config
 
 
@@ -416,10 +287,34 @@ if __name__ == '__main__':
         "num_workers": 0,
         "multiagent": {},
         "model": {
-            "custom_model": "cc_model",
+            "custom_model": "cc_transformer",
+            "custom_model_config": {
+                "max_num_agents": 15,
+                "actor":{  
+                    "activation_fn": "relu",
+                    "hidden_layers":[512,512,512]
+                    },
+                "critic":{
+                    "centralized": True,
+                    "embedding_size": 32,
+                    "num_heads": 4,
+                    "d_model": 32,
+                    "use_scale": True,
+                    "activation_fn": "relu",
+                    "hidden_layers":[512,512,512],
+                    },
+                "embedding":{
+                    "activation_fn": "relu",
+                    "hidden_layers": [512,512,512]
+                    },
+            "fcnet_activation": "relu",
+            "fcnet_hiddens": [512, 512,512],
+            "vf_share_layers": True
+            },
         },
         "framework": "tf",
         "env_config": {},
+
     }
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
@@ -441,22 +336,22 @@ if __name__ == '__main__':
 
     # multiagent configuration
     temp_env = create_env()
-    policy_graphs = {'av': (PPOTFPolicy,
-                            temp_env.observation_space,
-                            temp_env.action_space,
-                            {})}
+    
+    policy_graphs = {
+                    'av': (CCPPOPolicy,temp_env.observation_space,temp_env.action_space,{}),
+            }
 
     def policy_mapping_fn(_):
         return 'av'
-
+    
     config.update({
         'multiagent': {
             'policies': policy_graphs,
             'policy_mapping_fn': tune.function(policy_mapping_fn),
-            'policies_to_train': ['av']
+            #'policies_to_train': ['av0','av1']
         }
     })
-
+    
     stop = {
         "training_iteration": 1,
         "timesteps_total": 5000,
@@ -466,7 +361,7 @@ if __name__ == '__main__':
     
     run_experiments({
         flow_params['exp_tag']: {
-            'run': CCTrainer,
+            'run': 'CcTransformer',
             'env': env_name,
             'checkpoint_freq': 5,
             'checkpoint_at_end': True,
@@ -474,7 +369,7 @@ if __name__ == '__main__':
                 'training_iteration': N_TRAINING_ITERATIONS
             },
             'config': config,
-            'num_samples':3,
+            'num_samples':1,
         },
     })
     

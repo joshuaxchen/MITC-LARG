@@ -134,16 +134,7 @@ class MultiAgentHighwayPOEnv(CCMultiEnv):
                 (this_speed - follow_speed) / max_speed,
                 follow_head / max_length
             ])
-            '''
-            observation = np.array([
-                this_speed / max_speed,
-                lead_speed / max_speed,
-                lead_head / max_length,
-                follow_speed / max_speed,
-                follow_head / max_length
-            ])
-            '''
-
+ 
             obs.update({rl_id: observation})
 
         return obs

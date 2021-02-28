@@ -7,15 +7,16 @@ from typing import Tuple
 import tensorflow as tf
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.agents.ppo.ppo import PPOTrainer
-from ray.rllib.agents.ppo.ppo_tf_policy import KLCoeffMixin, PPOLoss, PPOTFPolicy
+from ray.rllib.agents.ppo.ppo_tf_policy import KLCoeffMixin, PPOTFPolicy, ppo_surrogate_loss as tf_loss
 from ray.rllib.evaluation.postprocessing import Postprocessing, compute_advantages
 from ray.rllib.policy.sample_batch import SampleBatch
 from ray.rllib.policy.tf_policy import EntropyCoeffSchedule, LearningRateSchedule
-from ray.rllib.utils.explained_variance import explained_variance
+from ray.rllib.utils.tf_ops import explained_variance
 from ray.tune import register_trainable
 
 OTHER_AGENT = "other_agent"
-
+OPPONENT_OBS = "opponent_obs"
+OPPONENT_ACTION = "opponent_action"
 
 class CentralizedCriticModel(ABC, TFModelV2):
     """Multi-agent model that implements a centralized VF."""
@@ -27,18 +28,20 @@ class CentralizedCriticModel(ABC, TFModelV2):
 
         # env parameters
         self.obs_space_shape = obs_space.shape[0]
-        self.act_space_shape = action_space.n
-        self.centralized = model_config["custom_options"]["critic"]["centralized"]
-        self.max_num_agents = model_config["custom_options"]["max_num_agents"]
+        self.act_space_shape = action_space.shape[0]
+        self.num_outputs = action_space.shape[0]*2
+        
+        self.centralized = model_config["custom_model_config"]["critic"]["centralized"]
+        self.max_num_agents = model_config["custom_model_config"]["max_num_agents"]
         self.max_num_opponents = self.max_num_agents - 1
         self.debug_mode = True
 
         # Build the actor network
-        self.actor = self._build_actor(**model_config["custom_options"]["actor"])
+        self.actor = self._build_actor(**model_config["custom_model_config"]["actor"])
         self.register_variables(self.actor.variables)
 
         # Central Value Network
-        self.critic = self._build_critic(**model_config["custom_options"]["critic"])
+        self.critic = self._build_critic(**model_config["custom_model_config"]["critic"])
         self.register_variables(self.critic.variables)
 
         # summaries
@@ -55,7 +58,7 @@ class CentralizedCriticModel(ABC, TFModelV2):
         pass
 
     def forward(self, input_dict, state, seq_lens):
-        policy = self.actor(input_dict["obs_flat"])
+        policy = self.actor(input_dict["obs"])
         self._value_out = tf.reduce_mean(input_tensor=policy, axis=-1)  # not used
         return policy, state
 
@@ -78,7 +81,7 @@ class CcTransformer(CentralizedCriticModel):
         output = build_fullyConnected(
             inputs=inputs,
             hidden_layers=hidden_layers,
-            num_outputs=self.act_space_shape,
+            num_outputs=self.act_space_shape*2,
             activation_fn=activation_fn,
             name="actor",
         )
@@ -108,12 +111,12 @@ class CcTransformer(CentralizedCriticModel):
 
         # opponents' input
         opponent_shape = (
-            (self.obs_space_shape + self.act_space_shape) * self.max_num_opponents,
+            (self.obs_space_shape + self.act_space_shape*2) * self.max_num_opponents,
         )
         opponent_obs = tf.keras.layers.Input(shape=opponent_shape, name="other_agent")
         opponent_input = tf.reshape(
             opponent_obs,
-            [-1, self.max_num_opponents, self.obs_space_shape + self.act_space_shape],
+            [-1, self.max_num_opponents, self.obs_space_shape + self.act_space_shape*2],
         )
 
         # opponents' embedding
@@ -176,7 +179,7 @@ def build_fullyConnected(
         kernel_initializer=tf.keras.initializers.glorot_normal(),
         bias_initializer=tf.keras.initializers.constant(0.1),
     )(x)
-
+    #output = output[:,None]
     return output
 
 
@@ -443,9 +446,11 @@ def centralized_critic_postprocessing(
     policy, sample_batch, other_agent_batches=None, episode=None
 ):
     # one hot encoding parser
-    one_hot_enc = functools.partial(one_hot_encoding, n_classes=policy.action_space.n)
+    #one_hot_enc = functools.partial(one_hot_encoding, n_classes=policy.action_space.n)
     max_num_opponents = policy.model.max_num_opponents
+    print("Post processing")
 
+    print(sample_batch)
     if policy.loss_initialized():
         assert other_agent_batches is not None
 
@@ -455,7 +460,7 @@ def centralized_critic_postprocessing(
                     len(other_agent_batches), max_num_opponents
                 )
             )
-
+        
         # lifespan of the agents
         time_span = (sample_batch["t"][0], sample_batch["t"][-1])
 
@@ -465,7 +470,7 @@ def centralized_critic_postprocessing(
             Opponent(
                 (opp_batch["t"][0], opp_batch["t"][-1]),
                 opp_batch[SampleBatch.CUR_OBS],
-                one_hot_enc(opp_batch[SampleBatch.ACTIONS]),
+                opp_batch[SampleBatch.ACTIONS],
             )
             for agent_id, (_, opp_batch) in other_agent_batches.items()
             if time_overlap(time_span, (opp_batch["t"][0], opp_batch["t"][-1]))
@@ -479,7 +484,7 @@ def centralized_critic_postprocessing(
         missing_opponent = Opponent(
             None,
             np.zeros_like(sample_batch[SampleBatch.CUR_OBS]),
-            one_hot_enc(np.zeros_like(sample_batch[SampleBatch.ACTIONS])),
+            np.zeros_like(sample_batch[SampleBatch.ACTIONS]),
         )
         opponents = opponents + (
             [missing_opponent] * (max_num_opponents - len(opponents))
@@ -494,16 +499,22 @@ def centralized_critic_postprocessing(
             [opp.observation for opp in opponents] + [opp.action for opp in opponents],
             axis=-1,
         )
+        
+        # value prediction
+        sample_batch[SampleBatch.VF_PREDS] = np.zeros_like(
+            sample_batch[SampleBatch.ACTIONS], dtype=np.float32
+        )
+
         # overwrite default VF prediction with the central VF
         sample_batch[SampleBatch.VF_PREDS] = policy.compute_central_value_function(
             sample_batch[SampleBatch.CUR_OBS], sample_batch[OTHER_AGENT]
         )
-
+        
     else:
 
         # opponents' observation placeholder
         missing_obs = np.zeros_like(sample_batch[SampleBatch.CUR_OBS])
-        missing_act = one_hot_enc(np.zeros_like(sample_batch[SampleBatch.ACTIONS]))
+        missing_act = np.zeros_like(sample_batch[SampleBatch.ACTIONS])
         sample_batch[OTHER_AGENT] = np.concatenate(
             [missing_obs for _ in range(max_num_opponents)]
             + [missing_act for _ in range(max_num_opponents)],
@@ -514,10 +525,9 @@ def centralized_critic_postprocessing(
         sample_batch[SampleBatch.VF_PREDS] = np.zeros_like(
             sample_batch[SampleBatch.ACTIONS], dtype=np.float32
         )
-
     train_batch = compute_advantages(
         sample_batch,
-        0.0,
+        np.array([0.0]),
         policy.config["gamma"],
         policy.config["lambda"],
         use_gae=policy.config["use_gae"],
@@ -529,34 +539,17 @@ def centralized_critic_postprocessing(
 def loss_with_central_critic(policy, model, dist_class, train_batch):
     CentralizedValueMixin.__init__(policy)
 
-    logits, state = model.from_batch(train_batch)
-    action_dist = dist_class(logits, model)
+    #logits, state = model.from_batch(train_batch)
+    #action_dist = dist_class(logits, model)
     policy.central_value_out = policy.model.central_value_function(
         train_batch[SampleBatch.CUR_OBS], train_batch[OTHER_AGENT]
     )
 
-    policy.loss_obj = PPOLoss(
-        dist_class,
-        model,
-        train_batch[Postprocessing.VALUE_TARGETS],
-        train_batch[Postprocessing.ADVANTAGES],
-        train_batch[SampleBatch.ACTIONS],
-        train_batch[SampleBatch.ACTION_DIST_INPUTS],
-        train_batch[SampleBatch.ACTION_LOGP],
-        train_batch[SampleBatch.VF_PREDS],
-        action_dist,
-        policy.central_value_out,
-        policy.kl_coeff,
-        tf.ones_like(train_batch[Postprocessing.ADVANTAGES], dtype=tf.bool),
-        entropy_coeff=policy.entropy_coeff,
-        clip_param=policy.config["clip_param"],
-        vf_clip_param=policy.config["vf_clip_param"],
-        vf_loss_coeff=policy.config["vf_loss_coeff"],
-        use_gae=policy.config["use_gae"],
-    )
-
-    return policy.loss_obj.loss
-
+    vf_saved = model.value_function
+    func = tf_loss
+    loss = func(policy, model, dist_class, train_batch)
+    model.value_function = vf_saved
+    return loss
 
 def setup_mixins(policy, obs_space, action_space, config):
     # copied from PPO
