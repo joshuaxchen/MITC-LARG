@@ -117,7 +117,7 @@ class CCMultiEnv(MultiAgentEnv, Env):
 
         infos = {key: {} for key in states.keys()}
 
-        # compute the reward
+        # compute the global reward
         if self.env_params.clip_actions:
             clipped_actions = self.clip_actions(rl_actions)
             reward = self.compute_reward(clipped_actions, fail=crash)
@@ -128,7 +128,6 @@ class CCMultiEnv(MultiAgentEnv, Env):
             done[rl_id] = True
             reward[rl_id] = 1
             states[rl_id] = np.zeros(self.observation_space.shape[0])
-        
         return states, reward, done, infos
 
     def reset(self, new_inflow_rate=None):

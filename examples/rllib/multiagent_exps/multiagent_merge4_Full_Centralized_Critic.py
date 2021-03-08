@@ -63,11 +63,11 @@ load_models(os.getcwd())  # Load models
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
-N_ROLLOUTS = 10 
+N_ROLLOUTS = 4 
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 0
+N_CPUS = 4
 NUM_RL = 10
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -158,7 +158,7 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
-        render=True,
+        render=False,
     ),
 
     # environment related parameters (see flow.core.params.EnvParams)
@@ -228,7 +228,7 @@ def setup_exps(flow_params):
     config['observation_filter'] = 'NoFilter'
     config["use_gae"] = True
     config["lambda"] = 0.95
-    config["shuffle_sequences"] = True
+    #config["shuffle_sequences"] = True
     config["vf_clip_param"] = 1e8
     config["num_sgd_iter"] = 10
     #config["kl_target"] = 0.003
@@ -289,7 +289,7 @@ if __name__ == '__main__':
         "model": {
             "custom_model": "cc_transformer",
             "custom_model_config": {
-                "max_num_agents": 15,
+                "max_num_agents": 100,
                 "actor":{  
                     "activation_fn": "relu",
                     "hidden_layers":[512,512,512]
@@ -301,14 +301,14 @@ if __name__ == '__main__':
                     "d_model": 32,
                     "use_scale": True,
                     "activation_fn": "relu",
-                    "hidden_layers":[512,512,512],
+                    "hidden_layers":[100,50,25],
                     },
                 "embedding":{
                     "activation_fn": "relu",
-                    "hidden_layers": [512,512,512]
+                    "hidden_layers": [100,50,25]
                     },
             "fcnet_activation": "relu",
-            "fcnet_hiddens": [512, 512,512],
+            "fcnet_hiddens": [100,50,25],
             "vf_share_layers": True
             },
         },
@@ -358,7 +358,7 @@ if __name__ == '__main__':
         "episode_reward_mean": 2000,
     }
     #results = tune.run(CCTrainer, stop=stop, config=config, verbose=1)
-    
+    #from IPython import embed; embed() 
     run_experiments({
         flow_params['exp_tag']: {
             'run': 'CcTransformer',

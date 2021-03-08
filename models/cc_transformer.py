@@ -7,9 +7,9 @@ from typing import Tuple
 import tensorflow as tf
 from ray.rllib.models.tf.tf_modelv2 import TFModelV2
 from ray.rllib.agents.ppo.ppo import PPOTrainer
-from ray.rllib.agents.ppo.ppo_tf_policy import KLCoeffMixin, PPOTFPolicy, ppo_surrogate_loss as tf_loss
+from ray.rllib.agents.ppo.ppo_tf_policy import KLCoeffMixin, PPOTFPolicy, ppo_surrogate_loss
 from ray.rllib.evaluation.postprocessing import Postprocessing, compute_advantages
-from ray.rllib.policy.sample_batch import SampleBatch
+from ray.rllib.policy.sample_batch import SampleBatch, MultiAgentBatch
 from ray.rllib.policy.tf_policy import EntropyCoeffSchedule, LearningRateSchedule
 from ray.rllib.utils.tf_ops import explained_variance
 from ray.tune import register_trainable
@@ -58,7 +58,7 @@ class CentralizedCriticModel(ABC, TFModelV2):
         pass
 
     def forward(self, input_dict, state, seq_lens):
-        policy = self.actor(input_dict["obs"])
+        policy = self.actor(input_dict["obs_flat"])
         self._value_out = tf.reduce_mean(input_tensor=policy, axis=-1)  # not used
         return policy, state
 
@@ -68,12 +68,10 @@ class CentralizedCriticModel(ABC, TFModelV2):
         return tf.reshape(self.critic(obs), [-1])
 
     def value_function(self):
-        return tf.reshape(self._value_out, [1])  # not used
-
+        return tf.reshape(self._value_out, [-1])  # not used
 
 class CcTransformer(CentralizedCriticModel):
     """Multi-agent model that implements a centralized VF."""
-
     def _build_actor(
         self, activation_fn="relu", hidden_layers=[512, 512, 512], **kwargs
     ):
@@ -111,14 +109,13 @@ class CcTransformer(CentralizedCriticModel):
 
         # opponents' input
         opponent_shape = (
-            (self.obs_space_shape + self.act_space_shape*2) * self.max_num_opponents,
+            (self.obs_space_shape + self.act_space_shape) * self.max_num_opponents,
         )
         opponent_obs = tf.keras.layers.Input(shape=opponent_shape, name="other_agent")
         opponent_input = tf.reshape(
             opponent_obs,
-            [-1, self.max_num_opponents, self.obs_space_shape + self.act_space_shape*2],
+            [-1, self.max_num_opponents, self.obs_space_shape + self.act_space_shape],
         )
-
         # opponents' embedding
         # `[batch_size, self.max_num_opponents, embedding_size]`
         opponent_embedding = build_fullyConnected(
@@ -434,8 +431,8 @@ class CentralizedValueMixin(object):
         self, obs, other_agent
     ):  # opponent_obs, opponent_actions):
         feed_dict = {
-            self.get_placeholder(SampleBatch.CUR_OBS): obs,
-            self.get_placeholder(OTHER_AGENT): other_agent,
+                self.get_placeholder(SampleBatch.CUR_OBS): obs,
+                self.get_placeholder(OTHER_AGENT): other_agent,
         }
         return self.get_session().run(self.central_value_function, feed_dict)
 
@@ -445,12 +442,8 @@ class CentralizedValueMixin(object):
 def centralized_critic_postprocessing(
     policy, sample_batch, other_agent_batches=None, episode=None
 ):
-    # one hot encoding parser
-    #one_hot_enc = functools.partial(one_hot_encoding, n_classes=policy.action_space.n)
     max_num_opponents = policy.model.max_num_opponents
-    print("Post processing")
-
-    print(sample_batch)
+    last_r = 0.0 
     if policy.loss_initialized():
         assert other_agent_batches is not None
 
@@ -475,7 +468,26 @@ def centralized_critic_postprocessing(
             for agent_id, (_, opp_batch) in other_agent_batches.items()
             if time_overlap(time_span, (opp_batch["t"][0], opp_batch["t"][-1]))
         ]
-
+        
+        # calculate last_r
+        start_time = sample_batch["t"][0]
+        end_time = sample_batch["t"][-1]
+        total_rewards = []
+        max_time = 0
+        for agent_id, (_, opp_batch) in other_agent_batches.items():
+            if opp_batch["t"][-1] > max_time:
+                max_time = opp_batch["t"][-1]
+        for agent_id, (_, opp_batch) in other_agent_batches.items():
+            pad_reward = np.zeros(max_time+1)
+            pad_reward[opp_batch["t"][0] : opp_batch["t"][-1]]=opp_batch[SampleBatch.REWARDS][:opp_batch["t"][-1]-opp_batch["t"][0]]
+            total_rewards.append(list(pad_reward))
+        pad_reward = np.zeros(max_time+1)
+        pad_reward[sample_batch["t"][0] : sample_batch["t"][-1]]=sample_batch[SampleBatch.REWARDS][:end_time-start_time]
+        total_rewards.append(list(pad_reward))
+        total_rewards=np.array(total_rewards)
+        total_rewards = np.max(total_rewards, axis=0)
+        last_r = np.sum(total_rewards[end_time-1:])
+        print(sample_batch['agent_id'][0],last_r)
         # apply the adequate cropping or padding compared to time_span
         for opp in opponents:
             opp.crop_or_pad(time_span)
@@ -500,11 +512,6 @@ def centralized_critic_postprocessing(
             axis=-1,
         )
         
-        # value prediction
-        sample_batch[SampleBatch.VF_PREDS] = np.zeros_like(
-            sample_batch[SampleBatch.ACTIONS], dtype=np.float32
-        )
-
         # overwrite default VF prediction with the central VF
         sample_batch[SampleBatch.VF_PREDS] = policy.compute_central_value_function(
             sample_batch[SampleBatch.CUR_OBS], sample_batch[OTHER_AGENT]
@@ -522,12 +529,13 @@ def centralized_critic_postprocessing(
         )
 
         # value prediction
-        sample_batch[SampleBatch.VF_PREDS] = np.zeros_like(
-            sample_batch[SampleBatch.ACTIONS], dtype=np.float32
+        sample_batch[SampleBatch.VF_PREDS] = np.zeros(
+            sample_batch[SampleBatch.ACTIONS].shape[0], dtype=np.float32
         )
+
     train_batch = compute_advantages(
         sample_batch,
-        np.array([0.0]),
+        last_r,
         policy.config["gamma"],
         policy.config["lambda"],
         use_gae=policy.config["use_gae"],
@@ -546,7 +554,7 @@ def loss_with_central_critic(policy, model, dist_class, train_batch):
     )
 
     vf_saved = model.value_function
-    func = tf_loss
+    func = ppo_surrogate_loss
     loss = func(policy, model, dist_class, train_batch)
     model.value_function = vf_saved
     return loss
@@ -567,11 +575,6 @@ def central_vf_stats(policy, train_batch, grads):
             train_batch[Postprocessing.VALUE_TARGETS], policy.central_value_out
         )
     }
-
-
-def one_hot_encoding(values, n_classes):
-    return np.eye(n_classes)[values]
-
 
 def time_overlap(time_span, agent_time):
     """Check if agent_time overlaps with time_span"""
