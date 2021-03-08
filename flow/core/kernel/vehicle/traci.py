@@ -32,7 +32,9 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         KernelVehicle.__init__(self, master_kernel, sim_params)
 
-        self.__ids = []  # ids of all vehicles self.__human_ids = []  # ids of human-driven vehicles self.__controlled_ids = []  # ids of flow-controlled vehicles
+        self.__ids = []  # ids of all vehicles 
+        self.__human_ids = []  # ids of human-driven vehicles 
+        self.__controlled_ids = []  # ids of flow-controlled vehicles
         self.__controlled_lc_ids = []  # ids of flow lc-controlled vehicles
         self.__rl_ids = []  # ids of rl-controlled vehicles
         self.__observed_ids = []  # ids of the observed vehicles
@@ -101,10 +103,12 @@ class TraCIVehicle(KernelVehicle):
                 self.num_vehicles += 1
                 if typ['acceleration_controller'][0] == RLController:
                     self.num_rl_vehicles += 1
-        if hasattr(vehicles, '__customInflows'):
-            self.__customInflows = vehicles.__customInflows
-        else:
-            self.__customInflows = None
+        #print(hasattr(vehicles, '__customInflows'))
+        #if hasattr(vehicles, '__customInflows'):
+        #    self.__customInflows = vehicles.__customInflows
+        #else:
+        #    self.__customInflows = None
+        self.__customInflows = vehicles._customInflows
 
     def update(self, reset):
         """See parent class.
@@ -269,7 +273,11 @@ class TraCIVehicle(KernelVehicle):
         self.__rl_ids.sort()
         if self.__customInflows is not None:
             self.__customInflows.spawnVehicles(self.sim_step, self)
-            departed_ids = [self.get_type(i) for i in self.get_departed_ids()]
+            departed_ids = self.get_departed_ids()
+            if departed_ids != 0:
+                departed_ids = [self.get_type(i) for i in departed_ids]
+            else:
+                departed_ids = []
             self.__customInflows.handleDeparted(departed_ids)
 
     def _add_departed(self, veh_id, veh_type):

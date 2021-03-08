@@ -235,7 +235,7 @@ class VehicleParams:
         self.initial = []
 
 
-        self.__customInflows = None
+        self._customInflows = None
 
     def add(self,
             veh_id,
@@ -353,7 +353,7 @@ class VehicleParams:
         return self.__vehicles[veh_id]["type"]
 
     def setCustomInflows(self, customInflows):
-        self.__customInflows = customInflows
+        self._customInflows = customInflows
 
 
 class SimParams(object):
@@ -1093,7 +1093,8 @@ class CustomInflows:
             "edge":edge,
             "vehs_per_hour":vehs_per_hour,
             "lane":depart_lane,
-            "speed":depart_speed
+            "speed":depart_speed,
+            "spawnNum":0
             }
         self.__flows.append(new_inflow)
         self.__counts.append({})
@@ -1102,7 +1103,9 @@ class CustomInflows:
 
     def spawnVehicles(self, dt, api):
         for i, f in enumerate(self.__flows):
-            num = dt/60*f["vehs_per_hour"]
+            num = f["spawnNum"]+dt/60/60*f["vehs_per_hour"]
+            f["spawnNum"] = num-int(num)
+            num = int(num)
             toSpawn = np.random.choice(f["veh_types"], p=f["p"], size=num)
             for v in toSpawn:
                 api.add(str(v) + str(np.random.randint(100000000000)), v, 
@@ -1111,6 +1114,7 @@ class CustomInflows:
 
     
     def handleDeparted(self, departed):
+        print(self.__counts)
         counts = {}
         for d in departed:
             if d in counts:
@@ -1122,6 +1126,7 @@ class CustomInflows:
                 if t in counts:
                     while counts[t] > 0 and c[t] > 0:
                         c[t] -= 1
+                        print(self.__counts)
                         counts[t] -= 1
             
 
