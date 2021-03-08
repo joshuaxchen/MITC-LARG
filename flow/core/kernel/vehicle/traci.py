@@ -273,12 +273,13 @@ class TraCIVehicle(KernelVehicle):
         self.__rl_ids.sort()
         if self.__customInflows is not None:
             self.__customInflows.spawnVehicles(self.sim_step, self)
-            departed_ids = self.get_departed_ids()
-            if departed_ids != 0:
-                departed_ids = [self.get_type(i) for i in departed_ids]
-            else:
-                departed_ids = []
-            self.__customInflows.handleDeparted(departed_ids)
+            #departed_ids = self.get_departed_ids()
+            #if departed_ids != 0:
+            #    departed_ids = [self.get_type(i) for i in departed_ids]
+            #else:
+            #    departed_ids = []
+            #self.__customInflows.handleDeparted(departed_ids)
+            self.__customInflows.handleDeparted(self.get_departed_ids())
 
     def _add_departed(self, veh_id, veh_type):
         """Add a vehicle that entered the network from an inflow or reset.

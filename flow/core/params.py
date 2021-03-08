@@ -1097,9 +1097,9 @@ class CustomInflows:
             "spawnNum":0
             }
         self.__flows.append(new_inflow)
-        self.__counts.append({})
-        for v in veh_types:
-            self.__counts[-1][v] = 0
+        #self.__counts.append({})
+        #for v in veh_types:
+        #    self.__counts[-1][v] =
 
     def spawnVehicles(self, dt, api):
         for i, f in enumerate(self.__flows):
@@ -1110,12 +1110,22 @@ class CustomInflows:
             for v in toSpawn:
                 api.add(str(v) + str(np.random.randint(100000000000)), v, 
                 f["edge"], 0, f["lane"], f["speed"])
-                self.__counts[i][v] += 1
+                self.__counts[v] = 0
+    def update(self):
+        for v in self.__counts:
+            self.__counts[v] += 1
+
+    def getCount(self, veh):
+        if veh not in self.__counts:
+            return -1
+        return self.__counts[veh]
+
 
     
     def handleDeparted(self, departed):
         print(self.__counts)
         counts = {}
+        """
         for d in departed:
             if d in counts:
                 counts[d] += 1
@@ -1128,6 +1138,9 @@ class CustomInflows:
                         c[t] -= 1
                         print(self.__counts)
                         counts[t] -= 1
+        """
+        for d in departed:
+            del self.__counts[d]
             
 
 
