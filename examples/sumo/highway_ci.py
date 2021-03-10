@@ -25,7 +25,7 @@ def highway_example(render=None):
         A non-rl experiment demonstrating the performance of human-driven
         vehicles on a figure eight.
     """
-    sim_params = SumoParams(render=True)
+    sim_params = SumoParams(render=False)
 
     if render is not None:
         sim_params.render = render

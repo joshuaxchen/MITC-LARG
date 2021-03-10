@@ -1075,7 +1075,7 @@ class CustomInflows:
 
     def __init__(self):
         self.__flows = []
-        self.__counts = []
+        self.__counts = {}
 
 
     def add(self,
@@ -1108,13 +1108,20 @@ class CustomInflows:
             num = int(num)
             toSpawn = np.random.choice(f["veh_types"], p=f["p"], size=num)
             for v in toSpawn:
-                api.add(str(v) + str(np.random.randint(100000000000)), v, 
+                name = str(v) + str(np.random.randint(100000000000))
+                api.add(name, v, 
                 f["edge"], 0, f["lane"], f["speed"])
-                self.__counts[v] = 0
+                self.__counts[name] = 0
+
+    def getIds(self):
+        return list(self.__counts.keys())
     def update(self):
         for v in self.__counts:
             self.__counts[v] += 1
-
+    
+    def contains(self, veh):
+        return veh in self.__counts
+    
     def getCount(self, veh):
         if veh not in self.__counts:
             return -1
@@ -1123,7 +1130,6 @@ class CustomInflows:
 
     
     def handleDeparted(self, departed):
-        print(self.__counts)
         counts = {}
         """
         for d in departed:

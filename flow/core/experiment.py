@@ -112,18 +112,25 @@ class Experiment:
         vels_each_veh = []
         outflows = []
         inflows = []
+        time_delays = []
         for i in range(num_runs):
             vel = np.zeros(num_steps)
             logging.info("Iter #" + str(i))
             ret = 0
             ret_list = []
             state = self.env.reset()
+            time_delay = []
             for j in range(num_steps):
                 state, reward, done, _ = self.env.step(rl_actions(state))
                 vel[j] = np.mean(
                     self.env.k.vehicle.get_speed(self.env.k.vehicle.get_ids()))
                 ret += reward
                 ret_list.append(reward)
+                tmp = self.env.k.vehicle.get_time_delay(self.env.k.vehicle.get_arrived_ids())
+                if isinstance(tmp, list):
+                    time_delay += tmp
+                else:
+                    time_delay.append(tmp)
                 '''
                 if(vel[j]<0):
                     print(self.env.k.vehicle.get_speed(self.env.k.vehicle.get_ids()))
@@ -140,6 +147,13 @@ class Experiment:
             std_vels.append(np.std(vel))
             outflows.append(self.env.k.vehicle.get_outflow_rate(int(300)))
             inflows.append(self.env.k.vehicle.get_inflow_rate(int(300)))
+            tmp = self.env.k.vehicle.get_time_delay(self.env.k.vehicle.get_ids())
+            if isinstance(tmp, list):
+                time_delay += tmp
+            else:
+                time_delay.append(tmp)
+            time_delays.append(np.mean(time_delay))
+            print(time_delay)
             print("Round {0}, return: {1}".format(i, ret))
             #print("vel:{}".format(vel))
         info_dict["vel_each_veh"] = vels_each_veh
@@ -160,6 +174,8 @@ class Experiment:
             np.mean(outflows),np.std(outflows)),outflows)
         print("Average, std inflow:{},{}".format(
             np.mean(inflows),np.std(inflows)),inflows)
+        print("Average, td time delay:{},{}".format(
+            np.mean(time_delays), np.std(time_delays)))
 
         self.env.terminate()
 
