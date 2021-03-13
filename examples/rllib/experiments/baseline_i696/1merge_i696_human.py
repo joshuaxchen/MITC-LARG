@@ -46,6 +46,7 @@ scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flo
 ###########################
 scenario_road_data = {"name" : "I696_ONE_LANE",
             "net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane.xml'), 
+            #"net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane_delete_others.xml'), 
             "rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.xml')],
             #"rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.i696_onelane_Evenshorter.xml')],
             "edges_distribution" : ["404969345#0", "59440544#0", "124433709", "38726647"] 
@@ -262,7 +263,7 @@ flow_params = dict(
         no_step_log=False,       # this disables log writing?
         sim_step=0.5,            # Daniel updated from osm.sumocfg
         lateral_resolution=0.25, # determines lateral discretization of lanes
-        render=False,#True,             # False for training, True for debugging
+        render=False,             # False for training, True for debugging
         restart_instance=True,
     ),
 

@@ -293,16 +293,8 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
             reward = self.compute_reward(rl_actions, fail=crash)
 
         for rl_id in self.exiting_rl_veh: #self.k.vehicle.get_arrived_rl_ids():
-            done[rl_id] = True
-            reward[rl_id] = 20 #1 #0
-            states[rl_id] = np.zeros(self.observation_space.shape[0])
-            #print("rl_id",rl_id, states)
-        for rl_id in self.k.vehicle.get_arrived_rl_ids():
-            #print("arrived:",rl_id)
-            done[rl_id] = True
-            reward[rl_id] = 20
-            states[rl_id] = np.zeros(self.observation_space.shape[0])
-
+            reward[rl_id] = 20 
+            states[rl_id] = np.zeros(self.observation_space.shape[0]) 
         return states, reward, done, infos
     
     def _apply_rl_actions(self, rl_actions):
@@ -378,6 +370,7 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
                 super().additional_command()
         else:
                 rl_ids = self.k.vehicle.get_rl_ids()
+                # reset each step
                 self.exiting_rl_veh = []
                 # add rl vehicles that just entered the network into the rl queue
                 for veh_id in rl_ids:
