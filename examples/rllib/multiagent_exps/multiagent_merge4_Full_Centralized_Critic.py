@@ -63,11 +63,11 @@ load_models(os.getcwd())  # Load models
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
-N_ROLLOUTS = 4 
+N_ROLLOUTS = 1 
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 4
+N_CPUS = 1
 NUM_RL = 10
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -210,7 +210,7 @@ def setup_exps(flow_params):
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 4096
+    config['sgd_minibatch_size'] = 128
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
     #config['model'].update({'fcnet_hiddens': [100, 50, 25]})
@@ -318,7 +318,7 @@ if __name__ == '__main__':
     }
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 4096
+    config['sgd_minibatch_size'] = 128
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
 
