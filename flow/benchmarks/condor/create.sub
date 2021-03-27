@@ -14,14 +14,14 @@ requirements=InMastodon
 
  
 
-Error = condor_logs/err.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+Error = condor/condor_logs/err.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
 
-Output = condor_logs/out.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+Output = condor/condor_logs/out.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
 
-Log = condor_logs/log.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+Log = condor/condor_logs/log.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
 
  
-executable = eval_params.sh
+executable = condor/eval_params.sh
 
 
 queue 1 

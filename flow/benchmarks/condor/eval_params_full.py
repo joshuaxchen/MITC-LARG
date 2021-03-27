@@ -193,6 +193,10 @@ if __name__ == '__main__':
         final_outflows.append(vehicles.get_outflow_rate(500))
         times.append(time)
     #print(np.mean(final_outflows))
+    print(np.mean(mean_vel), np.std(mean_vel))
+    print(np.mean(std_vel), np.std(std_vel))
+    print(np.mean(final_inflows), np.std(final_inflows))
+    print(np.mean(final_outflows), np.std(final_outflows))
     if args.output:
         with open(args.output, 'w') as f:
             f.write(str(np.mean(final_outflows)))
