@@ -316,8 +316,8 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
         obs = {}
 
         # normalizing constants
-        max_speed = self.k.network.max_speed()
-        max_length = self.k.network.length()
+        max_speed = 30.0#self.k.network.max_speed()
+        max_length = 1000.0#self.k.network.length()
 
         for rl_id in self.rl_veh:
             this_speed = self.k.vehicle.get_speed(rl_id)
