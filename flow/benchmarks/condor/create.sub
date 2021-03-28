@@ -1,0 +1,27 @@
+# Condor submit file for simple training run
+
+ 
+universe = vanilla
+
+requirements=InMastodon
+
++Group = "GRAD"
+
++Project = "AI_ROBOTICS"
+
++ProjectDescription = "MITC"
+
+
+ 
+
+Error = condor/condor_logs/err.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+Output = condor/condor_logs/out.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+Log = condor/condor_logs/log.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+ 
+executable = condor/eval_params.sh
+
+
+queue 1 

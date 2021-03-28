@@ -102,6 +102,7 @@ flow_params = dict(
             "max_decel": 4.5,
             "target_velocity": 30,
             "num_rl": NUM_RL,
+            "merge_edge": "left"
         },
     ),
 
