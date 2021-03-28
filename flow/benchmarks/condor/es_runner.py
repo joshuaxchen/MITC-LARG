@@ -34,6 +34,12 @@ end_file = base_dir + "/results/valuationdone_{}.txt"
 params_file = base_dir + "/results/params_{}_i_{}.txt"
 results_file = base_dir + "/results/value_{}_i_{}.txt"
 
+config = {"benchmark_name":args.benchmark_name,
+        "controller_name": args.controller_name,
+        "gens":args.gens,
+        "gensize":args.gensize}
+
+
 cma_p = None
 
 
@@ -76,6 +82,9 @@ def check_done():
 os.mkdir(args.base_dir)
 os.mkdir(args.base_dir+"/results")
 os.mkdir(args.base_dir+"/process")
+
+with open(args.base_dir+'/config.json', 'w') as f:
+    json.dump(config, f)
 
 start_cma()
 
