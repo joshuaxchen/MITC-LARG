@@ -34,4 +34,4 @@ ${RUN} ${PPO_RUNNER} --benchmark_name 1merge_horizon2000_warmup0_simstep05_flow2
 
 
 echo "4th exp: train with avg speed reward in the entire network from scratch"
-${RUN} ${PPO_RUNNER} --benchmark_name 1merge_horizon2000_warmup0_simstep05_flow2000_merge200_dePart10_AvgVel g-num_cpus ${CPU_NUM} --lr ${LR} --num_rollouts ${NUM_ROLLOUTS} 
+${RUN} ${PPO_RUNNER} --benchmark_name 1merge_horizon2000_warmup0_simstep05_flow2000_merge200_dePart10_AvgVel --num_cpus ${CPU_NUM} --lr ${LR} --num_rollouts ${NUM_ROLLOUTS} 
