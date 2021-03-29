@@ -2,9 +2,9 @@
 BENCHMARK=./flow/benchmarks
 PPO_RUNNER=${BENCHMARK}/rllib/ppo_runner.py	
 RUN=python
-CPU_NUM=1
+CPU_NUM=12
 LR=5e-5
-NUM_ROLLOUTS=2
+NUM_ROLLOUTS=20
 
 echo "**********************************************************************************************************"
 echo "run a centralized experiment on simple merge to train agents with original reward, outflow, average speeds" 
