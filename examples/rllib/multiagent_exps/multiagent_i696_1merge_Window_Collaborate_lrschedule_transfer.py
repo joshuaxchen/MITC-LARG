@@ -52,7 +52,7 @@ RL_PENETRATION = 0.1
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
-from flow.scenarios.directory_path import scenario_dir_path
+from flow.scenarios import scenario_dir_path
 scenarios_dir = scenario_dir_path
 #scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
 scenario_road_data = {"name" : "I696_ONE_LANE",
