@@ -51,7 +51,9 @@ RL_PENETRATION = 0.1
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
-scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
+from examples.rllib.paths import MITC_path
+scenarios_dir = os.path.join(MITC_path, 'flow', 'scenarios')
+#scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
 scenario_road_data = {"name" : "I696_ONE_LANE",
             "net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane.xml'), 
             "rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.xml')],
