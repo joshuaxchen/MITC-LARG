@@ -5,6 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
+import os
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -13,8 +14,9 @@ from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
 from ray import tune
 from ray.tune.registry import register_env
 from ray.tune import run_experiments
+from flow.networks import Network
+from flow.controllers import SimCarFollowingController,IDMController, RLController, SimLaneChangeController, ContinuousRouter
 
-from flow.controllers import RLController, SimCarFollowingController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -22,7 +24,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -33,28 +35,32 @@ from copy import deepcopy
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
-N_ROLLOUTS = 30 
+N_ROLLOUTS = 1 
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 10
-NUM_RL = 10
+N_CPUS = 0
+NUM_RL = 30
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1
-# Selfishness constant
+# selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
 
-
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
-additional_net_params["merge_lanes"] = 1
-additional_net_params["highway_lanes"] = 1
-additional_net_params["pre_merge_length"] = 500
+scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
+scenario_road_data = {"name" : "I696_ONE_LANE",
+            #"net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane.xml'), 
+            "net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane_delete_others.xml'), 
+            "rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.xml')],
+            #"rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.i696_onelane_Evenshorter.xml')],
+            "edges_distribution" : ["404969345#0", "59440544#0", "124433709", "38726647"] 
+            }
 
 
 
@@ -67,63 +73,80 @@ additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 # CREATE VEHICLE TYPES AND INFLOWS
 
 vehicles = VehicleParams()
-inflows = InFlows()
-
-# human vehicles
 vehicles.add(
     veh_id="human",
-    acceleration_controller=(SimCarFollowingController, {}),
+    acceleration_controller=(SimCarFollowingController, {
+        #"noise": 0.2
+    }),
+    lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
-        speed_mode=9,  # for safer behavior at the merges
-        #tau=1.5  # larger distance between cars
+      speed_mode=9,
     ),
-    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=5)
+    lane_change_params=SumoLaneChangeParams(
+      model="SL2015",
+      lane_change_mode=1621,
+      lc_pushy=0,
+      lc_assertive=5, 
+      lc_impatience=1e-8,
+      lc_time_to_impatience=1e12
+    ), 
+    num_vehicles=0)
 
-# autonomous vehicles
 vehicles.add(
     veh_id="rl",
     acceleration_controller=(RLController, {}),
+    lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
+      speed_mode=9
     ),
+    lane_change_params=SumoLaneChangeParams(
+        model="SL2015",
+        lane_change_mode=1621,      
+        lc_pushy=0, 
+        lc_assertive=5,
+        lc_impatience=1e-8,
+        lc_time_to_impatience=1e12
+    ), 
     num_vehicles=0)
 
-# Vehicles are introduced from both sides of merge, with RL vehicles entering
-# from the highway portion as well
 inflow = InFlows()
 inflow.add(
     veh_type="human",
-    edge="inflow_highway",
-    vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
-    depart_lane="free",
-    depart_speed=10)
+    edge="59440544#0", # flow id se2w1 from xml file
+    begin=10,#0,
+    end=90000,
+    vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
+    departSpeed=10,
+    departLane="free",
+    )
+
 inflow.add(
     veh_type="rl",
-    edge="inflow_highway",
-    vehs_per_hour=RL_PENETRATION * FLOW_RATE,
+    edge="59440544#0", # flow id se2w1 from xml file
+    begin=10,#0,
+    end=90000,
+    vehs_per_hour = RL_PENETRATION*FLOW_RATE,
+    depart_speed=10,
     depart_lane="free",
-    depart_speed=10)
+    )
+
 inflow.add(
     veh_type="human",
-    edge="inflow_merge",
-    vehs_per_hour=MERGE_RATE,
-    depart_lane="free",
-    depart_speed=7.5)
+    edge="124433709", # flow id e2w1 from xml file
+    begin=10,#0,
+    end=90000,
+    vehs_per_hour = MERGE_RATE, #(1 - RL_PENETRATION)*FLOW_RATE,
+    departSpeed=7.5,
+    departLane="free",
+    )
+
 
 flow_params = dict(
-    exp_tag='multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='multiagent_highway_i696_1merge_Window_FullAug_ZeroShot_Transfer',
 
-    env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
+    env_name=MultiAgentHighwayPOEnvWindowFullCollaborate,
     network=MergeNetwork,
     simulator='traci',
-
-    #env=EnvParams(
-    #    horizon=HORIZON,
-    #    warmup_steps=200,
-    #    sims_per_step=1,  # do not put more than one #FIXME why do not put more than one
-    #    additional_params=additional_env_params,
-    #),
 
     sim=SumoParams(
         restart_instance=True,
@@ -134,25 +157,57 @@ flow_params = dict(
     # environment related parameters (see flow.core.params.EnvParams)
     env=EnvParams(
         horizon=HORIZON,
-        sims_per_step=1,
+        sims_per_step=1, #5,
         warmup_steps=0,
         additional_params={
             "max_accel": 2.6,
             "max_decel": 4.5,
             "target_velocity": 30,
-            "num_rl": NUM_RL,
-            "eta1": ETA_1,
-            "eta2": ETA_2,
+            "num_rl": NUM_RL, # used by WaveAttenuationMergePOEnv e.g. to fix action dimension
+            "ignore_edges":[
+                            #before window
+                            "59440544#0",
+                            "59440544#1",
+                            ":4308145956_0",
+                            ":gneJ29_2",
+                            ":62290112_0",
+                            ":gneJ26_0",
+                            "59440544#1-AddedOffRampEdge",
+                            "22723058#0",
+                            "22723058#1",
+                            "491515539",
+                            ":gneJ24_1",
+                            "341040160#0",
+                            ":4308145961_0",
+                            "4308145961",
+
+                            #after window
+                            "422314897#1",
+                            "489256509",
+                            "456874110",
+                            ],
+            "eta1":ETA_1,
+            "eta2":ETA_2,
+            #"max_inflow":FLOW_RATE + 3*MERGE_RATE,
         },
     ),
-
     net=NetParams(
         inflows=inflow,
+        #no_internal_links=False,
         additional_params=additional_net_params,
+        template={
+          "net" : scenario_road_data["net"],# see above
+          "rou" : scenario_road_data["rou"],# see above 
+        }
     ),
 
+
     veh=vehicles,
-    initial=InitialConfig(),
+    initial=InitialConfig(
+      # Distributing only at the beginning of routes
+      scenario_road_data["edges_distribution"]
+    ),
+
 )
 
 
@@ -180,16 +235,11 @@ def setup_exps(flow_params):
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 4096
+    config['sgd_minibatch_size'] = 128
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
     config['model'].update({'fcnet_hiddens': [100, 50, 25]})
-    #config['lr'] = tune.grid_search([5e-4, 1e-4])
-    config['lr_schedule'] = [
-            [0, 5e-4],
-            [1000000, 1e-4],
-            [4000000, 1e-5],
-            [8000000, 1e-6]]
+    config['lr'] = 0.0
     config['horizon'] = HORIZON
     config['clip_actions'] = False
     config['observation_filter'] = 'NoFilter'
@@ -243,6 +293,11 @@ def setup_exps(flow_params):
 # RUN EXPERIMENT
 
 if __name__ == '__main__':
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument('--restore', type=str, help='restore from which checkpoint?')
+    args = parser.parse_args()
+
     alg_run, env_name, config = setup_exps(flow_params)
     ray.init(num_cpus=N_CPUS + 1)
 
@@ -250,12 +305,13 @@ if __name__ == '__main__':
         flow_params['exp_tag']: {
             'run': alg_run,
             'env': env_name,
-            'checkpoint_freq': 5,
+            'checkpoint_freq': 1,
             'checkpoint_at_end': True,
             'stop': {
-                'training_iteration': N_TRAINING_ITERATIONS
+                'training_iteration': 1
             },
             'config': config,
-            'num_samples':3,
+            'num_samples':1,
+            'restore':args.restore,
         },
     })
