@@ -146,7 +146,8 @@ class TraCISimulation(KernelSimulation):
                 sumo_call.append("--collision.check-junctions")
                 sumo_call.append("true")
                 
-                 # save an initial state, if requested
+                # save an initial state, if requested
+                '''
                 if sim_params.save_state_time is not None:
                     sumo_call.append("--save-state.times")
                     sumo_call.append(str(sim_params.save_state_time))
@@ -157,7 +158,7 @@ class TraCISimulation(KernelSimulation):
                 if sim_params.load_state is not None:
                     sumo_call.append("--load-state")
                     sumo_call.append(sim_params.load_state)
-
+                '''
                 # enable stop after collision
                 #sumo_call.append("--collision.stoptime")
                 #sumo_call.append("1")
