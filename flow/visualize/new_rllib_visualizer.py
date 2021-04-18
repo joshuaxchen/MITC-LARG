@@ -537,6 +537,7 @@ def create_parser():
 
     # required input parameters
     parser.add_argument(
+
         'result_dir', type=str, help='Directory containing results')
     parser.add_argument('checkpoint_num', type=str, help='Checkpoint number.')
 
@@ -618,6 +619,7 @@ if __name__ == '__main__':
         print("Speed: {:.2f}, {:.2f}".format(np.mean(Speed), np.std(Speed)))
         print("Inflow: {:.2f}, {:.2f}".format(np.mean(Inflow), np.std(Inflow)))
         print("Outflow: {:.2f}, {:.2f}".format(np.mean(Outflow), np.std(Outflow)))
+    '''
     ray.shutdown()
     _register_all() #Fix reinit error, this does not happen in ray 0.9.0, only fix for ray 0.8.5
         
@@ -630,3 +632,4 @@ if __name__ == '__main__':
             print("Killing", pid)
             if pid > 0:
                 os.kill(pid, signal.SIGKILL)
+    '''
