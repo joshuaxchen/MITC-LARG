@@ -39,6 +39,8 @@ from flow.utils.rllib import get_flow_params
 from flow.utils.rllib import get_rllib_config
 from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
+from flow.scenarios import scenario_dir_path
+
 seed_filename = glob.glob("eval_seeds/*/seeds.pkl")
 print(seed_filename)
 print("Using ", len(seed_filename), " random seeds")
@@ -137,6 +139,15 @@ def visualizer_rllib(args, seed=None):
     config['num_workers'] = 0
 
     flow_params = get_flow_params(config)
+    net_params=flow_params['net']
+    template_dict=net_params.template
+    for key, path in template_dict.iteritems():
+        feature_path='flow/scenarios/'
+        if feature_path in path:
+            occur_index=path.rindex(feature_path)
+            new_path=os.path.join(scenario_dir_path, path[occur_index+1:])
+            template_dict[key]=new_path
+
     #flow_params['env'].additional_params["use_seeds"]=args.use_seeds
 #    print(args.use_seeds)
     seed_tmp = None
