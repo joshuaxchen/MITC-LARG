@@ -8,7 +8,7 @@ is 10%.
 - **Observation Dimension**: (25, )
 - **Horizon**: 750 steps
 """
-from flow.envs import MergePOEnvArrive
+from flow.envs import MergePOEnv
 from flow.networks import MergeNetwork
 from copy import deepcopy
 from flow.core.params import SumoParams, EnvParams, InitialConfig, NetParams, \
@@ -20,7 +20,7 @@ from flow.controllers import SimCarFollowingController, RLController,IDMControll
 # time horizon of a single rollout
 HORIZON = 2000
 # inflow rate at the highway
-FLOW_RATE = 2000
+FLOW_RATE = 1750
 # percent of autonomous vehicles
 RL_PENETRATION = 0.1
 # num_rl term (see ADDITIONAL_ENV_PARAMs)
@@ -74,10 +74,10 @@ inflow.add(
 
 flow_params = dict(
     # name of the experiment
-    exp_tag="merge_4_Sim_Arrive_oldparams",
+    exp_tag="merge_4_Sim_FLOW_target20_old_params",
 
     # name of the flow environment the experiment is running on
-    env_name=MergePOEnvArrive,
+    env_name=MergePOEnv,
 
     # name of the network class the experiment is running on
     network=MergeNetwork,
@@ -102,8 +102,7 @@ flow_params = dict(
             "max_decel": 4.5,
             "target_velocity": 30,
             "num_rl": NUM_RL,
-            "reset_inflow":False,
-            "inflow_range":[1.0],
+            "merge_edge": "left"
         },
     ),
 

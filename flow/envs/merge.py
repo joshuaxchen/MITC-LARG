@@ -9,7 +9,7 @@ from flow.envs.base import Env
 from flow.core import rewards
 
 from gym.spaces.box import Box
-
+from copy import deepcopy
 import numpy as np
 import collections
 import random
@@ -335,6 +335,20 @@ class MergePOEnv(Env):
         self.exited_rl_veh = []
         self.leader = []
         self.follower = []
+        additional_params = self.env_params.additional_params
+        if additional_params.get("reset_inflow"):
+            #assume we only pass scale 0.9-1.1 for example
+            try:
+                inflow_range = additional_params.get("inflow_range")
+            except:
+                # Did not specify the inflow range
+                inflow_range = [1.0]
+            total_inflows = self.network.net_params.inflows.get()
+            for inflow in total_inflows:
+                scale = np.random.uniform(min(inflow_range), max(inflow_range))
+                inflow['vehsPerHour'] = int(scale * inflow['vehsPerHour'])
+            print(self.network.net_params.inflows.get())
+        
         return super().reset()
 
 class MergePOEnvScaleInflow(MergePOEnv):

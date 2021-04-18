@@ -147,18 +147,23 @@ class TraCISimulation(KernelSimulation):
                 sumo_call.append("true")
                 
                 # save an initial state, if requested
-                '''
-                if sim_params.save_state_time is not None:
-                    sumo_call.append("--save-state.times")
-                    sumo_call.append(str(sim_params.save_state_time))
-                    sumo_call.append("--save-state.files")
-                    sumo_call.append(sim_params.save_state_file)
+                try: 
+                    if sim_params.save_state_time:
+                        sumo_call.append("--save-state.times")
+                        sumo_call.append(str(sim_params.save_state_time))
+                        sumo_call.append("--save-state.files")
+                        sumo_call.append(sim_params.save_state_file)
+                except:
+                    pass
 
                 # add the initial state of vehicles in the network, if provided
-                if sim_params.load_state is not None:
-                    sumo_call.append("--load-state")
-                    sumo_call.append(sim_params.load_state)
-                '''
+                try:
+                    if sim_params.load_state:
+                        sumo_call.append("--load-state")
+                        sumo_call.append(sim_params.load_state)
+                except:
+                    pass
+                
                 # enable stop after collision
                 #sumo_call.append("--collision.stoptime")
                 #sumo_call.append("1")
