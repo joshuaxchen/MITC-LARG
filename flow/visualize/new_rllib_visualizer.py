@@ -146,7 +146,7 @@ def visualizer_rllib(args, seed=None):
     net_path=template_dict['net']
     if feature_path in net_path:
         occur_index = net_path.rindex(feature_path)
-        new_net_path = os.path.join(scenario_dir_path, net_path[occur_index + 1:])
+        new_net_path = os.path.join(scenario_dir_path, net_path[occur_index + len(feature_path):])
     template_dict['net']=new_net_path
 
     rou_path_list=template_dict['rou']
@@ -154,7 +154,7 @@ def visualizer_rllib(args, seed=None):
     for path in rou_path_list:
         if feature_path in path:
             occur_index=path.rindex(feature_path)
-            new_path=os.path.join(scenario_dir_path, path[occur_index+1:])
+            new_path=os.path.join(scenario_dir_path, path[occur_index+len(feature_path):])
             new_rou_path_list.append(new_path)
     template_dict['rou']=new_rou_path_list
 
