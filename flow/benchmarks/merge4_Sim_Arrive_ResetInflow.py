@@ -103,7 +103,7 @@ flow_params = dict(
             "target_velocity": 20,
             "num_rl": NUM_RL,
             "reset_inflow":True,
-            "inflow_range":[0.9, 1.0],
+            "inflow_range":[0.9, 1.1],
         },
     ),
 
