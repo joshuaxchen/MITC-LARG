@@ -335,22 +335,20 @@ class MergePOEnv(Env):
         self.exited_rl_veh = []
         self.leader = []
         self.follower = []
-        from IPython import embed; embed() 
         additional_params = self.env_params.additional_params
         if additional_params.get("reset_inflow"):
             #assume we only pass scale 0.9-1.1 for example
-            inflow_range = additional_params.get("inflow_range")
+            try:
+                inflow_range = additional_params.get("inflow_range")
+            except:
+                # Did not specify the inflow range
+                inflow_range = [1.0]
             total_inflows = self.network.net_params.inflows.get()
             for inflow in total_inflows:
                 scale = np.random.uniform(min(inflow_range), max(inflow_range))
-                inflow['vehsPerHour'] = scale * inflow['vehsPerHour'] 
-            self.net_params.inflows = total_inflows
+                inflow['vehsPerHour'] = int(scale * inflow['vehsPerHour'])
+            print(self.network.net_params.inflows.get())
         
-        #Test
-        #total_inflows = self.network.net_params.inflows.get()
-        #for inflow in total_inflows:
-        #    scale=np.random.uniform(0.5,1.0)
-        #    inflow['vehsPerHour'] = scale * inflow['vehsPerHour'] 
         return super().reset()
 
 class MergePOEnvScaleInflow(MergePOEnv):
