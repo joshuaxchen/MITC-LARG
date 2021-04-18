@@ -139,16 +139,19 @@ def visualizer_rllib(args, seed=None):
     config['num_workers'] = 0
 
     flow_params = get_flow_params(config)
+
+    # replace the project path to the scenario xml, if the result to be
+    # visualized is generated from another project.
     net_params=flow_params['net']
     template_dict=net_params.template
     feature_path = 'flow/scenarios/'
-
+    # fix the network xml
     net_path=template_dict['net']
     if feature_path in net_path:
         occur_index = net_path.rindex(feature_path)
         new_net_path = os.path.join(scenario_dir_path, net_path[occur_index + len(feature_path):])
     template_dict['net']=new_net_path
-
+    # fix the route xml
     rou_path_list=template_dict['rou']
     new_rou_path_list=[]
     for path in rou_path_list:
