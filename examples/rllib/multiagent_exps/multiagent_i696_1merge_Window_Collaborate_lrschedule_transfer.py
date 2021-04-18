@@ -54,7 +54,8 @@ RL_PENETRATION = 0.1
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 from flow.scenarios import scenario_dir_path
 scenarios_dir = scenario_dir_path
-#scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
+#from flow.scenarios import scenario_dir_path
+scenarios_dir = scenario_dir_path
 scenario_road_data = {"name" : "I696_ONE_LANE",
             "net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane.xml'), 
             "rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.xml')],
