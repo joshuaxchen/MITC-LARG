@@ -96,6 +96,8 @@ class MergePOEnv(Env):
 
         super().__init__(env_params, sim_params, network, simulator)
 
+        self.original_inflow = deepcopy(self.network.net_params.inflows.get())
+
     @property
     def action_space(self):
         """See class definition."""
@@ -338,17 +340,28 @@ class MergePOEnv(Env):
         additional_params = self.env_params.additional_params
         if additional_params.get("reset_inflow"):
             #assume we only pass scale 0.9-1.1 for example
+            print("Randomized Inflow configuration")
             try:
-                inflow_range = additional_params.get("inflow_range")
+                inflow_range = additional_params["inflow_range"]
             except:
                 # Did not specify the inflow range
                 inflow_range = [1.0]
             total_inflows = self.network.net_params.inflows.get()
-            for inflow in total_inflows:
+            for i in range(len(total_inflows)):
                 scale = np.random.uniform(min(inflow_range), max(inflow_range))
-                inflow['vehsPerHour'] = int(scale * inflow['vehsPerHour'])
-            print(self.network.net_params.inflows.get())
+                total_inflows[i]['vehsPerHour'] = int(scale * self.original_inflow[i]['vehsPerHour'])
         
+        if additional_params.get("handset_inflow"):
+            total_inflows = self.network.net_params.inflows.get()
+            print("Handset Inflow configuration, \
+                    Notice: Only Use it when evaluation")
+            inflows_set = additional_params.get("handset_inflow")
+            assert len(inflows_set) == len(total_inflows)
+            for i in range(len(total_inflows)):
+                total_inflows[i]['vehsPerHour'] = inflows_set[i]
+        print(self.network.net_params.inflows.get())
+        print(self.original_inflow)
+
         return super().reset()
 
 class MergePOEnvScaleInflow(MergePOEnv):

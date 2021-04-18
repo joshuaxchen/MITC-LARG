@@ -137,8 +137,6 @@ def visualizer_rllib(args, seed=None):
     config['num_workers'] = 0
 
     flow_params = get_flow_params(config)
-    #flow_params['env'].additional_params["use_seeds"]=args.use_seeds
-#    print(args.use_seeds)
     seed_tmp = None
     if seed:
         with open(seed, 'rb') as f:
@@ -156,8 +154,6 @@ def visualizer_rllib(args, seed=None):
         #setattr(sim_params, 'seed', seed_tmp['sumo_seed'])
         sim_params.seed = int(int(seed_tmp['sumo_seed'])/10**6)
         print(sim_params.seed)
-    #import IPython
-    #IPython.embed()
     # Determine agent and checkpoint
     config_run = config['env_config']['run'] if 'run' in config['env_config'] \
         else None
@@ -214,10 +210,21 @@ def visualizer_rllib(args, seed=None):
     #    input()
     #else:
     #    flow_params["env"].additional_params["use_seeds"] = args.use_seeds
+    
+
     if args.horizon:
         config['horizon'] = args.horizon
         flow_params['env'].horizon = args.horizon
+    
+    env_params = flow_params['env']
+    env_params.restart_instance = True
 
+    # Inflows        
+    if env_params.additional_params.get('reset_inflow'):
+        env_params.additional_params['reset_inflow']=False
+    if args.handset_inflow:
+        env_params.additional_params['handset_inflow']=args.handset_inflow
+    
     # Create and register a gym+rllib env
     create_env, env_name = make_create_env(params=flow_params, version=0, seeds_file=seed)
     register_env(env_name, create_env)
@@ -234,8 +241,7 @@ def visualizer_rllib(args, seed=None):
 
     # Start the environment with the gui turned on and a path for the
     # emission file
-    env_params = flow_params['env']
-    env_params.restart_instance = False
+       
     if args.evaluate:
         env_params.evaluate = True
 
@@ -587,6 +593,7 @@ def create_parser():
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
+    parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     return parser
 
 from subprocess import check_output
