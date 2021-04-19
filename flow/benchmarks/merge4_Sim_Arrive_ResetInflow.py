@@ -74,7 +74,7 @@ inflow.add(
 
 flow_params = dict(
     # name of the experiment
-    exp_tag="merge_4_Sim_Arrive_oldparams",
+    exp_tag="merge_4_Sim_Arrive_reset_inflow_oldparams",
 
     # name of the flow environment the experiment is running on
     env_name=MergePOEnvArrive,
@@ -100,10 +100,10 @@ flow_params = dict(
         additional_params={
             "max_accel": 2.6,
             "max_decel": 4.5,
-            "target_velocity": 30,
+            "target_velocity": 20,
             "num_rl": NUM_RL,
-            "reset_inflow":False,
-            "inflow_range":[1.0],
+            "reset_inflow":True,
+            "inflow_range":[0.9, 1.1],
         },
     ),
 
