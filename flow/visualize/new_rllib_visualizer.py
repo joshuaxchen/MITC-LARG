@@ -210,8 +210,9 @@ def visualizer_rllib(args, seed=None):
     #    input()
     #else:
     #    flow_params["env"].additional_params["use_seeds"] = args.use_seeds
-    
-
+    #sim_params.save_state_time=100
+    #sim_params.save_state_file='states.xml'
+    #sim_params.load_state='states.xml'
     if args.horizon:
         config['horizon'] = args.horizon
         flow_params['env'].horizon = args.horizon
