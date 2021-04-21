@@ -103,9 +103,10 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         obs = {}
 
         # normalizing constants
-        max_speed = self.k.network.max_speed()
-        max_length = self.k.network.length()
-
+        #max_speed = self.k.network.max_speed()
+        #max_length = self.k.network.length()
+        max_speed = 30.0
+        max_length = 1000.0
         for rl_id in self.k.vehicle.get_rl_ids():
             this_speed = self.k.vehicle.get_speed(rl_id)
             lead_id = self.k.vehicle.get_leader(rl_id)
@@ -316,8 +317,8 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
         obs = {}
 
         # normalizing constants
-        max_speed = self.k.network.max_speed()
-        max_length = self.k.network.length()
+        max_speed = 30.0#self.k.network.max_speed()
+        max_length = 1000.0#self.k.network.length()
 
         for rl_id in self.rl_veh:
             this_speed = self.k.vehicle.get_speed(rl_id)
@@ -836,12 +837,10 @@ class MultiAgentHighwayPOEnvMerge4(MultiAgentHighwayPOEnv):
     def get_state(self):
         states = super().get_state()
         junctions = set(self.k.network.get_junction_list())
-        max_speed = self.k.network.max_speed()
-        max_length = self.k.network.length()
 
         # normalizing constants
-        max_speed = self.k.network.max_speed()
-        max_length = self.k.network.length()
+        max_speed = 30.0 #self.k.network.max_speed()
+        max_length = 1000.0#self.k.network.length()
         merge_vehs = self.k.vehicle.get_ids_by_edge(["bottom","inflow_merge"])
         #merge_dists = [self.k.vehicle.get_x(veh) for veh in merge_vehs]
         merge_distance = 1

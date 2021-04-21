@@ -601,22 +601,6 @@ class Env(gym.Env):
         with open(logs_path + "/seeds.pkl", 'wb') as handle:
           pickle.dump(seeds, handle)
 
-
-
-
-        #with open('/home/dzgnkq/flow_2020_02_16_16_15_42.001297/seeds.pkl', 'rb') as handle:
-        #with open('/home/dzgnkq/flow_seeds/flow_2020_02_27_15_14_40.694017/seeds.pkl', 'rb') as handle:
-        #with open(os.environ["SEEDSFILE"], 'rb') as handle:
-        #    print()
-        #    print("loading seeds file " + os.environ["SEEDSFILE"])
-        #    print()
-        #    loaded_seeds = pickle.load(handle)
-        #    random.setstate(loaded_seeds['old_state_random'])
-        #    np.random.set_state(loaded_seeds['old_state_np'])
-        ######################################################################################################
-
-
-
         # reset the time counter
         self.time_counter = 0
         self.time_with_no_vehicles = 0
@@ -656,8 +640,8 @@ class Env(gym.Env):
                 try:
                     self.k.vehicle.remove(veh_id)
                 except (FatalTraCIError, TraCIException):
-                    print(traceback.format_exc())
-
+                    #print(traceback.format_exc())
+                    pass
         # clear all vehicles from the network and the vehicles class
         # FIXME (ev, ak) this is weird and shouldn't be necessary
         for veh_id in list(self.k.vehicle.get_ids()):
@@ -669,7 +653,6 @@ class Env(gym.Env):
                 self.k.vehicle.remove(veh_id)
             except (FatalTraCIError, TraCIException):
                 print("Error during start: {}".format(traceback.format_exc()))
-
         # reintroduce the initial vehicles to the network
         for veh_id in self.initial_ids:
             type_id, edge, lane_index, pos, speed = \

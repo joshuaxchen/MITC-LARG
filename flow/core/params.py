@@ -7,6 +7,7 @@ from flow.utils.flow_warnings import deprecated_attribute
 from flow.controllers.car_following_models import SimCarFollowingController
 from flow.controllers.rlcontroller import RLController
 from flow.controllers.lane_change_controllers import SimLaneChangeController
+import numpy as np
 
 
 SPEED_MODES = {
@@ -233,6 +234,9 @@ class VehicleParams:
         #: purposes
         self.initial = []
 
+
+        self._customInflows = None
+
     def add(self,
             veh_id,
             acceleration_controller=(SimCarFollowingController, {}),
@@ -347,6 +351,9 @@ class VehicleParams:
             vehicle ID whose type the user is querying
         """
         return self.__vehicles[veh_id]["type"]
+
+    def setCustomInflows(self, customInflows):
+        self._customInflows = customInflows
 
 
 class SimParams(object):
@@ -679,12 +686,14 @@ class NetParams:
                  inflows=None,
                  osm_path=None,
                  template=None,
-                 additional_params=None):
+                 additional_params=None,
+                 customInflows=None):
         """Instantiate NetParams."""
         self.inflows = inflows or InFlows()
         self.osm_path = osm_path
         self.template = template
         self.additional_params = additional_params or {}
+        self.customInflows = customInflows
 
 
 class InitialConfig:
@@ -1060,6 +1069,87 @@ class SumoLaneChangeParams:
             lane_change_mode = LC_MODES["no_lat_collide"]
 
         self.lane_change_mode = lane_change_mode
+
+
+class CustomInflows:
+
+    def __init__(self):
+        self.__flows = []
+        self.__counts = {}
+
+
+    def add(self,
+            veh_types,
+            veh_probs,
+            edge, 
+            vehs_per_hour=None,
+            depart_lane=1,
+            depart_speed=0,
+            name="flow"):
+        new_inflow = {
+            "name": "%s_%d" % (name, len(self.__flows)),
+            "veh_types": list(veh_types),
+            "p": veh_probs,
+            "edge":edge,
+            "vehs_per_hour":vehs_per_hour,
+            "lane":depart_lane,
+            "speed":depart_speed,
+            "spawnNum":0
+            }
+        self.__flows.append(new_inflow)
+        #self.__counts.append({})
+        #for v in veh_types:
+        #    self.__counts[-1][v] =
+
+    def spawnVehicles(self, dt, api):
+        for i, f in enumerate(self.__flows):
+            num = f["spawnNum"]+dt/60/60*f["vehs_per_hour"]
+            f["spawnNum"] = num-int(num)
+            num = int(num)
+            toSpawn = np.random.choice(f["veh_types"], p=f["p"], size=num)
+            for v in toSpawn:
+                name = str(v) + str(np.random.randint(100000000000))
+                api.add(name, v, 
+                f["edge"], 0, f["lane"], f["speed"])
+                self.__counts[name] = 0
+
+    def getIds(self):
+        return list(self.__counts.keys())
+    def update(self):
+        for v in self.__counts:
+            self.__counts[v] += 1
+    
+    def contains(self, veh):
+        return veh in self.__counts
+    
+    def getCount(self, veh):
+        if veh not in self.__counts:
+            return -1
+        return self.__counts[veh]
+
+
+    
+    def handleDeparted(self, departed):
+        counts = {}
+        """
+        for d in departed:
+            if d in counts:
+                counts[d] += 1
+            else:
+                counts[d] = 1
+        for c in self.__counts:
+            for t in c:
+                if t in counts:
+                    while counts[t] > 0 and c[t] > 0:
+                        c[t] -= 1
+                        print(self.__counts)
+                        counts[t] -= 1
+        """
+        for d in departed:
+            del self.__counts[d]
+            
+
+
 
 
 class InFlows:

@@ -102,6 +102,8 @@ flow_params = dict(
             "max_decel": 4.5,
             "target_velocity": 30,
             "num_rl": NUM_RL,
+            "reset_inflow":False,
+            "inflow_range":[1.0],
         },
     ),
 

@@ -68,7 +68,7 @@ inflow.add(
 inflow.add(
     veh_type="human",
     edge="inflow_merge",
-    vehs_per_hour=200,
+    vehs_per_hour=175,
     depart_lane="free",
     depart_speed=7.5)
 

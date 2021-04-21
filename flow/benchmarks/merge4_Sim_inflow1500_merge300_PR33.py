@@ -20,9 +20,9 @@ from flow.controllers import SimCarFollowingController, RLController,IDMControll
 # time horizon of a single rollout
 HORIZON = 2000
 # inflow rate at the highway
-FLOW_RATE = 2000
+FLOW_RATE = 1500
 # percent of autonomous vehicles
-RL_PENETRATION = 0.1
+RL_PENETRATION = 0.33
 # num_rl term (see ADDITIONAL_ENV_PARAMs)
 NUM_RL = 5
 
@@ -68,7 +68,7 @@ inflow.add(
 inflow.add(
     veh_type="human",
     edge="inflow_merge",
-    vehs_per_hour=200,
+    vehs_per_hour=300,
     depart_lane="free",
     depart_speed=7.5)
 
