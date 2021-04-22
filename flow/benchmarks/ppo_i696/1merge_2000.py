@@ -31,7 +31,7 @@ from flow.controllers import SimCarFollowingController,IDMController, RLControll
 
 # TODO hard coded
 #scenarios_dir = os.path.join(os.path.expanduser("~/"), 'local', 'flow_2019_07', 'flow', 'scenarios')
-scenarios_dir = os.path.join(os.path.expanduser("~/"), 'Documents', 'MITC', 'flow', 'scenarios')
+from flow.scenarios import scenario_dir_path
 # UNCOMMENT ONE OF THE FOLLOWING 3 VARIATIONS OF I696 SCENARIO 
 #
 #one-lane (no lane-changes), smaller
