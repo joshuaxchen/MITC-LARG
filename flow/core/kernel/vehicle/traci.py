@@ -32,8 +32,8 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         KernelVehicle.__init__(self, master_kernel, sim_params)
 
-        self.__ids = []  # ids of all vehicles
-        self.__human_ids = []  # ids of human-driven vehicles
+        self.__ids = []  # ids of all vehicles 
+        self.__human_ids = []  # ids of human-driven vehicles 
         self.__controlled_ids = []  # ids of flow-controlled vehicles
         self.__controlled_lc_ids = []  # ids of flow lc-controlled vehicles
         self.__rl_ids = []  # ids of rl-controlled vehicles
@@ -70,6 +70,8 @@ class TraCIVehicle(KernelVehicle):
         self._arrived_ids = []
         self._arrived_rl_ids = []
 
+        self._delays = {}
+
         # whether or not to automatically color vehicles
         try:
             self._color_vehicles = sim_params.color_vehicles
@@ -94,6 +96,7 @@ class TraCIVehicle(KernelVehicle):
         self.num_rl_vehicles = 0
 
         self.__vehicles.clear()
+        self._delays.clear()
         for typ in vehicles.initial:
             for i in range(typ['num_vehicles']):
                 veh_id = '{}_{}'.format(typ['veh_id'], i)
@@ -103,6 +106,13 @@ class TraCIVehicle(KernelVehicle):
                 self.num_vehicles += 1
                 if typ['acceleration_controller'][0] == RLController:
                     self.num_rl_vehicles += 1
+                self._delays[veh_id] = 0
+        #print(hasattr(vehicles, '__customInflows'))
+        #if hasattr(vehicles, '__customInflows'):
+        #    self.__customInflows = vehicles.__customInflows
+        #else:
+        #    self.__customInflows = None
+        self.__customInflows = vehicles._customInflows
 
     def update(self, reset):
         """See parent class.
@@ -121,6 +131,7 @@ class TraCIVehicle(KernelVehicle):
             specifies whether the simulator was reset in the last simulation
             step
         """
+
         vehicle_obs = {}
         for veh_id in self.__ids:
             vehicle_obs[veh_id] = \
@@ -145,7 +156,7 @@ class TraCIVehicle(KernelVehicle):
 
         # add entering vehicles into the vehicles class
         for veh_id in sim_obs[tc.VAR_DEPARTED_VEHICLES_IDS]:
-            if veh_id in self.get_ids() and vehicle_obs[veh_id] is not None:
+            if veh_id in self.get_ids() and not self.__customInflows.contains(veh_id) and vehicle_obs[veh_id] is not None:
                 # this occurs when a vehicle is actively being removed and
                 # placed again in the network to ensure a constant number of
                 # total vehicles (e.g. TrafficLightGridEnv). In this case, the vehicle
@@ -171,6 +182,7 @@ class TraCIVehicle(KernelVehicle):
             self._departed_ids.clear()
             self._arrived_ids.clear()
             self._arrived_rl_ids.clear()
+            #self._delays.clear()
 
             # add vehicles from a network template, if applicable
             if hasattr(self.master_kernel.network.network,
@@ -199,6 +211,16 @@ class TraCIVehicle(KernelVehicle):
             self._num_arrived.append(len(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]))
             self._departed_ids.append(sim_obs[tc.VAR_DEPARTED_VEHICLES_IDS])
             self._arrived_ids.append(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS])
+            for veh in self._departed_ids[-1]:
+                if self.__customInflows is not None:
+                    self._delays[veh] = self.__customInflows.getCount(veh)
+                else:
+                    self._delays[veh] = 0
+            #print(self._arrived_ids[-1])
+            #print(self._delays)
+            #print(self.__ids)
+            for veh in self.__ids:
+                self._delays[veh] += 1
 
         # update the "headway", "leader", and "follower" variables
         # Since there could be multiple followers and the below defines
@@ -264,6 +286,16 @@ class TraCIVehicle(KernelVehicle):
 
         # make sure the rl vehicle list is still sorted
         self.__rl_ids.sort()
+        if self.__customInflows is not None:
+            self.__customInflows.update()
+            self.__customInflows.spawnVehicles(self.sim_step, self)
+            departed_ids = self.get_departed_ids()
+            if departed_ids != 0:
+                self.__customInflows.handleDeparted(departed_ids)
+            #    departed_ids = [self.get_type(i) for i in departed_ids]
+            #else:
+            #    departed_ids = []
+            #self.__customInflows.handleDeparted(departed_ids)
 
     def _add_departed(self, veh_id, veh_type):
         """Add a vehicle that entered the network from an inflow or reset.
@@ -449,6 +481,8 @@ class TraCIVehicle(KernelVehicle):
 
     def get_ids(self):
         """See parent class."""
+        if self.__customInflows is not None:
+            return self.__ids + self.__customInflows.getIds()
         return self.__ids
 
     def get_human_ids(self):
@@ -539,6 +573,8 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         if isinstance(veh_id, (list, np.ndarray)):
             return [self.get_speed(vehID, error) for vehID in veh_id]
+        if self.__customInflows is not None and self.__customInflows.contains(veh_id):
+            return 0
         return self.__sumo_obs.get(veh_id, {}).get(tc.VAR_SPEED, error)
 
     def get_default_speed(self, veh_id, error=-1001):
@@ -1082,8 +1118,20 @@ class TraCIVehicle(KernelVehicle):
     def set_max_speed(self, veh_id, max_speed):
         """See parent class."""
         self.kernel_api.vehicle.setMaxSpeed(veh_id, max_speed)
+
+
+    def get_time_delay(self, veh_id, error=-1001):
+        if isinstance(veh_id, (list, np.ndarray, tuple)):
+            return [self.get_time_delay(vehID, error) for vehID in veh_id]
+        if veh_id in self._delays:
+            return self._delays[veh_id]*self.sim_step
+        elif self.__customInflows is not None and self.__customInflows.contains(veh_id):
+            return self.__customInflows.getCount(veh_id)*self.sim_step
+        else:
+            return error
     
     def close(self):
         """See parent class."""
         if self.kernel_api:
             self.kernel_api.close()
+

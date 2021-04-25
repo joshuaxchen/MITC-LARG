@@ -263,8 +263,7 @@ class KernelVehicle(object):
     def get_inflow_rate(self, time_span):
         """Return the inflow rate (in veh/hr) of vehicles from the network.
 
-        This value is computed over the specified **time_span** seconds.
-        """
+        This value is computed over the specified **time_span** seconds.  """
         raise NotImplementedError
 
     def get_outflow_rate(self, time_span):
@@ -658,4 +657,7 @@ class KernelVehicle(object):
         -------
         float
         """
+        raise NotImplementedError
+
+    def get_time_delay(self, veh_id, error):
         raise NotImplementedError

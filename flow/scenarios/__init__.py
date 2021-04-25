@@ -25,6 +25,8 @@ from flow.scenarios.loop import LoopScenario
 from flow.scenarios.grid import SimpleGridScenario
 from flow.scenarios.multi_loop import MultiLoopScenario
 
+# obtain directory path
+from flow.scenarios.directory_path import scenario_dir_path 
 
 __all__ = [
     "Scenario",
