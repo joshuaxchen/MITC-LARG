@@ -221,8 +221,10 @@ def visualizer_rllib(args, seed=None):
     env_params.restart_instance = True
 
     # Inflows        
-    if env_params.additional_params.get('reset_inflow'):
-        env_params.additional_params['reset_inflow']=False
+    #if env_params.additional_params.get('reset_inflow'):
+    #    env_params.additional_params['reset_inflow']=False
+    env_params.additional_params['reset_inflow']=True
+    env_params.additional_params['inflow_range']=[0.9, 1.1]
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     
