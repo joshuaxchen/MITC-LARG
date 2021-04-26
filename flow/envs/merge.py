@@ -95,8 +95,7 @@ class MergePOEnv(Env):
         self.follower = []
 
         super().__init__(env_params, sim_params, network, simulator)
-
-        self.original_inflow = deepcopy(self.network.net_params.inflows.get())
+        self.original_inflow = deepcopy(network.net_params.inflows.get())
 
     @property
     def action_space(self):

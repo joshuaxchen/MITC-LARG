@@ -255,7 +255,10 @@ def visualizer_rllib(args, seed=None):
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     
-    # Create and register a gym+rllib env
+    # Remove previous env; Create and register a gym+rllib env
+    env_dict = gym.envs.registration.registry.env_specs.copy()
+    for env in env_dict:
+        del gym.envs.registration.registry.env_specs[env]
     create_env, env_name = make_create_env(params=flow_params, version=0, seeds_file=seed)
     register_env(env_name, create_env)
 
@@ -284,13 +287,13 @@ def visualizer_rllib(args, seed=None):
     checkpoint = result_dir + '/checkpoint_' + args.checkpoint_num
     checkpoint = checkpoint + '/checkpoint-' + args.checkpoint_num
     agent.restore(checkpoint)
-
+    
     if hasattr(agent, "local_evaluator") and \
             os.environ.get("TEST_FLAG") != 'True':
         env = agent.local_evaluator.env
     else:
         env = gym.make(env_name)
-
+    
     if multiagent:
         rets = {}
         # map the agent id to its policy
@@ -521,7 +524,7 @@ def visualizer_rllib(args, seed=None):
 
     # terminate the environment
     env.unwrapped.terminate()
-
+    
     # if prompted, convert the emission file into a csv file
     if args.gen_emission:
         time.sleep(0.1)

@@ -138,7 +138,7 @@ def make_create_env(params, version=0, render=None, seeds_file=None):
             entry_point = env_loc + ':{}'.format(params["env_name"])
         else:
             entry_point = params["env_name"].__module__ + ':' + params["env_name"].__name__
-
+        
         try:
             register(
                 id=env_name,
