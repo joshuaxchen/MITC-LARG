@@ -339,7 +339,7 @@ class MergePOEnv(Env):
         additional_params = self.env_params.additional_params
         if additional_params.get("reset_inflow"):
             #assume we only pass scale 0.9-1.1 for example
-            print("Randomized Inflow configuration")
+            #print("Randomized Inflow configuration")
             try:
                 inflow_range = additional_params["inflow_range"]
             except:
@@ -347,7 +347,11 @@ class MergePOEnv(Env):
                 inflow_range = [1.0]
             total_inflows = self.network.net_params.inflows.get()
             for i in range(len(total_inflows)):
-                scale = np.random.uniform(min(inflow_range), max(inflow_range))
+                if len(inflow_range) <= 2:
+                    scale = np.random.uniform(min(inflow_range), max(inflow_range))
+                else:
+                    #print("Random Choice")
+                    scale = np.random.choice(inflow_range)
                 total_inflows[i]['vehsPerHour'] = int(scale * self.original_inflow[i]['vehsPerHour'])
         
         if additional_params.get("handset_inflow"):
@@ -358,8 +362,8 @@ class MergePOEnv(Env):
             assert len(inflows_set) == len(total_inflows)
             for i in range(len(total_inflows)):
                 total_inflows[i]['vehsPerHour'] = inflows_set[i]
-        print(self.network.net_params.inflows.get())
-        print(self.original_inflow)
+        #print(self.network.net_params.inflows.get())
+        #print(self.original_inflow)
 
         return super().reset()
 
