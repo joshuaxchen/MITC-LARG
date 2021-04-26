@@ -1089,7 +1089,7 @@ class CustomInflows:
         new_inflow = {
             "name": "%s_%d" % (name, len(self.__flows)),
             "veh_types": list(veh_types),
-            "p": veh_probs,
+            "p": veh_probs, # probability for each vehicle type
             "edge":edge,
             "vehs_per_hour":vehs_per_hour,
             "lane":depart_lane,
@@ -1104,15 +1104,20 @@ class CustomInflows:
     def spawnVehicles(self, dt, api):
         for i, f in enumerate(self.__flows):
             num = f["spawnNum"]+dt/60/60*f["vehs_per_hour"]
-            f["spawnNum"] = num-int(num)
-            num = int(num)
+            # vehs_per_hour at each second may not always give you an integer.
+            # Hence we use apawnNum to store the remaining portion of
+            # vehicles that have not been added.
+            f["spawnNum"] = num-int(num) 
+            num = int(num) # The number of vehicles to be added at this time step.
             toSpawn = np.random.choice(f["veh_types"], p=f["p"], size=num)
             for v in toSpawn:
                 name = str(v) + str(np.random.randint(100000000000))
                 api.add(name, v, 
                 f["edge"], 0, f["lane"], f["speed"])
-                self.__counts[name] = 0
-
+                # __counts is used to track the life time of each spawned
+                # vehicle, which is named by the vehicle type and a random
+                # integer.
+                self.__counts[name] = 0 
     def getIds(self):
         return list(self.__counts.keys())
     def update(self):

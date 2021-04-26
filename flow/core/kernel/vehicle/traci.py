@@ -211,6 +211,7 @@ class TraCIVehicle(KernelVehicle):
             self._num_arrived.append(len(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]))
             self._departed_ids.append(sim_obs[tc.VAR_DEPARTED_VEHICLES_IDS])
             self._arrived_ids.append(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS])
+            # TODO: is the last list in self._departed_ids the custom inflow?
             for veh in self._departed_ids[-1]:
                 if self.__customInflows is not None:
                     self._delays[veh] = self.__customInflows.getCount(veh)
@@ -219,6 +220,7 @@ class TraCIVehicle(KernelVehicle):
             print(self._arrived_ids[-1])
             print(self._delays)
             print(self.__ids)
+            # TODO: is the custome inflow not included in self.__ids?
             for veh in self.__ids:
                 self._delays[veh] += 1
 

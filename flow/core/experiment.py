@@ -109,14 +109,18 @@ class Experiment:
         vels = []
         mean_vels = []
         std_vels = []
+        # TODO: this variable seems not used.
         vels_each_veh = []
         outflows = []
         inflows = []
         time_delays = []
         for i in range(num_runs):
+            # vel stands for 'average velocity' at each time step
             vel = np.zeros(num_steps)
             logging.info("Iter #" + str(i))
+            # ret stands for total reward, which is defined by env
             ret = 0
+            # ret_list stores the list of reward at every time step
             ret_list = []
             state = self.env.reset()
             time_delay = []
