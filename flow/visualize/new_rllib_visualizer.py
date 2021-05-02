@@ -142,27 +142,28 @@ def visualizer_rllib(args, seed=None):
 
     # replace the project path to the scenario xml, if the result to be
     # visualized is generated from another project.
-    net_params=flow_params['net']
-    template_dict=net_params.template
-    feature_path = 'flow/scenarios/'
-    # fix the network xml
-    net_path=template_dict['net']
-    if feature_path in net_path:
-        occur_index = net_path.rindex(feature_path)
-        new_net_path = os.path.join(scenario_dir_path, net_path[occur_index + len(feature_path):])
-    template_dict['net']=new_net_path
-    # fix the route xml
-    rou_path_list=template_dict['rou']
-    new_rou_path_list=[]
-    for path in rou_path_list:
-        if feature_path in path:
-            occur_index=path.rindex(feature_path)
-            new_path=os.path.join(scenario_dir_path, path[occur_index+len(feature_path):])
-            new_rou_path_list.append(new_path)
-    template_dict['rou']=new_rou_path_list
+    try:
+        net_params=flow_params['net']
+        template_dict=net_params.template
+        feature_path = 'flow/scenarios/'
+        # fix the network xml
+        net_path=template_dict['net']
+        if feature_path in net_path:
+            occur_index = net_path.rindex(feature_path)
+            new_net_path = os.path.join(scenario_dir_path, net_path[occur_index + len(feature_path):])
+        template_dict['net']=new_net_path
+        # fix the route xml
+        rou_path_list=template_dict['rou']
+        new_rou_path_list=[]
+        for path in rou_path_list:
+            if feature_path in path:
+                occur_index=path.rindex(feature_path)
+                new_path=os.path.join(scenario_dir_path, path[occur_index+len(feature_path):])
+                new_rou_path_list.append(new_path)
+        template_dict['rou']=new_rou_path_list
+    except:
+        pass
 
-    #flow_params['env'].additional_params["use_seeds"]=args.use_seeds
-#    print(args.use_seeds)
     seed_tmp = None
     if seed:
         with open(seed, 'rb') as f:
@@ -247,12 +248,17 @@ def visualizer_rllib(args, seed=None):
     env_params.restart_instance = True
 
     # Inflows        
-    if env_params.additional_params.get('reset_inflow'):
-        env_params.additional_params['reset_inflow']=False
+    #if env_params.additional_params.get('reset_inflow'):
+    #    env_params.additional_params['reset_inflow']=False
+    env_params.additional_params['reset_inflow']=True
+    env_params.additional_params['inflow_range']=[0.9, 1.1]
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     
-    # Create and register a gym+rllib env
+    # Remove previous env; Create and register a gym+rllib env
+    env_dict = gym.envs.registration.registry.env_specs.copy()
+    for env in env_dict:
+        del gym.envs.registration.registry.env_specs[env]
     create_env, env_name = make_create_env(params=flow_params, version=0, seeds_file=seed)
     register_env(env_name, create_env)
 
@@ -281,13 +287,13 @@ def visualizer_rllib(args, seed=None):
     checkpoint = result_dir + '/checkpoint_' + args.checkpoint_num
     checkpoint = checkpoint + '/checkpoint-' + args.checkpoint_num
     agent.restore(checkpoint)
-
+    
     if hasattr(agent, "local_evaluator") and \
             os.environ.get("TEST_FLAG") != 'True':
         env = agent.local_evaluator.env
     else:
         env = gym.make(env_name)
-
+    
     if multiagent:
         rets = {}
         # map the agent id to its policy
@@ -518,7 +524,7 @@ def visualizer_rllib(args, seed=None):
 
     # terminate the environment
     env.unwrapped.terminate()
-
+    
     # if prompted, convert the emission file into a csv file
     if args.gen_emission:
         time.sleep(0.1)
