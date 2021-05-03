@@ -250,8 +250,9 @@ def visualizer_rllib(args, seed=None):
     # Inflows        
     #if env_params.additional_params.get('reset_inflow'):
     #    env_params.additional_params['reset_inflow']=False
-    env_params.additional_params['reset_inflow']=True
-    env_params.additional_params['inflow_range']=[0.9, 1.1]
+    if args.random_inflow:
+        env_params.additional_params['reset_inflow']=True
+        env_params.additional_params['inflow_range']=[0.9, 1.1]
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     
@@ -627,6 +628,7 @@ def create_parser():
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+    parser.add_argument('--random_inflow', action='store_true')
     return parser
 
 from subprocess import check_output
