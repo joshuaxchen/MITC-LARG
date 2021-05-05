@@ -35,13 +35,13 @@ additional_net_params["pre_merge_length"] = 500
 
 # RL vehicles constitute 5% of the total number of vehicles
 vehicles = VehicleParams()
-vehicles.add(
-    veh_id="human",
-    acceleration_controller=(SimCarFollowingController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
-    ),
-    num_vehicles=0)
+#vehicles.add(
+#    veh_id="human",
+#    acceleration_controller=(SimCarFollowingController, {}),
+#    car_following_params=SumoCarFollowingParams(
+#        speed_mode=9,
+#    ),
+#    num_vehicles=0)
 vehicles.add(
     veh_id="rl",
     acceleration_controller=(RLController, {}),
@@ -53,12 +53,12 @@ vehicles.add(
 # Vehicles are introduced from both sides of merge, with RL vehicles entering
 # from the highway portion as well
 inflow = InFlows()
-inflow.add(
-    veh_type="human",
-    edge="inflow_highway",
-    vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
-    depart_lane="free",
-    depart_speed=10)
+#inflow.add(
+#    veh_type="human",
+#    edge="inflow_highway",
+#    vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
+#    depart_lane="free",
+#    depart_speed=10)
 inflow.add(
     veh_type="rl",
     edge="inflow_highway",
