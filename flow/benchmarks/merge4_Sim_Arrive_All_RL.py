@@ -24,7 +24,7 @@ FLOW_RATE = 2000
 # percent of autonomous vehicles
 RL_PENETRATION = 1
 # num_rl term (see ADDITIONAL_ENV_PARAMs)
-NUM_RL = 100
+NUM_RL = 50
 
 # We consider a highway network with an upstream merging lane producing
 # shockwaves
