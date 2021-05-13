@@ -18,5 +18,5 @@ class Controller(BaseController):
             return 1
         else:
             cur_vel = env.k.vehicle.get_speed(self.veh_id)
-            return (8-cur_vel)
+            return (12-cur_vel)
 
