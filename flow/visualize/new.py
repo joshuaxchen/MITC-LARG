@@ -137,8 +137,6 @@ def visualizer_rllib(args, seed=None):
     config['num_workers'] = 0
 
     flow_params = get_flow_params(config)
-    #flow_params['env'].additional_params["use_seeds"]=args.use_seeds
-#    print(args.use_seeds)
     seed_tmp = None
     if seed:
         with open(seed, 'rb') as f:
@@ -156,8 +154,6 @@ def visualizer_rllib(args, seed=None):
         #setattr(sim_params, 'seed', seed_tmp['sumo_seed'])
         sim_params.seed = int(int(seed_tmp['sumo_seed'])/10**6)
         print(sim_params.seed)
-    #import IPython
-    #IPython.embed()
     # Determine agent and checkpoint
     config_run = config['env_config']['run'] if 'run' in config['env_config'] \
         else None
@@ -214,16 +210,26 @@ def visualizer_rllib(args, seed=None):
     #    input()
     #else:
     #    flow_params["env"].additional_params["use_seeds"] = args.use_seeds
+    #sim_params.save_state_time=100
+    #sim_params.save_state_file='states.xml'
+    sim_params.load_state='states.xml'
     if args.horizon:
         config['horizon'] = args.horizon
         flow_params['env'].horizon = args.horizon
+    
+    env_params = flow_params['env']
+    env_params.restart_instance = True
 
+    # Inflows        
+    if env_params.additional_params.get('reset_inflow'):
+        env_params.additional_params['reset_inflow']=False
+    if args.handset_inflow:
+        env_params.additional_params['handset_inflow']=args.handset_inflow
+    
     # Create and register a gym+rllib env
-    register_time = time.time()
     create_env, env_name = make_create_env(params=flow_params, version=0, seeds_file=seed)
     register_env(env_name, create_env)
-    register_time = time.time() - register_time
-    print("Register Time:", register_time)
+
     # check if the environment is a single or multiagent environment, and
     # get the right address accordingly
     # single_agent_envs = [env for env in dir(flow.envs)
@@ -236,8 +242,7 @@ def visualizer_rllib(args, seed=None):
 
     # Start the environment with the gui turned on and a path for the
     # emission file
-    env_params = flow_params['env']
-    env_params.restart_instance = True#False
+       
     if args.evaluate:
         env_params.evaluate = True
 
@@ -250,15 +255,13 @@ def visualizer_rllib(args, seed=None):
     checkpoint = result_dir + '/checkpoint_' + args.checkpoint_num
     checkpoint = checkpoint + '/checkpoint-' + args.checkpoint_num
     agent.restore(checkpoint)
-    
-    create_time = time.time()
+
     if hasattr(agent, "local_evaluator") and \
             os.environ.get("TEST_FLAG") != 'True':
         env = agent.local_evaluator.env
     else:
         env = gym.make(env_name)
-    create_time = time.time() - create_time
-    print("Create time:", create_time)
+
     if multiagent:
         rets = {}
         # map the agent id to its policy
@@ -288,11 +291,8 @@ def visualizer_rllib(args, seed=None):
     else:
         use_lstm = False
 
-    restart_time = time.time()
     env.restart_simulation(
         sim_params=sim_params, render=sim_params.render)
-    restart_time = time.time() - restart_time
-    print("Restart Time:", restart_time)
 
     # Simulate and collect metrics
     final_outflows = []
@@ -341,7 +341,6 @@ def visualizer_rllib(args, seed=None):
     states = []
     times = []
     WARMUP = args.warmup
-    run_time = time.time()
     for i in range(args.num_rollouts):
         vel = []
         time_to_exit = 0
@@ -436,65 +435,64 @@ def visualizer_rllib(args, seed=None):
                     i, ret, agent_id))
         else:
             print('Round {}, Return: {}'.format(i, ret))
-    run_time = time.time() - run_time
+
     print('==== Summary of results ====')
-    print("Run Time: ", run_time)
     print("Return:")
     env.close()
-    return_reward = 0
     if multiagent:
+        mean_rewards = []
         for agent_id, rew in rets.items():
             print('For agent', agent_id)
             print(rew)
             print('Average, std return: {}, {} for agent {}'.format(
                 np.mean(rew), np.std(rew), agent_id))
-            return_reward = np.mean(rew)
+            mean_rewards.extend(rew)
+        if len(mean_rewards) > 0:
+            mean_reward = np.mean(mean_rewards)
+        else:
+            mean_reward = 0
     else:
         print(rets)
-        print('Average, std: {:.2f}, {:.5f}'.format(
+        print('Average, std: {:.2f}, {:.2f}'.format(
             np.mean(rets), np.std(rets)))
-        return_reward = np.mean(rets)
-    
+        mean_reward = np.mean(rets)
+
     print("\nSpeed, mean (m/s):")
     print(mean_speed)
-    print('Average, std: {:.2f}, {:.5f}'.format(np.mean(mean_speed), np.std(
+    print('Average, std: {:.2f}, {:.2f}'.format(np.mean(mean_speed), np.std(
         mean_speed)))
     print("\nSpeed, std (m/s):")
     print(std_speed)
-    print('Average, std: {:.2f}, {:.5f}'.format(np.mean(std_speed), np.std(
+    print('Average, std: {:.2f}, {:.2f}'.format(np.mean(std_speed), np.std(
         std_speed)))
 
     # Compute arrival rate of vehicles in the last 500 sec of the run
     print("\nOutflows (veh/hr):")
     print(final_outflows)
-    print('Average, std: {:.2f}, {:.5f}'.format(np.mean(final_outflows),
+    print('Average, std: {:.2f}, {:.2f}'.format(np.mean(final_outflows),
                                         np.std(final_outflows)))
     # Compute departure rate of vehicles in the last 500 sec of the run
     print("Inflows (veh/hr):")
     print(final_inflows)
-    print('Average, std: {:.2f}, {:.5f}'.format(np.mean(final_inflows),
+    print('Average, std: {:.2f}, {:.2f}'.format(np.mean(final_inflows),
                                         np.std(final_inflows)))
     # Compute throughput efficiency in the last 500 sec of the
     print("Throughput efficiency (veh/hr):")
     print(throughput_efficiency)
-    print('Average, std: {:.2f}, {:.5f}'.format(np.mean(throughput_efficiency),
+    print('Average, std: {:.2f}, {:.2f}'.format(np.mean(throughput_efficiency),
                                         np.std(throughput_efficiency)))
     print("Time Delay")
     print(times)
-    print("Time for certain number of vehicles to exit {:.2f},{:.5f}".format((np.mean(times)),np.std(times)))
+    print("Time for certain number of vehicles to exit {:.2f},{:.2f}".format((np.mean(times)),np.std(times)))
 
     if args.output:
-        np.savetxt(args.output, [return_reward, mean_speed, std_speed,final_inflows, final_outflows,times])
+        np.savetxt(args.output, [mean_speed, std_speed,final_inflows, final_outflows,times])
     if SUMMARY_PLOTS:
       generateHtmlplots(actions, rewards, states)
-    
+
     # terminate the environment
     env.unwrapped.terminate()
-    env.terminate()
-    # Deleting the env in order to remove sumo process
-    del env
-    del evaluation_config
-    
+
     # if prompted, convert the emission file into a csv file
     if args.gen_emission:
         time.sleep(0.1)
@@ -531,7 +529,10 @@ def visualizer_rllib(args, seed=None):
         os_cmd += " -pix_fmt yuv420p " + dirs[-1] + ".mp4"
         os_cmd += "&& cp " + dirs[-1] + ".mp4 " + save_dir + "/"
         os.system(os_cmd)
-    return return_reward, mean_speed, final_inflows, final_outflows 
+    mean_speed, mean_inflows, mean_outflows = np.mean(mean_speed), np.mean(final_inflows), np.mean(final_outflows)
+    if multiagent:
+        return mean_speed, final_inflows, final_outflows, mean_reward
+    return mean_speed, final_inflows, final_outflows, mean_reward
 
 def create_parser():
     """Create the parser to capture CLI arguments."""
@@ -543,6 +544,7 @@ def create_parser():
 
     # required input parameters
     parser.add_argument(
+
         'result_dir', type=str, help='Directory containing results')
     parser.add_argument('checkpoint_num', type=str, help='Checkpoint number.')
 
@@ -592,6 +594,7 @@ def create_parser():
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
+    parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     return parser
 
 from subprocess import check_output
@@ -601,44 +604,40 @@ def get_pid(name):
     
 if __name__ == '__main__':
     parser = create_parser()
-    from time import sleep
-    import time
     args = parser.parse_args()
     Speed = []
     Inflow = []
     Outflow = []
     Reward = []
-    init_time = time.time()
-    ray.init(num_cpus=1, object_store_memory=1048*1024*1024)
-    #ray.init(local_mode=True) 
-    init_time = time.time() - init_time
-    print("Initialization used ", init_time,"seconds")
-
+    ray.init(
+    num_cpus=1,
+    object_store_memory=1024*1024*1024)
     for i in range(len(seed_filename)):
 
         seed = seed_filename[i]
         print("Using seed: ", seed)
-        single_run_time = time.time()
-        reward, speed, inflow, outflow = visualizer_rllib(args, seed)
-        single_run_time = time.time()-single_run_time
+        speed, inflow, outflow, reward = visualizer_rllib(args, seed)
         Speed.append(speed)
         Inflow.append(inflow)
         Outflow.append(outflow)
         Reward.append(reward)
-        print("Round ",i+1, ":", speed, inflow, outflow)
+        print("Round ",i+1, ":", speed, inflow, outflow, reward)
         print("Moving Stats at Round ", i+1, ":")
-        print("Speed: ", np.mean(Speed), np.std(Speed))
-        print("Inflow: ", np.mean(Inflow), np.std(Inflow))
-        print("Outflow: ", np.mean(Outflow), np.std(Outflow))
-        print("Reward: ", np.mean(Reward), np.std(Reward))
-        print("Time this run: ", single_run_time)
-        '''
-        if i%1 ==0 and i!=99:
-            name = 'sumo'
-            pids = get_pid(name)
-            for pid in pids:
-                pid = int(pid)
-                #print("Killing", pid)
-                if pid > 0:
-                    os.killpg(pid, signal.SIGKILL)
-        '''
+        print("Reward: {:.2f}, {:.2f}".format(np.mean(Reward), np.std(Reward)))
+        print("Speed: {:.2f}, {:.2f}".format(np.mean(Speed), np.std(Speed)))
+        print("Inflow: {:.2f}, {:.2f}".format(np.mean(Inflow), np.std(Inflow)))
+        print("Outflow: {:.2f}, {:.2f}".format(np.mean(Outflow), np.std(Outflow)))
+    '''
+    ray.shutdown()
+    _register_all() #Fix reinit error, this does not happen in ray 0.9.0, only fix for ray 0.8.5
+        
+    if i%1 ==0 and i!=99:
+        name = 'sumo'
+        pids = get_pid(name)
+        #pid =  int(pid.split('\\')[0])
+        for pid in pids:
+            pid = int(pid)
+            print("Killing", pid)
+            if pid > 0:
+                os.kill(pid, signal.SIGKILL)
+    '''

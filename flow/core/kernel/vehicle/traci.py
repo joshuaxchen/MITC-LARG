@@ -217,10 +217,9 @@ class TraCIVehicle(KernelVehicle):
                     self._delays[veh] = self.__customInflows.getCount(veh)
                 else:
                     self._delays[veh] = 0
-            print(self._arrived_ids[-1])
-            print(self._delays)
-            print(self.__ids)
-            # TODO: is the custome inflow not included in self.__ids?
+            #print(self._arrived_ids[-1])
+            #print(self._delays)
+            #print(self.__ids)
             for veh in self.__ids:
                 self._delays[veh] += 1
 

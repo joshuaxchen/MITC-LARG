@@ -633,52 +633,69 @@ class Env(gym.Env):
         # perform shuffling (if requested)
         elif self.initial_config.shuffle:
             self.setup_initial_state()
+        
+        # Load vehicles from saved states or not
+        try:
+            load_state = self.sim_params.load_state
+            for veh_id in list(self.k.vehicle.get_ids()):
+                self.k.vehicle.remove(veh_id, from_sumo=False)
 
-        # clear all vehicles from the network and the vehicles class
-        if self.simulator == 'traci':
-            for veh_id in self.k.kernel_api.vehicle.getIDList():  # FIXME: hack
+            for veh_id in self.k.kernel_api.vehicle.getIDList():
+                self.k.vehicle._add_departed(veh_id, "human")
+            #from IPython import embed; embed()
+            # Run assertions to make sure the operation was successful.
+            assert self.k.vehicle.num_vehicles == \
+                   len(self.k.kernel_api.vehicle.getIDList())
+            assert set(self.k.vehicle.get_ids()) == \
+                   set(self.k.kernel_api.vehicle.getIDList()), \
+                   list(set(self.k.vehicle.get_ids()) -
+                        set(self.k.kernel_api.vehicle.getIDList()))
+        except:
+            # clear all vehicles from the network and the vehicles class
+            if self.simulator == 'traci':
+                for veh_id in self.k.kernel_api.vehicle.getIDList():  # FIXME: hack
+                    try:
+                        self.k.vehicle.remove(veh_id)
+                    except (FatalTraCIError, TraCIException):
+                        print(traceback.format_exc())
+
+            # clear all vehicles from the network and the vehicles class
+            # FIXME (ev, ak) this is weird and shouldn't be necessary
+            for veh_id in list(self.k.vehicle.get_ids()):
+                # do not try to remove the vehicles from the network in the first
+                # step after initializing the network, as there will be no vehicles
+                if self.step_counter == 0:
+                    continue
                 try:
                     self.k.vehicle.remove(veh_id)
                 except (FatalTraCIError, TraCIException):
-                    #print(traceback.format_exc())
-                    pass
-        # clear all vehicles from the network and the vehicles class
-        # FIXME (ev, ak) this is weird and shouldn't be necessary
-        for veh_id in list(self.k.vehicle.get_ids()):
-            # do not try to remove the vehicles from the network in the first
-            # step after initializing the network, as there will be no vehicles
-            if self.step_counter == 0:
-                continue
-            try:
-                self.k.vehicle.remove(veh_id)
-            except (FatalTraCIError, TraCIException):
-                print("Error during start: {}".format(traceback.format_exc()))
-        # reintroduce the initial vehicles to the network
-        for veh_id in self.initial_ids:
-            type_id, edge, lane_index, pos, speed = \
-                self.initial_state[veh_id]
+                    print("Error during start: {}".format(traceback.format_exc()))
+            # reintroduce the initial vehicles to the network
+            for veh_id in self.initial_ids:
+                type_id, edge, lane_index, pos, speed = \
+                    self.initial_state[veh_id]
 
-            try:
-                self.k.vehicle.add(
-                    veh_id=veh_id,
-                    type_id=type_id,
-                    edge=edge,
-                    lane=lane_index,
-                    pos=pos,
-                    speed=speed)
-            except (FatalTraCIError, TraCIException):
-                # if a vehicle was not removed in the first attempt, remove it
-                # now and then reintroduce it
-                self.k.vehicle.remove(veh_id)
-                if self.simulator == 'traci':
-                    self.k.kernel_api.vehicle.remove(veh_id)  # FIXME: hack
-                self.k.vehicle.add(
-                    veh_id=veh_id,
-                    type_id=type_id,
-                    edge=edge,
-                    lane=lane_index,
-                    pos=pos,
-                    speed=speed)
+                try:
+                    self.k.vehicle.add(
+                        veh_id=veh_id,
+                        type_id=type_id,
+                        edge=edge,
+                        lane=lane_index,
+                        pos=pos,
+                        speed=speed)
+                except (FatalTraCIError, TraCIException):
+                    # if a vehicle was not removed in the first attempt, remove it
+                    # now and then reintroduce it
+                    self.k.vehicle.remove(veh_id)
+                    if self.simulator == 'traci':
+                        self.k.kernel_api.vehicle.remove(veh_id)  # FIXME: hack
+                    self.k.vehicle.add(
+                        veh_id=veh_id,
+                        type_id=type_id,
+                        edge=edge,
+                        lane=lane_index,
+                        pos=pos,
+                        speed=speed)
 
         # advance the simulation in the simulator by one step
         self.k.simulation.simulation_step()
