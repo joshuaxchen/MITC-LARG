@@ -5,6 +5,8 @@ from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
 import collections
 import os
+from copy import deepcopy
+
 ADDITIONAL_ENV_PARAMS = {
     # maximum acceleration of autonomous vehicles
     'max_accel': 1,
@@ -68,6 +70,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                     'Environment parameter "{}" not supplied'.format(p))
 
         super().__init__(env_params, sim_params, network, simulator)
+        self.original_inflow = deepcopy(network.net_params.inflows.get())
+        self._main_inflow = None
+        self._merge_inflow = None
 
     @property
     def observation_space(self):

@@ -197,6 +197,45 @@ class MultiEnv(MultiAgentEnv, Env):
         #sim_params.logs_path=logs_path
         with open(logs_path + "/seeds.pkl", 'wb') as handle:
             pickle.dump(seeds, handle)
+        
+        # Reset Inflow
+        additional_params = self.env_params.additional_params
+        if additional_params.get("reset_inflow"):
+            #assume we only pass scale 0.9-1.1 for example
+            #print("Randomized Inflow configuration")
+            try:
+                inflow_range = additional_params["inflow_range"]
+                print("Inflow Range:", inflow_range)
+            except:
+                # Did not specify the inflow range
+                inflow_range = [1.0]
+            total_inflows = self.network.net_params.inflows.get()
+            for i in range(len(total_inflows)):
+                if len(inflow_range) <= 2:
+                    scale = random.uniform(min(inflow_range), max(inflow_range))
+                else:
+                    #print("Random Choice")
+                    scale = random.choice(inflow_range)
+                total_inflows[i]['vehsPerHour'] = int(scale * self.original_inflow[i]['vehsPerHour'])
+        
+        if additional_params.get("handset_inflow"):
+            total_inflows = self.network.net_params.inflows.get()
+            print("Handset Inflow configuration, \
+                    Notice: Only Use it when evaluation")
+            inflows_set = additional_params.get("handset_inflow")
+            assert len(inflows_set) == len(total_inflows)
+            for i in range(len(total_inflows)):
+                total_inflows[i]['vehsPerHour'] = inflows_set[i]
+        print(self.network.net_params.inflows.get())
+        print(self.original_inflow)
+        self._main_inflow = 0.0
+        self._merge_inflow = 0.0
+        total_inflows = self.network.net_params.inflows.get()
+        for tf in total_inflows:
+            if tf['departSpeed'] <= 7.5:
+                self._merge_inflow += tf['vehsPerHour']
+            else:
+                self._main_inflow += tf['vehsPerHour']
 
         # reset the time counter
         self.time_counter = 0
