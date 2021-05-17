@@ -6,4 +6,4 @@ class Controller(BaseController):
         super().__init__(veh_id, car_following_params)
         
     def get_accel(self, env):
-        return 1
+        return 1000
