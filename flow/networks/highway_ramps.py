@@ -124,13 +124,14 @@ class HighwayRampsNetwork(Network):
             "id": "highway_{}".format(i),
             "x": self.nodes_pos[i],
             "y": 0,
-            "radius": 10
+            "radius": 10,
+            'type':'priority'
         } for i in range(len(self.nodes_pos))]
 
         nodes_on_ramps = [{
             "id": "on_ramp_{}".format(i),
             "x": x + self.on_ramps_length * cos(self.angle_on_ramps),
-            "y": self.on_ramps_length * sin(self.angle_on_ramps)
+            "y": self.on_ramps_length * sin(self.angle_on_ramps),
         } for i, x in enumerate(self.on_ramps_pos)]
 
         nodes_off_ramps = [{
@@ -156,7 +157,8 @@ class HighwayRampsNetwork(Network):
             "type": "on_ramp",
             "from": "on_ramp_{}".format(i),
             "to": "highway_{}".format(self.highway_pos[x]),
-            "length": self.on_ramps_length
+            "length": self.on_ramps_length,
+            'priority':5
         } for i, x in enumerate(self.on_ramps_pos)]
 
         off_ramps_edges = [{
