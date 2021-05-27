@@ -31,9 +31,8 @@ from copy import deepcopy
 
 EXAMPLE_USAGE = """
 example usage:
-    python xxxx.py --attr --value 
+    python xxxx.py --attr value
 """
-
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
@@ -84,7 +83,6 @@ additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 
 
 # CREATE VEHICLE TYPES AND INFLOWS
-
 vehicles = VehicleParams()
 inflows = InFlows()
 

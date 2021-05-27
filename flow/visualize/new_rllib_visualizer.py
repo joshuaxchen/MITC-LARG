@@ -258,6 +258,8 @@ def visualizer_rllib(args, seed=None):
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     # AV Penetration
+    if args.handset_avp:
+        env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     
     # Remove previous env; Create and register a gym+rllib env
     env_dict = gym.envs.registration.registry.env_specs.copy()
