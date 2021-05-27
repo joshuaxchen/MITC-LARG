@@ -3,9 +3,10 @@ import numpy as np
 from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
-from flow.core.params import InFlows
 import collections
 import os
+from copy import deepcopy
+
 ADDITIONAL_ENV_PARAMS = {
     # maximum acceleration of autonomous vehicles
     'max_accel': 1,
@@ -69,6 +70,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                     'Environment parameter "{}" not supplied'.format(p))
 
         super().__init__(env_params, sim_params, network, simulator)
+        self.original_inflow = deepcopy(network.net_params.inflows.get())
+        self._main_inflow = None
+        self._merge_inflow = None
 
     @property
     def observation_space(self):
@@ -203,38 +207,6 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             follow_id = self.k.vehicle.get_follower(rl_id)
             if follow_id:
                 self.k.vehicle.set_observed(follow_id)
-    def reset(self):
-        """ See parent class.
-
-        In addition, a  few variables that are specific to this class are
-        emptied before they are used by the new rollout.
-            
-        """
-        if additional_params.get("handset_avp"):
-            inflow = InFlows()
-            MERGE_RATE=200
-            FLOW_RATE=2000
-            avp=additional_params.get("handset_avp")
-            if 1-avp>0:
-                inflow.add(
-                    veh_type="human",
-                    edge="inflow_highway",
-                    vehs_per_hour=(1 - avp) * FLOW_RATE,
-                    depart_lane="free",
-                    depart_speed=10)
-            if avp>0:
-                inflow.add(
-                    veh_type="rl",
-                    edge="inflow_highway",
-                    vehs_per_hour=avp * FLOW_RATE,
-                    depart_lane="free",
-                    depart_speed=10)
-            inflow.add(
-                veh_type="human",
-                edge="inflow_merge",
-                vehs_per_hour=MERGE_RATE,
-                depart_lane="free",
-                depart_speed=7.5)
 
 class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
     def __init__(self, env_params, sim_params, network, simulator='traci'):

@@ -254,7 +254,10 @@ def visualizer_rllib(args, seed=None):
     #    env_params.additional_params['reset_inflow']=False
     if args.random_inflow:
         env_params.additional_params['reset_inflow']=True
-        env_params.additional_params['inflow_range']=[0.9, 1.1]
+        #env_params.additional_params['inflow_range']=[0.9, 1.1]
+        #env_params.additional_params['inflow_range']=[0.7, 1.3]
+        env_params.additional_params['inflow_range']=[0.5, 1.5]
+
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
     # AV Penetration
@@ -378,11 +381,15 @@ def visualizer_rllib(args, seed=None):
     rewards = []
     states = []
     times = []
+    info = {}; info['main_inflow']=[]; info['merge_inflow']=[]
     WARMUP = args.warmup
     for i in range(args.num_rollouts):
         vel = []
         time_to_exit = 0
         state = env.reset()
+        #get inflow setting and log into info here
+        info['main_inflow']=env._main_inflow
+        info['merge_inflow']=env._merge_inflow
         if multiagent:
             ret = {key: [0] for key in rets.keys()}
         else:
@@ -523,8 +530,8 @@ def visualizer_rllib(args, seed=None):
     print(times)
     print("Time for certain number of vehicles to exit {:.2f},{:.2f}".format((np.mean(times)),np.std(times)))
 
-    if args.output:
-        np.savetxt(args.output, [mean_speed, std_speed,final_inflows, final_outflows,times])
+    #if args.output:
+    #    np.savetxt(args.output, [mean_speed, std_speed,final_inflows, final_outflows,times])
     if SUMMARY_PLOTS:
       generateHtmlplots(actions, rewards, states)
 
@@ -569,8 +576,8 @@ def visualizer_rllib(args, seed=None):
         os.system(os_cmd)
     mean_speed, mean_inflows, mean_outflows = np.mean(mean_speed), np.mean(final_inflows), np.mean(final_outflows)
     if multiagent:
-        return mean_speed, final_inflows, final_outflows, mean_reward
-    return mean_speed, final_inflows, final_outflows, mean_reward
+        return mean_speed, final_inflows, final_outflows, mean_reward, info
+    return mean_speed, final_inflows, final_outflows, mean_reward, info
 
 def create_parser():
     """Create the parser to capture CLI arguments."""
@@ -649,10 +656,13 @@ def get_pid(name):
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
+    import json
     Speed = []
     Inflow = []
     Outflow = []
     Reward = []
+    MainInflow = []
+    MergeInflow = []
     ray.init(
     num_cpus=1,
     object_store_memory=1024*1024*1024)
@@ -660,28 +670,28 @@ if __name__ == '__main__':
 
         seed = seed_filename[i]
         print("Using seed: ", seed)
-        speed, inflow, outflow, reward = visualizer_rllib(args, seed)
+        speed, inflow, outflow, reward, info = visualizer_rllib(args, seed)
         Speed.append(speed)
         Inflow.append(inflow)
-        Outflow.append(outflow)
+        Outflow.append(np.mean(outflow))
         Reward.append(reward)
+        if 'main_inflow' in info.keys():
+            MainInflow.append(info['main_inflow'])
+        if 'merge_inflow' in info.keys():
+            MergeInflow.append(info['merge_inflow'])
         print("Round ",i+1, ":", speed, inflow, outflow, reward)
         print("Moving Stats at Round ", i+1, ":")
         print("Reward: {:.2f}, {:.2f}".format(np.mean(Reward), np.std(Reward)))
         print("Speed: {:.2f}, {:.2f}".format(np.mean(Speed), np.std(Speed)))
         print("Inflow: {:.2f}, {:.2f}".format(np.mean(Inflow), np.std(Inflow)))
         print("Outflow: {:.2f}, {:.2f}".format(np.mean(Outflow), np.std(Outflow)))
-    '''
-    ray.shutdown()
-    _register_all() #Fix reinit error, this does not happen in ray 0.9.0, only fix for ray 0.8.5
-        
-    if i%1 ==0 and i!=99:
-        name = 'sumo'
-        pids = get_pid(name)
-        #pid =  int(pid.split('\\')[0])
-        for pid in pids:
-            pid = int(pid)
-            print("Killing", pid)
-            if pid > 0:
-                os.kill(pid, signal.SIGKILL)
-    '''
+        print("MainInflow Setting: {}".format(info['main_inflow']))
+        print("MergeInflow Setting: {}".format(info['merge_inflow']))
+        if args.output:
+            data = {}
+            data['main_inflow']=MainInflow
+            data['merge_inflow']=MergeInflow
+            data['outflow']=Outflow
+            with open(args.output,'w') as f: 
+                json.dump(data,f)
+            
