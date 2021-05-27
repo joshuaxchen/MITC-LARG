@@ -96,6 +96,8 @@ class MergePOEnv(Env):
 
         super().__init__(env_params, sim_params, network, simulator)
         self.original_inflow = deepcopy(network.net_params.inflows.get())
+        self._main_inflow = None
+        self._merge_inflow = None
 
     @property
     def action_space(self):
@@ -336,6 +338,7 @@ class MergePOEnv(Env):
         self.exited_rl_veh = []
         self.leader = []
         self.follower = []
+        '''
         additional_params = self.env_params.additional_params
         if additional_params.get("reset_inflow"):
             #assume we only pass scale 0.9-1.1 for example
@@ -364,7 +367,15 @@ class MergePOEnv(Env):
                 total_inflows[i]['vehsPerHour'] = inflows_set[i]
         #print(self.network.net_params.inflows.get())
         #print(self.original_inflow)
-
+        self._main_inflow = 0.0
+        self._merge_inflow = 0.0
+        total_inflows = self.network.net_params.inflows.get()
+        for tf in total_inflows:
+            if tf['departSpeed'] <= 7.5:
+                self._merge_inflow += tf['vehsPerHour']
+            else:
+                self._main_inflow += tf['vehsPerHour']
+        '''
         return super().reset()
 
 class MergePOEnvScaleInflow(MergePOEnv):
