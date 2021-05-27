@@ -8,7 +8,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}"
 
 for AVP in 10 8 6 4 2
 do
-	python3 flow/visualize/new_rllib_visualizer.py $TRAIN_DIR_10 $CHCKPOINT --render_mode no_render --avp ${AVP} >> ./avp_multi_agent/av10/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt
+	python3 flow/visualize/new_rllib_visualizer.py $TRAIN_DIR_10 $CHCKPOINT --render_mode no_render --handset_avp ${AVP} >> ./avp_multi_agent/av10/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt
 done
 
 

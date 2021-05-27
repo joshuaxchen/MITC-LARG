@@ -629,6 +629,11 @@ def create_parser():
         '--warmup',
         type=int,
         default=800,)
+    parser.add_argument(
+        '--handset_avp',
+        type=int,
+        default=10)
+
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
