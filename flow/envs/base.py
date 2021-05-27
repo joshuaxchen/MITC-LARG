@@ -16,6 +16,7 @@ from gym.spaces import Box
 from gym.spaces import Tuple
 from traci.exceptions import FatalTraCIError
 from traci.exceptions import TraCIException
+from flow.core.params import InFlows
 
 import sumolib
 
@@ -639,6 +640,32 @@ class Env(gym.Env):
                 self._merge_inflow += tf['vehsPerHour']
             else:
                 self._main_inflow += tf['vehsPerHour']
+
+        if additional_params.get("handset_avp"):
+            inflow = InFlows()
+            MERGE_RATE=200
+            FLOW_RATE=2000
+            avp=additional_params.get("handset_avp")
+            if 1-avp>0:
+                inflow.add(
+                    veh_type="human",
+                    edge="inflow_highway",
+                    vehs_per_hour=(1 - avp) * FLOW_RATE,
+                    depart_lane="free",
+                    depart_speed=10)
+            if avp>0:
+                inflow.add(
+                    veh_type="rl",
+                    edge="inflow_highway",
+                    vehs_per_hour=avp * FLOW_RATE,
+                    depart_lane="free",
+                    depart_speed=10)
+            inflow.add(
+                veh_type="human",
+                edge="inflow_merge",
+                vehs_per_hour=MERGE_RATE,
+                depart_lane="free",
+                depart_speed=7.5)
 
         # reset the time counter
         self.time_counter = 0
