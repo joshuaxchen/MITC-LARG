@@ -15,7 +15,7 @@ echo "with original reward, outflow, average speeds***************"
 echo "************************************************************"
 
 echo "1st exp: train agent with original reward"
-${SETPATH} ${RUN} ${PPO_RUNNER} --benchmark_name merge4_Sim_Arrive_All_RL --num_cpus ${CPU_NUM} --lr ${LR} --num_rollouts ${NUM_ROLLOUTS} --memory 2 
+${RUN} ${PPO_RUNNER} --benchmark_name merge4_Sim_Arrive_All_RL --num_cpus ${CPU_NUM} --lr ${LR} --num_rollouts ${NUM_ROLLOUTS} --memory 2 
 
 #echo "2nd exp: train agent with reward as the number of departing vehicles (outflow)"
 #${SETPATH} ${RUN} ${PPO_RUNNER} --benchmark_name merge4_Sim_Arrive --num_cpus ${CPU_NUM} --lr ${LR} --num_rollouts ${NUM_ROLLOUTS} --memory 2

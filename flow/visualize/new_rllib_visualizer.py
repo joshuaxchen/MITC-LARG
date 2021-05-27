@@ -140,6 +140,8 @@ def visualizer_rllib(args, seed=None):
 
     flow_params = get_flow_params(config)
 
+
+
     # replace the project path to the scenario xml, if the result to be
     # visualized is generated from another project.
     try:
@@ -255,6 +257,7 @@ def visualizer_rllib(args, seed=None):
         env_params.additional_params['inflow_range']=[0.9, 1.1]
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
+    # AV Penetration
     
     # Remove previous env; Create and register a gym+rllib env
     env_dict = gym.envs.registration.registry.env_specs.copy()

@@ -5,6 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
+import argparse
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -28,6 +29,24 @@ from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
 
+EXAMPLE_USAGE = """
+example usage:
+    python xxxx.py --attr --value 
+"""
+
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
+    epilog=EXAMPLE_USAGE)
+# optional input parameters
+parser.add_argument(
+    '--avp',
+    type=int,
+    default=10,
+    help="The percentage of autonomous vehicles. value between 0-100")
+
+args=parser.parse_args()
+
 # SET UP PARAMETERS FOR THE SIMULATION
 
 # number of training iterations
@@ -44,7 +63,7 @@ FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = 0.1
+RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
@@ -112,7 +131,7 @@ inflow.add(
     depart_speed=7.5)
 
 flow_params = dict(
-    exp_tag='multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
@@ -256,6 +275,6 @@ if __name__ == '__main__':
                 'training_iteration': N_TRAINING_ITERATIONS
             },
             'config': config,
-            'num_samples':3,
+            'num_samples':1,
         },
     })
