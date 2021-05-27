@@ -255,6 +255,9 @@ def visualizer_rllib(args, seed=None):
         env_params.additional_params['inflow_range']=[0.9, 1.1]
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
+
+    if args.handset_avp:
+        env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     
     # Remove previous env; Create and register a gym+rllib env
     env_dict = gym.envs.registration.registry.env_specs.copy()
