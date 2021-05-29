@@ -642,25 +642,25 @@ class Env(gym.Env):
                 self._main_inflow += tf['vehsPerHour']
 
         if additional_params.get("handset_avp"):
-            inflow = InFlows()
+            self.network.net_params.inflows= InFlows()
             MERGE_RATE=200
             FLOW_RATE=2000
             avp=additional_params.get("handset_avp")
             if 1-avp>0:
-                inflow.add(
+                self.network.net_params.inflows.add(
                     veh_type="human",
                     edge="inflow_highway",
                     vehs_per_hour=(1 - avp) * FLOW_RATE,
                     depart_lane="free",
                     depart_speed=10)
             if avp>0:
-                inflow.add(
+                self.network.net_params.inflows.add(
                     veh_type="rl",
                     edge="inflow_highway",
                     vehs_per_hour=avp * FLOW_RATE,
                     depart_lane="free",
                     depart_speed=10)
-            inflow.add(
+            self.network.net_params.inflows.add(
                 veh_type="human",
                 edge="inflow_merge",
                 vehs_per_hour=MERGE_RATE,

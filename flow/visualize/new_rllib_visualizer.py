@@ -140,6 +140,8 @@ def visualizer_rllib(args, seed=None):
 
     flow_params = get_flow_params(config)
 
+
+
     # replace the project path to the scenario xml, if the result to be
     # visualized is generated from another project.
     try:
@@ -258,7 +260,7 @@ def visualizer_rllib(args, seed=None):
 
     if args.handset_inflow:
         env_params.additional_params['handset_inflow']=args.handset_inflow
-
+    # AV Penetration
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     
@@ -634,6 +636,11 @@ def create_parser():
         '--warmup',
         type=int,
         default=800,)
+    parser.add_argument(
+        '--handset_avp',
+        type=int,
+        default=10)
+
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)

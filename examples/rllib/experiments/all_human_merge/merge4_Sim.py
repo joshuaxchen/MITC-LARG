@@ -95,7 +95,7 @@ inflow.add(
 
 flow_params = dict(
     # name of the experiment
-    exp_tag="merge_4_HUMAN_Sim",
+    exp_tag="yulin_merge_4_HUMAN_Sim",
 
     # name of the flow environment the experiment is running on
     env_name=MergePOEnv,
