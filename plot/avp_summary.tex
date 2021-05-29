@@ -12,16 +12,15 @@
       scale only axis,
       every x tick label/.append style={font=\Large},
       every y tick label/.append style={font=\Large},
-	legend style={at={(0.1,0.95)},anchor=north west}
+	legend style={at={(0.6,0.35)},anchor=north west}
   }
 
 \begin{axis}[
     legend style={font=\Large},
-	xlabel={\Large Number of outputs},
+	ylabel={\Large Outflow},
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
-	y label style={at={(axis description cs:0.030,0.5)}, anchor=south},
-	ylabel={\Large Avg. time (\si{\second})},
-	ymin=0
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	xlabel={\Large Evaluated AVP},
 ]
 
 % trained on avp=10 
