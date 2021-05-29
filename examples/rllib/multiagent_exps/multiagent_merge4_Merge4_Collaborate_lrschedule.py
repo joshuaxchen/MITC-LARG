@@ -43,6 +43,11 @@ parser.add_argument(
     type=int,
     default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument(
+    '--num_rl',
+    type=int,
+    default=10,
+    help="The percentage of autonomous vehicles. value between 0-100")
 
 args=parser.parse_args()
 
@@ -55,14 +60,19 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 10
+N_CPUS = 11
+
 NUM_RL = 10
+if args.num_rl:
+    NUM_RL=args.num_rl
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = (args.avp/100.0) 
+RL_PENETRATION = 0.1 
+if args.avp:
+    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
