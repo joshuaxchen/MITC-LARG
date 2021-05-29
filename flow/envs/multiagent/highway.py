@@ -909,6 +909,27 @@ class MultiAgentHighwayPOEnvMerge4Negative(MultiAgentHighwayPOEnvMerge4):
             reward = -0.1
             rewards[rl_id] = reward
         return rewards
+    
+class MultiAgentHighwayPOEnvMerge4CollaborateAdvantage(MultiAgentHighwayPOEnvMerge4):
+    def compute_reward(self, rl_actions, **kwargs):
+        if rl_actions is None:
+            return {}
+
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+        reward1 = -0.1
+        avg_reward=492
+        reward2 = average_velocity(self)/300
+        reward  = reward1 * eta1 + reward2 * eta2 - avg_reward
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rewards[rl_id] = reward
+        return rewards
+
 
 class MultiAgentHighwayPOEnvMerge4Collaborate(MultiAgentHighwayPOEnvMerge4):
     def compute_reward(self, rl_actions, **kwargs):

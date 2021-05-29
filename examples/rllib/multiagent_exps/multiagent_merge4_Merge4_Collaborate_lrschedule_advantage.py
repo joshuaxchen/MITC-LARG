@@ -23,7 +23,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4CollaborateAdvantage
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -55,7 +55,7 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 10
+N_CPUS = 5 
 NUM_RL = 10
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -133,7 +133,7 @@ inflow.add(
 flow_params = dict(
     exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
-    env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
+    env_name=MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,
     network=MergeNetwork,
     simulator='traci',
 
