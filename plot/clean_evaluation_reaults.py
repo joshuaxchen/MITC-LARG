@@ -51,7 +51,7 @@ for folder_name in folder_name_list:
             summary[folder_name][file_name][attr]=value
 #print(summary)
 for folder_name in folder_name_list:
-    attr_name='Inflow'
+    attr_name='Speed'
     attr_list=[]
     for file_name in files_in_each_folder[folder_name]:
         key=re.split("_",file_name)[-1].split(".")[0]
