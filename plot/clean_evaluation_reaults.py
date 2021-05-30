@@ -1,5 +1,5 @@
 import os
-
+import re
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -52,14 +52,19 @@ for folder_name in folder_name_list:
 #print(summary)
 for folder_name in folder_name_list:
     attr_name='Speed'
+    attr_list=[]
     for file_name in files_in_each_folder[folder_name]:
-        key=file_name.split("_.")
-        print(key[-2:])
+        key=re.split("_",file_name)[-1].split(".")[0]
         if file_name=='summary.txt':
             continue
-        print(file_name,summary[folder_name][file_name]['Speed'])
-    print('\n')
+        values=summary[folder_name][file_name][attr_name].split(",")
+        attr_list.append((int(key), values[0].strip(), values[1].strip())) 
+    attr_list.sort()
+    print(folder_name)
+    for item in attr_list:
+        print(item[0], item[1], item[2])
 
+    print('\n')
 
 
 
