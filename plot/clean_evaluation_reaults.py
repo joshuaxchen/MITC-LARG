@@ -51,7 +51,10 @@ for folder_name in folder_name_list:
             summary[folder_name][file_name][attr]=value
 #print(summary)
 for folder_name in folder_name_list:
+    attr_name='Speed'
     for file_name in files_in_each_folder[folder_name]:
+        key=file_name.split("_.")
+        print(key[-2:])
         if file_name=='summary.txt':
             continue
         print(file_name,summary[folder_name][file_name]['Speed'])
