@@ -1,4 +1,11 @@
 from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv
+import numpy as np
+from gym.spaces.box import Box
+from flow.core.rewards import desired_velocity, average_velocity
+from flow.envs.multiagent.base import MultiEnv
+import collections
+import os
+from copy import deepcopy
 
 class MultiAgentHighwayPOEnvDistanceMergeInfoMOR(MultiAgentHighwayPOEnv):
     @property
@@ -54,8 +61,6 @@ class MultiAgentHighwayPOEnvDistanceMergeInfoMOR(MultiAgentHighwayPOEnv):
             length = self.k.network.edge_length(edge)
             pos = self.k.vehicle.get_position(rl_id)
             distance = (length - pos)/(length)
-            else:
-                pass #FIXME implement
 
             observation = np.array([
                 this_speed / max_speed,
@@ -134,6 +139,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
         max_length = 1000.0#self.k.network.length()
         
         for rl_id in states:
+            veh_x = self.k.vehicle.get_x_by_id(rl_id)
             merge_edge = None
             merge_edge_pos = float('inf')
             for e in self.env_params.additional_params['merging_edges']:
@@ -160,10 +166,8 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
             veh_vel = []
             
             #calculate RL distance to the center junction
-            veh_x = self.k.vehicle.get_x_by_id(rl_id)
             edge = self.k.vehicle.get_edge(rl_id)
             length = self.k.network.edge_length(edge)
-            center_x = self.k.network.total_edgestarts_dict["center"]
             #rl_dist = 1
             rl_dist = (rl_position - length)/length
             #if edge in ["inflow_highway","left","center"]:
