@@ -8,14 +8,16 @@ is 10%.
 - **Observation Dimension**: (25, )
 - **Horizon**: 750 steps
 """
-from flow.envs import MergePOEnvArrive
+from flow.envs import MergePOEnvArrive, MergePOEnvWindowArrive
 from flow.networks import MergeNetwork
 from copy import deepcopy
 from flow.core.params import SumoParams, EnvParams, InitialConfig, NetParams, \
     InFlows, SumoCarFollowingParams
-from flow.networks.merge import ADDITIONAL_NET_PARAMS
+#from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from flow.core.params import VehicleParams
 from flow.controllers import SimCarFollowingController, RLController,IDMController
+from flow.networks import HighwayRampsNetwork
+from flow.networks.highway_ramps import ADDITIONAL_NET_PARAMS
 
 # time horizon of a single rollout
 HORIZON = 2000
@@ -29,10 +31,30 @@ NUM_RL = 5
 # We consider a highway network with an upstream merging lane producing
 # shockwaves
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
-additional_net_params["merge_lanes"] = 1
-additional_net_params["highway_lanes"] = 1
-additional_net_params["pre_merge_length"] = 500
+#additional_net_params["merge_lanes"] = 1
+#additional_net_params["highway_lanes"] = 1
+#additional_net_params["pre_merge_length"] = 500
 
+additional_net_params.update({
+    # lengths of highway, on-ramps and off-ramps respectively
+    "highway_length": 1500,
+    "on_ramps_length": 250,
+    "off_ramps_length": 250,
+    # number of lanes on highway, on-ramps and off-ramps respectively
+    "highway_lanes": 1,
+    "on_ramps_lanes": 1,
+    "off_ramps_lanes": 1,
+    # speed limit on highway, on-ramps and off-ramps respectively
+    "highway_speed": 30,
+    "on_ramps_speed": 20,
+    "off_ramps_speed": 20,
+    # positions of the on-ramps
+    "on_ramps_pos": [500],
+    # positions of the off-ramps
+    "off_ramps_pos": [1000],
+    # probability for a vehicle to exit the highway at the next off-ramp
+    "next_off_ramp_proba": 0.25
+})
 # RL vehicles constitute 5% of the total number of vehicles
 vehicles = VehicleParams()
 vehicles.add(
@@ -41,7 +63,7 @@ vehicles.add(
     car_following_params=SumoCarFollowingParams(
         speed_mode=9,
     ),
-    num_vehicles=5)
+    num_vehicles=0)
 vehicles.add(
     veh_id="rl",
     acceleration_controller=(RLController, {}),
@@ -55,32 +77,32 @@ vehicles.add(
 inflow = InFlows()
 inflow.add(
     veh_type="human",
-    edge="inflow_highway",
+    edge="highway_0",
     vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
     depart_lane="free",
     depart_speed=10)
 inflow.add(
     veh_type="rl",
-    edge="inflow_highway",
+    edge="highway_0",
     vehs_per_hour=RL_PENETRATION * FLOW_RATE,
     depart_lane="free",
     depart_speed=10)
 inflow.add(
     veh_type="human",
-    edge="inflow_merge",
+    edge="on_ramp_0",
     vehs_per_hour=200,
     depart_lane="free",
     depart_speed=7.5)
 
 flow_params = dict(
     # name of the experiment
-    exp_tag="merge_4_Sim_Arrive_reset_inflow_oldparams_0.7_1.3",
+    exp_tag="highway_4_Sim_Arrive_oldparams",
 
     # name of the flow environment the experiment is running on
-    env_name=MergePOEnvArrive,
+    env_name=MergePOEnvWindowArrive,
 
     # name of the network class the experiment is running on
-    network=MergeNetwork,
+    network=HighwayRampsNetwork,
 
     # simulator that is used by the experiment
     simulator='traci',
@@ -100,10 +122,11 @@ flow_params = dict(
         additional_params={
             "max_accel": 2.6,
             "max_decel": 4.5,
-            "target_velocity": 20,
+            "target_velocity": 30,
             "num_rl": NUM_RL,
-            "reset_inflow":True,
-            "inflow_range":[0.7, 1.3],
+            "reset_inflow":False,
+            "inflow_range":[1.0],
+            'ignore_edges' : ['highway_2', 'off_ramp_0']
         },
     ),
 

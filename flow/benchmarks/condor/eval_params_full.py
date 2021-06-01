@@ -189,8 +189,8 @@ if __name__ == '__main__':
                 break
         mean_vel.append(np.mean(vel))
         std_vel.append(np.std(vel))
-        final_inflows.append(vehicles.get_inflow_rate(500))
-        final_outflows.append(vehicles.get_outflow_rate(500))
+        final_inflows.append(vehicles.get_inflow_rate(HORIZON*flow_params['sim'].sim_step))
+        final_outflows.append(vehicles.get_outflow_rate(HORIZON*flow_params['sim'].sim_step))
         times.append(time)
     #print(np.mean(final_outflows))
     print(np.mean(mean_vel), np.std(mean_vel))
