@@ -46,8 +46,8 @@ MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1
 # Selfishness constant
-ETA_1 = 0.9
-ETA_2 = 0.1
+ETA_1 = 0.8
+ETA_2 = 0.2
 
 
 # SET UP PARAMETERS FOR THE NETWORK
