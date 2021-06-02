@@ -16,8 +16,8 @@
   }
 
 \begin{axis}[
-    legend style={font=\Large},
-	ylabel={\Large Outflow},
+    legend style={font=\small},
+	ylabel={\Large Speed},
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	xlabel={\Large Evaluated AVP},
@@ -117,7 +117,7 @@ a	b   	c
 \label{AVP90}
 
 
-\addplot[mark=none, black, samples=2] {16.27};\label{Baseline}
+\addplot[mark=none, black, samples=200] coordinates {(0,16.27) (100,16.27)};{};\label{Baseline}
 
 \addlegendimage{/pgfplots/refstyle=AVP10}
 \addlegendentry{AVP10}
