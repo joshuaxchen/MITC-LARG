@@ -116,6 +116,28 @@ a	b   	c
 \label{AVP90}
 
 
+
+%densely dashed, 
+\addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
+draw=blue!10!green, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+2 -3.15 1.71
+4 -21.78 7.21
+6 -26.13 12.93
+8 -36.15 16.57
+10 -42.50 17.80
+20 -31.54 33.65
+30 72.37 78.25
+40 296.50 149.36
+50 680.19 236.20
+60 1405.80 280.42
+70 2019.99 271.74
+80 2521.60 278.66
+100 3587.17 292.98
+};
+\label{linearPPO}
+
+
 \addlegendimage{/pgfplots/refstyle=AVP10}
 \addlegendentry{AVP10}
 
@@ -130,6 +152,9 @@ a	b   	c
 
 \addlegendimage{/pgfplots/refstyle=AVP90}
 \addlegendentry{AVP90}
+
+\addlegendimage{/pgfplots/refstyle=linearPPO}
+\addlegendentry{linearPPO}
 
 
 

@@ -116,6 +116,27 @@ a	b   	c
 
 %\addplot[mark=none, black, samples=2] {2184.91};\label{Baseline}
 
+%densely dashed, 
+\addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
+draw=blue!10!green, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+2 1722.24 13.45
+4 1714.18 15.35
+6 1710.11 14.00
+8 1706.76 17.78
+10 1702.87 17.82
+20 1679.11 17.95
+30 1655.86 21.62
+40 1623.31 27.50
+50 1585.12 35.44
+60 1593.61 39.77
+70 1589.80 38.61
+80 1585.26 33.93
+100 1562.36 44.24
+};
+\label{linearPPO}
+
+
 \addlegendimage{/pgfplots/refstyle=AVP10}
 \addlegendentry{AVP10}
 
@@ -130,6 +151,10 @@ a	b   	c
 
 \addlegendimage{/pgfplots/refstyle=AVP90}
 \addlegendentry{AVP90}
+
+\addlegendimage{/pgfplots/refstyle=linearPPO}
+\addlegendentry{linearPPO}
+
 
 %\addlegendimage{/pgfplots/refstyle=Baseline}
 %\addlegendentry{Human Baseline}
