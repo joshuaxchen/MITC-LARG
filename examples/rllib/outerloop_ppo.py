@@ -14,15 +14,14 @@ from typing import Optional, Type
 
 from ray.rllib.agents import with_common_config
 from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
-from ray.rllib.agents.trainer_template import build_trainer
+#from ray.rllib.agents.trainer_template import build_trainer
+from examples.rllib.trainer_template import build_trainer
 from ray.rllib.evaluation.worker_set import WorkerSet
 from ray.rllib.execution.rollout_ops import ParallelRollouts, ConcatBatches, \
     StandardizeFields, SelectExperiences
 from ray.rllib.execution.train_ops import TrainOneStep, TrainTFMultiGPU
 from ray.rllib.execution.metric_ops import StandardMetricsReporting
-from ray.rllib.policy.policy import LEARNER_STATS_KEY, Policy
-from ray.rllib.policy.sample_batch import DEFAULT_POLICY_ID
-from ray.rllib.utils.deprecation import DEPRECATED_VALUE
+from ray.rllib.policy.policy import Policy
 from ray.rllib.utils.typing import TrainerConfigDict
 from ray.util.iter import LocalIterator
 
@@ -40,7 +39,7 @@ DEFAULT_CONFIG = with_common_config({
     # If true, use the Generalized Advantage Estimator (GAE)
     # with a value function, see https://arxiv.org/pdf/1506.02438.pdf.
     "use_gae": True,
-    # The GAE (lambda) parameter.
+    # The GAE(lambda) parameter.
     "lambda": 1.0,
     # Initial coefficient for KL divergence.
     "kl_coeff": 0.2,
@@ -61,14 +60,12 @@ DEFAULT_CONFIG = with_common_config({
     "lr": 5e-5,
     # Learning rate schedule.
     "lr_schedule": None,
+    # Share layers for value function. If you set this to True, it's important
+    # to tune vf_loss_coeff.
+    "vf_share_layers": False,
     # Coefficient of the value function loss. IMPORTANT: you must tune this if
-    # you set vf_share_layers=True inside your model's config.
+    # you set vf_share_layers: True.
     "vf_loss_coeff": 1.0,
-    "model": {
-        # Share layers for value function. If you set this to True, it's
-        # important to tune vf_loss_coeff.
-        "vf_share_layers": False,
-    },
     # Coefficient of the entropy regularizer.
     "entropy_coeff": 0.0,
     # Decay schedule for the entropy regularizer.
@@ -86,12 +83,16 @@ DEFAULT_CONFIG = with_common_config({
     "batch_mode": "truncate_episodes",
     # Which observation filter to apply to the observation.
     "observation_filter": "NoFilter",
-
-    # Deprecated keys:
-    # Share layers for value function. If you set this to True, it's important
-    # to tune vf_loss_coeff.
-    # Use config.model.vf_share_layers instead.
-    "vf_share_layers": DEPRECATED_VALUE,
+    # Uses the sync samples optimizer instead of the multi-gpu one. This is
+    # usually slower, but you might want to try it if you run into issues with
+    # the default optimizer.
+    "simple_optimizer": False,
+    # Whether to fake GPUs (using CPUs).
+    # Set this to True for debugging on non-GPU machines (set `num_gpus` > 0).
+    "_fake_gpus": False,
+    # Switch on Trajectory View API for PPO by default.
+    # NOTE: Only supported for PyTorch so far.
+    "_use_trajectory_view_api": True,
 })
 
 # __sphinx_doc_end__
@@ -122,27 +123,6 @@ def validate_config(config: TrainerConfigDict) -> None:
                              config["sgd_minibatch_size"],
                              config["train_batch_size"]))
 
-    # Check for mismatches between `train_batch_size` and
-    # `rollout_fragment_length` and auto-adjust `rollout_fragment_length`
-    # if necessary.
-    num_workers = config["num_workers"] or 1
-    calculated_min_rollout_size = \
-        num_workers * config["num_envs_per_worker"] * \
-        config["rollout_fragment_length"]
-    if config["train_batch_size"] % calculated_min_rollout_size != 0:
-        new_rollout_fragment_length = config["train_batch_size"] // (
-            num_workers * config["num_envs_per_worker"])
-        logger.warning(
-            "`train_batch_size` ({}) cannot be achieved with your other "
-            "settings (num_workers={} num_envs_per_worker={} "
-            "rollout_fragment_length={})! Auto-adjusting "
-            "`rollout_fragment_length` to {}.".format(
-                config["train_batch_size"], config["num_workers"],
-                config["num_envs_per_worker"],
-                config["rollout_fragment_length"],
-                new_rollout_fragment_length))
-        config["rollout_fragment_length"] = new_rollout_fragment_length
-
     # Episodes may only be truncated (and passed into PPO's
     # `postprocessing_fn`), iff generalized advantage estimation is used
     # (value function estimate at end of truncated episode to estimate
@@ -153,8 +133,16 @@ def validate_config(config: TrainerConfigDict) -> None:
             "function (to estimate the return at the end of the truncated "
             "trajectory). Consider setting batch_mode=complete_episodes.")
 
+    # Multi-gpu not supported for PyTorch and tf-eager.
+    if config["framework"] in ["tf2", "tfe", "torch"]:
+        config["simple_optimizer"] = True
+    # Performance warning, if "simple" optimizer used with (static-graph) tf.
+    elif config["simple_optimizer"]:
+        logger.warning(
+            "Using the simple minibatch optimizer. This will significantly "
+            "reduce performance, consider simple_optimizer=False.")
     # Multi-agent mode and multi-GPU optimizer.
-    if config["multiagent"]["policies"] and not config["simple_optimizer"]:
+    elif config["multiagent"]["policies"] and not config["simple_optimizer"]:
         logger.info(
             "In multi-agent mode, policies will be optimized sequentially "
             "by the multi-GPU optimizer. Consider setting "
@@ -190,14 +178,12 @@ class UpdateKL:
 
     def __call__(self, fetches):
         def update(pi, pi_id):
-            assert LEARNER_STATS_KEY not in fetches, \
-                ("{} should be nested under policy id key".format(
-                    LEARNER_STATS_KEY), fetches)
+            assert "kl" not in fetches, (
+                "kl should be nested under policy id key", fetches)
             if pi_id in fetches:
-                kl = fetches[pi_id][LEARNER_STATS_KEY].get("kl")
-                assert kl is not None, (fetches, pi_id)
+                assert "kl" in fetches[pi_id], (fetches, pi_id)
                 # Make the actual `Policy.update_kl()` call.
-                pi.update_kl(kl)
+                pi.update_kl(fetches[pi_id]["kl"])
             else:
                 logger.warning("No data for {}, not updating kl".format(pi_id))
 
@@ -212,14 +198,11 @@ def warn_about_bad_reward_scales(config, result):
 
     # Warn about excessively high VF loss.
     learner_stats = result["info"]["learner"]
-    if DEFAULT_POLICY_ID in learner_stats:
-        scaled_vf_loss = config["vf_loss_coeff"] * \
-            learner_stats[DEFAULT_POLICY_ID][LEARNER_STATS_KEY]["vf_loss"]
-
-        policy_loss = learner_stats[DEFAULT_POLICY_ID][LEARNER_STATS_KEY][
-            "policy_loss"]
-        if config.get("model", {}).get("vf_share_layers") and \
-                scaled_vf_loss > 100:
+    if "default_policy" in learner_stats:
+        scaled_vf_loss = (config["vf_loss_coeff"] *
+                          learner_stats["default_policy"]["vf_loss"])
+        policy_loss = learner_stats["default_policy"]["policy_loss"]
+        if config["vf_share_layers"] and scaled_vf_loss > 100:
             logger.warning(
                 "The magnitude of your value function loss is extremely large "
                 "({}) compared to the policy loss ({}). This can prevent the "
@@ -265,10 +248,7 @@ def execution_plan(workers: WorkerSet,
         SelectExperiences(workers.trainable_policies()))
     # Concatenate the SampleBatches into one.
     rollouts = rollouts.combine(
-        ConcatBatches(
-            min_batch_size=config["train_batch_size"],
-            count_steps_by=config["multiagent"]["count_steps_by"],
-        ))
+        ConcatBatches(min_batch_size=config["train_batch_size"]))
     # Standardize advantages.
     rollouts = rollouts.for_each(StandardizeFields(["advantages"]))
 
@@ -282,10 +262,13 @@ def execution_plan(workers: WorkerSet,
     else:
         train_op = rollouts.for_each(
             TrainTFMultiGPU(
-                workers=workers,
+                workers,
                 sgd_minibatch_size=config["sgd_minibatch_size"],
                 num_sgd_iter=config["num_sgd_iter"],
                 num_gpus=config["num_gpus"],
+                rollout_fragment_length=config["rollout_fragment_length"],
+                num_envs_per_worker=config["num_envs_per_worker"],
+                train_batch_size=config["train_batch_size"],
                 shuffle_sequences=config["shuffle_sequences"],
                 _fake_gpus=config["_fake_gpus"],
                 framework=config.get("framework")))
@@ -300,7 +283,7 @@ def execution_plan(workers: WorkerSet,
 
 # Build a child class of `Trainer`, which uses the framework specific Policy
 # determined in `get_policy_class()` above.
-PPOTrainer = build_trainer(
+outerloop_PPOTrainer = build_trainer(
     name="Outerloop-PPO",
     default_config=DEFAULT_CONFIG,
     validate_config=validate_config,
@@ -308,3 +291,4 @@ PPOTrainer = build_trainer(
     get_policy_class=get_policy_class,
     execution_plan=execution_plan,
 )
+

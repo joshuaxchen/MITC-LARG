@@ -6,6 +6,13 @@ highway with ramps network.
 import json
 import ray
 import argparse
+import sys
+
+#del sys.modules['ray.rllib.agents.trainer_template']
+#sys.modules['ray.rllib.agents.trainer_template']=__import__('examples.rllib.trainer_template')
+#sys.modules['ray.rllib.agents.trainer_template.build_trainer']=__import__('examples.rllib.trainer_template.build_trainer')
+#from ray.rllib.agents.trainer_template import build_trainer 
+
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -28,6 +35,11 @@ from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
+
+from examples.rllib.register_outerloop_ppo import register_outerloop_ppo
+from examples.rllib import high_inflow_range
+
+register_outerloop_ppo()
 
 EXAMPLE_USAGE = """
 example usage:
@@ -204,7 +216,7 @@ def setup_exps(flow_params):
     dict
         training configuration parameters
     """
-    alg_run = 'PPO'
+    alg_run = 'Outerloop-PPO'
     agent_cls = get_agent_class(alg_run)
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
@@ -236,6 +248,7 @@ def setup_exps(flow_params):
     config["vf_share_layers"] = True
     config["vf_loss_coeff"] = 0.5
 
+    high_inflow_range=[1500, 1600, 1700, 1800, 1900, 2000]
 
     # save the flow params for replay
     flow_json = json.dumps(

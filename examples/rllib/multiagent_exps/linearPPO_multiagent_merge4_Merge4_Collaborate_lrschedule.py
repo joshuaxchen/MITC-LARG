@@ -212,7 +212,8 @@ def setup_exps(flow_params):
     config['sgd_minibatch_size'] = 4096
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
-    config['model'].update({'fcnet_hiddens': [100, 50, 25]})
+    #config['model'].update({'fcnet_hiddens': [100, 50, 25]})
+    config['model'].update({'fcnet_hiddens': [1]})
     #config['lr'] = tune.grid_search([5e-4, 1e-4])
     config['lr_schedule'] = [
             [0, 5e-4],
