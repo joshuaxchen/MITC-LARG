@@ -173,7 +173,8 @@ flow_params = dict(
             "eta1": ETA_1,
             "eta2": ETA_2,
             "reset_inflow": True,
-            "inflow_range:": [0.9, 1, 1.1],
+            #"inflow_range:": [0.9, 1, 1.1],
+            "inflow_range:": [0.7, 0.9, 1, 1.1, 1.2],
         },
     ),
 
