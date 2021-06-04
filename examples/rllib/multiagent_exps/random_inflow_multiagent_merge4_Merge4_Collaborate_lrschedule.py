@@ -48,6 +48,18 @@ parser.add_argument(
     type=int,
     default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+parser.add_argument(
+    '--random_main_inflow',
+    type=int,
+    nargs="+",
+    help="Manually set main inflow configurations")
+parser.add_argument(
+    '--random_merge_inflow',
+    type=int,
+    nargs="+",
+    help="Manually set merge inflow configurations")
+
 
 args=parser.parse_args()
 
@@ -140,6 +152,11 @@ inflow.add(
     depart_lane="free",
     depart_speed=7.5)
 
+main_inflow_choices=args.random_main_inflow
+merge_inflow_choices=args.random_merge_inflow
+print(main_inflow_choices)
+print(merge_inflow_choices)
+
 flow_params = dict(
     exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
@@ -172,8 +189,10 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
-            "reset_inflow": True,
-            "inflow_range:": [0.9, 1, 1.1],
+            "reset_inflow_discrete": True,
+            "main_inflow": main_inflow_choices,
+            "merge_inflow": merge_inflow_choices,
+            "avp": RL_PENETRATION,
         },
     ),
 

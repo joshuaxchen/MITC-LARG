@@ -218,7 +218,44 @@ class MultiEnv(MultiAgentEnv, Env):
                     #print("Random Choice")
                     scale = random.choice(inflow_range)
                 total_inflows[i]['vehsPerHour'] = int(scale * self.original_inflow[i]['vehsPerHour'])
-        
+       
+        if additional_params.get("reset_inflow_discrete"):
+            #assume we only pass scale 0.9-1.1 for example
+            #print("Randomized Inflow configuration")
+            try:
+                main_inflow_choices= additional_params["main_inflow_choices"]
+                chosen_main_inflow= random.uniform(main_inflow_choices)
+
+                merge_inflow_choices= additional_params["merge_inflow_choices"]
+                chosen_merge_inflow= random.uniform(merge_inflow_choices)
+
+                self.network.net_params.inflows=InFlows()
+                avp=additional_params.get("avp")
+                if 1-avp>0:
+                    self.network.net_params.inflows.add(
+                        veh_type="human",
+                        edge="inflow_highway",
+                        vehs_per_hour=chosen_main_inflow*(1-avp),
+                        depart_lane="free",
+                        depart_speed=10)
+                if avp>0:
+                    self.network.net_params.inflows.add(
+                        veh_type="rl",
+                        edge="inflow_highway",
+                        vehs_per_hour=chosen_main_inflow*avp,
+                        depart_lane="free",
+                        depart_speed=10)
+                if chosen_merge_inflow>0:
+                    self.network.net_params.inflows.add(
+                        veh_type="human",
+                        edge="inflow_merge",
+                        vehs_per_hour=chosen_merge_inflow,
+                        depart_lane="free",
+                        depart_speed=7.5)
+            except:
+                # Did not specify the inflow range
+                pass
+
         if additional_params.get("handset_inflow"):
             total_inflows = self.network.net_params.inflows.get()
             print("Handset Inflow configuration, \
