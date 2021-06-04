@@ -128,9 +128,11 @@ def build_trainer(
 
             if before_init:
                 before_init(self)
+            
+            # TODO: startegically pick inflows, and create an environment with the inflow
+            #from examples.rllib import high_inflow_range, merge_inflow_range, flow_params
+            #intelligent_env_controller(high_inflow_range, flow_params)
 
-            print("***************************************************")
-            print(env_creator)
             # Creating all workers (excluding evaluation workers).
             self.workers = self._make_workers(
                 env_creator=env_creator,
