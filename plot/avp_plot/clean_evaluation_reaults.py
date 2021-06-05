@@ -41,12 +41,10 @@ for folder_name in folder_name_list:
     for file_name in files_in_each_folder[folder_name]:
         if file_name=='summary.txt':
             continue
-        print(file_name)
         fname=os.path.join(folder_path, file_name)
         data=LastNlines(fname, 6, 2)
         summary[folder_name][file_name]=dict()
         for attr_value in data:
-            print(attr_value)
             text=attr_value.split(":")
             attr=text[0]
             value=text[1].strip()

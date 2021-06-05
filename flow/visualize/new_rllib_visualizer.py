@@ -638,8 +638,7 @@ def create_parser():
         default=800,)
     parser.add_argument(
         '--handset_avp',
-        type=int,
-        default=10)
+        type=int)
 
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
