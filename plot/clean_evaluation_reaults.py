@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
 
 
 
-working_dir=os.path.join("..","avp_multi_agent")
+working_dir=os.path.join("..","exp_results", "random_inflow")#, "main2000-1700_merge200")
 folder_name_list=obtain_subfolder_names(working_dir)
 files_in_each_folder=dict()
 summary=dict()
@@ -41,15 +41,17 @@ for folder_name in folder_name_list:
     for file_name in files_in_each_folder[folder_name]:
         if file_name=='summary.txt':
             continue
+        print(file_name)
         fname=os.path.join(folder_path, file_name)
         data=LastNlines(fname, 6, 2)
         summary[folder_name][file_name]=dict()
         for attr_value in data:
+            print(attr_value)
             text=attr_value.split(":")
             attr=text[0]
             value=text[1].strip()
             summary[folder_name][file_name][attr]=value
-#print(summary)
+print(summary)
 for folder_name in folder_name_list:
     attr_name='Outflow'
     attr_list=[]
