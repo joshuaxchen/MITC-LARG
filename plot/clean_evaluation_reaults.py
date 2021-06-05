@@ -51,12 +51,11 @@ for folder_name in folder_name_list:
             attr=text[0]
             value=text[1].strip()
             summary[folder_name][file_name][attr]=value
-print(summary)
 for folder_name in folder_name_list:
     attr_name='Outflow'
     attr_list=[]
     for file_name in files_in_each_folder[folder_name]:
-        key=re.split("_",file_name)[-1].split(".")[0]
+        key=re.split("_",file_name)[0].split("-")[0]
         if file_name=='summary.txt':
             continue
         values=summary[folder_name][file_name][attr_name].split(",")
