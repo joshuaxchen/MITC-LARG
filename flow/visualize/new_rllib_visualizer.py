@@ -694,4 +694,5 @@ if __name__ == '__main__':
             data['outflow']=Outflow
             with open(args.output,'w') as f: 
                 json.dump(data,f)
-            
+        if args.render_mode =="sumo_gui":
+            break    
