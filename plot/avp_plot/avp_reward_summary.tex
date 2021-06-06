@@ -12,7 +12,7 @@
       scale only axis,
       every x tick label/.append style={font=\Large},
       every y tick label/.append style={font=\Large},
-	legend style={at={(0.5,0.45)},anchor=north west}
+	legend style={at={(0.1,0.85)},anchor=north west}
   }
 
 \begin{axis}[
@@ -119,7 +119,7 @@ a	b   	c
 
 %densely dashed, 
 \addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
-draw=blue!10!green, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+draw=blue!10!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
 a	b   	c
 2 -3.15 1.71
 4 -21.78 7.21

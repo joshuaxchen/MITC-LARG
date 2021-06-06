@@ -12,7 +12,7 @@
       scale only axis,
       every x tick label/.append style={font=\Large},
       every y tick label/.append style={font=\Large},
-	legend style={at={(0.5,0.45)},anchor=north west}
+	legend style={at={(0.5,0.65)},anchor=north west}
   }
 
 \begin{axis}[
@@ -116,10 +116,9 @@ a	b   	c
 \label{AVP90}
 
 
-%\addplot[mark=none, black, samples=2] {936.90};\label{Baseline}
 %densely dashed, 
 \addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
-draw=blue!10!green, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+draw=blue!10!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
 a	b   	c
 2 1555.34 14.31
 4 1549.33 15.07
@@ -136,6 +135,10 @@ a	b   	c
 100 1501.63 36.18
 };
 \label{linearPPO}
+
+\addplot[mark=none, black, samples=200] coordinates {(-10,1558.12)
+(100,1558.12)};
+\label{Baseline}
 
 
 \addlegendimage{/pgfplots/refstyle=AVP10}
@@ -154,11 +157,10 @@ a	b   	c
 \addlegendentry{AVP90}
 
 \addlegendimage{/pgfplots/refstyle=linearPPO}
-\addlegendentry{linearPPO}
+\addlegendentry{linearPPOAVP10}
 
-
-%\addlegendimage{/pgfplots/refstyle=Baseline}
-%\addlegendentry{Human Baseline}
+\addlegendimage{/pgfplots/refstyle=Baseline}
+\addlegendentry{Human Baseline}
 
 
 
