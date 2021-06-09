@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
 
 
 
-working_dir=os.path.join("..","exp_results", "random_inflow")#, "main2000-1700_merge200")
+working_dir=os.path.join("..","..","exp_results", "random_inflow")#, "main2000-1700_merge200")
 folder_name_list=obtain_subfolder_names(working_dir)
 files_in_each_folder=dict()
 summary=dict()
@@ -52,7 +52,7 @@ for folder_name in folder_name_list:
             value=text[1].strip()
             summary[folder_name][file_name][attr]=value
 for folder_name in folder_name_list:
-    attr_name='Outflow'
+    attr_name='Speed'
     attr_list=[]
     for file_name in files_in_each_folder[folder_name]:
         key=re.split("_",file_name)[0].split("-")[0]
