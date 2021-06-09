@@ -23,7 +23,9 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4CollaborateAdvantage
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
+from flow.envs.multiagent import
+MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -43,6 +45,11 @@ parser.add_argument(
     type=int,
     default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument(
+    '--num_rl',
+    type=int,
+    default=10,
+    help="The percentage of autonomous vehicles. value between 0-100")
 
 args=parser.parse_args()
 
@@ -55,14 +62,19 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 5 
+N_CPUS = 11
+
 NUM_RL = 10
+if args.num_rl:
+    NUM_RL=args.num_rl
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = (args.avp/100.0) 
+RL_PENETRATION = 0.1 
+if args.avp:
+    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
@@ -133,7 +145,7 @@ inflow.add(
 flow_params = dict(
     exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
-    env_name=MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,
+    env_name=MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead,
     network=MergeNetwork,
     simulator='traci',
 
@@ -270,6 +282,7 @@ if __name__ == '__main__':
             'run': alg_run,
             'env': env_name,
             'checkpoint_freq': 5,
+            'max_failures': 999,
             'checkpoint_at_end': True,
             'stop': {
                 'training_iteration': N_TRAINING_ITERATIONS
