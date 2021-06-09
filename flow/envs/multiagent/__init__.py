@@ -14,6 +14,8 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvNewStatesCollaborate, MultiAgentHighwayPOEnvNewStatesZero,\
                         MultiAgentHighwayPOEnvNewStatesNegativeInflow,MultiAgentHighwayPOEnvMerge4,\
                         MultiAgentHighwayPOEnvMerge4Negative, MultiAgentHighwayPOEnvMerge4Collaborate, MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead,\
+                        MultiAgentHighwayPOEnvMerge4AdaptiveHeadway,\
+                        MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead,\
                         MultiAgentHighwayPOEnvAblationDistance,\
                         MultiAgentHighwayPOEnvAblationDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestion,\
