@@ -37,14 +37,6 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         """See class definition."""
         return Box(0, 1, shape=(1,), dtype=np.float32)
 
-    def _apply_rl_actions(self, rl_actions):
-        """See class definition."""
-        # in the warmup steps, rl_actions is None
-        if rl_actions:
-            for rl_id, actions in rl_actions.items():
-                accel = actions[0]
-                self.k.vehicle.apply_acceleration(rl_id, accel)
-
     def idm_acceleration(self, veh_id, rl_action):
         if rl_action is None:
             return None
@@ -55,9 +47,9 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         b=1.5 # comfortable deceleration, in m/s2 (default: 1.5)
         v0=30 # desirable velocity, in m/s (default: 30)
         T=MAX_T*rl_action # safe time headway, in s (default: 1)
-        v = self.k.vehicle.get_speed(self.veh_id) 
-        lead_id = env.k.vehicle.get_leader(self.veh_id)
-        h = self.k.vehicle.get_headway(self.veh_id)
+        v = self.k.vehicle.get_speed(veh_id) 
+        lead_id = self.k.vehicle.get_leader(veh_id)
+        h = self.k.vehicle.get_headway(veh_id)
          # in order to deal with ZeroDivisionError
         if abs(h) < 1e-3:
             h = 1e-3
@@ -68,8 +60,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
             s_star = s0 + max(0, v * T + v * (v - lead_vel) /(2 * np.sqrt(a * b)))
         return a * (1 - (v / v0)**delta - (s_star / h)**2)
 
-    @property
-    def apply_rl_actions(self, rl_follower_or_leaders=None):
+    def apply_rl_actions(self, rl_follower_or_leaders):
         """Specify the actions to be performed by the rl agent(s).
 
         If no actions are provided at any given step, the rl agents default to
@@ -80,6 +71,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         rl_actions : array_like
             list of actions provided by the RL algorithm
         """
+
         # ignore if no actions are issued
         if rl_follower_or_leaders is None:
             return

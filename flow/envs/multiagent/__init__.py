@@ -14,8 +14,6 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvNewStatesCollaborate, MultiAgentHighwayPOEnvNewStatesZero,\
                         MultiAgentHighwayPOEnvNewStatesNegativeInflow,MultiAgentHighwayPOEnvMerge4,\
                         MultiAgentHighwayPOEnvMerge4Negative, MultiAgentHighwayPOEnvMerge4Collaborate, MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead,\
-                        MultiAgentHighwayPOEnvMerge4AdaptiveHeadway,\
-                        MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead,\
                         MultiAgentHighwayPOEnvAblationDistance,\
                         MultiAgentHighwayPOEnvAblationDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestion,\
@@ -32,6 +30,8 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive
+from flow.envs.multiagent.adaptive_headway import MultiAgentHighwayPOEnvMerge4AdaptiveHeadway, MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead
+
 
 __all__ = ['MultiEnv', 'MultiAgentAccelEnv', 'MultiWaveAttenuationPOEnv',
            'MultiTrafficLightGridPOEnv', 'MultiAgentHighwayPOEnv',
