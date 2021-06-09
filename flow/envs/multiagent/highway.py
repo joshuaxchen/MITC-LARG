@@ -952,8 +952,7 @@ class MultiAgentHighwayPOEnvMerge4Collaborate(MultiAgentHighwayPOEnvMerge4):
             rewards[rl_id] = reward
         return rewards
 
-class
-MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead(MultiAgentHighwayPOEnvMerge4Collaborate):
+class MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead(MultiAgentHighwayPOEnvMerge4Collaborate):
     @property
     def observation_space(self):
         #See class definition
@@ -961,7 +960,7 @@ MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead(MultiAgentHighwayPOEnvM
 
     def get_state(self):
         obs=super().get_state()
-
+        # add the 10th state, the number of vehicles ahead for each RL vehicle (merge road excluded)
         for rl_id in self.k.vehicle.get_rl_ids():
             rl_x=self.k.vehicle.get_x_by_id(rl_id)
             rl_road_id=self.k.vehicle.get_edge(rl_id)

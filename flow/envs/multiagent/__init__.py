@@ -13,7 +13,7 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvNewStates, MultiAgentHighwayPOEnvNewStatesNegative,\
                         MultiAgentHighwayPOEnvNewStatesCollaborate, MultiAgentHighwayPOEnvNewStatesZero,\
                         MultiAgentHighwayPOEnvNewStatesNegativeInflow,MultiAgentHighwayPOEnvMerge4,\
-                        MultiAgentHighwayPOEnvMerge4Negative, MultiAgentHighwayPOEnvMerge4Collaborate, MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,\
+                        MultiAgentHighwayPOEnvMerge4Negative, MultiAgentHighwayPOEnvMerge4Collaborate, MultiAgentHighwayPOEnvMerge4CollaborateAdvantage,MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead,\
                         MultiAgentHighwayPOEnvAblationDistance,\
                         MultiAgentHighwayPOEnvAblationDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestion,\

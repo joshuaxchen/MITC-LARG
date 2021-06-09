@@ -24,8 +24,7 @@ from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
-from flow.envs.multiagent import
-MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -43,13 +42,12 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     '--avp',
     type=int,
-    default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument(
     '--num_rl',
     type=int,
-    default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
 
 args=parser.parse_args()
 
@@ -186,6 +184,11 @@ flow_params = dict(
     initial=InitialConfig(),
 )
 
+if args.handset_inflow:
+    flow_params['env'].additional_params['handset_inflow']=args.handset_inflow
+# AV Penetration
+if args.handset_avp:
+    flow_params['env'].additional_params['handset_avp']=(args.handset_avp/100.0)
 
 # SET UP EXPERIMENT
 
