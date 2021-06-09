@@ -186,9 +186,6 @@ flow_params = dict(
 
 if args.handset_inflow:
     flow_params['env'].additional_params['handset_inflow']=args.handset_inflow
-# AV Penetration
-if args.handset_avp:
-    flow_params['env'].additional_params['handset_avp']=(args.handset_avp/100.0)
 
 # SET UP EXPERIMENT
 
