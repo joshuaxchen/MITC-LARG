@@ -931,6 +931,8 @@ class MultiAgentHighwayPOEnvMerge4CollaborateAdvantage(MultiAgentHighwayPOEnvMer
         return rewards
 
 
+
+
 class MultiAgentHighwayPOEnvMerge4Collaborate(MultiAgentHighwayPOEnvMerge4):
     def compute_reward(self, rl_actions, **kwargs):
         if rl_actions is None:
@@ -950,6 +952,33 @@ class MultiAgentHighwayPOEnvMerge4Collaborate(MultiAgentHighwayPOEnvMerge4):
             rewards[rl_id] = reward
         return rewards
 
+class
+MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead(MultiAgentHighwayPOEnvMerge4Collaborate):
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
+
+    def get_state(self):
+        obs=super().get_state()
+
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rl_x=self.k.vehicle.get_x_by_id(rl_id)
+            rl_road_id=self.k.vehicle.get_edge(rl_id)
+            num_ahead=0
+            for veh_id in self.k.vehicle.get_ids():
+                veh_x=self.k.vehicle.get_x_by_id(veh_id)
+                veh_road_id=self.k.vehicle.get_edge(rl_id)
+                if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom"] and rl_x<veh_x:
+                    num_ahead+=1
+                else:
+                    pass
+            observation=obs[rl_id]
+            observation = np.append(observation, num_ahead)
+            obs.update({rl_id: observation})
+
+        return obs
+ 
 class MultiAgentHighwayPOEnvAblationDistance(MultiAgentHighwayPOEnvMerge4):
     @property
     def observation_space(self):
