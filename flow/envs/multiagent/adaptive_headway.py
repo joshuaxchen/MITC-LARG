@@ -1,6 +1,7 @@
 """Environment used to train vehicles to improve traffic on a highway."""
 import numpy as np
 from gym.spaces.box import Box
+from gym.spaces import Discrete 
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
 import collections
@@ -35,9 +36,12 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         """
 
         """See class definition."""
-        return Box(0, 1, shape=(1,), dtype=np.float32)
+        #import pdb; pdb.set_trace()
+        return Discrete(100)
+        #return Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32)
 
     def idm_acceleration(self, veh_id, rl_action):
+        #print(veh_id, "chooses to be a leader with probability:",rl_action)
         if rl_action is None:
             return None
         a=1 # max acceleration, in m/s2 (default: 1)
@@ -71,14 +75,14 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         rl_actions : array_like
             list of actions provided by the RL algorithm
         """
-
+        #print(rl_follower_or_leaders)
         # ignore if no actions are issued
         if rl_follower_or_leaders is None:
             return
         # maintain the a headway discounted by action 
         rl_actions={}
         for rl_id, actions in rl_follower_or_leaders.items():
-            accel=self.idm_acceleration(rl_id, actions[0])
+            accel=self.idm_acceleration(rl_id, actions/100.0)
             rl_actions[rl_id]=np.array([accel])
         rl_clipped = self.clip_actions(rl_actions)
         self._apply_rl_actions(rl_clipped)
