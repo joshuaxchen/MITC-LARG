@@ -37,8 +37,10 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
 
         """See class definition."""
         #import pdb; pdb.set_trace()
-        return Discrete(100)
-        #return Box(low=0.0, high=1.0, shape=(1,), dtype=np.float32)
+        #return Discrete(100)
+        return Box(low=np.abs(0.0), high=np.abs(1.0), shape=(1,), dtype=np.float32)
+        #return Box(low=np.array([0.0]), high=np.array([1.0]), shape=(1,), dtype=np.float32)
+        #return Box(low=np.float32(np.array([0.0])), high=np.float32(np.array([1.0])), shape=(1,), dtype=np.float32)
 
     def idm_acceleration(self, veh_id, rl_action):
         #print(veh_id, "chooses to be a leader with probability:",rl_action)
@@ -82,7 +84,12 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         # maintain the a headway discounted by action 
         rl_actions={}
         for rl_id, actions in rl_follower_or_leaders.items():
-            accel=self.idm_acceleration(rl_id, actions/100.0)
+            chosen_act=actions[0]
+            if chosen_act<0:
+                chosen_act=0
+            if chosen_act>1:
+                chosen_act=1
+            accel=self.idm_acceleration(rl_id, chosen_act)
             rl_actions[rl_id]=np.array([accel])
         rl_clipped = self.clip_actions(rl_actions)
         self._apply_rl_actions(rl_clipped)
