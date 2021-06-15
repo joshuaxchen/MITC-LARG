@@ -1,13 +1,13 @@
 """Environment used to train vehicles to improve traffic on a highway."""
 import numpy as np
 from gym.spaces.box import Box
-from gym.spaces import Discrete 
+from gym.spaces import Discrete, MultiBinary 
 from flow.core.rewards import desired_velocity, average_velocity
-from flow.envs.multiagent.base import MultiEnv
+from flow.envs import MergePOEnvArrive
 import collections
 import os
 from copy import deepcopy
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4
+from flow.envs import MergePOEnv 
 
 ADDITIONAL_ENV_PARAMS = {
     # maximum acceleration of autonomous vehicles
@@ -22,7 +22,7 @@ ADDITIONAL_ENV_PARAMS = {
     #"eta2": 0.1
 }
 
-class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
+class MergePOEnvAdaptiveHeadway(MergePOEnvArrive):
     @property
     def action_space(self):
         """Identify the dimensions and bounds of the action space.
@@ -37,8 +37,9 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
 
         """See class definition."""
         #import pdb; pdb.set_trace()
-        return Discrete(10)
-        #return Box(low=np.abs(0.0), high=np.abs(1.0), shape=(1,), dtype=np.float32)
+        #return Discrete(100)
+        return Box(low=np.abs(0.0), high=np.abs(1.0), shape=(self.num_rl,), dtype=np.float32)
+        #return MultiBinary(self.num_rl)
         #return Box(low=np.array([0.0]), high=np.array([1.0]), shape=(1,), dtype=np.float32)
         #return Box(low=np.float32(np.array([0.0])), high=np.float32(np.array([1.0])), shape=(1,), dtype=np.float32)
 
@@ -53,8 +54,6 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         b=1.5 # comfortable deceleration, in m/s2 (default: 1.5)
         v0=30 # desirable velocity, in m/s (default: 30)
         T=MAX_T*rl_action # safe time headway, in s (default: 1)
-        if T<=1:
-            T=1
         v = self.k.vehicle.get_speed(veh_id) 
         lead_id = self.k.vehicle.get_leader(veh_id)
         h = self.k.vehicle.get_headway(veh_id)
@@ -84,41 +83,20 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         if rl_follower_or_leaders is None:
             return
         # maintain the a headway discounted by action 
-        rl_actions={}
-        for rl_id, actions in rl_follower_or_leaders.items():
-            chosen_act=actions
+        rl_actions=[]
+        for i, rl_id in enumerate(self.rl_veh):
+            # ignore rl vehicles outside the network
+            if rl_id not in self.k.vehicle.get_rl_ids():
+                rl_follower_or_leaders[i]=0
+                continue
+            chosen_act=rl_follower_or_leaders[i]
             if chosen_act<0:
                 chosen_act=0
             if chosen_act>1:
                 chosen_act=1
             accel=self.idm_acceleration(rl_id, chosen_act)
-            rl_actions[rl_id]=np.array([accel])
-        rl_clipped = self.clip_actions(rl_actions)
+            rl_follower_or_leaders[i]=accel
+        rl_clipped = self.clip_actions(rl_follower_or_leaders)
         self._apply_rl_actions(rl_clipped)
 
-class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOEnvMerge4AdaptiveHeadway):
-    @property
-    def observation_space(self):
-        #See class definition
-        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
-
-    def get_state(self):
-        obs=super().get_state()
-        # add the 10th state, the number of vehicles ahead for each RL vehicle (merge road excluded)
-        for rl_id in self.k.vehicle.get_rl_ids():
-            rl_x=self.k.vehicle.get_x_by_id(rl_id)
-            rl_road_id=self.k.vehicle.get_edge(rl_id)
-            num_ahead=0
-            for veh_id in self.k.vehicle.get_ids():
-                veh_x=self.k.vehicle.get_x_by_id(veh_id)
-                veh_road_id=self.k.vehicle.get_edge(rl_id)
-                if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom"] and rl_x<veh_x:
-                    num_ahead+=1
-                else:
-                    pass
-            observation=obs[rl_id]
-            observation = np.append(observation, num_ahead)
-            obs.update({rl_id: observation})
-
-        return obs
 

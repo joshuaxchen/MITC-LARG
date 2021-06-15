@@ -141,7 +141,7 @@ inflow.add(
     depart_speed=7.5)
 
 flow_params = dict(
-    exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_countahead_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead,
     network=MergeNetwork,
