@@ -41,9 +41,6 @@ from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
 
-seed_filename = glob.glob("eval_seeds/*/seeds.pkl")
-print(seed_filename)
-print("Using ", len(seed_filename), " random seeds")
 EXAMPLE_USAGE = """
 example usage:
     python ./visualizer_rllib.py /ray_results/experiment_dir/result_dir 1
@@ -645,6 +642,7 @@ def create_parser():
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     parser.add_argument('--random_inflow', action='store_true')
+    parser.add_argument('--seed_dir', type=str, help='seed dir')
     return parser
 
 from subprocess import check_output
@@ -665,6 +663,12 @@ if __name__ == '__main__':
     ray.init(
     num_cpus=1,
     object_store_memory=1024*1024*1024)
+
+    if args.seed_dir:
+        seed_filename = glob.glob(args.seed_dir+"/eval_seeds/*/seeds.pkl")
+    print(seed_filename)
+    print("Using ", len(seed_filename), " random seeds")
+
     for i in range(len(seed_filename)):
 
         seed = seed_filename[i]
