@@ -664,6 +664,7 @@ if __name__ == '__main__':
     MergeInflow = []
     ray.init(
     num_cpus=1,
+    num_gpus=0,
     object_store_memory=1024*1024*1024)
     for i in range(len(seed_filename)):
 
