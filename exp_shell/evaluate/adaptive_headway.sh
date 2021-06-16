@@ -7,6 +7,7 @@ TRAIN_DIR_4=~/ray_results/yulin_adaptive_headway_eta1_0.9_eta2_0.1/PPO_MultiAgen
 #TRAIN_DIR_70=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/merge4_highway2000_merge200_avp_70
 #TRAIN_DIR_90=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/merge4_highway2000_merge200_avp_90
 
+TRAIN_DIR_5=/home/users/flow_user/ray_results/yulin_adaptive_headway_eta1_0.9_eta2_0.1/penality
 #TRAIN_DIR_100=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_ac09e_00000_0_2021-05-26_02-04-54 
 
 TRAIN_DIR_Centralizd=/home/users/flow_user/ray_results/yulin_centeralized_adaptive_headway_binary/PPO_MergePOEnvAdaptiveHeadway-v0_0dd89_00000_0_2021-06-13_11-47-35
@@ -27,14 +28,14 @@ MERGE_INFLOW=200
 
 for AVP in 2 4 6 8 10 20 30 #40 50 60 70 80 100
 do
-	python3 $VISUALIZER $TRAIN_DIR_4 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/adaptive_headway/continuous_penality/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_5 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/adaptive_headway/continuous_penality/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
 done
 
 wait 
 
 for AVP in 40 50 60 70 80 100
 do
-	python3 $VISUALIZER $TRAIN_DIR_4 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/adaptive_headway/continuous_penality/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_5 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/adaptive_headway/continuous_penality/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
 done
 
 
