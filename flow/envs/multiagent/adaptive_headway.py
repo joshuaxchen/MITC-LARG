@@ -37,9 +37,10 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
 
         """See class definition."""
         #import pdb; pdb.set_trace()
-        return Discrete(10)
+        #return Discrete(10)
         #return Box(low=np.abs(0.0), high=np.abs(1.0), shape=(1,), dtype=np.float32)
         #return Box(low=np.array([0.0]), high=np.array([1.0]), shape=(1,), dtype=np.float32)
+        return Box(low=-float('inf'), high=float('inf'), shape=(1,), dtype=np.float32)
         #return Box(low=np.float32(np.array([0.0])), high=np.float32(np.array([1.0])), shape=(1,), dtype=np.float32)
 
     def idm_acceleration(self, veh_id, rl_action):
@@ -86,15 +87,41 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         # maintain the a headway discounted by action 
         rl_actions={}
         for rl_id, actions in rl_follower_or_leaders.items():
-            chosen_act=actions
+            chosen_act=actions[0]
             if chosen_act<0:
                 chosen_act=0
-            if chosen_act>1:
-                chosen_act=1
+            #if chosen_act>1:
+            #    chosen_act=1
             accel=self.idm_acceleration(rl_id, chosen_act)
             rl_actions[rl_id]=np.array([accel])
         rl_clipped = self.clip_actions(rl_actions)
         self._apply_rl_actions(rl_clipped)
+
+    def compute_reward(self, rl_actions, **kwargs):
+        """See class definition."""
+        if rl_actions is None:
+            return {}
+        rewards=super().compute_reward(rl_actions, **kwargs)
+        #print("rewards:",rewards)
+        #print("actions:",rl_actions)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            if self.env_params.evaluate:
+                # reward is speed of vehicle if we are in evaluation mode
+                reward = self.k.vehicle.get_speed(rl_id)
+            elif kwargs['fail']:
+                # reward is 0 if a collision occurred
+                reward = 0
+            else:
+                # reward from parent class
+                if rl_id in rl_actions.keys():
+                    act=rl_actions[rl_id][0]
+                    #print("action is:",act)
+                    reward=rewards[rl_id]                
+                    # compute penality for action
+                    penality=((2*(act-0.5))**6-1)*0.1 
+                    #print("reward=", reward, "penality=", penality) 
+                    rewards[rl_id] = reward-penality
+        return rewards
 
 class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOEnvMerge4AdaptiveHeadway):
     @property
