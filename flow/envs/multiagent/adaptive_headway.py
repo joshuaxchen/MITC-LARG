@@ -139,7 +139,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOE
             for veh_id in self.k.vehicle.get_ids():
                 veh_x=self.k.vehicle.get_x_by_id(veh_id)
                 veh_road_id=self.k.vehicle.get_edge(rl_id)
-                if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom"] and rl_x<veh_x:
+                if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom", "center"] and rl_x<veh_x:
                     num_ahead+=1
                 else:
                     pass
