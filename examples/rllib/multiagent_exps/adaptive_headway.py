@@ -173,7 +173,7 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
-            "max_headway": 10
+            "max_headway": 50
         },
     ),
 
