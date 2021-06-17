@@ -88,6 +88,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4):
         rl_actions={}
         for rl_id, actions in rl_follower_or_leaders.items():
             chosen_act=actions[0]
+            #print(rl_id, "chooses to be a leader with probability:", chosen_act)
             if chosen_act<0:
                 chosen_act=0
             #if chosen_act>1:
