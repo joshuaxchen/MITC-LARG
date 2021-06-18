@@ -666,6 +666,8 @@ if __name__ == '__main__':
 
     if args.seed_dir:
         seed_filename = glob.glob(args.seed_dir+"/eval_seeds/*/seeds.pkl")
+    else:
+        seed_filename = glob.glob("eval_seeds/*/seeds.pkl")
     print(seed_filename)
     print("Using ", len(seed_filename), " random seeds")
 

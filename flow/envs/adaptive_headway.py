@@ -38,7 +38,7 @@ class MergePOEnvAdaptiveHeadway(MergePOEnvArrive):
         """See class definition."""
         #import pdb; pdb.set_trace()
         #return Discrete(100)
-        return Box(low=np.abs(0.0), high=np.abs(1.0), shape=(self.num_rl,), dtype=np.float32)
+        return Box(low=-float('inf'), high=float('inf'), shape=(self.num_rl,), dtype=np.float32)
         #return MultiBinary(self.num_rl)
         #return Box(low=np.array([0.0]), high=np.array([1.0]), shape=(1,), dtype=np.float32)
         #return Box(low=np.float32(np.array([0.0])), high=np.float32(np.array([1.0])), shape=(1,), dtype=np.float32)
@@ -54,6 +54,8 @@ class MergePOEnvAdaptiveHeadway(MergePOEnvArrive):
         b=1.5 # comfortable deceleration, in m/s2 (default: 1.5)
         v0=30 # desirable velocity, in m/s (default: 30)
         T=MAX_T*rl_action # safe time headway, in s (default: 1)
+        if T<=1:
+            T=1
         v = self.k.vehicle.get_speed(veh_id) 
         lead_id = self.k.vehicle.get_leader(veh_id)
         h = self.k.vehicle.get_headway(veh_id)
@@ -92,11 +94,32 @@ class MergePOEnvAdaptiveHeadway(MergePOEnvArrive):
             chosen_act=rl_follower_or_leaders[i]
             if chosen_act<0:
                 chosen_act=0
-            if chosen_act>1:
-                chosen_act=1
             accel=self.idm_acceleration(rl_id, chosen_act)
             rl_follower_or_leaders[i]=accel
         rl_clipped = self.clip_actions(rl_follower_or_leaders)
         self._apply_rl_actions(rl_clipped)
+
+    def compute_reward(self, rl_actions, **kwargs):
+        """See class definition."""
+        if self.env_params.evaluate:
+            return np.mean(self.k.vehicle.get_speed(self.k.vehicle.get_ids()))
+        if kwargs['fail']:
+            # reward is 0 if a collision occurred
+            reward = 0
+        if rl_actions is None:
+            return {}
+        reward=super().compute_reward(rl_actions, **kwargs)
+        #print("rewards:",rewards)
+        #print("actions:",rl_actions)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            # reward from parent class
+            if rl_id in rl_actions.keys():
+                act=rl_actions[rl_id][0]
+                #print("action is:",act)
+                # compute penality for action
+                penality=((2*(act-0.5))**6-1)*0.1 
+                #print("reward=", reward, "penality=", penality) 
+                reward = reward-penality
+        return reward
 
 
