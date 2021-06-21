@@ -125,6 +125,37 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
         self._apply_rl_actions(clipped_acceleration)
         print("clipped acceleration:", clipped_acceleration)
     
+    def compute_reward(self, rl_actions, **kwargs):
+        """See class definition."""
+        if rl_actions is None:
+            return {}
+        rewards=super().compute_reward(rl_actions, **kwargs)
+        #print("rewards:",rewards)
+        #print("actions:",rl_actions)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            if self.env_params.evaluate:
+                # reward is speed of vehicle if we are in evaluation mode
+                reward = self.k.vehicle.get_speed(rl_id)
+            elif kwargs['fail']:
+                # reward is 0 if a collision occurred
+                reward = 0
+            else:
+                # reward from parent class
+                if rl_id in rl_actions.keys():
+                    act=rl_actions[rl_id][0]
+                    #print("action is:",act)
+                    reward=rewards[rl_id]
+                    # compute penality for action
+                    if act>=self.action_space.low and act<=self.action_space.high:
+                        penality=0
+                    elif act<self.action_space.low:
+                        penality=self.action_space.low-act
+                    else:
+                        penality=act-self.action_space.high
+                    #print("reward=", reward, "penality=", penality)
+                    rewards[rl_id] = reward-penality
+        return rewards
+
 class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOEnvMerge4AdaptiveHeadway):
     @property
     def observation_space(self):

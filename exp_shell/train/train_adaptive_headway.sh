@@ -4,7 +4,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 
 
-for AVP in 10  
+for AVP in 10 90 60 30 
 do
 	python3 ../../examples/rllib/multiagent_exps/adaptive_headway.py --avp ${AVP}
 done
