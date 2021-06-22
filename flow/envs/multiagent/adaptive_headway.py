@@ -27,7 +27,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
     @property
     def action_space(self):
         """See class definition."""
-        print(self.env_params.additional_params["max_accel"])
+        #print(self.env_params.additional_params["max_accel"])
         return Box(
             low=0,#-np.abs(self.env_params.additional_params['max_decel']),
             high=1,#self.env_params.additional_params['max_accel'],
@@ -57,6 +57,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
                 s_star = 0
             else:
                 lead_vel = self.k.vehicle.get_speed(lead_id)
+                print("leader velocity:", lead_vel)
                 s_star = s0 + max(0, v * T + v * (v - lead_vel) /(2 * np.sqrt(a * b)))
             return a * (1 - (v / v0)**delta - (s_star / h)**2)
 
@@ -90,6 +91,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
         if rl_actions is None:
             return
 
+        print("************************************")
         # print existing headway
         for rl_id in self.k.vehicle.get_rl_ids():
             lead_head = self.k.vehicle.get_headway(rl_id)
