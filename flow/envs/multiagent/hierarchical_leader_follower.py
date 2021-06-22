@@ -35,15 +35,49 @@ ADDITIONAL_ENV_PARAMS = {
     "max_headway": 1,
 }
 
-class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Collaborate):
+class MyCallbacks(DefaultCallbacks):
+    def on_episode_start(self, worker, base_env, policies, episode, **kwargs):
+        # save env state when an episode starts
+        env = base_env.get_unwrapped()[0]
+        state = env.get_state()
+        episode.user_data["initial_state"] = state
+
+def policy_map_fn(_):
+        return 'av'
+
+class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collaborate):
+    accel_agent=None
+    def init_policy_agent(result_dir, checkpoint):
+        config=get_rllib_config(result_dir)
+        config['callbacks'] = MyCallbacks
+        config['num_workers'] = 0
+        if config.get('multiagent',{}).get('policies', None):
+            pkl=get_rllib_pkl(result_dir)
+            config['multiagent'] = pkl['multiagent']
+        else:
+            import sys
+            sys.exit(-1)
+        config_run=config['env_config']['run']
+        flow_params = get_flow_params(config)
+        create_env, env_name = make_create_env(params=flow_params, version=0)
+        register_env(env_name, create_env)
+        agent_cls = get_trainable_cls(config_run)
+        agent = agent_cls(env=env_name, config=config) 
+        agent.restore(checkpoint)
+        return agent
+
+    def __init__(self, env_params, sim_params, network, simulator='traci'):
+        super().__init__(env_params, sim_params, network, simulator)
+
     @property
     def action_space(self):
         """See class definition."""
-        return Box(
-            low=0,#-np.abs(self.env_params.additional_params['max_decel']),
-            high=1,#self.env_params.additional_params['max_accel'],
-            shape=(1,),  # (4,),
-            dtype=np.float32)
+        return Discrete(2)
+        #return Box(
+        #    low=0,#-np.abs(self.env_params.additional_params['max_decel']),
+        #    high=1,#self.env_params.additional_params['max_accel'],
+        #    shape=(1,),  # (4,),
+        #    dtype=np.float32)
 
     def idm_acceleration(self, veh_id, rl_action):
             #print(veh_id, "chooses to be a leader with probability:",rl_action)
@@ -55,9 +89,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
             MAX_T=self.env_params.additional_params['max_headway']
             b=1.5 # comfortable deceleration, in m/s2 (default: 1.5)
             v0=30 # desirable velocity, in m/s (default: 30)
-            T=MAX_T*rl_action # safe time headway, in s (default: 1)
-            if T<=1:
-                T=1
+            T=1 # safe time headway, in s (default: 1)
             v = self.k.vehicle.get_speed(veh_id) 
             lead_id = self.k.vehicle.get_leader(veh_id)
             h = self.k.vehicle.get_headway(veh_id)
@@ -86,6 +118,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
                     a_max=self.env_params.additional_params['max_decel'])
         return rl_acceleration
 
+
     def apply_rl_actions(self, rl_actions=None):
         """Specify the actions to be performed by the rl agent(s).
 
@@ -101,6 +134,13 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
         if rl_actions is None:
             return
 
+        if 'trained_dir' in self.env_params.additional_params.keys() and MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent is None:
+            print("load policy agent")
+            result_dir=self.env_params.additional_params['trained_dir']
+            checkpoint=self.env_params.additional_params['checkpoint']
+            MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent=MultiAgentHighwayPOEnvMerge4Hierarchy.init_policy_agent(result_dir, checkpoint)
+
+        #print("network choice:",rl_actions) 
         clipped_actions = self.clip_actions(rl_actions)
         if rl_actions!=clipped_actions:
             print("********network gives an action out of bound********************")
@@ -110,50 +150,31 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
             #print("actions from the network:",rl_actions)
             #print("actions after clipped:",clipped_actions)
             #print("within bound:[",self.action_space.low[0], ",", self.action_space.high[0],"]")
-        rl_acceleration={}
-        for rl_id, actions in clipped_actions.items():
-            chosen_act=actions[0]
-            #print(rl_id, "chooses to be a leader with probability:", chosen_act)
-            accel=self.idm_acceleration(rl_id, chosen_act)
-            rl_acceleration[rl_id]=np.array([accel])  
-        #print("before clip:", rl_acceleration)
-        clipped_acceleration=self.clip_acceleration(rl_acceleration)
-        #print("after clip:", clipped_acceleration)
-        self._apply_rl_actions(clipped_acceleration)
-    
-    def compute_reward(self, rl_actions, **kwargs):
-        """See class definition."""
-        if rl_actions is None:
-            return {}
-        rewards=super().compute_reward(rl_actions, **kwargs)
-        #print("rewards:",rewards)
-        #print("actions:",rl_actions)
-        for rl_id in self.k.vehicle.get_rl_ids():
-            if self.env_params.evaluate:
-                # reward is speed of vehicle if we are in evaluation mode
-                reward = self.k.vehicle.get_speed(rl_id)
-            elif kwargs['fail']:
-                # reward is 0 if a collision occurred
-                reward = 0
+
+        leader_rl_acceleration={}
+        follower_rl_acceleration={}
+        acceleration={}
+        for rl_id, choice in clipped_actions.items():
+            # compute acceleration as a leader: the acceleration is from the headway
+            if choice==0:# be a follower 
+                #print(rl_id, "chooses to be a leader with probability:", chosen_act)
+                leader_accel=self.idm_acceleration(rl_id)
+                acceleration[rl_id]=np.array([leader_accel])  
+            elif choice==1: # be a leader
+                # compute acceleartion as a follower: the acceleration is from an existing policy
+                state=self.get_state()
+                acceleration[rl_id]= MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
             else:
-                # reward from parent class
-                if rl_id in rl_actions.keys():
-                    act=rl_actions[rl_id][0]
-                    #print("action is:",act)
-                    reward=rewards[rl_id]
-                    # compute penality for action
-                    if act>=self.action_space.low and act<=self.action_space.high:
-                        penality=0
-                    elif act<self.action_space.low:
-                        penality=self.action_space.low-act
-                    else:
-                        penality=act-self.action_space.high
-                    #print("reward=", reward, "penality=", penality)
-                    rewards[rl_id] = reward-penality
-        return rewards
+                print("action out of bound")
+                import sys
+                sys.exit(-1)
 
+        #print("before clip acceleration:", acceleration)
+        clipped_acceleration=self.clip_acceleration(acceleration)
+        #print("after clip acceleration:", clipped_acceleration)
+        self._apply_rl_actions(clipped_acceleration)
 
-class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOEnvMerge4AdaptiveHeadway):
+class MultiAgentHighwayPOEnvMerge4HierarchyCountAhead(MultiAgentHighwayPOEnvMerge4CollaborateA):
     @property
     def observation_space(self):
         #See class definition
