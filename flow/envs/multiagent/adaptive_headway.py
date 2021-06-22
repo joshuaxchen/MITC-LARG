@@ -179,7 +179,8 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead(MultiAgentHighwayPOE
                 else:
                     pass
             observation=obs[rl_id]
-            observation = np.append(observation, num_ahead)
+            max_ahead=100.0
+            observation = np.append(observation, num_ahead/max_ahead)
             obs.update({rl_id: observation})
 
         return obs
