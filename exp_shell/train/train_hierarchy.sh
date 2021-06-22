@@ -6,7 +6,7 @@ export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 
 for AVP in 10  
 do
-	python3 ../../examples/rllib/multiagent_exps/hierarchical_adaptive_headway.py --avp ${AVP}
+	python3 ../../examples/rllib/multiagent_exps/hierarchical_policy.py --avp ${AVP}
 done
 
 #for AVP in 70 90 
