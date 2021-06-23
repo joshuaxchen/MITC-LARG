@@ -10,7 +10,8 @@
 #adaptive_headway_count_ahead_main2000_merge200_avp10_maxheadway50
 #adaptive_headway_penality_main2000_merge200_avp10_maxheadway50
 #merge4_highway2000_merge200_avp_90 
-TRAIN_DIR=~/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Hierarchy-v0_8659f_00000_0_2021-06-22_21-55-53
+#TRAIN_DIR=~/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Hierarchy-v0_8659f_00000_0_2021-06-22_21-55-53
+TRAIN_DIR=../flow_results/aamas_full
 
 #yulin_adaptive_headway_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4AdaptiveHeadway-v0_4383e_00000_0_2021-06-11_19-15-16
 #~/gitlab/flow_results/PPO_MultiAgentHighwayPOEnvMerge4AdaptiveHeadway-v0_4383e_00000_0_2021-06-11_19-15-16
@@ -26,7 +27,7 @@ $TRAIN_DIR \
 $CHCKPOINT \
 --render_mode sumo_gui \
 --num_rollouts 1 \
---handset_avp 10 
+#--handset_avp 10 
 #--handset_inflow 1350 150 200 
 #sumo_gui \
 
