@@ -57,6 +57,9 @@ for folder_name in folder_name_list:
         key=re.split("_",file_name)[-1].split(".")[0]
         if file_name=='summary.txt':
             continue
+        if attr_name not in summary[folder_name][file_name]:
+            print(folder_name, file_name)
+            print(summary[folder_name][file_name])
         values=summary[folder_name][file_name][attr_name].split(",")
         attr_list.append((int(key), values[0].strip(), values[1].strip())) 
     attr_list.sort()

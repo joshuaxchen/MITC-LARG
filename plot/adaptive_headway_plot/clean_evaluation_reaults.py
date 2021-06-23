@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
 
 
 
-working_dir=os.path.join("..","..","exp_results", "avp_count_ahead")#, "main2000-1700_merge200")
+working_dir=os.path.join("..","..","exp_results", "count_ahead")#, "main2000-1700_merge200")
 folder_name_list=obtain_subfolder_names(working_dir)
 files_in_each_folder=dict()
 summary=dict()
@@ -41,24 +41,32 @@ for folder_name in folder_name_list:
     for file_name in files_in_each_folder[folder_name]:
         if file_name=='summary.txt':
             continue
+        print(folder_name,file_name)
         fname=os.path.join(folder_path, file_name)
         data=LastNlines(fname, 6, 2)
         summary[folder_name][file_name]=dict()
         for attr_value in data:
+            print(attr_value)
             text=attr_value.split(":")
             attr=text[0]
             value=text[1].strip()
             summary[folder_name][file_name][attr]=value
-print(summary)
 for folder_name in folder_name_list:
     attr_name='Outflow'
     attr_list=[]
     for file_name in files_in_each_folder[folder_name]:
-        key=re.split("_",file_name)[-1].split(".")[0]
+        #print(file_name)
+        key=re.split("_",file_name)[0].split("-")[0]
         if file_name=='summary.txt':
             continue
         values=summary[folder_name][file_name][attr_name].split(",")
-        attr_list.append((int(key), values[0].strip(), values[1].strip())) 
+        import re
+        match = re.match(r"([a-z]+)([0-9]+)", key, re.I)
+        if match:
+            items = match.groups()
+            #print("*******",items)
+            #print(items[1], values[0].strip(), values[1].strip())
+            attr_list.append((int(items[1]), values[0].strip(), values[1].strip())) 
     attr_list.sort()
     print(folder_name)
     for item in attr_list:

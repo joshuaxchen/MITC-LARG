@@ -1,15 +1,19 @@
 #!/bin/bash
-TRAIN_DIR=~/gitlab/flow_results/new_adaptive_headway_penality_avp10_main2000_merge200_maxheadway50
+#TRAIN_DIR=~/gitlab/flow_results/new_adaptive_headway_penality_avp10_main2000_merge200_maxheadway50
 #count_ahead_normalized_multiagent_main2000_merge200_avp10
 #new_adaptive_headway_penality_avp10_main2000_merge200_maxheadway50
 #new_adaptive_headway_avp10_main2000_merge200_maxheadway50
-$merge4_highway2000_merge200_avp_10
+#$merge4_highway2000_merge200_avp_10
 #new_adaptive_headway_avp10_main2000_merge200_maxheadway50
 #new_adaptive_headway_avp90_main2000_merge200_maxheadway50
 #new_adaptive_headway_count_ahead_avp10_main2000_merge200_maxheadway50
 #adaptive_headway_count_ahead_main2000_merge200_avp10_maxheadway50
 #adaptive_headway_penality_main2000_merge200_avp10_maxheadway50
 #merge4_highway2000_merge200_avp_90 
+TRAIN_DIR=~/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Hierarchy-v0_8659f_00000_0_2021-06-22_21-55-53
+
+#yulin_adaptive_headway_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4AdaptiveHeadway-v0_4383e_00000_0_2021-06-11_19-15-16
+#~/gitlab/flow_results/PPO_MultiAgentHighwayPOEnvMerge4AdaptiveHeadway-v0_4383e_00000_0_2021-06-11_19-15-16
 #merge4_highway2000_merge200_avp_10
 #merge_4_HUMAN_Sim
 #linearPPO
@@ -25,3 +29,4 @@ $CHCKPOINT \
 --handset_avp 10 
 #--handset_inflow 1350 150 200 
 #sumo_gui \
+
