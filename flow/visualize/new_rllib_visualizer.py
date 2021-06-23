@@ -40,6 +40,7 @@ from flow.utils.rllib import get_rllib_config
 from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Hierarchy
 
 EXAMPLE_USAGE = """
 example usage:
@@ -260,7 +261,6 @@ def visualizer_rllib(args, seed=None):
     # AV Penetration
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
-    
     if args.policy_dir is not None:
         result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
@@ -269,7 +269,7 @@ def visualizer_rllib(args, seed=None):
             checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
         else:
             checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-500'
-    else:
+    elif flow_params['env_name']==MultiAgentHighwayPOEnvMerge4Hierarchy:
         result_dir=env_params.additional_params['trained_dir']
         checkpoint_dir=env_params.additional_params['checkpoint']
     #trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
