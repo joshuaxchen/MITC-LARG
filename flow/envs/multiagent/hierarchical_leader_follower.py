@@ -141,7 +141,8 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
             elif choice==1: # be a leader
                 # compute acceleartion as a follower: the acceleration is from an existing policy
                 state=self.get_state()
-                acceleration[rl_id]= self.accel_agent_obj.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
+                if rl_id in state.keys():
+                    acceleration[rl_id]= self.accel_agent_obj.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
                 #accel_policy_obj=ray.get(accel_policy)
                 #acceleration[rl_id]= accel_policy_obj.compute_single_action(state[rl_id][0:9]) 
             else:

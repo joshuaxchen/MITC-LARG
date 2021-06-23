@@ -163,7 +163,7 @@ result_dir=args.policy_dir
 #flow_params['env'].additional_params['trained_dir']=result_dir
 #flow_params['env'].additional_params['env_name']=env_name
 checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
-trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
+#trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
 
 #flow_params['env'].additional_params['checkpoint']=checkpoint_dir
 

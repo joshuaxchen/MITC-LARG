@@ -18,8 +18,6 @@ class MyCallbacks(DefaultCallbacks):
         state = env.get_state()
         episode.user_data["initial_state"] = state
 
-accel_agent=None
-accel_policy=None
 def init_policy_agent(result_dir, checkpoint):
     #ray.init()
     config=get_rllib_config(result_dir)
