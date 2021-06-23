@@ -27,7 +27,8 @@ $TRAIN_DIR \
 $CHCKPOINT \
 --render_mode sumo_gui \
 --num_rollouts 1 \
-#--handset_avp 10 
-#--handset_inflow 1350 150 200 
-#sumo_gui \
+--render_mode no_render
+#--render_mode sumo_gui 
+#--handset_avp 30 \
+#--handset_inflow 3000 
 
