@@ -40,6 +40,7 @@ except ImportError:
     from ray.rllib.agents.registry import get_agent_class
 
 from ray.rllib.agents.callbacks import DefaultCallbacks
+from flow.envs.multiagent.trained_policy import init_policy_agent
 
 EXAMPLE_USAGE = """
 example usage:
@@ -75,7 +76,7 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 1
+N_CPUS = 11
 
 NUM_RL = 10
 if args.num_rl:
@@ -155,11 +156,14 @@ inflow.add(
     depart_lane="free",
     depart_speed=7.5)
 
+
+ray.init(num_cpus=N_CPUS + 1,object_store_memory=2*1024*1024*1024)
 # restore the trained policy as an acceleration controller and give it to the environment
 result_dir=args.policy_dir    
 #flow_params['env'].additional_params['trained_dir']=result_dir
 #flow_params['env'].additional_params['env_name']=env_name
 checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
+trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
 
 #flow_params['env'].additional_params['checkpoint']=checkpoint_dir
 
@@ -200,6 +204,7 @@ flow_params = dict(
             "trained_dir":result_dir,
             #"env_name":MultiAgentHighwayPOEnvMerge4Hierarchy,
             "checkpoint":checkpoint_dir,
+            #"trained_agent_ref":trained_agent_ref,
         },
     ),
 
@@ -271,7 +276,8 @@ def setup_exps(flow_params):
         flow_params, cls=FlowParamsEncoder, sort_keys=True, indent=4)
     config['env_config']['flow_params'] = flow_json
     config['env_config']['run'] = alg_run
-
+    
+    #flow_params['env'].additional_params['trained_agent_ref']=trained_agent_ref
     create_env, env_name = make_create_env(params=flow_params, version=0)
     print(env_name)
 
@@ -302,8 +308,8 @@ def setup_exps(flow_params):
 # RUN EXPERIMENT
 
 if __name__ == '__main__':
+
     alg_run, env_name, config = setup_exps(flow_params)
-    ray.init(num_cpus=N_CPUS + 1)
 
     run_experiments({
         flow_params['exp_tag']: {

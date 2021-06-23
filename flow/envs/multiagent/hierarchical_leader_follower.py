@@ -18,8 +18,8 @@ except ImportError:
     from ray.rllib.agents.registry import get_agent_class
 
 from ray.rllib.agents.callbacks import DefaultCallbacks
-
-
+from flow.envs.multiagent.trained_policy import init_policy_agent 
+import ray
 
 ADDITIONAL_ENV_PARAMS = {
     # maximum acceleration of autonomous vehicles
@@ -35,39 +35,19 @@ ADDITIONAL_ENV_PARAMS = {
     "max_headway": 1,
 }
 
-class MyCallbacks(DefaultCallbacks):
-    def on_episode_start(self, worker, base_env, policies, episode, **kwargs):
-        # save env state when an episode starts
-        env = base_env.get_unwrapped()[0]
-        state = env.get_state()
-        episode.user_data["initial_state"] = state
 
 def policy_map_fn(_):
         return 'av'
 
 class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collaborate):
-    accel_agent=None
-    def init_policy_agent(result_dir, checkpoint):
-        config=get_rllib_config(result_dir)
-        config['callbacks'] = MyCallbacks
-        config['num_workers'] = 0
-        if config.get('multiagent',{}).get('policies', None):
-            pkl=get_rllib_pkl(result_dir)
-            config['multiagent'] = pkl['multiagent']
-        else:
-            import sys
-            sys.exit(-1)
-        config_run=config['env_config']['run']
-        flow_params = get_flow_params(config)
-        create_env, env_name = make_create_env(params=flow_params, version=0)
-        register_env(env_name, create_env)
-        agent_cls = get_trainable_cls(config_run)
-        agent = agent_cls(env=env_name, config=config) 
-        agent.restore(checkpoint)
-        return agent
 
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
+        #trained_agent_ref=env_params.additional_params['trained_agent_ref']
+        #print("obtained ref:",trained_agent_ref)
+        result_dir=env_params.additional_params['trained_dir']
+        checkpoint=env_params.additional_params['checkpoint']
+        self.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
 
     @property
     def action_space(self):
@@ -79,10 +59,8 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         #    shape=(1,),  # (4,),
         #    dtype=np.float32)
 
-    def idm_acceleration(self, veh_id, rl_action):
+    def idm_acceleration(self, veh_id):
             #print(veh_id, "chooses to be a leader with probability:",rl_action)
-            if rl_action is None:
-                return None
             a=1 # max acceleration, in m/s2 (default: 1)
             delta=4 # acceleration exponent (default: 4)
             s0=2 # linear jam distance, in m (default: 2)
@@ -134,11 +112,11 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         if rl_actions is None:
             return
 
-        if 'trained_dir' in self.env_params.additional_params.keys() and MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent is None:
-            print("load policy agent")
-            result_dir=self.env_params.additional_params['trained_dir']
-            checkpoint=self.env_params.additional_params['checkpoint']
-            MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent=MultiAgentHighwayPOEnvMerge4Hierarchy.init_policy_agent(result_dir, checkpoint)
+        #if 'trained_dir' in self.env_params.additional_params.keys() and MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent is None:
+        #    print("load policy agent")
+        #    result_dir=self.env_params.additional_params['trained_dir']
+        #    checkpoint=self.env_params.additional_params['checkpoint']
+        #    MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent=MultiAgentHighwayPOEnvMerge4Hierarchy.init_policy_agent(result_dir, checkpoint)
 
         #print("network choice:",rl_actions) 
         clipped_actions = self.clip_actions(rl_actions)
@@ -163,7 +141,9 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
             elif choice==1: # be a leader
                 # compute acceleartion as a follower: the acceleration is from an existing policy
                 state=self.get_state()
-                acceleration[rl_id]= MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
+                acceleration[rl_id]= self.accel_agent_obj.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
+                #accel_policy_obj=ray.get(accel_policy)
+                #acceleration[rl_id]= accel_policy_obj.compute_single_action(state[rl_id][0:9]) 
             else:
                 print("action out of bound")
                 import sys
@@ -174,7 +154,7 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         #print("after clip acceleration:", clipped_acceleration)
         self._apply_rl_actions(clipped_acceleration)
 
-class MultiAgentHighwayPOEnvMerge4HierarchyCountAhead(MultiAgentHighwayPOEnvMerge4CollaborateA):
+class MultiAgentHighwayPOEnvMerge4HierarchyCountAhead(MultiAgentHighwayPOEnvMerge4Hierarchy):
     @property
     def observation_space(self):
         #See class definition
