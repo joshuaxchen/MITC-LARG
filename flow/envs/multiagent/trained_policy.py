@@ -19,7 +19,7 @@ class MyCallbacks(DefaultCallbacks):
         episode.user_data["initial_state"] = state
 
 def init_policy_agent(result_dir, checkpoint):
-    #ray.init()
+    print("load trained dir:",result_dir)
     config=get_rllib_config(result_dir)
     config['callbacks'] = MyCallbacks
     config['num_workers'] = 0

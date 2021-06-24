@@ -268,7 +268,11 @@ def visualizer_rllib(args, seed=None):
         if args.policy_checkpoint is not None:
             checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
         else:
-            checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-500'
+            checkpoint_dir = result_dir + '/checkpoint_500' + "/"+'checkpoint-500'
+
+        env_params.additional_params['trained_dir']=result_dir
+        env_params.additional_params['checkpoint']=checkpoint_dir
+
     elif flow_params['env_name']==MultiAgentHighwayPOEnvMerge4Hierarchy:
         result_dir=env_params.additional_params['trained_dir']
         checkpoint_dir=env_params.additional_params['checkpoint']
