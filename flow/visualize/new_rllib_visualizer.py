@@ -40,6 +40,7 @@ from flow.utils.rllib import get_rllib_config
 from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Hierarchy
 
 EXAMPLE_USAGE = """
 example usage:
@@ -260,7 +261,23 @@ def visualizer_rllib(args, seed=None):
     # AV Penetration
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
-    
+    if args.policy_dir is not None:
+        result_dir=args.policy_dir    
+        #flow_params['env'].additional_params['trained_dir']=result_dir
+        #flow_params['env'].additional_params['env_name']=env_name
+        if args.policy_checkpoint is not None:
+            checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
+        else:
+            checkpoint_dir = result_dir + '/checkpoint_500' + "/"+'checkpoint-500'
+
+        env_params.additional_params['trained_dir']=result_dir
+        env_params.additional_params['checkpoint']=checkpoint_dir
+
+    elif flow_params['env_name']==MultiAgentHighwayPOEnvMerge4Hierarchy:
+        result_dir=env_params.additional_params['trained_dir']
+        checkpoint_dir=env_params.additional_params['checkpoint']
+    #trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
+
     # Remove previous env; Create and register a gym+rllib env
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
@@ -643,6 +660,11 @@ def create_parser():
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     parser.add_argument('--random_inflow', action='store_true')
     parser.add_argument('--seed_dir', type=str, help='seed dir')
+    parser.add_argument('--policy_dir', type=str, help="path to the trained policy")
+
+    parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
+
+
     return parser
 
 from subprocess import check_output
