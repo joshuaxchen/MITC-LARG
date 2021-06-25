@@ -168,7 +168,7 @@ checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'check
 #flow_params['env'].additional_params['checkpoint']=checkpoint_dir
 
 flow_params = dict(
-    exp_tag='yulin_countahead_hierarchy_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_densityahead_hierarchy_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4HierarchyDensityAhead,
     network=MergeNetwork,

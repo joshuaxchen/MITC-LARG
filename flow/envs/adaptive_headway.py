@@ -111,15 +111,12 @@ class MergePOEnvAdaptiveHeadway(MergePOEnvArrive):
         reward=super().compute_reward(rl_actions, **kwargs)
         #print("rewards:",rewards)
         #print("actions:",rl_actions)
-        for rl_id in self.k.vehicle.get_rl_ids():
-            # reward from parent class
-            if rl_id in rl_actions.keys():
-                act=rl_actions[rl_id][0]
-                #print("action is:",act)
-                # compute penality for action
-                penality=((2*(act-0.5))**6-1)*0.1 
-                #print("reward=", reward, "penality=", penality) 
-                reward = reward-penality
+
+        for i, rl_id in enumerate(self.rl_veh):
+            act=rl_actions[i]
+            penality=((2*(act-0.5))**6-1)*0.01 
+            #print("act=",act,"reward=",reward,"penality=",penality)
+            reward = reward-penality
         return reward
 
 

@@ -142,7 +142,7 @@ inflow.add(
     depart_speed=7.5)
 
 flow_params = dict(
-    exp_tag='yulin_adaptive_headway_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_adaptive_headway_count_ahead_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead,
     network=MergeNetwork,
@@ -173,7 +173,7 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
-            "max_headway": 20
+            "max_headway": 50
         },
     ),
 
