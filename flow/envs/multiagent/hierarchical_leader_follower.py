@@ -53,7 +53,7 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         #    MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
 
     def __del__(self):
-        super().__del__()
+        #super().__del__()
         del self.accel_agent_obj
 
     @property

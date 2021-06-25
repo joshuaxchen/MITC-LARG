@@ -3,7 +3,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 
-TRAINED_POLICY=~/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/aamas_full
+TRAINED_POLICY=~/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full
 
 for AVP in 10  
 do
