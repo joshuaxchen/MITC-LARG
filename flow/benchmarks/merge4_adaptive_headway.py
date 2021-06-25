@@ -74,7 +74,7 @@ inflow.add(
 
 flow_params = dict(
     # name of the experiment
-    exp_tag="yulin_centeralized_adaptive_headway_binary",
+    exp_tag="yulin_centeralized_adaptive_headway",
 
     # name of the flow environment the experiment is running on
     env_name=MergePOEnvAdaptiveHeadway,
@@ -104,7 +104,7 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "reset_inflow":False,
             "inflow_range":[1.0],
-            "max_headway":20
+            "max_headway":50
         },
     ),
 

@@ -160,6 +160,7 @@ inflow.add(
 ray.init(num_cpus=N_CPUS + 1,object_store_memory=2*1024*1024*1024)
 # restore the trained policy as an acceleration controller and give it to the environment
 result_dir=args.policy_dir    
+print("result_dir:", result_dir)
 #flow_params['env'].additional_params['trained_dir']=result_dir
 #flow_params['env'].additional_params['env_name']=env_name
 checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint

@@ -40,7 +40,7 @@ def policy_map_fn(_):
         return 'av'
 
 class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collaborate):
-
+    #accel_agent_obj=None
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
         #trained_agent_ref=env_params.additional_params['trained_agent_ref']
@@ -49,6 +49,12 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         checkpoint=env_params.additional_params['checkpoint']
         print("load data from:", result_dir)
         self.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
+        #if MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj is None:
+        #    MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
+
+    def __del__(self):
+        super().__del__()
+        del self.accel_agent_obj
 
     @property
     def action_space(self):
@@ -143,6 +149,7 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
                 # compute acceleartion as a follower: the acceleration is from an existing policy
                 state=self.get_state()
                 if rl_id in state.keys():
+                    #acceleration[rl_id]= MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
                     acceleration[rl_id]= self.accel_agent_obj.compute_action(state[rl_id][0:9], policy_id=policy_map_fn(rl_id)) 
                 #accel_policy_obj=ray.get(accel_policy)
                 #acceleration[rl_id]= accel_policy_obj.compute_single_action(state[rl_id][0:9]) 

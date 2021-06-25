@@ -1,5 +1,5 @@
 #!/bin/bash
-BENCHMARK=../flow/benchmarks
+BENCHMARK=../../flow/benchmarks
 PPO_RUNNER=${BENCHMARK}/rllib/ppo_runner.py	
 RUN=python
 CPU_NUM=11
@@ -7,7 +7,7 @@ LR=5e-5
 NUM_ROLLOUTS=20
 
 echo "*************add python path to current direction***********"
-export PYTHONPATH="${PYTHONPATH}:${PWD}/../"
+export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 echo "************************************************************"
 echo "run a centralized experiment on simple merge to train agents" 
