@@ -32,7 +32,7 @@ from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull
 from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive
 from flow.envs.multiagent.adaptive_headway import MultiAgentHighwayPOEnvMerge4AdaptiveHeadway, MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead
 #,MultiAgentHighwayPOEnvMerge4HierarchicalAdaptiveHeadway
-from flow.envs.multiagent.hierarchical_leader_follower import MultiAgentHighwayPOEnvMerge4Hierarchy, MultiAgentHighwayPOEnvMerge4HierarchyCountAhead
+from flow.envs.multiagent.hierarchical_leader_follower import MultiAgentHighwayPOEnvMerge4Hierarchy, MultiAgentHighwayPOEnvMerge4HierarchyCountAhead, MultiAgentHighwayPOEnvMerge4HierarchyDensityAhead
 
 
 __all__ = ['MultiEnv', 'MultiAgentAccelEnv', 'MultiWaveAttenuationPOEnv',

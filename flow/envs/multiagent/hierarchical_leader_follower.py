@@ -182,4 +182,36 @@ class MultiAgentHighwayPOEnvMerge4HierarchyCountAhead(MultiAgentHighwayPOEnvMerg
             obs.update({rl_id: observation})
 
         return obs
+class MultiAgentHighwayPOEnvMerge4HierarchyDensityAhead(MultiAgentHighwayPOEnvMerge4Hierarchy):
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
 
+    def get_state(self):
+        obs=super().get_state()
+        # add the 10th state, the number of vehicles ahead for each RL vehicle (merge road excluded)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rl_x=self.k.vehicle.get_x_by_id(rl_id)
+            rl_road_id=self.k.vehicle.get_edge(rl_id)
+            num_ahead=0
+            for veh_id in self.k.vehicle.get_ids():
+                veh_x=self.k.vehicle.get_x_by_id(veh_id)
+                veh_road_id=self.k.vehicle.get_edge(rl_id)
+                if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom", "center"] and rl_x<veh_x:
+                    num_ahead+=1
+                else:
+                    pass
+            observation=obs[rl_id]
+            # obtain the distance to the junction
+            center_x = self.k.network.total_edgestarts_dict["center"]
+            #print("center_x",center_x)
+            merge_dist=obs[rl_id][5]*center_x
+            veh_length=self.k.vehicle.get_length(rl_id)
+            #print("merge_dist",merge_dist)
+            #print("veh_length",veh_length)
+            observation = np.append(observation, num_ahead*veh_length/merge_dist)
+            #print("density", observation[-1])
+            obs.update({rl_id: observation})
+
+        return obs
