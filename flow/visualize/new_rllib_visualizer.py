@@ -262,16 +262,16 @@ def visualizer_rllib(args, seed=None):
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     if args.policy_dir is not None:
-        result_dir=args.policy_dir    
+        accel_result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
         #flow_params['env'].additional_params['env_name']=env_name
         if args.policy_checkpoint is not None:
-            checkpoint_dir = result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
+            accel_checkpoint_dir = accel_result_dir + '/checkpoint_' + args.policy_checkpoint+"/"+'checkpoint-' + args.policy_checkpoint
         else:
-            checkpoint_dir = result_dir + '/checkpoint_500' + "/"+'checkpoint-500'
+            accel_checkpoint_dir = accel_result_dir + '/checkpoint_500' + "/"+'checkpoint-500'
 
-        env_params.additional_params['trained_dir']=result_dir
-        env_params.additional_params['checkpoint']=checkpoint_dir
+        env_params.additional_params['trained_dir']=accel_result_dir
+        env_params.additional_params['checkpoint']=accel_checkpoint_dir
 
     elif flow_params['env_name']==MultiAgentHighwayPOEnvMerge4Hierarchy:
         result_dir=env_params.additional_params['trained_dir']
