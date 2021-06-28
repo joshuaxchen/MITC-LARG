@@ -1,0 +1,159 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(0.5,0.65)},anchor=north west}
+  }
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large Outflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	xlabel={\Large Evaluated AVP},
+]
+
+
+% trained on avp=10 
+% dashdotdotted,
+\addplot[mark=diamond, thick, mark options={solid, fill=blue!40, mark size=2 pt}, draw=blue, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+
+};
+\label{aamas_full}
+
+% trained on avp=10, hierarchy based on aamas_full
+% error bars/.cd, y dir=both, y explicit,
+\addplot[mark=square, thick, mark options={solid, fill=green!60, mark size=2 pt}, draw=black!60!green] table [x=a, y=b] {
+a	b   	c
+2 1554.90 16.17
+4 1542.24 18.90
+6 1514.94 18.85
+8 1500.30 18.13
+10 1568.64 25.48
+20 1460.16 32.47
+30 1384.02 27.19
+40 1344.84 37.98
+50 1327.14 52.76
+60 1311.66 59.47
+70 1296.30 58.51
+80 1708.20 27.00
+100 1662.30 31.78
+};
+\label{hierarchy_aamas_full}  
+
+% trained on avp=10, hierarchy based on aamas_full with count ahead
+%densely dashed, 
+\addplot[mark=o, thick, mark options={solid, fill=black!60!red, mark size=2pt}, draw=black!60!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+
+};
+\label{hierarchy_aamas_count_ahead}
+
+
+% trained on avp=10, hierarchy based on aamas_full with density ahead
+%densely dashed, 
+\addplot[mark=triangle, thick, loosely dotted, mark options={solid, fill=red!60, mark size=2pt}, draw=black!20!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+2 1555.80 13.98
+4 1552.26 15.75
+6 1551.18 15.65
+8 1550.52 16.83
+10 1549.56 15.79
+20 1596.84 20.62
+30 1600.74 25.73
+40 1594.50 32.84
+50 1589.34 37.43
+60 1602.30 45.50
+70 1620.24 43.18
+80 1647.00 56.97
+100 1717.02 67.20
+};
+\label{hierarchy_aamas_density_ahead}
+
+
+% trained on avp=10, hierarchy based on aamas_full with vehicles behind rl ahead
+%densely dashed, 
+\addplot[mark=otimes, thick, mark options={solid, fill=red!60, mark size=2pt},
+draw=blue!10!green, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+2 1607.52 17.92
+4 1601.52 18.18
+6 1592.16 17.35
+8 1591.80 24.27
+10 1685.76 30.78
+20 1725.96 40.89
+30 1753.74 44.70
+40 1771.20 52.65
+50 1773.72 39.06
+60 1758.42 35.98
+80 1721.22 27.79
+100 1672.98 29.31
+};
+\label{hierarchy_aamas_between_ahead}
+
+
+% trained on avp=90, hierarchy based on aamas_full 
+%densely dashed, 
+\addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
+draw=blue!10!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
+a	b   	c
+2 1558.08 15.54
+4 1560.06 14.19
+6 1556.14 14.68
+8 1558.56 14.68
+10 1583.23 26.23
+20 1625.76 24.84
+30 1607.91 29.84
+40 1608.96 37.44
+50 1614.91 48.75
+60 1649.40 61.20
+80 1731.09 71.80
+100 1785.66 59.59
+};
+\label{hierarchy_aamas_full_avp90}
+
+\addplot[mark=none, black, samples=200] coordinates {(-10,1558.12)
+(100,1558.12)};
+\label{Baseline}
+
+
+\addlegendimage{/pgfplots/refstyle=aamas_full}
+\addlegendentry{aamas_full}
+
+\addlegendimage{/pgfplots/refstyle=hierarchy_aamas_full}
+\addlegendentry{hierarchy_aamas_full}
+
+\addlegendimage{/pgfplots/refstyle=hierarchy_aamas_count_ahead}
+\addlegendentry{hierarchy_aamas_count_ahead}
+
+\addlegendimage{/pgfplots/refstyle=hierarchy_aamas_density_ahead}
+\addlegendentry{hierarchy_aamas_density_ahead}
+
+\addlegendimage{/pgfplots/refstyle=hierarchy_aamas_between_ahead}
+\addlegendentry{hierarchy_aamas_between_ahead}
+
+\addlegendimage{/pgfplots/refstyle=hierarchy_aamas_full_avp90}
+\addlegendentry{hierarchy_aamas_full_avp90}
+
+\addlegendimage{/pgfplots/refstyle=Baseline}
+\addlegendentry{Human Baseline}
+
+
+
+
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
+
