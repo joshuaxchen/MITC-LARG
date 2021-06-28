@@ -1,5 +1,7 @@
-TRAIN_DIR_2=/home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/hierarchy_based_on_aamas_full
-TRAIN_DIR_1=/home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/hierarchy_aamas_full_avp90
+#TRAIN_DIR_1=/home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full
+TRAIN_DIR_2=/home/users/flow_user/ray_results/yulin_countbetween_hierarchy_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4HierarchyVehiclesBetweenNextRL-v0_77108_00000_0_2021-06-27_00-42-31/
+
+#yulin_hierarchy_eta1_0.9_eta2_0.1/hierarchy_based_on_aamas_full
 
 CHCKPOINT=500
 
@@ -14,39 +16,24 @@ echo "set python path: $PYTHONPATH"
 
 MERGE_INFLOW=200
 
-for AVP in 2 4 # 10 20 30 #40 50 60 70 80 100
+for AVP in 2 4 6 8 # 10 20 30 #40 50 60 70 80 100
 do
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_2 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/between_aamas_full/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt 
 done
 
 wait 
 
-for AVP in 6 8 # 10 20 30 #40 50 60 70 80 100
+for AVP in 10 20 30 #40 50 60 70 80 100
 do
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
-done
-
-wait 
-
-for AVP in 10 20 #40 50 60 70 80 100
-do
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_2 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/between_aamas_full/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt 
 done
 
 wait
 
-for AVP in 30 40 
+for AVP in 40 50 60 
 do
 
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
-done
-
-wait 
-
-for AVP in 50 60 
-do
-
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_2 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/between_aamas_full/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt 
 done
 
 wait
@@ -54,7 +41,7 @@ wait
 for AVP in 80 100
 do
 
-	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/aamas_full_avp90/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	python3 $VISUALIZER $TRAIN_DIR_2 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} --policy_dir /home/users/flow_user/ray_results/yulin_hierarchy_eta1_0.9_eta2_0.1/aamas_full >> $EXP_FOLDER/hierarchy/between_aamas_full/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt 
 done
 
 

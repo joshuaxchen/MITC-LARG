@@ -162,6 +162,47 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         clipped_acceleration=self.clip_acceleration(acceleration)
         #print("after clip acceleration:", clipped_acceleration)
         self._apply_rl_actions(clipped_acceleration)
+class MultiAgentHighwayPOEnvMerge4HierarchyVehiclesBetweenNextRL(MultiAgentHighwayPOEnvMerge4Hierarchy):
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
+
+    def get_state(self):
+        obs=super().get_state()
+        # add the 10th state, the number of vehicles ahead for each RL vehicle (merge road excluded)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rl_x=self.k.vehicle.get_x_by_id(rl_id)
+            rl_road_id=self.k.vehicle.get_edge(rl_id)
+            num_between=0
+            if rl_road_id in ["inflow_merge", "bottom", "center"]:
+                # if rl vehicle is not before junction
+                pass
+            else:
+                # if it is before the junction
+                # find the nearest rl vehicle position
+                closest_rl_x=10000 # a large number 
+                # find the closest rl with the smallest x
+                for next_rl_id in self.k.vehicle.get_rl_ids():
+                    next_rl_x=self.k.vehicle.get_x_by_id(next_rl_id)
+                    next_rl_road_id=self.k.vehicle.get_edge(rl_id)
+                    if next_rl_road_id not in ["inflow_merge", "bottom", "center"] and next_rl_x>rl_x and next_rl_x<closest_rl_x: # ahead of current rl
+                        closest_rl_x=next_rl_x
+
+                for veh_id in self.k.vehicle.get_ids():
+                    veh_x=self.k.vehicle.get_x_by_id(veh_id)
+                    veh_road_id=self.k.vehicle.get_edge(rl_id)
+                    if veh_id!=rl_id and veh_road_id not in ["inflow_merge", "bottom", "center"] and rl_x<veh_x and veh_x<closest_rl_x:
+                        num_between+=1
+                    else:
+                        pass
+            observation=obs[rl_id]
+            max_ahead=50.0
+            #print("num between:",num_between)
+            observation = np.append(observation, num_between/max_ahead)
+            obs.update({rl_id: observation})
+
+        return obs
 
 class MultiAgentHighwayPOEnvMerge4HierarchyCountAhead(MultiAgentHighwayPOEnvMerge4Hierarchy):
     @property

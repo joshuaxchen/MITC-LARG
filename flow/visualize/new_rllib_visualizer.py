@@ -551,7 +551,7 @@ def visualizer_rllib(args, seed=None):
 
     # terminate the environment
     env.unwrapped.terminate()
-    
+   
     # if prompted, convert the emission file into a csv file
     if args.gen_emission:
         time.sleep(0.1)
@@ -571,6 +571,7 @@ def visualizer_rllib(args, seed=None):
 
         # delete the .xml version of the emission file
         os.remove(emission_path)
+        
 
     # if we wanted to save the render, here we create the movie
     if args.save_render:
@@ -589,6 +590,10 @@ def visualizer_rllib(args, seed=None):
         os_cmd += "&& cp " + dirs[-1] + ".mp4 " + save_dir + "/"
         os.system(os_cmd)
     mean_speed, mean_inflows, mean_outflows = np.mean(mean_speed), np.mean(final_inflows), np.mean(final_outflows)
+    # remove agent and its resources
+    del agent
+    del env
+ 
     if multiagent:
         return mean_speed, final_inflows, final_outflows, mean_reward, info
     return mean_speed, final_inflows, final_outflows, mean_reward, info
