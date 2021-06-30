@@ -1,0 +1,8 @@
+/u/yulin/flow/MITC/condor_jobs/./train/condor_aamas_models.sh: line 18: $' \nPlease do not change the command below. \nFirst obtain the number of cpus from input (condor sub)\nStop exitence ray process to avoid confliction\nCreate rollout workers\nStart ray and initiate rollout workers\n': command not found
+2021-06-30 18:19:06,869	INFO services.py:1092 -- View the Ray dashboard at [1m[32mhttp://localhost:8265[39m[22m
+WARNING:tensorflow:From /projects/agents3/aim/flow/miniconda3/envs/flow_test/lib/python3.7/site-packages/tensorflow/python/compat/v2_compat.py:96: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:ray.tune.sample:DeprecationWarning: wrapping <function setup_exps.<locals>.policy_mapping_fn at 0x14b8c6d1d290> with tune.function() is no longer needed
+2021-06-30 18:19:33,681	INFO worker.py:651 -- Connecting to existing Ray cluster at address: 128.83.139.9:6379
+2021-06-30 18:19:33,873	INFO trainer.py:1065 -- `_use_trajectory_view_api` only supported for PyTorch so far! Will run w/o.
