@@ -1,4 +1,4 @@
-TRAIN_DIR_10=/home/users/flow_user/ray_results/yulin_adaptive_headway_eta1_0.9_eta2_0.1/adaptive_headway_avp10_main2000_merge200/
+#TRAIN_DIR_10=/home/users/flow_user/ray_results/yulin_adaptive_headway_eta1_0.9_eta2_0.1/adaptive_headway_avp10_main2000_merge200/
 #TRAIN_DIR_30=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/merge4_highway2000_merge200_avp_30
 #TRAIN_DIR_50=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/merge4_highway2000_merge200_avp_50
 #TRAIN_DIR_70=/home/users/flow_user/ray_results/yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/merge4_highway2000_merge200_avp_70
@@ -8,17 +8,38 @@ TRAIN_DIR_10=/home/users/flow_user/ray_results/yulin_adaptive_headway_eta1_0.9_e
 
 HUMAN_DIR=/home/users/flow_user/ray_results/yulin_merge_4_HUMAN_Sim/PPO_MergePOEnv-v0_baf56_00000_0_2021-05-26_02-05-19 
 
-CHCKPOINT=500
+
+FLOW_DIR=${PWD}/../..
+
+CHCKPOINT=1
 
 
 echo "*************add python path to current direction***********"
-export PYTHONPATH="${PYTHONPATH}:${PWD}"
+export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
+MERGE_INFLOW=200
 
-for AVP in 2 4 6 8 10 30 50 70 80 100
+for MAIN_INFLOW in 1300 1400 1500 1600 1700 1800 1900 2000
 do
-	python3 flow/visualize/new_rllib_visualizer.py $HUMAN_DIR $CHCKPOINT --render_mode no_render --handset_avp ${AVP} >> ./exp_results/adaptive_headway/avp10/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+	#MAIN_HUMAN_INFLOW= xargs printf "%.*f\n" "$MAIN_HUMAN_INFLOW"
+	let MAIN_RL_INFLOW=MAIN_INFLOW/10
+	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+	echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
+	python3 ../../flow/visualize/new_rllib_visualizer.py \
+		$HUMAN_DIR\
+		$CHCKPOINT \
+		--render_mode no_render \
+		--seed_dir $FLOW_DIR \
+		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+		> ../../exp_results/human/${MAIN_INFLOW}_$MERGE_INFLOW.txt &
 done
+
+
+
+#for AVP in 2 4 6 8 10 30 50 70 80 100
+#do
+#	python3 flow/visualize/new_rllib_visualizer.py $HUMAN_DIR $CHCKPOINT --render_mode no_render --handset_avp ${AVP} >> ./exp_results/adaptive_headway/avp10/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt &
+#done
 
 #for AVP in 2 4 6 8 10 30 50 70 80 100
 #do

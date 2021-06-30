@@ -48,6 +48,8 @@ parser.add_argument(
     type=int,
     default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+parser.add_argument('--exp_folder_suffix', type=str, help="Attach a string to the experiment folder name for easier identification")
 
 args=parser.parse_args()
 
@@ -89,6 +91,8 @@ additional_net_params["pre_merge_length"] = 500
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
+if args.handset_inflow:
+    additional_env_params['handset_inflow']=args.handset_inflow
 
 
 
@@ -139,6 +143,10 @@ inflow.add(
     vehs_per_hour=MERGE_RATE,
     depart_lane="free",
     depart_speed=7.5)
+
+suffix=""
+if args.exp_folder_suffix:
+    suffix=args.exp_folder_suffix
 
 flow_params = dict(
     exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
