@@ -49,7 +49,7 @@ parser.add_argument(
     default=10,
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
-parser.add_argument('--exp_folder_suffix', type=str, help="Attach a string to the experiment folder name for easier identification")
+parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
 
 args=parser.parse_args()
 
@@ -93,7 +93,8 @@ additional_net_params["pre_merge_length"] = 500
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 if args.handset_inflow:
     additional_env_params['handset_inflow']=args.handset_inflow
-
+    FLOW_RATE=args.handset_inflow[0]+args.handset_inflow[1] 
+    print("main flow rate:",FLOW_RATE)
 
 
 # CREATE VEHICLE TYPES AND INFLOWS
@@ -144,12 +145,12 @@ inflow.add(
     depart_lane="free",
     depart_speed=7.5)
 
-suffix=""
-if args.exp_folder_suffix:
-    suffix=args.exp_folder_suffix
+mark=""
+if args.exp_folder_mark:
+    mark="_"+args.exp_folder_mark
 
 flow_params = dict(
-    exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
