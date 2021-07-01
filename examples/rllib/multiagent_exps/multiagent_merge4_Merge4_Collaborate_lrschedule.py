@@ -92,7 +92,7 @@ additional_net_params["pre_merge_length"] = 500
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 if args.handset_inflow:
-    additional_env_params['handset_inflow']=args.handset_inflow
+    #additional_env_params['handset_inflow']=args.handset_inflow
     FLOW_RATE=args.handset_inflow[0]+args.handset_inflow[1] 
     print("main flow rate:",FLOW_RATE)
 
