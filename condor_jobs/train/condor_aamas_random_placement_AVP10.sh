@@ -37,15 +37,15 @@ echo "main inflow: $2"
 # Even vehicle placement
 MERGE_INFLOW=200
 
-for AVP in 100 #10 30 50 80 100
+for AVP in 10 #10 30 50 80 100
 do
-	let PERCENTAGE=AVP/100.0
+	let PERCENTAGE=AVP/100
 	for MAIN_INFLOW in $2 #1650 1850 2000 
 	do
 		let MAIN_RL_INFLOW=MAIN_INFLOW*PERCENTAGE
 		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 		echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/condor_multiagent_merge4_Merge4_Collaborate_lrschedule.py \
+		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/condor_random_placement_merge4_Merge4_Collaborate_lrschedule.py \
 		--avp ${AVP} \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--exp_folder_mark Even_Avp${AVP}_Main${MAIN_INFLOW}_Merge${MERGE_INFLOW}

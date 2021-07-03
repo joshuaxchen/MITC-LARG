@@ -1,5 +1,5 @@
-import os
 import sys
+import os
 import datetime
 
 def check_existing_trained_progress(exp_tag, alg_run):
@@ -36,9 +36,5 @@ def check_existing_trained_progress(exp_tag, alg_run):
                     latest_checkpoint_folder=os.path.join(root, checkpoint_dir)
         return latest_checkpoint_folder
     return None
-    
 
-exp_tag="yulin_multiagent_Even_Avp100_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1"
-alg_run="PPO"
-checkpoint_to_restore=check_existing_trained_progress(exp_tag, alg_run)
-print(checkpoint_to_restore)
+
