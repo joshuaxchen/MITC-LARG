@@ -270,10 +270,19 @@ class MultiEnv(MultiAgentEnv, Env):
         self._merge_inflow = 0.0
         total_inflows = self.network.net_params.inflows.get()
         for tf in total_inflows:
-            if tf['departSpeed'] <= 7.5:
-                self._merge_inflow += tf['vehsPerHour']
+            if 'vehsPerHour' in tf:
+                # using vehs per hour
+                if tf['departSpeed'] <= 7.5:
+                    self._merge_inflow += tf['vehsPerHour']
+                else:
+                    self._main_inflow += tf['vehsPerHour']
+            elif 'probability' in tf:
+                # using probability 
+                # print('using probability')
+                self._merge_inflow+=tf['probability']*3600
             else:
-                self._main_inflow += tf['vehsPerHour']
+                print('Inflow is not specified in vehsPerHour or probability')
+
 
         if additional_params.get("handset_avp"):
             self.network.net_params.inflows= InFlows()
