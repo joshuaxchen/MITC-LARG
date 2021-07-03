@@ -6,6 +6,9 @@ highway with ramps network.
 import json
 import ray
 import argparse
+import os
+import sys
+import datetime
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -193,6 +196,40 @@ flow_params = dict(
     initial=InitialConfig(),
 )
 
+def check_existing_trained_progress(exp_tag, alg_run):
+    # jobs in condor tend to be preempted by condor sheduler and then resumed.
+    # when resumed, we should restore from existing progress instead of
+    # starting from the beginning.
+    exp_parent_path=os.path.join("~","ray_results", exp_tag)  
+    exp_parent_path=os.path.expanduser(exp_parent_path)
+    #print(exp_parent_path)
+    if os.path.isdir(exp_parent_path):
+        root_dir_file_list=os.walk(exp_parent_path)
+        i=0
+        latest_checkpoint_folder=None
+        latest_time=None
+        latest_checkpoint_num=-1
+        for (root, child_folders, file_list) in root_dir_file_list:
+            divided_path_list=root.split("/")
+            #print(divided_path_list[-1])
+            if not divided_path_list[-1].startswith(alg_run):
+                continue
+            folder_name_list=root.split("_")
+            day=folder_name_list[-2]
+            time=folder_name_list[-1]
+            folder_date=datetime.datetime.strptime(day+'_'+time, '%Y-%m-%d_%H-%M-%S')
+            #print(folder_date)
+            for checkpoint_dir in child_folders:
+                checkpoint_num=int(checkpoint_dir.split("_")[1])
+                #print(latest_time)
+                if latest_time is None or latest_time<folder_date or (latest_time==folder_date and latest_checkpoint_num<checkpoint_num):
+                    latest_time=folder_date
+                    latest_checkpoint_num=checkpoint_num
+                    latest_checkpoint_folder=os.path.join(root, checkpoint_dir)
+        return latest_checkpoint_folder
+    return None
+
+
 
 # SET UP EXPERIMENT
 
@@ -215,6 +252,7 @@ def setup_exps(flow_params):
     """
     alg_run = 'PPO'
     agent_cls = get_agent_class(alg_run)
+    #agent_cls.restore()
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
@@ -284,17 +322,36 @@ if __name__ == '__main__':
     alg_run, env_name, config = setup_exps(flow_params)
     #ray.init(num_cpus=N_CPUS + 1)
     ray.init(address="127.0.0.1:6379", _redis_password="mitc_flow")
-    run_experiments({
-        flow_params['exp_tag']: {
-            'run': alg_run,
-            'env': env_name,
-            'checkpoint_freq': 5,
-            'max_failures': 999,
-            'checkpoint_at_end': True,
-            'stop': {
-                'training_iteration': N_TRAINING_ITERATIONS
+    existing_checkpoint=check_existing_trained_progress(flow_params['exp_tag'],alg_run)
+    print("detected checkpoint:", existing_checkpoint)
+    if existing_checkpoint is None:
+        run_experiments({
+            flow_params['exp_tag']: {
+                'run': alg_run,
+                'env': env_name,
+                'checkpoint_freq': 5,
+                'max_failures': 999,
+                'checkpoint_at_end': True,
+                'stop': {
+                    'training_iteration': N_TRAINING_ITERATIONS
+                },
+                'config': config,
+                'num_samples':1
             },
-            'config': config,
-            'num_samples':1,
-        },
-    })
+        })
+    else:
+        run_experiments({
+            flow_params['exp_tag']: {
+                'run': alg_run,
+                'env': env_name,
+                'checkpoint_freq': 5,
+                'max_failures': 999,
+                'checkpoint_at_end': True,
+                'stop': {
+                    'training_iteration': N_TRAINING_ITERATIONS
+                },
+                'config': config,
+                'num_samples':1,
+                'restore': existing_checkpoint,
+            },
+        },resume=True)
