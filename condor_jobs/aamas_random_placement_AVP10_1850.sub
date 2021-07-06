@@ -1,0 +1,25 @@
+# Condor submit file for simple training run
+
+universe = vanilla   
+
+requirements=InMastodon
+
++Group = "GUEST"
+
++Project = "AI_ROBOTICS"
+
++ProjectDescription = "MITC"
+
+arguments= 13 1850
+
+executable = ./train/condor_aamas_random_placement_AVP10.sh
+
+
+Error = condor_logs/err.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+Output = condor_logs/out.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+Log = condor_logs/log.$(ClusterID)_$(ProcID)_$RANDOM_INTEGER(0, 65535)
+
+
+queue 1 

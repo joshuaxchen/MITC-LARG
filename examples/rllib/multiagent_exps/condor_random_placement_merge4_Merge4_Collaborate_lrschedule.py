@@ -3,12 +3,12 @@
 Trains a non-constant number of agents, all sharing the same policy, on the
 highway with ramps network.
 """
-import json
-import ray
-import argparse
 import os
 import sys
 import datetime
+import json
+import ray
+import argparse
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -71,6 +71,7 @@ N_CPUS = 11
 NUM_RL = 10
 if args.num_rl:
     NUM_RL=args.num_rl
+
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 if args.handset_inflow:
@@ -101,6 +102,7 @@ additional_net_params["pre_merge_length"] = 500
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 
+
 # CREATE VEHICLE TYPES AND INFLOWS
 vehicles = VehicleParams()
 inflows = InFlows()
@@ -125,6 +127,9 @@ vehicles.add(
     ),
     num_vehicles=0)
 
+# veh perhour to probability of each vehicle per second
+main_inflow_prob=FLOW_RATE/3600.0
+
 # Vehicles are introduced from both sides of merge, with RL vehicles entering
 # from the highway portion as well
 inflow = InFlows()
@@ -132,14 +137,16 @@ if 1-RL_PENETRATION>0:
     inflow.add(
         veh_type="human",
         edge="inflow_highway",
-        vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
+        probability=main_inflow_prob*(1-RL_PENETRATION),
+        #vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
         depart_lane="free",
         depart_speed=10)
 if RL_PENETRATION>0:
     inflow.add(
         veh_type="rl",
         edge="inflow_highway",
-        vehs_per_hour=RL_PENETRATION * FLOW_RATE,
+        probability=main_inflow_prob*RL_PENETRATION,
+        #vehs_per_hour=RL_PENETRATION * FLOW_RATE,
         depart_lane="free",
         depart_speed=10)
 inflow.add(
@@ -154,7 +161,7 @@ if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
 flow_params = dict(
-    exp_tag='yulin_multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='yulin_random_placement_multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
@@ -198,7 +205,6 @@ flow_params = dict(
 )
 
 
-
 # SET UP EXPERIMENT
 
 def setup_exps(flow_params):
@@ -220,7 +226,6 @@ def setup_exps(flow_params):
     """
     alg_run = 'PPO'
     agent_cls = get_agent_class(alg_run)
-    #agent_cls.restore()
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
@@ -319,11 +324,12 @@ def check_existing_trained_progress(exp_tag, alg_run):
     return None
 
 
+
 # RUN EXPERIMENT
 
 if __name__ == '__main__':
     alg_run, env_name, config = setup_exps(flow_params)
-    #ray.init(num_cpus=N_CPUS + 1)
+    # ray.init(num_cpus=N_CPUS + 1)
     ray.init(address="127.0.0.1:6379", _redis_password="mitc_flow")
     existing_checkpoint=check_existing_trained_progress(flow_params['exp_tag'],alg_run)
     print("detected checkpoint:", existing_checkpoint)
@@ -358,3 +364,4 @@ if __name__ == '__main__':
                 'restore': existing_checkpoint,
             },
         },resume=True)
+    

@@ -32,25 +32,21 @@ FLOW_DIR=${PWD}/..
 export PYTHONPATH="${PYTHONPATH}:${FLOW_DIR}"
 export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 
-echo "main inflow: $2"
+TRAIN_DIR_1=~/ray_results/yulin_multiagent_Even_Avp100_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_8a7f3_00000_0_2021-07-01_16-08-53
+VISUALIZER="${FLOW_DIR}/flow/visualize/condor_rllib_visualizer.py"
+EXP_FOLDER="${FLOW_DIR}/exp_results"
+
+CHCKPOINT=500
 
 # Even vehicle placement
 MERGE_INFLOW=200
 
-for AVP in 100 #10 30 50 80 100
+for AVP in 10 #20 30 40 50 60 70 80 90 100
 do
-	let PERCENTAGE=AVP/100.0
-	for MAIN_INFLOW in $2 #1650 1850 2000 
-	do
-		let MAIN_RL_INFLOW=MAIN_INFLOW*PERCENTAGE
-		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-		echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/condor_multiagent_merge4_Merge4_Collaborate_lrschedule.py \
-		--avp ${AVP} \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--exp_folder_mark Even_Avp${AVP}_Main${MAIN_INFLOW}_Merge${MERGE_INFLOW}
-	done
+	python3 $VISUALIZER $TRAIN_DIR_1 $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/aamas/2000_200/merge4_2000_200_TAVP_10_EAVP_${AVP}.txt 
 done
+
+wait 
 
 #######################################################
 ' 
