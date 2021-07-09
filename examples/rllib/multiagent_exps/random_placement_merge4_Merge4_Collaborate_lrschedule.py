@@ -62,7 +62,7 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 11
+N_CPUS = 40
 
 NUM_RL = 10
 if args.num_rl:

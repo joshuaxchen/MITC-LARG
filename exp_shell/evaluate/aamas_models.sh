@@ -51,6 +51,15 @@ MARK[12]='1650_200_100'
 TRAIN_DIR[13]='/home/users/flow_user/ray_results/yulin_multiagent_Even_Avp100_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_8a7f3_00000_0_2021-07-01_16-08-53'
 MARK[13]='2000_200_100'
 
+#####new##########
+TRAIN_DIR[14]='/home/users/flow_user/ray_results/yulin_multiagent_Even_Avp100_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_d6d8e_00000_0_2021-07-07_12-07-41'
+MARK[14]='1850_200_100'
+# neymar
+
+TRAIN_DIR[15]='/home/users/flow_user/ray_results/yulin_multiagent_Even_Avp10_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_e7ee4_00000_0_2021-07-07_23-49-40'
+MARK[15]='1850_200_10'
+# commander 
+
 # new 
 
 
@@ -72,7 +81,7 @@ echo "************************************************************"
 #echo ${TRAIN_DIR[*]}
 NUM=0
 
-for I in 10 11 12 13
+for I in 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ~/yulin/MITC-LARGE/exp_results/aamas_models/${MARK[$I]}
@@ -89,7 +98,7 @@ do
 		#	wait
 		#fi
 	done
-	wait
+	#wait
 done
 
 #for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
