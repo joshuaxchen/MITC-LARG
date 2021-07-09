@@ -41,6 +41,7 @@ from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Hierarchy
+from flow.core.params import  InFlows 
 
 EXAMPLE_USAGE = """
 example usage:
@@ -257,7 +258,36 @@ def visualizer_rllib(args, seed=None):
         env_params.additional_params['inflow_range']=[0.5, 1.5]
 
     if args.handset_inflow:
-        env_params.additional_params['handset_inflow']=args.handset_inflow
+        # env_params.additional_params['handset_inflow']=args.handset_inflow
+        # handset_inflow
+        input_inflows=args.handset_inflow
+        main_human_inflow_rate=input_inflows[0] 
+        main_rl_inflow_rate=input_inflows[1] 
+        merge_inflow_rate=input_inflows[2]
+        inflow = InFlows()
+        if main_human_inflow_rate>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_highway",
+                vehs_per_hour=main_human_inflow_rate,
+                depart_lane="free",
+                depart_speed=10)
+        if main_rl_inflow_rate>0:
+            inflow.add(
+                veh_type="rl",
+                edge="inflow_highway",
+                vehs_per_hour=main_rl_inflow_rate,
+                depart_lane="free",
+                depart_speed=10)
+        if merge_inflow_rate>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_merge",
+                vehs_per_hour=merge_inflow_rate,
+                depart_lane="free",
+                depart_speed=7.5)
+        flow_params['net'].inflows=inflow
+
     # AV Penetration
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
