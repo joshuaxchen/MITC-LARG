@@ -288,7 +288,71 @@ def visualizer_rllib(args, seed=None):
                 depart_speed=7.5)
         flow_params['net'].inflows=inflow
 
+    FLOW_RATE=0
+    MERGE_RATE=0
+    # compute the total flow rate
+    # the flow rate could be defined by probability or vehicles per hour
+    # this must go after the inflows are well set up, after reading from
+    # configuration file or user input
+    for inflow in flow_params['net'].inflows.get(): 
+        if inflow['edge'] =='inflow_highway':
+            if 'vehs_per_hour' in inflow:
+                FLOW_RATE+=inflow['vehs_per_hour']
+            elif 'vehsPerHour' in inflow:
+                FLOW_RATE+=inflow['vehsPerHour']
+            elif 'probability' in inflow:
+                FLOW_RATE+=inflow['probability']*3600
+            else:
+                print(inflow.keys()) 
+                print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
+                sys.exit(-1)
+        if inflow['edge'] =='inflow_merge':
+            if 'vehs_per_hour' in inflow:
+                MERGE_RATE+=inflow['vehs_per_hour']
+            elif 'vehsPerHour' in inflow:
+                MERGE_RATE+=inflow['vehsPerHour']
+            elif 'probability' in inflow:
+                MERGE_RATE+=inflow['probability']*3600
+            else:
+                print(inflow.keys()) 
+                print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
+                sys.exit(-1)
+
     # AV Penetration
+    if args.avp_to_probability:
+        # convert avp to probability
+        # veh perhour to probability of each vehicle per second
+        avp=args.avp_to_probability/100.0
+        main_inflow_prob=FLOW_RATE/3600.0
+        av_probability=main_inflow_prob*avp
+        human_probability=main_inflow_prob*(1-avp)
+         
+        # set the inflows by probability
+        input_inflows=args.handset_inflow
+        inflow = InFlows()
+        if human_probability>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_highway",
+                probability=human_probability,
+                depart_lane="free",
+                depart_speed=10)
+        if av_probability>0:
+            inflow.add(
+                veh_type="rl",
+                edge="inflow_highway",
+                probability=av_probability,
+                depart_lane="free",
+                depart_speed=10)
+        if MERGE_RATE>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_merge",
+                vehs_per_hour=MERGE_RATE,
+                depart_lane="free",
+                depart_speed=7.5)
+        flow_params['net'].inflows=inflow
+         
     if args.handset_avp:
         env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     if args.policy_dir is not None:
@@ -687,7 +751,7 @@ def create_parser():
         default=800,)
     parser.add_argument(
         '--handset_avp',
-        type=int)
+        type=float)
 
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
@@ -698,7 +762,7 @@ def create_parser():
     parser.add_argument('--policy_dir', type=str, help="path to the trained policy")
 
     parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
-
+    parser.add_argument('--avp_to_probability', type=float, help='input an avp and we will convert it to probability automatically')
 
     return parser
 

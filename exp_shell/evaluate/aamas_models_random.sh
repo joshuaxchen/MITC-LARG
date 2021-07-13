@@ -85,55 +85,20 @@ NUM=0
 
 mkdir ${EXP_FOLDER}/aamas_models_random
 
-for I in 1 2 3 4 
+for I in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${EXP_FOLDER}/aamas_models_random/${MARK[$I]}
-	for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
+	for AVP in 1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 100
 	do
 		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/aamas_models_random/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
+		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} >> $EXP_FOLDER/aamas_models_random/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
 	done
+	if ((I==4 || I==8 || I==12)); then
+		wait
+	fi
 done
 
-wait 
-
-for I in 5 6 7 8 
-do
-	echo "${TRAIN_DIR[$I]}"
-	mkdir ${EXP_FOLDER}/aamas_models_random/${MARK[$I]}
-	for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
-	do
-		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/aamas_models_random/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
-	done
-done
-
-wait 
-
-for I in 9 10 11 12 
-do
-	echo "${TRAIN_DIR[$I]}"
-	mkdir ${EXP_FOLDER}/aamas_models_random/${MARK[$I]}
-	for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
-	do
-		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/aamas_models_random/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
-	done
-done
-
-wait 
-
-for I in 13 14 15
-do
-	echo "${TRAIN_DIR[$I]}"
-	mkdir ${EXP_FOLDER}/aamas_models_random/${MARK[$I]}
-	for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
-	do
-		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_avp ${AVP} >> $EXP_FOLDER/aamas_models_random/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
-	done
-done
 
 #for AVP in 2 4 6 8 10 20 30 40 50 60 70 80 100
 #do
