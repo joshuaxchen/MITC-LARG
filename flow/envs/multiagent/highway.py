@@ -978,7 +978,6 @@ class MultiAgentHighwayPOEnvMerge4CollaborateWithVehiclesAhead(MultiAgentHighway
 
             # important: normalize
             max_ahead=100.0
-            print(rl_id, " num_ahead:", num_ahead/max_ahead)
             observation = np.append(observation, num_ahead/max_ahead)
             obs.update({rl_id: observation})
 

@@ -39,7 +39,6 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
     @property
     def action_space(self):
         """See class definition."""
-        #print(self.env_params.additional_params["max_accel"])
         return Box(
             low=0,#-np.abs(self.env_params.additional_params['max_decel']),
             high=1,#self.env_params.additional_params['max_accel'],
@@ -69,7 +68,6 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
                 s_star = 0
             else:
                 lead_vel = self.k.vehicle.get_speed(lead_id)
-                print("leader velocity:", lead_vel)
                 s_star = s0 + max(0, v * T + v * (v - lead_vel) /(2 * np.sqrt(a * b)))
             return a * (1 - (v / v0)**delta - (s_star / h)**2)
 
@@ -103,16 +101,7 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
         if rl_actions is None:
             return
 
-        print("************************************")
-        # print existing headway
-        for rl_id in self.k.vehicle.get_rl_ids():
-            lead_head = self.k.vehicle.get_headway(rl_id)
-            print(rl_id, "headway:", lead_head)
-
-        # print existing choice
-        print("network actions:", rl_actions)
         clipped_actions = self.clip_actions(rl_actions)
-        print("clipped actions:", clipped_actions)
         if rl_actions!=clipped_actions:
             print("********network gives an action out of bound********************")
             import sys
@@ -121,23 +110,16 @@ class MultiAgentHighwayPOEnvMerge4AdaptiveHeadway(MultiAgentHighwayPOEnvMerge4Co
             #print("actions from the network:",rl_actions)
             #print("actions after clipped:",clipped_actions)
             #print("within bound:[",self.action_space.low[0], ",", self.action_space.high[0],"]")
-        else:
-            print("equal")
         rl_acceleration={}
         for rl_id, actions in clipped_actions.items():
             chosen_act=actions[0]
             #print(rl_id, "chooses to be a leader with probability:", chosen_act)
             accel=self.idm_acceleration(rl_id, chosen_act)
             rl_acceleration[rl_id]=np.array([accel])  
-            
-            this_speed = self.k.vehicle.get_speed(rl_id)
-            print(rl_id, " speed ", this_speed)
         #print("before clip:", rl_acceleration)
-        print("applied acceleration:", rl_acceleration)
         clipped_acceleration=self.clip_acceleration(rl_acceleration)
         #print("after clip:", clipped_acceleration)
         self._apply_rl_actions(clipped_acceleration)
-        print("clipped acceleration:", clipped_acceleration)
     
     def compute_reward(self, rl_actions, **kwargs):
         """See class definition."""

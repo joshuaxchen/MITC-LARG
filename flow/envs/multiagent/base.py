@@ -463,10 +463,8 @@ class MultiEnv(MultiAgentEnv, Env):
         if rl_actions is None:
             return
 
-        print("rl_action from the network:",rl_actions)
         # clip according to the action space requirements
         clipped_actions = self.clip_actions(rl_actions)
-        print("after action clipped:",clipped_actions)
         #if rl_actions!=clipped_actions:
         #    print("action bound:[",self.action_space.low[0],"," ,self.action_space.high[1],"]")
         #    print("rl_action from the network:",rl_actions)

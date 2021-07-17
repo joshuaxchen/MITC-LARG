@@ -115,41 +115,26 @@ a	b   	c
 };
 \label{AVP90}
 
+
+%densely dashed, 
 \addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
 draw=blue!10!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
 a	b   	c
-2 1600.38 18.04
-4 1620.00 20.58
-6 1639.12 28.21
-8 1660.36 28.22
-10 1683.40 32.37
-30 1743.80 29.74
-50 1763.89 34.40
-70 1779.23 35.21
-80 1786.46 36.61
-100 1792.98 28.63
+2 1555.34 14.31
+4 1549.33 15.07
+6 1546.63 13.90
+8 1543.46 17.07
+10 1541.63 15.80
+20 1526.54 13.30
+30 1514.05 16.60
+40 1497.74 17.34
+50 1480.25 25.14
+60 1505.88 29.33
+70 1517.33 30.85
+80 1516.57 28.51
+100 1501.63 36.18
 };
-\label{AVP90-countahead}
-
-%densely dashed, 
-%\addplot[mark=otimes, thick, mark options={solid, fill=blue!60, mark size=2pt},
-%draw=blue!10!red, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {
-%a	b   	c
-%2 1555.34 14.31
-%4 1549.33 15.07
-%6 1546.63 13.90
-%8 1543.46 17.07
-%10 1541.63 15.80
-%20 1526.54 13.30
-%30 1514.05 16.60
-%40 1497.74 17.34
-%50 1480.25 25.14
-%60 1505.88 29.33
-%70 1517.33 30.85
-%80 1516.57 28.51
-%100 1501.63 36.18
-%};
-%\label{linearPPO}
+\label{linearPPO}
 
 \addplot[mark=none, black, samples=200] coordinates {(-10,1558.12)
 (100,1558.12)};
@@ -171,8 +156,8 @@ a	b   	c
 \addlegendimage{/pgfplots/refstyle=AVP90}
 \addlegendentry{AVP90}
 
-\addlegendimage{/pgfplots/refstyle=AVP90-countahead}
-\addlegendentry{AVP90-countahead}
+\addlegendimage{/pgfplots/refstyle=linearPPO}
+\addlegendentry{linearPPOAVP10}
 
 \addlegendimage{/pgfplots/refstyle=Baseline}
 \addlegendentry{Human Baseline}

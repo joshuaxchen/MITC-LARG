@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
 
 
 
-working_dir=os.path.join("..","..","exp_results", "avp_count_ahead")#, "main2000-1700_merge200")
+working_dir=os.path.join("..","exp_results", "random_inflow")#, "main2000-1700_merge200")
 folder_name_list=obtain_subfolder_names(working_dir)
 files_in_each_folder=dict()
 summary=dict()
