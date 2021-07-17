@@ -82,7 +82,7 @@ CHCKPOINT=500
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/aamas_models_inflows
+WORKING_DIR=$EXP_FOLDER/random_evaluation/aamas_models_inflows
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:$FLOW_DIR"
@@ -93,8 +93,8 @@ echo "************************************************************"
 #echo ${TRAIN_DIR[*]}
 NUM=0
 
-MERGE_INFLOW=200
 
+MERGE_INFLOW=200
 for I in 5
 do
 	echo "${TRAIN_DIR[$I]}"
@@ -105,13 +105,10 @@ do
 		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 		echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_$MERGE_INFLOW.txt &
+		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVPS[$I]} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}.txt 
 	done
-	if ((I == 4 || I==8 || I==12)); then
-		wait
-	fi
+	
 done
-
 
 
 
@@ -126,7 +123,7 @@ done
 #		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 #		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 #		echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
-#		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_$MERGE_INFLOW.txt &
+#		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVPS[$I]} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_$MERGE_INFLOW.txt &
 #	done
 #	if ((I == 4 || I==8 || I==12)); then
 #		wait
