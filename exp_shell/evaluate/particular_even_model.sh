@@ -85,8 +85,11 @@ EXP_FOLDER=$FLOW_DIR/exp_results
 WORKING_DIR=$EXP_FOLDER/special_models_even/
 
 # 1. 1650_200_30 I=3
+# 1. 1650_200_80 I=9
 # 2. 1850_200_30 I=4
+# 2. 1850_200_30 I=10
 # 3. 2000_200_30 I=5
+# 3. 2000_200_30 I=11
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:$FLOW_DIR"
@@ -104,8 +107,10 @@ mkdir ${WORKING_DIR}
 
 J=0
 
-# 2 3 4 5 8 9 13 
-for I in 1 6 7 10 11 12 14 15
+# 1 2 6 7 8 12 13 14 15 
+# 1 6 wily 
+# 2 8 9 13 drperceptron
+for I in 7 12 13 # 14 15 
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
@@ -119,7 +124,7 @@ do
 			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
 			python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
 			let J=J+1
-			if ((J == 20)); then
+			if ((J == 40)); then
 				wait
 				let J=0
 				echo "another batch"
