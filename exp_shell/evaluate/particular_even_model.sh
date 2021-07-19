@@ -82,7 +82,7 @@ CHCKPOINT=500
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/special_models/
+WORKING_DIR=$EXP_FOLDER/special_models_even/
 
 # 1. 1650_200_30 I=3
 # 2. 1850_200_30 I=4
@@ -101,11 +101,15 @@ NUM=0
 MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
-for I in 5 4 
+
+J=0
+
+# 2 3 4 5 8 9 13 
+for I in 1 6 7 10 11 12 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
-	for MAIN_INFLOW in 1650 1850 
+	for MAIN_INFLOW in 1600 1650 1700 1800 1850 1900 2000
 	do
 		for AVP in 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
 		do
@@ -114,8 +118,13 @@ do
 			echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
 			python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+			let J=J+1
+			if ((J == 20)); then
+				wait
+				let J=0
+				echo "another batch"
+			fi
 		done
-		wait
 	done
 	
 done
