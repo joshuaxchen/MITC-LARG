@@ -71,9 +71,9 @@ VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
 WORKING_DIR=$EXP_FOLDER/special_models_random/
 
-# 1. 1650_200_30 I=3
-# 2. 1850_200_30 I=4
-# 3. 2000_200_30 I=5
+# 1. 1650_200_30 I=4
+# 2. 1850_200_30 I=5
+# 3. 2000_200_30 I=6
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:$FLOW_DIR"
@@ -88,7 +88,7 @@ NUM=0
 MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
-for I in 3 4 5
+for I in 4 5 6
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
