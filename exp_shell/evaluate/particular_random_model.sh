@@ -88,6 +88,7 @@ NUM=0
 MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
+J=0
 for I in 4 5 6
 do
 	echo "${TRAIN_DIR[$I]}"
@@ -101,9 +102,14 @@ do
 			echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
 			python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+			let J=J+1
+			if ((J == 20)); then
+				wait
+				let J=0
+				echo "another batch"
+			fi
 		done
 	done
-	wait
 done
 
 #for I in 4 
