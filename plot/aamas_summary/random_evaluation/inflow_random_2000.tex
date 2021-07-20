@@ -1,0 +1,147 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	blue,every mark/.append style={fill=blue!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
+	blue,every mark/.append style={fill=blue!60}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
+	blue,every mark/.append style={fill=blue!40}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
+	blue,every mark/.append style={fill=blue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
+	blue,every mark/.append style={fill=blue!10}, mark=square*, error bars/.cd, y dir=both, y explicit\\%
+	red,densely dashed,every mark/.append style={solid,fill=red!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
+	red,densely dashed,every mark/.append style={solid,fill=red!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
+	red,densely dashed,every mark/.append style={solid,fill=red!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
+	red,densely dashed,every mark/.append style={solid,fill=red!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
+	red,densely dashed,every mark/.append style={solid,fill=red!10}, mark=square*, error bars/.cd, y dir=both, y explicit\\%
+	green!40!black, dashed,every mark/.append style={solid,fill=green!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
+	green!40!black, dashed,every mark/.append style={solid,fill=green!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
+	green!40!black, dashed,every mark/.append style={solid,fill=green!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
+	green!40!black, dashed,every mark/.append style={solid,fill=green!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
+	green!40!black, dashed,every mark/.append style={solid,fill=green!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
+	black, dashed,every mark/.append style={solid,fill=green!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
+	black, dashed,every mark/.append style={solid,fill=green!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
+	black, dashed,every mark/.append style={solid,fill=green!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
+	black, dashed,every mark/.append style={solid,fill=green!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
+	black, dashed,every mark/.append style={solid,fill=green!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
+	}
+
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large Outflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	xlabel={\Large Evaluated Main Inflow},
+	cycle list name=mycolorlist
+]
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1624.82	47.02
+1650	1624.21	44.11
+1700	1630.44	49.14
+1750	1627.2	45.28
+1800	1630.69	40.42
+1850	1627.34	40.97
+1900	1623.71	41.61
+1950	1625.51	44.49
+2000	1626.19	39.85
+};
+\label{random-2000-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1714.21	55.56
+1650	1722.42	48.08
+1700	1734.84	49.85
+1750	1749.74	49.25
+1800	1751.76	53.04
+1850	1745.93	55.67
+1900	1752.34	46.88
+1950	1751.0	55.95
+2000	1752.66	45.61
+};
+\label{random-2000-200-30}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1686.2	29.98
+1650	1693.22	29.07
+1700	1699.13	31.93
+1750	1701.94	30.23
+1800	1700.86	29.56
+1850	1700.17	27.82
+1900	1703.99	26.08
+1950	1704.6	28.69
+2000	1700.32	28.5
+};
+\label{random-2000-200-50}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1740.06	48.93
+1650	1770.37	51.49
+1700	1792.33	42.97
+1750	1811.41	40.92
+1800	1809.79	36.83
+1850	1816.74	36.97
+1900	1820.81	39.94
+1950	1825.09	39.53
+2000	1822.03	38.52
+};
+\label{random-2000-200-80}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1721.38	37.7
+1650	1735.16	31.03
+1700	1752.7	30.26
+1750	1759.28	25.75
+1800	1767.35	26.77
+1850	1765.26	28.59
+1900	1767.13	31.47
+1950	1769.83	26.71
+2000	1767.13	23.87
+};
+\label{random-2000-200-100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	1714.93	78.63
+1700	1694.59	122.75
+1800	1572.7	44.91
+1900	1560.49	14.78
+2000	1558.12	15.24
+};
+\label{human}
+
+\addlegendimage{/pgfplots/refstyle=random-2000-200-10}
+\addlegendentry{random-2000-200-10}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-30}
+\addlegendentry{random-2000-200-30}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-50}
+\addlegendentry{random-2000-200-50}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-80}
+\addlegendentry{random-2000-200-80}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-100}
+\addlegendentry{random-2000-200-100}
+\addlegendimage{/pgfplots/refstyle=human}
+\addlegendentry{human}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
