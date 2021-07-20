@@ -105,7 +105,7 @@ mkdir ${WORKING_DIR}
 J=0
 
 # 2 3 4 5 8 9 13 
-for I in 1 6 7 10 11 12 14 15
+for I in 1 6 # 7 10 11 12 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
