@@ -111,11 +111,11 @@ J=0
 # 1 2 6 7 8 12 13 14 15 
 # 1 6 wily 
 # 2 8 9 13 drperceptron slow
-for I in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 # 7 12 13 # 14 15 
+for I in 1 2 3 4 5 6 7 8 9 10 #11 12 13 14 15 # 7 12 13 # 14 15 
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
-	for MAIN_INFLOW in 1600 1650 1700 1800 1850 1900 2000
+	for MAIN_INFLOW in 1600 1650 1700 1800 1850 1900 2000 #2100 2200 2250
 	do
 		for AVP in 25 30 35 40 # 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
 		do
@@ -135,6 +135,8 @@ do
 	
 done
 
+wait 
+source ~/notification_zyl.sh
 
 #for I in 4 
 #do
