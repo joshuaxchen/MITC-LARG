@@ -107,6 +107,7 @@ mkdir ${WORKING_DIR}
 
 J=0
 
+# 2 3 4 5 8 9 13 
 # 1 2 6 7 8 12 13 14 15 
 # 1 6 wily 
 # 2 8 9 13 drperceptron slow
