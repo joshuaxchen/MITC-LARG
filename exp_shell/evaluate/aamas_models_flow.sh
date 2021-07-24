@@ -94,6 +94,12 @@ echo "************************************************************"
 NUM=0
 
 MERGE_INFLOW=200
+mkdir $EXP_FOLDER/aamas_models_inflows
+for I in 14 15
+do
+	echo "${TRAIN_DIR[$I]}"
+	mkdir $EXP_FOLDER/aamas_models_inflows/${MARK[$I]}
+	for MAIN_INFLOW in 1600 1650 1700 1750 1800 1850 1900 1950 
 
 for I in 5
 do

@@ -18,20 +18,17 @@ echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 MERGE_INFLOW=200
-
-for MAIN_INFLOW in 2100 2200 2250 2300 2400 2500 2600 
+for MAIN_INFLOW in 1610 1620 1630 1640 1650 1660 1670 1680 1690 1710 1720 1730 1740 1750 1760 1770 1780 1790
 do
 	#MAIN_HUMAN_INFLOW= xargs printf "%.*f\n" "$MAIN_HUMAN_INFLOW"
-	let MAIN_RL_INFLOW=MAIN_INFLOW/10
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
+	echo $MAIN_INFLOW $MERGE_INFLOW
 	python3 ../../flow/visualize/new_rllib_visualizer.py \
 		$HUMAN_DIR\
 		$CHCKPOINT \
 		--render_mode no_render \
 		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		> ../../exp_results/human/${MAIN_INFLOW}_$MERGE_INFLOW.txt &
+		--main_merge_human_inflows $MAIN_INFLOW $MERGE_INFLOW \
+		> ../../exp_results/human/${MAIN_INFLOW}_${MERGE_INFLOW}.txt &
 done
 
 

@@ -257,6 +257,27 @@ def visualizer_rllib(args, seed=None):
         #env_params.additional_params['inflow_range']=[0.7, 1.3]
         env_params.additional_params['inflow_range']=[0.5, 1.5]
 
+    if args.main_merge_human_inflows:
+        input_inflows=args.main_merge_human_inflows
+        inflow = InFlows()
+        main_human_inflow_rate=input_inflows[0] 
+        merge_human_inflow_rate=input_inflows[1]
+        if main_human_inflow_rate>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_highway",
+                vehs_per_hour=main_human_inflow_rate,
+                depart_lane="free",
+                depart_speed=10)
+        if merge_human_inflow_rate>0:
+            inflow.add(
+                veh_type="human",
+                edge="inflow_merge",
+                vehs_per_hour=merge_human_inflow_rate,
+                depart_lane="free",
+                depart_speed=7.5)
+        flow_params['net'].inflows=inflow
+
     if args.handset_inflow:
         # env_params.additional_params['handset_inflow']=args.handset_inflow
         # handset_inflow
@@ -400,9 +421,10 @@ def visualizer_rllib(args, seed=None):
         config['horizon'] = args.horizon
         env_params.horizon = args.horizon
     # create the agent that will be used to compute the actions
-    agent = agent_cls(env=env_name, config=config)
     checkpoint = result_dir + '/checkpoint_' + args.checkpoint_num
     checkpoint = checkpoint + '/checkpoint-' + args.checkpoint_num
+    print("begin to initialize agent from checkpoint", checkpoint)
+    agent = agent_cls(env=env_name, config=config)
     agent.restore(checkpoint)
     
     if hasattr(agent, "local_evaluator") and \
@@ -752,6 +774,12 @@ def create_parser():
     parser.add_argument(
         '--handset_avp',
         type=float)
+
+    parser.add_argument(
+        '--main_merge_human_inflows',
+        type=int,
+        nargs="+",
+        help="This is often used for evaluating human baseline")
 
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
