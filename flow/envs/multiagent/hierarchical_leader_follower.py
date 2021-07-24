@@ -47,7 +47,7 @@ class MultiAgentHighwayPOEnvMerge4Hierarchy(MultiAgentHighwayPOEnvMerge4Collabor
         #print("obtained ref:",trained_agent_ref)
         result_dir=env_params.additional_params['trained_dir']
         checkpoint=env_params.additional_params['checkpoint']
-        print("load data from:", result_dir)
+        print("load data from:", result_dir, "checkpoint", checkpoint)
         self.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
         #if MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj is None:
         #    MultiAgentHighwayPOEnvMerge4Hierarchy.accel_agent_obj=init_policy_agent(result_dir,checkpoint)
