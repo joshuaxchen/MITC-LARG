@@ -1,0 +1,4494 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	 blue,  every mark/.append style={fill=blue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dashed every mark/.append style={fill=blue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 blue, dashed every mark/.append style={fill=blue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dotted every mark/.append style={fill=blue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 blue, loosely dotted every mark/.append style={fill=blue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 blue, loosely dashed every mark/.append style={fill=blue!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dashdotted every mark/.append style={fill=blue!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 blue, loosely dashdottted every mark/.append style={fill=blue!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 blue,  every mark/.append style={fill=blue!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dashed every mark/.append style={fill=blue!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 blue, dashed every mark/.append style={fill=blue!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dotted every mark/.append style={fill=blue!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dotted every mark/.append style={fill=red!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashed every mark/.append style={fill=red!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dashdotted every mark/.append style={fill=red!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashdottted every mark/.append style={fill=red!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 red,  every mark/.append style={fill=red!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dashed every mark/.append style={fill=red!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 red, dashed every mark/.append style={fill=red!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dotted every mark/.append style={fill=red!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dotted every mark/.append style={fill=red!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashed every mark/.append style={fill=red!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dashdotted every mark/.append style={fill=red!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashdottted every mark/.append style={fill=red!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 green,  every mark/.append style={fill=green!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dashed every mark/.append style={fill=green!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 green, dashed every mark/.append style={fill=green!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dotted every mark/.append style={fill=green!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 green, loosely dotted every mark/.append style={fill=green!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 green, loosely dashed every mark/.append style={fill=green!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dashdotted every mark/.append style={fill=green!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 green, loosely dashdottted every mark/.append style={fill=green!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 green,  every mark/.append style={fill=green!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dashed every mark/.append style={fill=green!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 green, dashed every mark/.append style={fill=green!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dotted every mark/.append style={fill=green!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dotted every mark/.append style={fill=brown!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dashed every mark/.append style={fill=brown!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dashdotted every mark/.append style={fill=brown!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dashdottted every mark/.append style={fill=brown!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 brown,  every mark/.append style={fill=brown!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dashed every mark/.append style={fill=brown!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 brown, dashed every mark/.append style={fill=brown!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dotted every mark/.append style={fill=brown!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dotted every mark/.append style={fill=brown!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dashed every mark/.append style={fill=brown!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dashdotted every mark/.append style={fill=brown!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dashdottted every mark/.append style={fill=brown!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 cyan,  every mark/.append style={fill=cyan!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dashed every mark/.append style={fill=cyan!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, dashed every mark/.append style={fill=cyan!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dotted every mark/.append style={fill=cyan!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dotted every mark/.append style={fill=cyan!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dashed every mark/.append style={fill=cyan!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dashdotted every mark/.append style={fill=cyan!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dashdottted every mark/.append style={fill=cyan!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 cyan,  every mark/.append style={fill=cyan!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dashed every mark/.append style={fill=cyan!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, dashed every mark/.append style={fill=cyan!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dotted every mark/.append style={fill=cyan!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dotted every mark/.append style={fill=darkgray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dashed every mark/.append style={fill=darkgray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dashdotted every mark/.append style={fill=darkgray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dashdottted every mark/.append style={fill=darkgray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray,  every mark/.append style={fill=darkgray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dashed every mark/.append style={fill=darkgray!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, dashed every mark/.append style={fill=darkgray!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dotted every mark/.append style={fill=darkgray!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dotted every mark/.append style={fill=darkgray!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dashed every mark/.append style={fill=darkgray!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dashdotted every mark/.append style={fill=darkgray!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dashdottted every mark/.append style={fill=darkgray!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 gray,  every mark/.append style={fill=gray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dashed every mark/.append style={fill=gray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 gray, dashed every mark/.append style={fill=gray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dotted every mark/.append style={fill=gray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 gray, loosely dotted every mark/.append style={fill=gray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 gray, loosely dashed every mark/.append style={fill=gray!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dashdotted every mark/.append style={fill=gray!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 gray, loosely dashdottted every mark/.append style={fill=gray!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 gray,  every mark/.append style={fill=gray!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dashed every mark/.append style={fill=gray!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 gray, dashed every mark/.append style={fill=gray!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dotted every mark/.append style={fill=gray!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dotted every mark/.append style={fill=lightgray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashed every mark/.append style={fill=lightgray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dashdotted every mark/.append style={fill=lightgray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashdottted every mark/.append style={fill=lightgray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray,  every mark/.append style={fill=lightgray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dashed every mark/.append style={fill=lightgray!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, dashed every mark/.append style={fill=lightgray!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dotted every mark/.append style={fill=lightgray!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dotted every mark/.append style={fill=lightgray!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashed every mark/.append style={fill=lightgray!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dashdotted every mark/.append style={fill=lightgray!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashdottted every mark/.append style={fill=lightgray!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 lime,  every mark/.append style={fill=lime!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dashed every mark/.append style={fill=lime!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 lime, dashed every mark/.append style={fill=lime!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dotted every mark/.append style={fill=lime!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 lime, loosely dotted every mark/.append style={fill=lime!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 lime, loosely dashed every mark/.append style={fill=lime!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dashdotted every mark/.append style={fill=lime!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 lime, loosely dashdottted every mark/.append style={fill=lime!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 lime,  every mark/.append style={fill=lime!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dashed every mark/.append style={fill=lime!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 lime, dashed every mark/.append style={fill=lime!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dotted every mark/.append style={fill=lime!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dotted every mark/.append style={fill=magenta!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashed every mark/.append style={fill=magenta!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dashdotted every mark/.append style={fill=magenta!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashdottted every mark/.append style={fill=magenta!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 magenta,  every mark/.append style={fill=magenta!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dashed every mark/.append style={fill=magenta!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 magenta, dashed every mark/.append style={fill=magenta!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dotted every mark/.append style={fill=magenta!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dotted every mark/.append style={fill=magenta!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashed every mark/.append style={fill=magenta!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dashdotted every mark/.append style={fill=magenta!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashdottted every mark/.append style={fill=magenta!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 olive,  every mark/.append style={fill=olive!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dashed every mark/.append style={fill=olive!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 olive, dashed every mark/.append style={fill=olive!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dotted every mark/.append style={fill=olive!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 olive, loosely dotted every mark/.append style={fill=olive!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 olive, loosely dashed every mark/.append style={fill=olive!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dashdotted every mark/.append style={fill=olive!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 olive, loosely dashdottted every mark/.append style={fill=olive!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 olive,  every mark/.append style={fill=olive!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dashed every mark/.append style={fill=olive!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 olive, dashed every mark/.append style={fill=olive!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dotted every mark/.append style={fill=olive!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dotted every mark/.append style={fill=orange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dashed every mark/.append style={fill=orange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dashdotted every mark/.append style={fill=orange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dashdottted every mark/.append style={fill=orange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 orange,  every mark/.append style={fill=orange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dashed every mark/.append style={fill=orange!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 orange, dashed every mark/.append style={fill=orange!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dotted every mark/.append style={fill=orange!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dotted every mark/.append style={fill=orange!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dashed every mark/.append style={fill=orange!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dashdotted every mark/.append style={fill=orange!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dashdottted every mark/.append style={fill=orange!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 pink,  every mark/.append style={fill=pink!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dashed every mark/.append style={fill=pink!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 pink, dashed every mark/.append style={fill=pink!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dotted every mark/.append style={fill=pink!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dotted every mark/.append style={fill=pink!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dashed every mark/.append style={fill=pink!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dashdotted every mark/.append style={fill=pink!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dashdottted every mark/.append style={fill=pink!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 pink,  every mark/.append style={fill=pink!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dashed every mark/.append style={fill=pink!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 pink, dashed every mark/.append style={fill=pink!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dotted every mark/.append style={fill=pink!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dotted every mark/.append style={fill=purple!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dashed every mark/.append style={fill=purple!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dashdotted every mark/.append style={fill=purple!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dashdottted every mark/.append style={fill=purple!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 purple,  every mark/.append style={fill=purple!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dashed every mark/.append style={fill=purple!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 purple, dashed every mark/.append style={fill=purple!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dotted every mark/.append style={fill=purple!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dotted every mark/.append style={fill=purple!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dashed every mark/.append style={fill=purple!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dashdotted every mark/.append style={fill=purple!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dashdottted every mark/.append style={fill=purple!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 teal,  every mark/.append style={fill=teal!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dashed every mark/.append style={fill=teal!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 teal, dashed every mark/.append style={fill=teal!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dotted every mark/.append style={fill=teal!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 teal, loosely dotted every mark/.append style={fill=teal!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 teal, loosely dashed every mark/.append style={fill=teal!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dashdotted every mark/.append style={fill=teal!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 teal, loosely dashdottted every mark/.append style={fill=teal!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 teal,  every mark/.append style={fill=teal!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dashed every mark/.append style={fill=teal!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 teal, dashed every mark/.append style={fill=teal!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dotted every mark/.append style={fill=teal!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dotted every mark/.append style={fill=violet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashed every mark/.append style={fill=violet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dashdotted every mark/.append style={fill=violet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashdottted every mark/.append style={fill=violet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 violet,  every mark/.append style={fill=violet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dashed every mark/.append style={fill=violet!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 violet, dashed every mark/.append style={fill=violet!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dotted every mark/.append style={fill=violet!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dotted every mark/.append style={fill=violet!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashed every mark/.append style={fill=violet!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dashdotted every mark/.append style={fill=violet!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashdottted every mark/.append style={fill=violet!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 yellow,  every mark/.append style={fill=yellow!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dashed every mark/.append style={fill=yellow!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, dashed every mark/.append style={fill=yellow!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dotted every mark/.append style={fill=yellow!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, loosely dotted every mark/.append style={fill=yellow!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, loosely dashed every mark/.append style={fill=yellow!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dashdotted every mark/.append style={fill=yellow!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 yellow, loosely dashdottted every mark/.append style={fill=yellow!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 yellow,  every mark/.append style={fill=yellow!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dashed every mark/.append style={fill=yellow!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, dashed every mark/.append style={fill=yellow!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dotted every mark/.append style={fill=yellow!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dotted every mark/.append style={fill=Bittersweet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashed every mark/.append style={fill=Bittersweet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dashdotted every mark/.append style={fill=Bittersweet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashdottted every mark/.append style={fill=Bittersweet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet,  every mark/.append style={fill=Bittersweet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dashed every mark/.append style={fill=Bittersweet!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, dashed every mark/.append style={fill=Bittersweet!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dotted every mark/.append style={fill=Bittersweet!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dotted every mark/.append style={fill=Bittersweet!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashed every mark/.append style={fill=Bittersweet!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dashdotted every mark/.append style={fill=Bittersweet!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashdottted every mark/.append style={fill=Bittersweet!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet,  every mark/.append style={fill=BlueViolet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dashed every mark/.append style={fill=BlueViolet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, dashed every mark/.append style={fill=BlueViolet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dotted every mark/.append style={fill=BlueViolet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, loosely dotted every mark/.append style={fill=BlueViolet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, loosely dashed every mark/.append style={fill=BlueViolet!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dashdotted every mark/.append style={fill=BlueViolet!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, loosely dashdottted every mark/.append style={fill=BlueViolet!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet,  every mark/.append style={fill=BlueViolet!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dashed every mark/.append style={fill=BlueViolet!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, dashed every mark/.append style={fill=BlueViolet!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dotted every mark/.append style={fill=BlueViolet!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dotted every mark/.append style={fill=BrickRed!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dashed every mark/.append style={fill=BrickRed!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dashdotted every mark/.append style={fill=BrickRed!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dashdottted every mark/.append style={fill=BrickRed!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed,  every mark/.append style={fill=BrickRed!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dashed every mark/.append style={fill=BrickRed!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, dashed every mark/.append style={fill=BrickRed!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dotted every mark/.append style={fill=BrickRed!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dotted every mark/.append style={fill=BrickRed!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dashed every mark/.append style={fill=BrickRed!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dashdotted every mark/.append style={fill=BrickRed!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dashdottted every mark/.append style={fill=BrickRed!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange,  every mark/.append style={fill=BurntOrange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dashed every mark/.append style={fill=BurntOrange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, dashed every mark/.append style={fill=BurntOrange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dotted every mark/.append style={fill=BurntOrange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dotted every mark/.append style={fill=BurntOrange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dashed every mark/.append style={fill=BurntOrange!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dashdotted every mark/.append style={fill=BurntOrange!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dashdottted every mark/.append style={fill=BurntOrange!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange,  every mark/.append style={fill=BurntOrange!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dashed every mark/.append style={fill=BurntOrange!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, dashed every mark/.append style={fill=BurntOrange!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dotted every mark/.append style={fill=BurntOrange!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dotted every mark/.append style={fill=CadetBlue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dashed every mark/.append style={fill=CadetBlue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dashdotted every mark/.append style={fill=CadetBlue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dashdottted every mark/.append style={fill=CadetBlue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue,  every mark/.append style={fill=CadetBlue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dashed every mark/.append style={fill=CadetBlue!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, dashed every mark/.append style={fill=CadetBlue!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dotted every mark/.append style={fill=CadetBlue!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dotted every mark/.append style={fill=CadetBlue!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dashed every mark/.append style={fill=CadetBlue!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dashdotted every mark/.append style={fill=CadetBlue!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dashdottted every mark/.append style={fill=CadetBlue!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink,  every mark/.append style={fill=CarnationPink!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dashed every mark/.append style={fill=CarnationPink!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, dashed every mark/.append style={fill=CarnationPink!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dotted every mark/.append style={fill=CarnationPink!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, loosely dotted every mark/.append style={fill=CarnationPink!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, loosely dashed every mark/.append style={fill=CarnationPink!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dashdotted every mark/.append style={fill=CarnationPink!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, loosely dashdottted every mark/.append style={fill=CarnationPink!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink,  every mark/.append style={fill=CarnationPink!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dashed every mark/.append style={fill=CarnationPink!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, dashed every mark/.append style={fill=CarnationPink!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dotted every mark/.append style={fill=CarnationPink!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dotted every mark/.append style={fill=Cerulean!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashed every mark/.append style={fill=Cerulean!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dashdotted every mark/.append style={fill=Cerulean!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashdottted every mark/.append style={fill=Cerulean!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean,  every mark/.append style={fill=Cerulean!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dashed every mark/.append style={fill=Cerulean!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, dashed every mark/.append style={fill=Cerulean!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dotted every mark/.append style={fill=Cerulean!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dotted every mark/.append style={fill=Cerulean!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashed every mark/.append style={fill=Cerulean!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dashdotted every mark/.append style={fill=Cerulean!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashdottted every mark/.append style={fill=Cerulean!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion,  every mark/.append style={fill=Dandelion!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dashed every mark/.append style={fill=Dandelion!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, dashed every mark/.append style={fill=Dandelion!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dotted every mark/.append style={fill=Dandelion!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, loosely dotted every mark/.append style={fill=Dandelion!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, loosely dashed every mark/.append style={fill=Dandelion!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dashdotted every mark/.append style={fill=Dandelion!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, loosely dashdottted every mark/.append style={fill=Dandelion!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion,  every mark/.append style={fill=Dandelion!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dashed every mark/.append style={fill=Dandelion!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, dashed every mark/.append style={fill=Dandelion!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dotted every mark/.append style={fill=Dandelion!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dotted every mark/.append style={fill=DarkOrchid!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashed every mark/.append style={fill=DarkOrchid!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dashdotted every mark/.append style={fill=DarkOrchid!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashdottted every mark/.append style={fill=DarkOrchid!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid,  every mark/.append style={fill=DarkOrchid!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dashed every mark/.append style={fill=DarkOrchid!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, dashed every mark/.append style={fill=DarkOrchid!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dotted every mark/.append style={fill=DarkOrchid!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dotted every mark/.append style={fill=DarkOrchid!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashed every mark/.append style={fill=DarkOrchid!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dashdotted every mark/.append style={fill=DarkOrchid!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashdottted every mark/.append style={fill=DarkOrchid!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Emerald,  every mark/.append style={fill=Emerald!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dashed every mark/.append style={fill=Emerald!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, dashed every mark/.append style={fill=Emerald!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dotted every mark/.append style={fill=Emerald!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, loosely dotted every mark/.append style={fill=Emerald!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, loosely dashed every mark/.append style={fill=Emerald!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dashdotted every mark/.append style={fill=Emerald!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, loosely dashdottted every mark/.append style={fill=Emerald!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Emerald,  every mark/.append style={fill=Emerald!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dashed every mark/.append style={fill=Emerald!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, dashed every mark/.append style={fill=Emerald!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dotted every mark/.append style={fill=Emerald!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dotted every mark/.append style={fill=Fuchsia!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dashed every mark/.append style={fill=Fuchsia!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dashdotted every mark/.append style={fill=Fuchsia!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dashdottted every mark/.append style={fill=Fuchsia!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia,  every mark/.append style={fill=Fuchsia!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dashed every mark/.append style={fill=Fuchsia!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, dashed every mark/.append style={fill=Fuchsia!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dotted every mark/.append style={fill=Fuchsia!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dotted every mark/.append style={fill=Fuchsia!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dashed every mark/.append style={fill=Fuchsia!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dashdotted every mark/.append style={fill=Fuchsia!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dashdottted every mark/.append style={fill=Fuchsia!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow,  every mark/.append style={fill=GreenYellow!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dashed every mark/.append style={fill=GreenYellow!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, dashed every mark/.append style={fill=GreenYellow!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dotted every mark/.append style={fill=GreenYellow!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dotted every mark/.append style={fill=GreenYellow!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dashed every mark/.append style={fill=GreenYellow!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dashdotted every mark/.append style={fill=GreenYellow!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dashdottted every mark/.append style={fill=GreenYellow!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow,  every mark/.append style={fill=GreenYellow!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dashed every mark/.append style={fill=GreenYellow!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, dashed every mark/.append style={fill=GreenYellow!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dotted every mark/.append style={fill=GreenYellow!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dotted every mark/.append style={fill=Magenta!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dashed every mark/.append style={fill=Magenta!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dashdotted every mark/.append style={fill=Magenta!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dashdottted every mark/.append style={fill=Magenta!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta,  every mark/.append style={fill=Magenta!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dashed every mark/.append style={fill=Magenta!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, dashed every mark/.append style={fill=Magenta!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dotted every mark/.append style={fill=Magenta!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dotted every mark/.append style={fill=Magenta!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dashed every mark/.append style={fill=Magenta!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dashdotted every mark/.append style={fill=Magenta!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dashdottted every mark/.append style={fill=Magenta!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Maroon,  every mark/.append style={fill=Maroon!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dashed every mark/.append style={fill=Maroon!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, dashed every mark/.append style={fill=Maroon!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dotted every mark/.append style={fill=Maroon!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, loosely dotted every mark/.append style={fill=Maroon!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, loosely dashed every mark/.append style={fill=Maroon!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dashdotted every mark/.append style={fill=Maroon!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, loosely dashdottted every mark/.append style={fill=Maroon!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Maroon,  every mark/.append style={fill=Maroon!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dashed every mark/.append style={fill=Maroon!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, dashed every mark/.append style={fill=Maroon!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dotted every mark/.append style={fill=Maroon!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dotted every mark/.append style={fill=MidnightBlue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashed every mark/.append style={fill=MidnightBlue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dashdotted every mark/.append style={fill=MidnightBlue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashdottted every mark/.append style={fill=MidnightBlue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue,  every mark/.append style={fill=MidnightBlue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dashed every mark/.append style={fill=MidnightBlue!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, dashed every mark/.append style={fill=MidnightBlue!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dotted every mark/.append style={fill=MidnightBlue!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dotted every mark/.append style={fill=MidnightBlue!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashed every mark/.append style={fill=MidnightBlue!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dashdotted every mark/.append style={fill=MidnightBlue!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashdottted every mark/.append style={fill=MidnightBlue!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Orange,  every mark/.append style={fill=Orange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dashed every mark/.append style={fill=Orange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, dashed every mark/.append style={fill=Orange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dotted every mark/.append style={fill=Orange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, loosely dotted every mark/.append style={fill=Orange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, loosely dashed every mark/.append style={fill=Orange!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dashdotted every mark/.append style={fill=Orange!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Orange, loosely dashdottted every mark/.append style={fill=Orange!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Orange,  every mark/.append style={fill=Orange!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dashed every mark/.append style={fill=Orange!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, dashed every mark/.append style={fill=Orange!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dotted every mark/.append style={fill=Orange!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dotted every mark/.append style={fill=OrangeRed!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashed every mark/.append style={fill=OrangeRed!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dashdotted every mark/.append style={fill=OrangeRed!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashdottted every mark/.append style={fill=OrangeRed!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed,  every mark/.append style={fill=OrangeRed!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dashed every mark/.append style={fill=OrangeRed!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, dashed every mark/.append style={fill=OrangeRed!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dotted every mark/.append style={fill=OrangeRed!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dotted every mark/.append style={fill=OrangeRed!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashed every mark/.append style={fill=OrangeRed!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dashdotted every mark/.append style={fill=OrangeRed!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashdottted every mark/.append style={fill=OrangeRed!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Orchid,  every mark/.append style={fill=Orchid!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dashed every mark/.append style={fill=Orchid!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, dashed every mark/.append style={fill=Orchid!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dotted every mark/.append style={fill=Orchid!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, loosely dotted every mark/.append style={fill=Orchid!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, loosely dashed every mark/.append style={fill=Orchid!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dashdotted every mark/.append style={fill=Orchid!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, loosely dashdottted every mark/.append style={fill=Orchid!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Orchid,  every mark/.append style={fill=Orchid!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dashed every mark/.append style={fill=Orchid!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, dashed every mark/.append style={fill=Orchid!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dotted every mark/.append style={fill=Orchid!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dotted every mark/.append style={fill=Periwinkle!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dashed every mark/.append style={fill=Periwinkle!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dashdotted every mark/.append style={fill=Periwinkle!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dashdottted every mark/.append style={fill=Periwinkle!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle,  every mark/.append style={fill=Periwinkle!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dashed every mark/.append style={fill=Periwinkle!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, dashed every mark/.append style={fill=Periwinkle!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dotted every mark/.append style={fill=Periwinkle!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dotted every mark/.append style={fill=Periwinkle!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dashed every mark/.append style={fill=Periwinkle!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dashdotted every mark/.append style={fill=Periwinkle!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dashdottted every mark/.append style={fill=Periwinkle!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna,  every mark/.append style={fill=RawSienna!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dashed every mark/.append style={fill=RawSienna!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, dashed every mark/.append style={fill=RawSienna!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dotted every mark/.append style={fill=RawSienna!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dotted every mark/.append style={fill=RawSienna!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dashed every mark/.append style={fill=RawSienna!20}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dashdotted every mark/.append style={fill=RawSienna!20}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dashdottted every mark/.append style={fill=RawSienna!20}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna,  every mark/.append style={fill=RawSienna!20}, mark=o, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dashed every mark/.append style={fill=RawSienna!20}, mark=oplus*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, dashed every mark/.append style={fill=RawSienna!20}, mark=oplus, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dotted every mark/.append style={fill=RawSienna!20}, mark=triangle, error bars/.cd, y dir=both, y explicit\\
+} %end of colors
+
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large Outflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large Evaluated AVP},
+	legend columns=15,
+	transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+	cycle list name=mycolorlist,
+	 xmax=40
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.43	31.4
+2	1598.98	35.43
+3	1605.89	35.26
+4	1612.4	38.61
+5	1611.68	41.57
+6	1614.85	39.03
+7	1622.05	42.25
+8	1625.9	40.0
+9	1627.42	44.38
+10	1629.79	47.58
+12	1639.15	44.67
+14	1641.2	47.65
+16	1655.5	49.58
+18	1656.5	43.36
+20	1673.57	46.73
+25	1686.35	51.84
+30	1697.83	49.76
+35	1698.01	45.19
+40	1694.99	41.71
+};
+\label{r-1650-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1586.95	32.63
+2	1592.93	36.32
+3	1602.4	37.55
+4	1607.47	38.03
+5	1608.59	32.95
+6	1615.72	34.63
+7	1620.43	39.65
+8	1628.06	40.89
+9	1636.06	41.74
+10	1631.05	43.46
+12	1636.7	49.99
+14	1644.52	43.67
+16	1660.68	53.62
+18	1671.88	55.68
+20	1677.02	47.14
+25	1700.1	43.97
+30	1711.48	41.69
+35	1717.2	43.31
+40	1718.82	37.31
+};
+\label{r-1650-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.69	26.26
+2	1585.73	28.14
+3	1595.92	28.43
+4	1599.55	32.08
+5	1605.28	30.46
+6	1614.24	33.45
+7	1619.24	34.89
+8	1622.59	34.43
+9	1628.1	44.52
+10	1633.28	48.5
+12	1639.84	48.96
+14	1651.79	50.51
+16	1660.07	50.82
+18	1678.39	50.1
+20	1683.47	51.28
+25	1707.84	48.66
+30	1718.28	45.77
+35	1723.1	44.07
+40	1725.73	35.07
+};
+\label{r-1650-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1574.03	19.14
+2	1585.55	24.32
+3	1592.1	28.1
+4	1595.45	28.48
+5	1603.12	36.05
+6	1608.88	32.27
+7	1611.47	30.9
+8	1617.3	41.84
+9	1624.21	39.65
+10	1636.09	40.57
+12	1642.14	45.01
+14	1650.64	48.0
+16	1658.95	54.2
+18	1671.52	52.0
+20	1683.86	40.72
+25	1714.93	50.19
+30	1719.61	50.07
+35	1723.07	40.99
+40	1721.38	41.55
+};
+\label{r-1650-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.79	19.32
+2	1581.3	23.59
+3	1587.28	25.27
+4	1592.96	27.72
+5	1608.41	32.31
+6	1612.51	32.55
+7	1614.24	32.92
+8	1621.48	35.67
+9	1623.13	32.53
+10	1630.87	40.13
+12	1641.02	44.13
+14	1647.94	44.07
+16	1665.9	50.16
+18	1681.49	50.31
+20	1688.4	46.31
+25	1710.94	50.45
+30	1721.2	51.48
+35	1729.73	44.4
+40	1717.52	41.78
+};
+\label{r-1650-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.0	14.96
+2	1578.71	22.88
+3	1586.59	24.58
+4	1595.45	28.6
+5	1601.21	29.43
+6	1608.41	34.28
+7	1614.24	35.03
+8	1618.13	37.21
+9	1624.5	41.88
+10	1626.41	43.53
+12	1638.11	44.59
+14	1652.83	51.74
+16	1667.41	43.94
+18	1674.58	48.23
+20	1685.48	53.96
+25	1712.3	50.85
+30	1719.94	47.25
+35	1741.25	43.35
+40	1724.47	39.94
+};
+\label{r-1650-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.28	16.95
+2	1579.43	20.27
+3	1587.64	22.43
+4	1593.14	24.45
+5	1599.62	25.47
+6	1600.42	29.87
+7	1617.19	33.09
+8	1617.08	35.62
+9	1626.73	43.04
+10	1627.31	44.15
+12	1639.84	47.61
+14	1652.69	49.31
+16	1667.99	53.86
+18	1672.52	54.77
+20	1693.08	56.71
+25	1713.35	46.43
+30	1729.48	46.18
+35	1733.26	36.9
+40	1725.37	41.68
+};
+\label{r-1650-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.98	18.35
+2	1579.18	19.27
+3	1586.92	24.77
+4	1595.56	24.84
+5	1605.28	28.55
+6	1607.51	34.37
+7	1614.35	32.77
+8	1621.98	38.68
+9	1623.64	39.07
+10	1629.58	37.68
+12	1641.92	45.9
+14	1653.26	49.58
+16	1670.08	56.71
+18	1677.2	47.89
+20	1686.28	51.63
+25	1705.5	46.45
+30	1724.29	43.17
+35	1727.86	46.93
+40	1726.99	40.21
+};
+\label{r-1650-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.92	16.98
+5	1602.65	25.37
+10	1626.41	42.56
+16	1670.62	45.63
+20	1689.77	49.16
+25	1713.1	50.83
+30	1727.93	49.47
+40	1721.7	40.84
+};
+\label{r-1650-200-30-2300}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.92	14.24
+5	1601.75	30.39
+10	1626.55	42.55
+16	1664.57	55.69
+20	1686.1	48.43
+25	1718.93	41.01
+30	1717.81	46.56
+40	1725.44	39.62
+};
+\label{r-1650-200-30-2400}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.23	16.77
+5	1598.76	26.04
+10	1615.75	39.5
+16	1654.56	52.11
+20	1685.84	50.64
+25	1713.42	45.69
+30	1730.66	39.63
+40	1730.84	36.18
+};
+\label{r-1650-200-30-2500}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.38	15.87
+5	1601.32	29.81
+10	1623.74	42.17
+16	1665.61	46.31
+20	1692.11	51.97
+25	1714.86	53.54
+30	1728.07	41.81
+40	1726.38	35.56
+};
+\label{r-1650-200-30-2600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1590.77	32.24
+2	1598.51	34.61
+3	1605.31	29.71
+4	1610.71	34.43
+5	1613.59	36.77
+6	1621.84	35.78
+7	1627.31	36.71
+8	1629.14	35.19
+9	1635.05	41.76
+10	1640.12	44.98
+12	1644.66	43.91
+14	1651.57	43.22
+16	1657.87	46.9
+18	1667.74	43.94
+20	1678.43	43.59
+25	1684.94	43.27
+30	1698.59	55.16
+35	1706.36	50.33
+40	1711.19	49.49
+};
+\label{r-1850-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.75	32.79
+2	1592.71	33.75
+3	1604.77	30.26
+4	1607.44	31.87
+5	1614.2	36.6
+6	1617.88	35.54
+7	1623.96	33.26
+8	1631.27	36.93
+9	1640.88	36.51
+10	1645.67	46.02
+12	1644.62	42.53
+14	1651.0	39.58
+16	1670.54	47.25
+18	1676.38	46.17
+20	1682.53	41.84
+25	1702.58	48.12
+30	1714.93	50.94
+35	1729.01	50.27
+40	1743.08	41.67
+};
+\label{r-1850-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1580.11	28.34
+2	1588.93	27.46
+3	1596.82	27.16
+4	1602.11	29.05
+5	1609.02	32.35
+6	1618.78	31.39
+7	1621.22	28.64
+8	1626.52	30.8
+9	1634.29	39.49
+10	1642.93	38.55
+12	1651.86	46.51
+14	1660.14	44.66
+16	1662.91	50.72
+18	1674.04	49.95
+20	1688.04	50.41
+25	1717.45	46.26
+30	1734.7	45.76
+35	1742.72	52.27
+40	1764.07	45.7
+};
+\label{r-1850-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1573.2	20.85
+2	1586.48	25.65
+3	1595.45	26.68
+4	1601.03	26.32
+5	1607.33	30.97
+6	1615.72	29.34
+7	1625.72	29.98
+8	1633.61	34.08
+9	1629.68	38.13
+10	1641.31	35.01
+12	1648.69	39.79
+14	1652.18	44.44
+16	1663.16	52.32
+18	1670.15	48.46
+20	1688.4	50.69
+25	1713.31	48.24
+30	1727.57	51.06
+35	1751.87	44.05
+40	1771.42	39.48
+};
+\label{r-1850-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.98	18.91
+2	1582.88	22.76
+3	1589.9	27.38
+4	1599.34	25.97
+5	1611.4	29.05
+6	1617.52	29.19
+7	1623.24	32.96
+8	1625.44	33.54
+9	1636.16	34.26
+10	1640.48	37.07
+12	1650.53	40.27
+14	1652.65	42.11
+16	1666.48	44.64
+18	1685.3	48.36
+20	1689.08	44.66
+25	1718.14	56.0
+30	1735.74	51.38
+35	1748.88	45.89
+40	1767.78	51.27
+};
+\label{r-1850-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.56	16.24
+2	1579.39	20.9
+3	1588.21	24.99
+4	1599.95	29.28
+5	1607.69	29.92
+6	1611.79	31.32
+7	1621.33	31.48
+8	1631.3	35.02
+9	1629.61	35.22
+10	1633.93	37.99
+12	1650.74	45.15
+14	1657.66	48.48
+16	1664.5	48.24
+18	1683.0	49.0
+20	1689.73	48.83
+25	1717.74	45.73
+30	1734.08	55.43
+35	1748.27	48.89
+40	1768.61	44.14
+};
+\label{r-1850-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.98	17.0
+2	1580.44	20.57
+3	1591.24	23.79
+4	1598.72	24.68
+5	1607.58	28.61
+6	1613.99	32.21
+7	1621.55	29.41
+8	1631.52	36.46
+9	1635.23	35.65
+10	1633.68	41.65
+12	1646.57	39.68
+14	1662.77	47.12
+16	1670.54	41.97
+18	1671.26	45.57
+20	1687.21	49.67
+25	1720.08	52.61
+30	1736.21	55.92
+35	1750.18	52.91
+40	1771.34	45.87
+};
+\label{r-1850-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.43	18.43
+2	1580.0	19.06
+3	1590.16	24.61
+4	1601.39	24.07
+5	1611.54	26.82
+6	1613.63	30.46
+7	1621.98	28.54
+8	1623.42	31.51
+9	1633.03	37.63
+10	1635.19	37.5
+12	1646.35	38.1
+14	1664.71	43.31
+16	1675.3	44.59
+18	1678.82	50.85
+20	1692.25	52.76
+25	1705.46	47.24
+30	1729.58	51.02
+35	1758.78	49.63
+40	1758.1	49.14
+};
+\label{r-1850-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.38	17.07
+5	1607.87	26.75
+10	1637.06	35.95
+16	1666.19	47.81
+20	1693.73	47.8
+25	1716.84	49.62
+30	1735.63	59.16
+40	1772.06	45.36
+};
+\label{r-1850-200-30-2300}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.36	13.75
+5	1608.66	25.53
+10	1641.24	35.83
+16	1659.42	49.63
+20	1687.64	48.91
+25	1714.0	53.52
+30	1723.18	54.3
+40	1767.13	49.1
+};
+\label{r-1850-200-30-2400}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.56	17.78
+5	1607.22	27.95
+10	1638.65	40.48
+16	1669.72	46.8
+20	1690.34	40.71
+25	1713.1	48.21
+30	1732.75	55.28
+40	1764.32	50.38
+};
+\label{r-1850-200-30-2500}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.52	15.65
+5	1602.32	27.57
+10	1633.79	40.8
+16	1669.07	46.57
+20	1701.32	38.53
+25	1719.5	51.0
+30	1737.14	47.48
+40	1769.65	48.17
+};
+\label{r-1850-200-30-2600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.97	23.97
+2	1607.11	28.43
+3	1612.8	33.26
+4	1620.22	31.89
+5	1625.76	33.1
+6	1626.59	37.51
+7	1629.4	38.95
+8	1632.53	38.41
+9	1621.44	38.75
+10	1626.19	39.85
+20	1625.18	55.53
+30	1633.46	62.2
+40	1638.47	64.66
+50	1652.33	57.81
+60	1659.64	63.65
+70	1656.76	60.32
+80	1660.5	67.8
+100	1659.71	60.72
+};
+\label{r-2000-200-10-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1542.42	21.4
+2	1538.17	24.73
+3	1540.91	24.84
+4	1541.41	24.02
+5	1544.18	24.05
+6	1547.89	26.39
+7	1546.16	26.71
+8	1551.13	25.57
+9	1555.99	24.34
+10	1553.33	31.63
+20	1610.14	31.2
+30	1649.81	37.33
+40	1690.96	39.8
+50	1743.91	48.43
+60	1775.48	46.57
+70	1805.62	43.04
+80	1812.85	32.58
+100	1767.13	23.87
+};
+\label{r-2000-200-100-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.14	30.6
+2	1597.07	30.24
+3	1610.32	30.33
+4	1608.8	34.48
+5	1616.33	41.77
+6	1620.14	37.16
+7	1620.32	34.21
+8	1624.82	40.65
+9	1626.55	42.53
+10	1634.76	40.23
+12	1641.49	44.92
+14	1643.62	44.73
+16	1654.74	50.62
+18	1665.11	51.3
+20	1671.88	51.58
+25	1692.07	51.22
+30	1714.21	55.56
+35	1722.92	54.23
+40	1722.06	47.04
+};
+\label{r-2000-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1587.13	33.11
+2	1595.66	35.27
+3	1599.8	31.85
+4	1609.78	37.35
+5	1614.53	36.66
+6	1617.23	32.62
+7	1622.45	32.26
+8	1631.52	37.18
+9	1634.94	34.4
+10	1641.6	49.57
+12	1643.15	49.05
+14	1650.35	39.8
+16	1663.88	51.83
+18	1681.24	52.73
+20	1685.41	51.66
+25	1714.86	52.74
+30	1734.84	49.85
+35	1755.58	44.01
+40	1762.96	41.68
+};
+\label{r-2000-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1578.71	29.24
+2	1586.63	27.48
+3	1593.47	24.68
+4	1602.54	28.5
+5	1607.33	30.46
+6	1616.26	31.13
+7	1618.13	33.57
+8	1625.8	36.85
+9	1627.13	39.38
+10	1631.34	39.8
+12	1645.09	46.27
+14	1657.8	50.12
+16	1663.74	52.0
+18	1675.15	51.11
+20	1693.37	57.27
+25	1722.78	56.93
+30	1751.76	53.04
+35	1770.66	47.58
+40	1786.64	41.61
+};
+\label{r-2000-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1574.32	20.31
+2	1587.24	24.18
+3	1592.46	28.49
+4	1598.76	27.4
+5	1604.48	29.11
+6	1613.02	31.94
+7	1618.67	32.3
+8	1625.4	41.2
+9	1627.13	32.93
+10	1631.99	38.35
+12	1645.34	37.45
+14	1654.67	44.06
+16	1665.18	51.2
+18	1675.8	48.91
+20	1691.89	49.53
+25	1729.94	49.7
+30	1752.34	46.88
+35	1774.15	43.39
+40	1790.6	34.98
+};
+\label{r-2000-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1572.41	19.98
+2	1582.13	24.09
+3	1591.6	26.05
+4	1600.56	25.34
+5	1609.85	29.94
+6	1611.86	28.92
+7	1619.42	33.57
+8	1624.68	33.36
+9	1628.06	35.41
+10	1631.7	37.63
+12	1643.65	41.38
+14	1656.29	45.42
+16	1664.89	45.29
+18	1685.02	52.23
+20	1699.06	51.78
+25	1729.84	51.31
+30	1752.66	45.61
+35	1775.41	44.56
+40	1789.49	40.24
+};
+\label{r-2000-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.35	14.45
+2	1578.85	22.3
+3	1588.9	24.62
+4	1598.98	25.72
+5	1607.4	28.01
+6	1608.66	30.98
+7	1621.62	34.15
+8	1620.47	35.14
+9	1625.69	42.27
+10	1628.17	38.55
+12	1642.64	43.36
+14	1654.42	48.2
+16	1668.17	45.08
+18	1683.94	46.6
+20	1692.14	50.68
+25	1730.02	56.22
+30	1757.84	49.68
+35	1777.25	51.75
+40	1796.65	40.82
+};
+\label{r-2000-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.85	15.41
+2	1578.67	20.24
+3	1589.87	23.38
+4	1595.45	26.67
+5	1604.63	25.75
+6	1607.36	28.0
+7	1620.18	33.02
+8	1622.63	31.86
+9	1627.49	37.74
+10	1628.68	39.2
+12	1639.33	43.69
+14	1657.84	44.82
+16	1668.56	51.66
+18	1678.82	55.7
+20	1690.78	51.59
+25	1724.9	53.53
+30	1757.48	52.05
+35	1775.23	42.13
+40	1797.41	43.14
+};
+\label{r-2000-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.17	16.11
+2	1578.92	18.34
+3	1587.13	20.28
+4	1596.71	24.54
+5	1603.48	25.07
+6	1606.61	27.56
+7	1609.2	32.7
+8	1618.09	34.66
+9	1623.71	35.64
+10	1633.32	36.96
+12	1636.99	40.44
+14	1645.96	49.01
+16	1667.74	47.92
+18	1680.55	48.26
+20	1700.24	57.42
+25	1733.8	54.45
+30	1754.21	55.67
+35	1778.08	51.85
+40	1782.07	50.45
+};
+\label{r-2000-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.59	16.65
+5	1604.81	26.87
+10	1629.61	39.06
+16	1664.53	42.43
+20	1687.36	56.15
+25	1734.44	55.4
+30	1763.89	43.09
+40	1796.22	45.28
+};
+\label{r-2000-200-30-2300}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.28	15.52
+5	1600.96	25.53
+10	1627.27	38.97
+16	1658.99	42.29
+20	1688.65	52.52
+25	1733.62	59.08
+30	1756.62	56.1
+40	1786.57	45.4
+};
+\label{r-2000-200-30-2400}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.13	17.07
+5	1605.6	25.25
+10	1627.02	40.78
+16	1669.54	47.95
+20	1696.36	47.41
+25	1729.4	51.69
+30	1762.06	44.1
+40	1793.16	45.07
+};
+\label{r-2000-200-30-2500}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.54	14.54
+5	1602.65	28.28
+10	1625.76	40.29
+16	1665.14	44.39
+20	1693.19	56.55
+25	1728.43	55.83
+30	1757.12	51.01
+40	1793.09	38.39
+};
+\label{r-2000-200-30-2600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1552.43	21.64
+2	1558.22	23.81
+3	1568.7	24.87
+4	1576.91	28.45
+5	1583.89	26.32
+6	1593.76	24.14
+7	1601.28	26.25
+8	1599.91	25.88
+9	1605.85	23.51
+10	1606.57	25.17
+20	1655.89	39.69
+30	1733.69	42.81
+40	1755.76	32.22
+50	1700.32	28.5
+60	1613.66	29.37
+70	1519.31	24.89
+80	1425.35	23.16
+100	1250.93	13.53
+};
+\label{r-2000-200-50-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.15	20.83
+2	1593.22	24.12
+3	1601.42	24.88
+4	1604.88	25.46
+5	1615.43	25.05
+6	1616.54	24.62
+7	1625.18	28.72
+8	1629.97	29.97
+9	1633.28	26.43
+10	1636.6	31.91
+20	1661.76	37.41
+30	1702.66	46.2
+40	1733.29	45.85
+50	1769.11	41.74
+60	1796.62	50.85
+70	1812.28	43.5
+80	1822.03	38.52
+100	1833.05	28.13
+};
+\label{r-2000-200-80-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1581.41	34.4
+2	1585.15	40.12
+3	1585.94	32.29
+4	1584.83	30.32
+5	1586.02	35.5
+6	1589.26	28.11
+7	1591.06	27.49
+8	1594.19	32.06
+9	1594.12	27.07
+10	1599.12	35.01
+12	1598.65	31.6
+14	1603.12	35.45
+16	1604.16	33.78
+18	1605.78	40.19
+20	1603.76	33.49
+25	1595.74	33.48
+30	1592.24	40.48
+35	1583.24	33.74
+40	1574.71	40.09
+};
+\label{1650-200-10-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.26	33.14
+2	1577.2	32.58
+3	1579.43	27.71
+4	1581.19	29.39
+5	1584.18	29.62
+6	1583.75	28.58
+7	1590.08	32.12
+8	1593.0	27.54
+9	1594.3	28.74
+10	1595.3	27.65
+12	1595.16	27.2
+14	1597.1	24.61
+16	1599.23	33.65
+18	1595.74	26.14
+20	1598.58	30.6
+25	1598.51	36.68
+30	1580.0	35.07
+35	1575.47	34.23
+40	1572.88	36.78
+};
+\label{1650-200-10-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.34	22.35
+2	1570.1	23.93
+3	1572.73	22.46
+4	1577.92	22.76
+5	1581.37	26.47
+6	1586.2	24.12
+7	1586.23	25.4
+8	1586.88	23.21
+9	1587.2	25.68
+10	1590.16	23.15
+12	1589.51	27.14
+14	1593.22	26.54
+16	1596.42	25.13
+18	1595.77	28.86
+20	1593.58	25.78
+25	1593.29	34.4
+30	1583.46	29.28
+35	1571.47	28.83
+40	1568.45	34.75
+};
+\label{1650-200-10-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.34	21.89
+2	1569.02	18.11
+3	1569.67	18.67
+4	1572.16	18.12
+5	1574.93	19.18
+6	1580.36	21.84
+7	1579.32	21.84
+8	1582.02	20.68
+9	1583.86	23.2
+10	1587.02	23.96
+12	1586.59	22.88
+14	1594.04	21.67
+16	1588.39	22.81
+18	1589.8	24.53
+20	1589.04	25.45
+25	1587.1	27.56
+30	1577.3	27.31
+35	1569.31	28.79
+40	1564.31	27.31
+};
+\label{1650-200-10-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.11	18.04
+2	1567.26	19.52
+3	1570.39	22.01
+4	1570.14	18.46
+5	1575.83	16.53
+6	1575.47	19.4
+7	1577.3	20.98
+8	1583.6	23.27
+9	1583.17	21.32
+10	1585.3	20.44
+12	1590.52	22.82
+14	1591.06	22.68
+16	1589.36	25.23
+18	1590.66	28.1
+20	1591.2	22.02
+25	1584.86	25.57
+30	1577.88	23.83
+35	1574.32	27.03
+40	1558.58	27.47
+};
+\label{1650-200-10-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.8	13.15
+2	1562.94	15.73
+3	1568.59	17.39
+4	1570.43	18.47
+5	1569.74	20.45
+6	1574.86	18.47
+7	1575.97	18.8
+8	1580.4	20.11
+9	1586.59	21.16
+10	1583.68	22.67
+12	1588.93	22.29
+14	1589.51	22.41
+16	1594.94	23.2
+18	1589.76	24.0
+20	1589.83	26.32
+25	1581.3	24.65
+30	1573.45	25.03
+35	1574.75	26.5
+40	1561.1	22.74
+};
+\label{1650-200-10-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.16	15.15
+2	1564.74	14.1
+3	1568.7	17.04
+4	1569.74	17.67
+5	1568.48	19.13
+6	1577.02	19.02
+7	1576.48	18.67
+8	1579.72	20.82
+9	1580.9	19.95
+10	1581.59	17.4
+12	1583.71	21.77
+14	1585.87	23.64
+16	1589.87	22.55
+18	1591.02	22.76
+20	1588.1	26.72
+25	1580.98	27.38
+30	1580.87	27.59
+35	1565.6	27.39
+40	1555.81	24.37
+};
+\label{1650-200-10-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.29	15.5
+2	1563.52	14.9
+3	1564.74	18.68
+4	1567.08	17.46
+5	1572.52	18.06
+6	1572.84	19.27
+7	1574.93	18.49
+8	1577.12	19.19
+9	1582.09	18.41
+10	1581.59	19.24
+12	1587.24	24.3
+14	1587.74	21.45
+16	1591.7	23.02
+18	1591.31	22.59
+20	1589.36	23.38
+25	1579.68	25.1
+30	1572.77	24.69
+35	1569.49	26.72
+40	1558.26	28.21
+};
+\label{1650-200-10-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.51	40.18
+2	1566.68	48.5
+3	1565.03	40.06
+4	1568.84	44.32
+5	1577.12	47.85
+6	1576.37	43.64
+7	1589.51	41.59
+8	1591.7	44.19
+9	1596.89	45.27
+10	1596.31	46.95
+12	1604.3	43.8
+14	1607.51	44.65
+16	1607.98	39.42
+18	1613.66	47.13
+20	1618.34	43.49
+25	1629.22	43.33
+30	1624.97	50.79
+35	1634.18	49.27
+40	1651.9	49.49
+};
+\label{1650-200-100-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.21	37.27
+2	1555.34	42.38
+3	1559.56	33.25
+4	1563.19	42.84
+5	1568.56	45.83
+6	1573.52	42.45
+7	1579.72	43.35
+8	1585.26	40.97
+9	1593.97	39.08
+10	1599.73	45.03
+12	1593.94	39.97
+14	1598.22	43.99
+16	1608.08	43.99
+18	1611.4	45.19
+20	1609.92	39.13
+25	1622.12	46.33
+30	1634.62	52.62
+35	1648.91	55.96
+40	1655.24	49.6
+};
+\label{1650-200-100-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1551.96	29.0
+2	1544.83	30.61
+3	1547.06	30.88
+4	1552.97	30.72
+5	1560.74	31.32
+6	1563.73	34.89
+7	1569.28	37.78
+8	1576.51	32.19
+9	1588.68	42.33
+10	1589.4	39.41
+12	1598.26	38.08
+14	1603.04	44.59
+16	1601.32	37.84
+18	1600.56	39.14
+20	1612.33	39.95
+25	1618.67	44.53
+30	1631.77	51.27
+35	1638.47	46.58
+40	1656.29	49.28
+};
+\label{1650-200-100-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1543.61	22.95
+2	1545.41	24.6
+3	1542.53	27.67
+4	1550.95	30.38
+5	1550.34	28.43
+6	1559.88	29.55
+7	1565.64	30.76
+8	1575.79	34.47
+9	1579.03	30.0
+10	1579.75	34.07
+12	1591.56	41.25
+14	1595.92	36.09
+16	1601.82	36.39
+18	1603.19	35.69
+20	1609.92	34.78
+25	1612.58	43.79
+30	1621.44	42.0
+35	1634.4	49.64
+40	1647.43	54.62
+};
+\label{1650-200-100-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1542.64	21.06
+2	1537.81	26.1
+3	1535.72	27.18
+4	1541.95	29.09
+5	1549.69	31.32
+6	1557.07	34.24
+7	1563.12	32.72
+8	1572.7	27.7
+9	1576.51	33.85
+10	1585.01	33.17
+12	1590.12	34.31
+14	1592.86	33.46
+16	1600.42	34.7
+18	1605.38	34.45
+20	1611.43	37.01
+25	1615.72	40.39
+30	1625.83	51.68
+35	1635.37	50.46
+40	1651.93	45.96
+};
+\label{1650-200-100-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1538.96	19.91
+2	1534.79	21.89
+3	1535.62	27.68
+4	1544.0	30.36
+5	1544.22	29.98
+6	1554.44	31.29
+7	1563.19	35.04
+8	1566.86	35.47
+9	1578.42	34.78
+10	1580.11	35.96
+12	1589.33	34.48
+14	1596.2	37.67
+16	1600.78	37.16
+18	1602.47	38.8
+20	1606.64	42.48
+25	1612.8	46.73
+30	1619.68	49.58
+35	1639.37	50.05
+40	1653.23	43.76
+};
+\label{1650-200-100-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1541.66	20.74
+2	1534.14	22.51
+3	1535.94	22.74
+4	1539.86	25.53
+5	1542.53	27.56
+6	1548.29	32.22
+7	1558.55	32.32
+8	1567.94	30.36
+9	1574.42	30.17
+10	1575.54	32.21
+12	1590.05	36.75
+14	1588.0	36.44
+16	1597.32	35.75
+18	1606.1	36.26
+20	1608.95	40.7
+25	1616.94	44.94
+30	1621.33	49.84
+35	1630.51	54.28
+40	1657.33	54.9
+};
+\label{1650-200-100-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1540.12	19.97
+2	1530.25	22.82
+3	1531.73	25.09
+4	1538.03	26.39
+5	1544.58	27.68
+6	1550.92	31.05
+7	1559.95	32.42
+8	1564.63	31.8
+9	1575.79	36.23
+10	1575.72	30.26
+12	1589.58	36.04
+14	1595.3	35.32
+16	1603.84	35.05
+18	1603.94	37.19
+20	1605.71	44.39
+25	1610.39	39.23
+30	1621.84	45.32
+35	1637.64	49.41
+40	1646.82	53.05
+};
+\label{1650-200-100-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.9	42.54
+2	1565.28	56.84
+3	1557.97	50.47
+4	1557.47	50.42
+5	1568.16	56.27
+6	1572.37	47.65
+7	1576.8	52.79
+8	1582.67	53.41
+9	1582.67	50.76
+10	1594.55	51.85
+12	1591.52	50.37
+14	1600.99	49.96
+16	1597.28	53.97
+18	1602.22	56.63
+20	1603.44	50.51
+25	1597.21	49.71
+30	1587.67	51.25
+35	1609.81	60.19
+40	1612.48	58.27
+};
+\label{1650-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1553.47	41.05
+2	1545.91	47.15
+3	1543.93	42.78
+4	1545.7	44.21
+5	1552.36	42.68
+6	1564.42	43.91
+7	1567.91	47.93
+8	1573.6	45.66
+9	1580.26	45.38
+10	1582.52	51.08
+12	1591.56	46.02
+14	1588.79	42.64
+16	1594.3	46.43
+18	1597.72	52.26
+20	1591.49	51.06
+25	1604.27	55.25
+30	1605.53	70.58
+35	1613.66	68.85
+40	1609.27	64.08
+};
+\label{1650-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1541.38	32.28
+2	1532.7	34.06
+3	1534.5	37.18
+4	1538.21	36.55
+5	1541.09	41.66
+6	1549.55	43.04
+7	1558.19	45.71
+8	1569.02	37.46
+9	1572.55	47.56
+10	1579.18	49.17
+12	1584.0	49.34
+14	1583.71	50.75
+16	1588.64	43.86
+18	1592.64	47.58
+20	1594.87	45.33
+25	1597.68	55.14
+30	1597.57	54.68
+35	1608.08	61.33
+40	1614.2	63.53
+};
+\label{1650-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1536.77	26.79
+2	1528.7	27.03
+3	1526.94	34.54
+4	1529.93	36.69
+5	1538.5	38.96
+6	1543.0	35.99
+7	1556.46	43.29
+8	1560.46	40.44
+9	1564.6	43.8
+10	1568.63	36.67
+12	1584.54	43.09
+14	1589.22	44.62
+16	1582.34	45.55
+18	1583.93	47.22
+20	1589.8	42.55
+25	1587.06	57.43
+30	1589.15	54.66
+35	1598.4	61.49
+40	1605.78	61.27
+};
+\label{1650-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1533.35	24.06
+2	1522.69	29.84
+3	1522.84	31.69
+4	1525.72	35.44
+5	1535.58	38.23
+6	1543.72	37.53
+7	1555.24	39.73
+8	1561.68	40.99
+9	1566.22	39.63
+10	1570.61	39.75
+12	1588.18	36.9
+14	1587.49	34.48
+16	1577.41	48.16
+18	1589.62	50.37
+20	1586.74	44.95
+25	1599.34	56.6
+30	1588.14	54.23
+35	1590.3	60.57
+40	1617.66	70.79
+};
+\label{1650-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1530.04	21.49
+2	1517.26	27.03
+3	1520.46	28.35
+4	1521.83	34.11
+5	1525.75	37.36
+6	1533.71	38.28
+7	1552.32	37.86
+8	1554.48	38.96
+9	1565.64	40.72
+10	1569.67	44.19
+12	1573.63	41.12
+14	1572.62	42.17
+16	1587.89	48.11
+18	1588.21	48.03
+20	1589.65	55.85
+25	1588.1	54.13
+30	1591.02	55.01
+35	1589.26	57.88
+40	1602.83	68.36
+};
+\label{1650-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1532.38	21.97
+2	1519.81	27.34
+3	1515.56	26.96
+4	1515.92	32.86
+5	1526.58	33.04
+6	1535.4	39.23
+7	1549.62	37.97
+8	1556.46	40.53
+9	1562.4	39.89
+10	1565.32	44.76
+12	1579.97	42.69
+14	1577.52	43.28
+16	1576.94	49.94
+18	1584.25	42.73
+20	1584.58	47.39
+25	1582.13	59.52
+30	1590.19	56.97
+35	1596.06	65.71
+40	1611.43	67.13
+};
+\label{1650-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1531.51	23.85
+2	1516.82	27.92
+3	1516.93	28.37
+4	1518.55	33.76
+5	1524.78	36.65
+6	1531.51	35.92
+7	1545.26	34.66
+8	1556.64	38.89
+9	1558.62	36.25
+10	1563.95	35.5
+12	1583.78	38.37
+14	1575.97	43.88
+16	1580.18	45.64
+18	1587.67	43.98
+20	1589.36	47.93
+25	1595.41	53.36
+30	1599.91	64.08
+35	1600.63	64.3
+40	1610.21	64.13
+};
+\label{1650-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1589.94	31.9
+2	1602.83	37.2
+3	1606.21	33.66
+4	1608.88	34.23
+5	1618.09	38.58
+6	1619.28	33.4
+7	1623.53	35.65
+8	1630.73	38.49
+9	1624.86	37.3
+10	1627.16	39.35
+12	1630.87	37.88
+14	1629.25	41.68
+16	1632.17	46.44
+18	1635.01	54.65
+20	1637.28	52.43
+25	1640.12	44.97
+30	1625.47	49.28
+35	1639.55	61.62
+40	1653.37	53.56
+};
+\label{1650-200-50-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.18	33.35
+2	1595.45	36.12
+3	1606.79	31.13
+4	1611.54	31.63
+5	1620.0	29.72
+6	1622.95	30.96
+7	1625.54	34.93
+8	1632.06	37.93
+9	1634.0	33.97
+10	1628.5	36.11
+12	1631.23	41.44
+14	1629.54	41.4
+16	1632.2	44.38
+18	1632.02	46.67
+20	1636.38	49.8
+25	1637.6	55.22
+30	1640.88	56.41
+35	1654.38	55.33
+40	1649.52	63.6
+};
+\label{1650-200-50-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1578.67	25.06
+2	1591.49	31.55
+3	1597.54	28.04
+4	1606.64	27.3
+5	1612.87	27.15
+6	1619.82	31.9
+7	1624.9	33.24
+8	1623.02	30.98
+9	1626.16	37.81
+10	1626.37	38.43
+25	1640.3	57.57
+30	1639.4	59.6
+35	1644.37	57.67
+40	1651.32	68.31
+};
+\label{1650-200-50-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+25	1640.3	56.05
+30	1633.72	53.93
+35	1650.64	58.0
+40	1651.18	57.61
+};
+\label{1650-200-50-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+25	1631.34	54.96
+30	1644.3	61.06
+35	1643.44	58.39
+40	1648.3	58.34
+};
+\label{1650-200-50-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1572.95	19.13
+2	1582.78	22.39
+3	1589.33	25.98
+4	1603.48	27.89
+5	1607.94	27.76
+6	1611.79	25.88
+7	1618.31	30.9
+8	1620.94	32.67
+9	1623.85	31.14
+10	1621.3	33.09
+12	1624.72	36.05
+14	1629.32	39.7
+16	1628.28	38.31
+18	1626.98	46.53
+20	1635.08	44.11
+25	1635.08	49.0
+30	1630.12	49.83
+35	1637.57	53.0
+40	1652.0	62.98
+};
+\label{1650-200-50-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1573.02	18.1
+2	1583.42	18.56
+3	1594.26	23.95
+4	1601.53	24.1
+5	1606.61	25.44
+6	1611.04	28.39
+7	1620.36	33.25
+8	1621.37	29.54
+9	1619.5	30.2
+10	1621.08	37.3
+12	1624.36	31.37
+14	1625.9	39.29
+16	1627.74	33.46
+18	1633.86	44.41
+20	1632.24	42.66
+25	1631.41	49.82
+30	1642.54	55.54
+35	1654.63	56.84
+40	1650.24	64.01
+};
+\label{1650-200-50-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1574.28	18.04
+2	1581.91	19.62
+3	1590.16	24.34
+4	1599.34	22.31
+5	1609.88	22.4
+6	1615.61	25.23
+7	1619.78	28.04
+8	1622.52	29.68
+9	1621.58	33.63
+10	1618.7	33.73
+12	1626.23	36.51
+14	1629.07	42.48
+16	1632.24	47.43
+18	1632.85	40.26
+20	1634.9	49.61
+25	1628.6	50.3
+30	1632.92	50.25
+35	1647.9	61.64
+40	1657.98	64.08
+};
+\label{1650-200-50-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1583.32	33.67
+2	1589.18	38.21
+3	1588.9	30.54
+4	1588.93	33.19
+5	1595.05	39.22
+6	1592.53	30.85
+7	1591.81	35.22
+8	1597.07	34.61
+9	1594.33	36.27
+10	1600.49	41.91
+12	1608.08	35.64
+14	1609.27	41.72
+16	1604.59	43.1
+18	1605.71	42.1
+20	1606.32	40.18
+25	1610.39	43.79
+30	1612.62	43.25
+35	1604.77	47.09
+40	1622.02	49.99
+};
+\label{1650-200-80-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1580.33	33.61
+2	1584.32	35.48
+3	1585.37	27.98
+4	1588.43	32.44
+5	1593.0	30.34
+6	1591.81	32.12
+7	1592.86	35.95
+8	1595.81	34.46
+9	1600.06	31.27
+10	1597.64	37.63
+12	1597.68	30.06
+14	1597.14	41.51
+16	1604.84	37.13
+18	1602.58	34.24
+20	1605.42	37.26
+25	1603.51	39.79
+30	1597.86	38.3
+35	1610.82	46.15
+40	1604.02	48.85
+};
+\label{1650-200-80-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.47	22.48
+2	1577.41	29.69
+3	1578.35	25.52
+4	1583.64	24.56
+5	1584.58	28.01
+6	1588.93	27.44
+7	1587.17	29.09
+8	1590.3	31.03
+9	1589.44	32.04
+10	1596.13	36.0
+12	1594.87	31.94
+14	1601.17	37.15
+16	1596.53	33.88
+18	1600.6	36.84
+20	1600.63	33.43
+25	1601.82	40.21
+30	1602.18	44.52
+35	1598.04	42.91
+40	1608.08	50.54
+};
+\label{1650-200-80-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.22	21.55
+2	1574.71	20.43
+3	1576.94	24.18
+4	1582.09	23.93
+5	1579.75	25.69
+6	1584.25	23.17
+7	1586.02	27.92
+8	1590.84	27.46
+9	1588.43	29.76
+10	1589.58	29.89
+12	1590.44	29.54
+14	1594.08	31.74
+16	1596.71	32.32
+18	1596.02	31.1
+20	1598.83	36.04
+25	1600.6	40.41
+30	1597.03	38.95
+35	1605.46	48.51
+40	1608.66	48.67
+};
+\label{1650-200-80-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.69	19.7
+2	1573.56	21.17
+3	1576.87	24.67
+4	1579.5	24.09
+5	1583.86	26.4
+6	1586.02	28.29
+7	1586.05	24.37
+8	1587.92	21.75
+9	1593.22	24.0
+10	1587.24	29.98
+12	1588.82	28.47
+14	1594.73	31.68
+16	1586.74	30.19
+18	1593.29	32.92
+20	1597.36	33.25
+25	1597.14	38.59
+30	1592.5	39.05
+35	1605.42	39.68
+40	1616.26	48.67
+};
+\label{1650-200-80-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.36	16.66
+2	1568.81	18.92
+3	1575.0	23.52
+4	1576.87	24.51
+5	1581.88	25.52
+6	1581.37	24.85
+7	1585.08	24.57
+8	1583.6	25.58
+9	1588.28	31.62
+10	1589.4	29.26
+12	1590.08	27.24
+14	1589.22	31.04
+16	1587.82	27.23
+18	1587.13	34.01
+20	1591.2	36.32
+25	1586.77	38.22
+30	1590.26	40.9
+35	1596.35	40.21
+40	1613.02	47.84
+};
+\label{1650-200-80-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.07	18.55
+2	1571.4	16.9
+3	1574.86	20.61
+4	1575.36	23.45
+5	1578.71	24.09
+6	1582.88	26.67
+7	1590.26	27.13
+8	1591.31	24.28
+9	1587.13	27.62
+10	1581.95	24.16
+12	1588.57	31.68
+14	1588.28	30.82
+16	1590.88	29.13
+18	1591.85	35.07
+20	1589.04	28.52
+25	1596.24	36.9
+30	1591.56	37.85
+35	1600.52	44.14
+40	1612.91	46.53
+};
+\label{1650-200-80-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.44	18.38
+2	1568.88	17.96
+3	1575.32	24.2
+4	1577.59	19.16
+5	1579.93	20.67
+6	1583.86	24.11
+7	1580.98	22.3
+8	1584.22	25.86
+9	1585.98	26.76
+10	1585.51	28.64
+12	1585.62	28.78
+14	1586.81	32.54
+16	1594.84	31.5
+18	1593.97	32.23
+20	1594.37	35.39
+25	1596.46	33.35
+30	1593.18	37.95
+35	1597.07	41.12
+40	1615.46	43.26
+};
+\label{1650-200-80-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1579.32	33.32
+2	1582.88	38.81
+3	1581.34	32.93
+4	1579.61	32.29
+5	1579.43	32.9
+6	1579.72	27.58
+7	1580.08	31.7
+8	1579.61	32.88
+9	1579.5	29.57
+10	1579.68	34.31
+12	1579.14	32.02
+14	1582.7	37.47
+16	1581.73	39.54
+18	1585.12	42.7
+20	1582.31	32.98
+25	1580.15	34.89
+30	1585.51	32.2
+35	1588.68	34.34
+40	1587.31	29.87
+};
+\label{1850-200-10-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1575.9	32.77
+2	1574.82	32.55
+3	1575.14	25.34
+4	1575.58	29.49
+5	1576.8	28.71
+6	1573.85	26.59
+7	1577.23	31.78
+8	1575.5	28.97
+9	1577.27	29.83
+10	1575.58	28.48
+12	1571.72	23.14
+14	1571.65	23.65
+16	1576.98	27.87
+18	1574.03	22.99
+20	1575.22	26.05
+25	1576.8	34.43
+30	1575.0	27.29
+35	1581.73	26.42
+40	1586.12	31.04
+};
+\label{1850-200-10-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.26	22.36
+2	1567.22	24.15
+3	1566.97	20.37
+4	1569.31	21.27
+5	1569.35	24.61
+6	1572.55	24.12
+7	1569.96	23.09
+8	1569.67	19.45
+9	1567.73	24.9
+10	1568.45	22.97
+12	1565.35	24.73
+14	1566.97	22.77
+16	1567.84	21.56
+18	1569.49	22.74
+20	1566.72	19.82
+25	1573.27	27.6
+30	1568.59	20.95
+35	1579.1	22.6
+40	1588.9	26.91
+};
+\label{1850-200-10-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.55	21.59
+2	1566.58	18.52
+3	1564.38	17.97
+4	1565.46	17.39
+5	1563.98	19.02
+6	1565.68	19.08
+7	1564.49	19.72
+8	1564.96	19.11
+9	1566.47	19.28
+10	1561.97	19.34
+12	1564.78	16.69
+14	1565.24	16.13
+16	1564.2	17.7
+18	1565.68	19.57
+20	1566.04	19.79
+25	1569.46	19.63
+30	1571.9	19.28
+35	1577.7	22.78
+40	1583.78	20.79
+};
+\label{1850-200-10-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.82	17.76
+2	1563.37	17.98
+3	1563.98	18.5
+4	1563.66	17.73
+5	1564.74	17.34
+6	1562.26	18.0
+7	1561.72	16.96
+8	1564.13	19.44
+9	1563.7	17.18
+10	1565.71	16.06
+12	1563.19	16.87
+14	1562.36	17.86
+16	1563.23	16.38
+18	1563.08	14.49
+20	1565.71	15.75
+25	1567.51	17.78
+30	1569.35	20.97
+35	1574.42	22.22
+40	1580.18	21.94
+};
+\label{1850-200-10-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.64	13.46
+2	1560.06	15.02
+3	1561.28	16.32
+4	1562.0	15.82
+5	1560.67	16.8
+6	1561.46	14.24
+7	1562.47	14.9
+8	1564.63	15.49
+9	1563.88	14.19
+10	1560.92	14.58
+12	1562.15	14.81
+14	1562.0	15.55
+16	1563.66	17.08
+18	1562.08	15.06
+20	1561.86	15.39
+25	1563.59	17.43
+30	1569.49	20.95
+35	1578.56	23.15
+40	1581.3	19.53
+};
+\label{1850-200-10-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.15	14.67
+2	1561.61	12.14
+3	1562.29	13.8
+4	1560.31	15.36
+5	1558.4	15.91
+6	1562.44	12.94
+7	1562.94	12.95
+8	1561.79	15.48
+9	1561.25	14.27
+10	1560.82	13.94
+12	1561.32	16.56
+14	1561.43	15.25
+16	1559.38	12.39
+18	1560.49	16.75
+20	1562.33	17.17
+25	1564.88	18.77
+30	1570.5	19.13
+35	1576.62	19.21
+40	1584.61	19.92
+};
+\label{1850-200-10-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.92	15.37
+2	1559.84	14.21
+3	1558.19	15.41
+4	1559.23	13.51
+5	1561.39	14.02
+6	1560.06	13.1
+7	1560.82	14.05
+8	1559.66	12.85
+9	1561.39	15.14
+10	1558.37	15.01
+12	1557.4	14.56
+14	1560.56	12.75
+16	1560.82	13.93
+18	1562.51	15.35
+20	1560.96	17.38
+25	1562.51	16.67
+30	1570.21	18.24
+35	1574.78	18.69
+40	1579.79	20.24
+};
+\label{1850-200-10-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1579.36	33.91
+2	1580.94	40.04
+3	1580.98	34.8
+4	1576.58	32.25
+5	1577.99	36.54
+6	1575.68	30.86
+7	1576.69	35.6
+8	1575.68	36.73
+9	1575.83	33.32
+10	1577.45	37.7
+12	1577.92	34.43
+14	1584.61	40.0
+16	1582.45	40.7
+18	1589.18	41.24
+20	1596.2	37.54
+25	1610.89	40.72
+30	1618.63	41.5
+35	1644.48	39.5
+40	1654.42	41.14
+};
+\label{1850-200-100-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1575.22	33.04
+2	1577.09	34.87
+3	1574.82	25.99
+4	1573.63	29.88
+5	1575.61	29.21
+6	1570.64	24.83
+7	1575.61	32.2
+8	1574.64	31.48
+9	1575.47	30.08
+10	1573.27	32.11
+12	1571.69	30.29
+14	1573.52	28.67
+16	1578.67	31.01
+18	1575.0	29.25
+20	1589.9	30.36
+25	1606.46	40.84
+30	1627.56	39.67
+35	1645.74	39.16
+40	1665.0	44.05
+};
+\label{1850-200-100-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.9	21.38
+2	1568.59	26.75
+3	1568.16	23.53
+4	1569.74	22.05
+5	1570.93	24.05
+6	1569.56	23.71
+7	1568.3	24.13
+8	1565.96	23.49
+9	1568.56	25.89
+10	1569.53	26.54
+12	1568.81	27.55
+14	1568.56	35.6
+16	1573.06	27.94
+18	1577.3	27.15
+20	1579.79	28.83
+25	1609.56	34.92
+30	1628.96	33.36
+35	1651.28	38.44
+40	1672.06	40.48
+};
+\label{1850-200-100-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.44	21.35
+2	1565.35	21.06
+3	1565.64	20.86
+4	1565.57	20.62
+5	1564.34	20.7
+6	1566.54	23.37
+7	1562.58	21.9
+8	1563.91	22.44
+9	1562.22	23.14
+10	1563.77	23.95
+12	1564.92	22.88
+14	1567.87	25.93
+16	1568.77	23.29
+18	1574.75	23.79
+20	1585.4	28.02
+25	1601.89	31.32
+30	1631.45	34.51
+35	1658.41	34.27
+40	1670.26	48.86
+};
+\label{1850-200-100-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.8	18.31
+2	1566.36	19.01
+3	1566.04	19.1
+4	1561.39	21.55
+5	1566.11	20.01
+6	1564.7	21.48
+7	1562.04	20.81
+8	1562.54	20.64
+9	1565.53	18.77
+10	1561.9	18.58
+12	1567.8	20.35
+14	1567.55	23.36
+16	1568.92	23.73
+18	1579.61	25.6
+20	1582.92	28.85
+25	1605.02	31.92
+30	1633.32	34.68
+35	1649.56	40.12
+40	1674.65	42.22
+};
+\label{1850-200-100-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.39	15.55
+2	1560.13	16.37
+3	1560.49	18.58
+4	1561.97	17.63
+5	1562.18	16.76
+6	1560.85	19.05
+7	1562.04	17.61
+8	1562.11	20.27
+9	1562.44	20.63
+10	1558.76	17.43
+12	1562.58	20.77
+14	1558.04	21.92
+16	1570.07	23.57
+18	1570.9	26.33
+20	1579.5	28.38
+25	1600.56	32.3
+30	1630.87	33.71
+35	1654.02	43.68
+40	1678.43	43.87
+};
+\label{1850-200-100-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.98	15.5
+2	1562.29	17.54
+3	1560.89	14.78
+4	1558.22	17.95
+5	1559.95	17.69
+6	1560.92	15.53
+7	1562.44	20.6
+8	1559.56	19.39
+9	1559.95	18.31
+10	1559.12	19.58
+12	1560.13	18.73
+14	1561.28	20.09
+16	1570.64	19.87
+18	1571.36	27.77
+20	1583.06	29.63
+25	1608.01	34.99
+30	1626.7	35.04
+35	1649.77	38.23
+40	1676.2	47.51
+};
+\label{1850-200-100-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.82	18.53
+2	1559.77	16.49
+3	1559.74	19.83
+4	1560.28	16.7
+5	1561.9	17.41
+6	1559.84	15.74
+7	1560.78	19.19
+8	1559.09	18.0
+9	1559.66	18.49
+10	1558.37	20.43
+12	1560.53	18.83
+14	1563.91	19.19
+16	1568.12	25.68
+18	1573.63	22.16
+20	1581.73	25.16
+25	1605.35	29.46
+30	1631.66	31.85
+35	1651.03	36.66
+40	1672.31	49.2
+};
+\label{1850-200-100-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1580.18	35.78
+2	1582.49	42.19
+3	1586.81	41.9
+4	1589.72	38.23
+5	1594.84	42.71
+6	1597.57	40.9
+7	1603.76	37.72
+8	1606.46	37.44
+9	1608.8	37.92
+10	1614.38	48.26
+12	1622.81	45.11
+14	1628.35	49.91
+16	1627.63	46.65
+18	1635.41	48.96
+20	1654.96	47.33
+25	1661.4	46.51
+30	1672.49	49.18
+35	1686.17	55.01
+40	1696.36	52.33
+};
+\label{1850-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1577.63	37.77
+2	1574.89	37.9
+3	1581.44	38.55
+4	1583.78	40.42
+5	1596.17	37.5
+6	1600.24	36.47
+7	1602.86	41.24
+8	1611.32	40.31
+9	1616.72	44.8
+10	1610.78	46.81
+12	1626.7	45.1
+14	1624.93	43.71
+16	1635.59	45.47
+18	1645.81	47.85
+20	1651.36	55.36
+25	1674.25	52.25
+30	1689.84	51.41
+35	1707.91	48.83
+40	1719.32	48.25
+};
+\label{1850-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.4	27.7
+2	1564.96	26.61
+3	1571.04	29.84
+4	1578.89	30.13
+5	1590.23	34.37
+6	1594.22	36.34
+7	1600.7	33.63
+8	1602.68	37.35
+9	1603.66	37.31
+10	1612.55	42.83
+12	1621.94	44.77
+14	1629.0	43.99
+16	1636.6	47.0
+18	1640.7	47.54
+20	1647.83	49.17
+25	1677.71	52.04
+30	1694.7	49.64
+35	1709.57	52.58
+40	1734.8	51.37
+};
+\label{1850-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.86	25.76
+2	1566.32	29.43
+3	1570.14	28.31
+4	1572.01	33.42
+5	1582.78	35.83
+6	1589.76	33.4
+7	1592.06	34.3
+8	1603.62	37.61
+9	1598.04	29.51
+10	1609.49	39.24
+12	1623.67	41.75
+14	1625.47	47.71
+16	1640.09	43.2
+18	1641.17	46.95
+20	1650.46	44.12
+25	1678.9	52.33
+30	1702.66	57.2
+35	1722.35	51.39
+40	1729.94	54.92
+};
+\label{1850-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.53	20.78
+2	1560.92	24.7
+3	1565.82	30.27
+4	1570.39	31.36
+5	1577.12	34.33
+6	1582.67	32.19
+7	1592.17	36.61
+8	1594.76	33.8
+9	1606.39	35.05
+10	1609.06	38.95
+12	1619.96	38.11
+14	1624.07	43.5
+16	1633.97	43.91
+18	1645.2	45.24
+20	1652.65	48.63
+25	1683.32	46.66
+30	1697.22	54.35
+35	1725.59	52.2
+40	1732.25	53.34
+};
+\label{1850-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1557.9	17.76
+2	1559.66	27.34
+3	1563.59	29.27
+4	1573.16	33.85
+5	1576.37	33.2
+6	1581.62	31.56
+7	1590.8	33.83
+8	1598.8	37.77
+9	1605.71	41.12
+10	1604.12	41.58
+12	1612.08	40.43
+14	1619.57	41.46
+16	1638.43	41.69
+18	1659.06	47.34
+20	1652.87	44.34
+25	1675.84	51.18
+30	1701.5	53.15
+35	1720.55	52.96
+40	1739.63	54.17
+};
+\label{1850-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1557.58	21.02
+2	1561.64	21.79
+3	1565.5	23.92
+4	1566.9	27.68
+5	1575.36	32.11
+6	1582.52	35.06
+7	1594.44	34.72
+8	1599.59	32.3
+9	1601.75	37.47
+10	1607.22	45.07
+12	1615.64	44.67
+14	1622.63	43.87
+16	1632.02	47.39
+18	1650.2	45.3
+20	1653.26	43.86
+25	1674.0	52.58
+30	1699.38	56.22
+35	1720.3	57.77
+40	1737.58	54.65
+};
+\label{1850-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1556.35	18.03
+2	1557.14	23.89
+3	1561.25	26.82
+4	1568.92	29.82
+5	1576.04	29.91
+6	1578.67	32.46
+7	1594.48	37.21
+8	1596.31	34.07
+9	1605.71	40.48
+10	1607.33	42.3
+12	1614.38	41.4
+14	1628.6	44.37
+16	1642.9	45.99
+18	1654.88	47.13
+20	1662.41	51.14
+25	1670.33	55.13
+30	1690.16	55.1
+35	1720.73	52.76
+40	1739.41	49.74
+};
+\label{1850-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1579.07	33.08
+2	1584.11	38.39
+3	1582.85	31.98
+4	1584.36	31.72
+5	1587.35	38.73
+6	1592.1	36.82
+7	1595.66	43.0
+8	1601.78	40.54
+9	1602.86	38.85
+10	1611.47	40.17
+12	1625.4	38.4
+14	1636.34	45.62
+16	1636.7	42.04
+18	1654.99	43.04
+20	1658.05	42.88
+25	1678.39	47.02
+30	1696.39	48.82
+35	1704.82	47.27
+40	1713.53	48.38
+};
+\label{1850-200-50-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.8	34.35
+2	1575.83	33.3
+3	1577.2	25.8
+4	1580.47	32.53
+5	1580.51	32.72
+6	1583.86	31.27
+7	1591.92	36.9
+8	1597.72	36.61
+9	1599.88	37.31
+10	1606.72	33.65
+12	1620.94	34.5
+14	1632.74	37.22
+16	1657.44	38.43
+18	1658.74	43.22
+20	1673.24	46.0
+25	1695.96	44.36
+30	1707.66	44.24
+35	1727.28	49.65
+40	1737.97	43.69
+};
+\label{1850-200-50-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.15	22.18
+2	1567.69	25.01
+3	1569.78	20.37
+4	1572.26	21.25
+5	1571.87	21.93
+6	1578.53	24.96
+7	1583.68	31.34
+8	1590.05	30.74
+9	1596.78	33.21
+10	1604.92	35.21
+12	1621.48	38.64
+14	1635.73	42.51
+16	1647.14	41.9
+18	1657.76	43.69
+20	1663.24	44.05
+25	1692.36	46.03
+30	1716.88	47.37
+35	1736.89	48.38
+40	1746.11	43.3
+};
+\label{1850-200-50-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.08	21.74
+2	1566.72	17.74
+3	1565.86	17.71
+4	1569.49	19.23
+5	1570.43	20.71
+6	1575.79	21.26
+7	1580.72	25.86
+8	1584.04	26.27
+9	1589.83	27.03
+10	1598.26	29.86
+12	1614.2	34.5
+14	1629.9	33.41
+16	1645.16	41.05
+18	1656.29	45.6
+20	1667.74	42.59
+25	1701.9	50.45
+30	1723.97	46.66
+35	1738.62	42.96
+40	1749.28	45.89
+};
+\label{1850-200-50-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.85	18.92
+2	1562.51	17.87
+3	1563.8	18.91
+4	1564.09	18.57
+5	1570.57	18.69
+6	1572.12	22.5
+7	1579.54	22.16
+8	1583.17	27.4
+9	1590.59	25.0
+10	1594.44	28.99
+12	1616.29	31.83
+14	1627.85	32.69
+16	1638.58	39.87
+18	1656.11	39.76
+20	1667.27	45.37
+25	1695.82	43.8
+30	1715.11	45.62
+35	1739.88	48.93
+40	1746.97	46.66
+};
+\label{1850-200-50-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.49	13.37
+2	1558.44	15.38
+3	1561.68	17.96
+4	1568.84	19.03
+5	1567.44	20.69
+6	1570.14	20.46
+7	1576.94	20.6
+8	1582.13	23.69
+9	1586.7	25.69
+10	1597.18	29.58
+12	1614.6	27.76
+14	1623.6	40.03
+16	1640.81	39.15
+18	1653.41	37.37
+20	1667.84	41.6
+25	1685.23	48.83
+30	1716.48	48.37
+35	1739.05	42.98
+40	1750.0	42.82
+};
+\label{1850-200-50-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.97	14.72
+2	1561.46	13.8
+3	1562.98	15.57
+4	1562.51	16.91
+5	1564.52	19.86
+6	1569.13	18.66
+7	1577.45	18.32
+8	1582.27	22.54
+9	1584.65	24.39
+10	1591.6	27.45
+12	1610.28	32.16
+14	1628.17	38.48
+16	1635.37	35.73
+18	1654.96	38.73
+20	1664.93	46.41
+25	1698.37	53.79
+30	1720.48	44.44
+35	1740.96	47.09
+40	1742.04	41.43
+};
+\label{1850-200-50-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1560.96	16.64
+2	1559.92	13.39
+3	1560.1	17.93
+4	1561.46	15.92
+5	1566.86	18.52
+6	1567.33	20.52
+7	1568.38	19.68
+8	1577.09	25.54
+9	1586.09	25.12
+10	1592.5	25.89
+12	1611.25	30.95
+14	1621.94	33.93
+16	1643.26	44.22
+18	1651.82	38.32
+20	1662.59	40.47
+25	1700.96	42.97
+30	1722.31	47.29
+35	1742.36	50.83
+40	1752.16	48.46
+};
+\label{1850-200-50-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1585.15	34.28
+2	1590.59	40.31
+3	1591.34	32.51
+4	1591.38	34.54
+5	1596.2	40.16
+6	1597.32	34.22
+7	1597.72	34.99
+8	1599.37	40.04
+9	1602.58	37.19
+10	1601.06	43.76
+12	1605.1	43.11
+14	1603.94	44.61
+16	1597.18	42.09
+18	1601.32	48.73
+20	1603.62	45.78
+25	1615.07	43.71
+30	1603.12	47.25
+35	1614.24	45.25
+40	1619.1	42.44
+};
+\label{1850-200-80-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1582.7	33.77
+2	1587.28	35.24
+3	1592.17	31.6
+4	1588.25	33.76
+5	1594.04	31.43
+6	1590.98	30.12
+7	1593.25	36.2
+8	1598.11	39.85
+9	1593.76	33.52
+10	1593.47	36.69
+12	1593.14	40.12
+14	1589.26	36.09
+16	1591.45	37.69
+18	1591.27	46.14
+20	1605.28	52.39
+25	1602.58	43.72
+30	1599.95	40.57
+35	1613.41	43.27
+40	1617.77	44.39
+};
+\label{1850-200-80-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.4	22.33
+2	1576.8	28.45
+3	1582.74	27.2
+4	1584.58	26.43
+5	1583.6	28.35
+6	1589.54	28.73
+7	1585.15	31.47
+8	1590.59	31.5
+9	1590.05	33.24
+10	1588.14	35.52
+12	1590.41	35.55
+14	1587.28	39.06
+16	1591.16	37.91
+18	1596.46	40.6
+20	1592.57	39.42
+25	1595.09	42.53
+30	1596.67	47.9
+35	1601.06	42.48
+40	1620.29	40.31
+};
+\label{1850-200-80-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.33	22.07
+2	1575.47	25.64
+3	1580.8	26.69
+4	1584.43	26.58
+5	1586.77	25.47
+6	1587.17	25.27
+7	1584.79	27.63
+8	1585.44	30.71
+9	1585.8	29.59
+10	1584.11	30.65
+12	1583.71	32.72
+14	1585.19	38.42
+16	1586.7	34.17
+18	1587.35	37.38
+20	1594.55	38.49
+25	1594.08	37.2
+30	1596.2	42.14
+35	1596.89	35.71
+40	1611.14	51.37
+};
+\label{1850-200-80-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.94	17.85
+2	1574.57	22.49
+3	1576.55	24.17
+4	1583.32	22.2
+5	1583.14	26.74
+6	1584.9	28.01
+7	1582.24	23.68
+8	1588.64	27.22
+9	1582.56	30.3
+10	1581.66	26.84
+12	1587.56	29.67
+14	1588.72	29.23
+16	1586.95	33.64
+18	1585.84	36.08
+20	1592.03	39.7
+25	1592.6	39.83
+30	1596.1	39.92
+35	1603.01	37.37
+40	1623.06	47.66
+};
+\label{1850-200-80-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.27	15.99
+2	1573.34	21.9
+3	1575.68	24.42
+4	1577.56	25.31
+5	1582.56	23.62
+6	1577.59	25.4
+7	1581.52	25.73
+8	1581.84	28.74
+9	1584.32	28.62
+10	1584.54	29.23
+12	1585.87	25.79
+14	1579.28	28.06
+16	1582.78	35.01
+18	1585.62	37.93
+20	1588.79	36.92
+25	1589.58	35.23
+30	1597.0	37.09
+35	1601.24	41.54
+40	1619.21	43.16
+};
+\label{1850-200-80-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.44	17.96
+2	1572.08	18.28
+3	1575.9	21.85
+4	1574.68	20.17
+5	1579.46	23.14
+6	1583.28	24.95
+7	1584.83	26.18
+8	1587.92	28.06
+9	1586.66	28.03
+10	1582.27	29.95
+12	1581.84	30.25
+14	1580.51	24.87
+16	1588.43	31.69
+18	1574.71	36.0
+20	1581.62	36.82
+25	1589.69	38.18
+30	1592.03	42.56
+35	1594.91	40.84
+40	1616.98	40.88
+};
+\label{1850-200-80-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.91	18.74
+2	1570.03	19.31
+3	1573.92	21.65
+4	1578.56	21.66
+5	1582.13	22.77
+6	1581.01	23.31
+7	1578.31	25.58
+8	1584.58	28.06
+9	1581.16	24.91
+10	1577.66	27.93
+12	1580.76	35.19
+14	1582.31	29.35
+16	1583.96	30.19
+18	1583.24	40.57
+20	1584.72	39.27
+25	1590.3	32.26
+30	1586.92	42.59
+35	1599.59	40.22
+40	1616.08	37.22
+};
+\label{1850-200-80-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1579.5	32.68
+2	1586.05	41.14
+3	1585.62	30.33
+4	1585.15	32.3
+5	1589.36	36.95
+6	1590.55	28.72
+7	1592.32	33.08
+8	1597.61	32.23
+9	1598.76	32.8
+10	1600.88	36.83
+12	1607.51	33.36
+14	1608.05	35.76
+16	1605.78	37.85
+18	1605.02	34.33
+20	1602.36	34.71
+25	1603.62	35.45
+30	1595.56	41.47
+35	1589.58	36.93
+40	1582.67	38.51
+};
+\label{2000-200-10-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.3	32.93
+2	1577.3	33.74
+3	1578.78	26.07
+4	1579.86	29.77
+5	1585.26	28.26
+6	1584.29	27.06
+7	1592.53	29.89
+8	1594.8	31.06
+9	1599.05	32.71
+10	1599.19	30.63
+12	1596.85	28.99
+14	1599.37	31.43
+16	1605.06	27.78
+18	1599.3	33.4
+20	1605.89	31.19
+25	1597.79	32.59
+30	1591.16	37.48
+35	1581.62	38.92
+40	1575.22	35.55
+};
+\label{2000-200-10-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.98	22.3
+2	1570.32	23.98
+3	1572.88	21.67
+4	1576.62	23.15
+5	1578.6	24.07
+6	1583.42	22.99
+7	1585.73	27.53
+8	1586.2	23.59
+9	1588.14	27.15
+10	1591.2	25.85
+12	1595.05	28.6
+14	1597.93	29.97
+16	1598.65	23.58
+18	1597.72	27.64
+20	1597.14	29.88
+25	1595.02	35.62
+30	1583.93	30.63
+35	1584.79	28.6
+40	1575.47	36.55
+};
+\label{2000-200-10-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.34	21.29
+2	1568.3	19.26
+3	1568.41	17.72
+4	1571.08	19.25
+5	1574.42	20.83
+6	1577.2	18.8
+7	1577.95	22.59
+8	1582.06	22.92
+9	1586.23	22.28
+10	1587.49	22.5
+12	1594.01	23.95
+14	1600.13	26.26
+16	1591.06	25.44
+18	1594.04	26.09
+20	1598.51	27.59
+25	1594.69	27.66
+30	1586.59	29.37
+35	1577.95	29.13
+40	1572.23	27.16
+};
+\label{2000-200-10-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.75	18.33
+2	1565.14	19.91
+3	1568.16	20.49
+4	1569.24	20.16
+5	1573.74	18.58
+6	1575.76	19.96
+7	1578.17	22.33
+8	1583.06	25.2
+9	1583.21	23.07
+10	1586.56	18.1
+12	1591.31	22.17
+14	1592.46	23.35
+16	1596.46	26.14
+18	1599.41	30.21
+20	1597.79	27.08
+25	1594.8	25.57
+30	1584.5	25.72
+35	1578.49	29.15
+40	1571.15	32.98
+};
+\label{2000-200-10-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.68	13.66
+2	1561.43	15.21
+3	1564.27	17.97
+4	1570.0	20.39
+5	1570.54	21.14
+6	1573.27	18.91
+7	1576.76	19.77
+8	1580.44	18.88
+9	1582.06	19.04
+10	1584.4	22.73
+12	1589.04	23.39
+14	1586.95	21.9
+16	1591.67	25.04
+18	1596.67	24.29
+20	1592.24	27.51
+25	1589.08	25.24
+30	1580.44	27.71
+35	1582.16	26.71
+40	1562.87	29.37
+};
+\label{2000-200-10-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.72	14.69
+2	1563.52	13.85
+3	1565.82	18.04
+4	1565.96	18.01
+5	1567.04	18.4
+6	1575.5	20.08
+7	1579.32	18.51
+8	1578.17	19.74
+9	1584.18	19.42
+10	1584.47	20.42
+12	1586.45	22.69
+14	1588.79	26.18
+16	1593.07	22.73
+18	1596.46	21.47
+20	1592.28	27.7
+25	1592.78	29.81
+30	1577.77	28.09
+35	1569.82	30.98
+40	1562.4	27.75
+};
+\label{2000-200-10-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1561.32	15.63
+2	1561.32	14.66
+3	1561.97	16.62
+4	1565.82	17.33
+5	1569.02	18.95
+6	1571.22	17.31
+7	1573.99	16.75
+8	1576.73	16.77
+9	1581.84	19.72
+10	1580.47	19.91
+12	1585.69	22.79
+14	1591.16	23.52
+16	1590.98	20.98
+18	1593.29	22.28
+20	1593.14	24.83
+25	1584.43	26.86
+30	1581.66	28.87
+35	1573.99	25.63
+40	1563.19	29.26
+};
+\label{2000-200-10-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1581.88	33.18
+2	1585.69	38.95
+3	1589.08	29.78
+4	1590.88	30.25
+5	1593.22	33.23
+6	1598.33	30.1
+7	1601.57	33.76
+8	1604.84	34.52
+9	1603.26	34.98
+10	1604.34	30.94
+12	1609.2	34.09
+14	1617.48	32.88
+16	1619.32	36.82
+18	1627.81	37.91
+20	1630.62	40.8
+25	1634.72	39.33
+30	1652.98	38.85
+35	1664.93	44.48
+40	1674.0	42.24
+};
+\label{2000-200-100-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1578.17	34.48
+2	1582.92	34.33
+3	1585.08	27.36
+4	1590.8	30.66
+5	1594.01	27.54
+6	1591.96	27.23
+7	1599.55	30.63
+8	1601.64	28.67
+9	1601.75	28.32
+10	1604.48	32.74
+12	1607.8	30.77
+14	1612.94	31.94
+16	1619.57	31.42
+18	1620.43	34.35
+20	1633.21	34.55
+25	1642.14	40.31
+30	1652.76	39.45
+35	1665.79	38.0
+40	1683.5	46.09
+};
+\label{2000-200-100-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.29	25.36
+2	1574.6	26.76
+3	1579.18	24.69
+4	1581.37	22.26
+5	1588.82	28.27
+6	1593.83	26.63
+7	1594.55	25.85
+8	1594.51	28.34
+9	1595.66	31.09
+10	1606.9	30.66
+12	1608.01	31.33
+14	1612.87	32.31
+16	1614.53	28.89
+18	1615.5	29.33
+20	1620.36	30.36
+25	1633.43	32.54
+30	1653.23	37.33
+35	1670.8	41.18
+40	1684.55	45.65
+};
+\label{2000-200-100-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1565.68	23.47
+2	1573.56	21.61
+3	1575.29	23.55
+4	1583.75	21.95
+5	1584.79	22.44
+6	1588.03	23.42
+7	1590.23	23.95
+8	1591.52	23.65
+9	1597.46	24.77
+10	1600.49	26.53
+12	1602.25	25.3
+14	1605.64	28.05
+16	1612.66	26.33
+18	1617.08	27.88
+20	1621.33	29.54
+25	1633.82	34.05
+30	1650.64	39.55
+35	1667.56	43.69
+40	1688.8	41.92
+};
+\label{2000-200-100-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.31	19.99
+2	1572.52	21.75
+3	1576.98	23.11
+4	1579.75	22.94
+5	1585.33	24.49
+6	1587.38	23.12
+7	1587.67	22.6
+8	1595.52	23.28
+9	1595.45	24.04
+10	1601.93	24.26
+12	1604.99	26.36
+14	1606.64	27.35
+16	1613.38	29.02
+18	1615.14	30.58
+20	1620.61	33.03
+25	1640.41	32.08
+30	1651.36	39.23
+35	1666.22	37.32
+40	1689.26	42.11
+};
+\label{2000-200-100-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.26	16.4
+2	1567.22	20.69
+3	1572.98	21.97
+4	1585.33	21.42
+5	1585.55	22.21
+6	1587.64	22.43
+7	1588.97	24.55
+8	1593.14	23.89
+9	1596.24	25.54
+10	1598.76	23.99
+12	1597.21	19.21
+14	1602.47	28.22
+16	1610.68	29.32
+18	1612.73	29.19
+20	1621.51	29.62
+25	1637.06	31.69
+30	1652.9	36.33
+35	1673.86	38.08
+40	1697.62	44.14
+};
+\label{2000-200-100-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.88	19.68
+2	1569.96	17.31
+3	1573.92	18.62
+4	1578.17	18.84
+5	1581.66	19.89
+6	1584.72	24.05
+7	1594.73	20.21
+8	1591.49	22.23
+9	1592.82	22.24
+10	1594.12	25.91
+12	1600.2	26.16
+14	1607.22	23.48
+16	1611.4	28.72
+18	1617.62	31.42
+20	1621.73	32.19
+25	1639.44	34.36
+30	1648.55	34.18
+35	1672.24	42.76
+40	1692.68	43.82
+};
+\label{2000-200-100-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1565.32	16.51
+2	1567.3	17.98
+3	1575.4	17.29
+4	1578.24	19.44
+5	1580.29	20.81
+6	1585.19	22.1
+7	1587.67	22.21
+8	1589.94	24.31
+9	1593.14	23.55
+10	1596.49	24.38
+12	1601.82	22.29
+14	1607.4	24.79
+16	1611.58	28.67
+18	1617.23	26.6
+20	1621.44	29.79
+25	1634.72	33.16
+30	1652.51	36.5
+35	1666.94	37.75
+40	1689.12	46.81
+};
+\label{2000-200-100-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1585.69	33.9
+2	1590.41	31.99
+3	1596.31	31.14
+4	1601.78	36.8
+5	1603.84	42.19
+6	1606.97	35.58
+7	1609.16	34.76
+8	1615.28	43.02
+9	1616.22	41.26
+10	1617.91	42.79
+12	1624.9	40.43
+14	1639.8	48.3
+16	1645.27	49.03
+18	1649.27	50.88
+20	1660.14	49.78
+25	1674.61	42.61
+30	1687.28	48.62
+35	1702.73	49.56
+40	1708.78	48.79
+};
+\label{2000-200-30-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1583.03	34.81
+2	1586.05	36.89
+3	1591.88	33.34
+4	1597.21	37.0
+5	1602.9	37.26
+6	1602.18	36.46
+7	1608.08	37.86
+8	1617.12	40.51
+9	1615.75	37.11
+10	1624.21	43.95
+12	1633.79	50.98
+14	1631.09	42.57
+16	1639.12	43.64
+18	1653.19	50.89
+20	1660.5	44.76
+25	1678.0	44.73
+30	1700.35	55.59
+35	1721.34	48.95
+40	1744.49	53.62
+};
+\label{2000-200-30-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1573.63	28.44
+2	1577.48	27.89
+3	1586.48	29.63
+4	1590.48	31.34
+5	1592.46	31.14
+6	1599.95	31.43
+7	1603.04	33.88
+8	1609.7	36.61
+9	1615.07	41.99
+10	1623.49	40.53
+12	1629.86	42.08
+14	1629.5	46.97
+16	1641.1	47.13
+18	1647.97	50.72
+20	1665.25	49.18
+25	1689.34	55.18
+30	1713.28	54.76
+35	1727.03	60.26
+40	1759.03	49.66
+};
+\label{2000-200-30-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.77	21.99
+2	1580.08	25.59
+3	1580.47	24.19
+4	1581.98	25.99
+5	1591.27	28.71
+6	1600.27	27.59
+7	1603.01	29.1
+8	1607.76	33.58
+9	1608.3	32.59
+10	1618.49	39.66
+12	1616.58	41.31
+14	1630.3	44.68
+16	1636.85	47.45
+18	1653.59	52.73
+20	1664.35	49.68
+25	1687.61	51.03
+30	1709.35	51.18
+35	1731.1	49.9
+40	1759.57	54.64
+};
+\label{2000-200-30-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.14	20.01
+2	1571.83	21.59
+3	1579.18	24.32
+4	1584.43	22.76
+5	1593.14	29.73
+6	1598.51	29.32
+7	1601.42	32.0
+8	1605.31	27.14
+9	1610.14	28.18
+10	1613.63	39.37
+12	1622.52	38.53
+14	1633.75	40.97
+16	1641.6	40.95
+18	1654.27	48.7
+20	1667.99	46.01
+25	1695.17	47.67
+30	1721.74	47.9
+35	1735.27	55.89
+40	1764.14	49.66
+};
+\label{2000-200-30-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.74	14.02
+2	1568.48	21.3
+3	1577.99	23.81
+4	1585.22	24.6
+5	1587.2	26.66
+6	1593.86	31.95
+7	1604.05	30.91
+8	1607.18	36.82
+9	1613.88	38.9
+10	1613.27	39.66
+12	1618.96	37.57
+14	1625.98	46.55
+16	1641.56	42.66
+18	1653.12	48.39
+20	1663.2	49.74
+25	1689.98	50.27
+30	1714.97	55.36
+35	1734.41	53.0
+40	1763.57	52.92
+};
+\label{2000-200-30-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1563.59	15.23
+2	1572.08	17.87
+3	1574.93	20.91
+4	1580.33	22.22
+5	1587.92	25.03
+6	1592.24	29.53
+7	1604.2	36.45
+8	1601.57	31.95
+9	1612.15	35.27
+10	1612.08	39.37
+12	1624.39	42.79
+14	1632.31	44.77
+16	1645.06	44.44
+18	1651.57	48.02
+20	1660.14	50.64
+25	1687.18	53.47
+30	1713.53	50.39
+35	1738.55	51.85
+40	1766.27	48.52
+};
+\label{2000-200-30-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.52	15.77
+2	1568.34	17.23
+3	1574.46	19.03
+4	1581.59	23.73
+5	1586.23	22.12
+6	1592.86	26.39
+7	1597.9	28.75
+8	1603.44	30.21
+9	1610.14	35.8
+10	1614.82	38.93
+12	1630.37	44.71
+14	1634.83	49.52
+16	1645.27	41.31
+18	1654.06	45.2
+20	1660.5	46.31
+25	1684.8	50.79
+30	1715.51	49.57
+35	1738.51	52.7
+40	1760.36	54.44
+};
+\label{2000-200-30-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1583.93	33.83
+2	1587.38	37.44
+3	1589.15	30.82
+4	1595.48	33.57
+5	1595.41	38.04
+6	1599.05	38.53
+7	1604.38	41.37
+8	1611.68	41.57
+9	1613.7	39.96
+10	1618.06	39.23
+12	1625.4	43.96
+14	1627.42	47.93
+16	1627.92	48.71
+18	1633.32	43.2
+20	1649.84	45.97
+25	1664.06	52.43
+30	1678.36	54.66
+35	1696.25	53.91
+40	1700.42	48.22
+};
+\label{2000-200-50-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1581.84	34.22
+2	1582.56	36.27
+3	1586.56	30.4
+4	1592.53	35.53
+5	1596.64	36.7
+6	1597.28	31.75
+7	1605.56	38.55
+8	1608.3	36.57
+9	1610.21	38.97
+10	1608.44	41.65
+12	1621.76	44.48
+14	1625.69	41.91
+16	1632.31	49.19
+18	1645.06	45.96
+20	1647.47	45.68
+25	1673.93	47.6
+30	1692.97	52.87
+35	1700.93	56.34
+40	1729.22	46.39
+};
+\label{2000-200-50-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1572.41	25.25
+2	1576.4	28.9
+3	1580.69	25.49
+4	1588.14	28.38
+5	1589.08	26.52
+6	1593.76	31.4
+7	1593.04	31.02
+8	1600.81	32.83
+9	1610.42	38.96
+10	1613.2	34.14
+12	1619.1	40.11
+14	1623.78	38.12
+16	1622.92	47.12
+18	1638.04	47.61
+20	1646.14	44.38
+25	1667.12	52.49
+30	1692.76	57.62
+35	1707.08	62.64
+40	1730.52	52.27
+};
+\label{2000-200-50-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.63	21.21
+2	1577.3	21.89
+3	1578.24	24.62
+4	1582.02	20.05
+5	1583.06	26.74
+6	1590.08	26.88
+7	1593.58	30.94
+8	1601.42	26.69
+9	1602.58	29.61
+10	1607.58	32.28
+12	1620.94	37.4
+14	1623.31	36.09
+16	1629.04	41.54
+18	1634.29	45.78
+20	1640.52	41.56
+25	1667.92	54.61
+30	1688.69	54.31
+35	1716.8	54.66
+40	1732.25	57.08
+};
+\label{2000-200-50-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1565.57	21.02
+2	1572.01	20.42
+3	1574.93	22.35
+4	1578.96	18.07
+5	1584.94	26.08
+6	1589.54	25.88
+7	1596.92	27.99
+8	1597.1	27.99
+9	1602.72	27.16
+10	1604.92	31.18
+12	1613.74	32.16
+14	1624.39	34.79
+16	1624.25	42.5
+18	1638.5	34.58
+20	1643.51	37.18
+25	1661.72	50.86
+30	1693.22	56.8
+35	1720.55	52.88
+40	1743.95	53.01
+};
+\label{2000-200-50-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1564.96	14.34
+2	1566.97	18.4
+3	1574.24	18.56
+4	1578.35	21.57
+5	1579.5	25.45
+6	1584.0	25.39
+7	1595.09	28.44
+8	1599.23	31.04
+9	1606.32	32.49
+10	1600.99	33.0
+12	1608.95	33.16
+14	1616.65	33.29
+16	1625.4	38.13
+18	1631.7	39.15
+20	1641.78	44.93
+25	1662.66	45.9
+30	1682.75	53.88
+35	1718.93	53.18
+40	1742.76	60.46
+};
+\label{2000-200-50-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.19	16.54
+2	1571.22	17.12
+3	1575.65	20.36
+4	1578.06	20.1
+5	1578.1	22.74
+6	1586.16	28.27
+7	1595.34	26.46
+8	1595.66	31.45
+9	1600.49	31.82
+10	1603.08	34.05
+12	1604.52	34.48
+14	1617.95	39.55
+16	1626.52	37.49
+18	1636.88	37.99
+20	1632.82	44.82
+25	1660.1	57.68
+30	1680.84	48.79
+35	1716.7	51.81
+40	1748.84	53.77
+};
+\label{2000-200-50-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.32	17.56
+2	1568.66	16.67
+3	1572.73	18.52
+4	1572.7	19.33
+5	1582.78	24.13
+6	1585.91	25.13
+7	1591.45	29.21
+8	1597.57	28.01
+9	1599.08	27.49
+10	1600.34	29.32
+12	1610.24	32.38
+14	1615.75	32.2
+16	1630.51	37.28
+18	1631.16	38.93
+20	1638.83	47.72
+25	1662.12	58.31
+30	1690.27	56.7
+35	1719.32	55.94
+40	1738.22	54.26
+};
+\label{2000-200-50-2250}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1587.02	33.22
+2	1594.19	34.84
+3	1598.15	35.32
+4	1598.58	33.96
+5	1602.07	39.44
+6	1600.96	32.66
+7	1604.41	37.06
+8	1609.06	39.63
+9	1609.06	40.47
+10	1612.55	44.84
+12	1612.04	39.94
+14	1605.06	45.3
+16	1618.52	45.4
+18	1614.74	45.37
+20	1621.22	43.33
+25	1626.73	47.03
+30	1631.52	52.74
+35	1645.52	46.82
+40	1656.79	60.29
+};
+\label{2000-200-80-1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1585.73	32.82
+2	1587.92	34.33
+3	1594.15	31.94
+4	1595.56	30.65
+5	1600.78	30.74
+6	1599.95	32.06
+7	1601.78	33.24
+8	1609.02	36.65
+9	1611.5	40.41
+10	1611.04	40.17
+12	1606.54	39.33
+14	1605.67	38.47
+16	1606.21	41.94
+18	1620.22	39.58
+20	1614.82	49.16
+25	1625.08	54.25
+30	1630.08	55.51
+35	1655.28	56.43
+40	1662.3	59.6
+};
+\label{2000-200-80-1700}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1575.83	23.01
+2	1579.97	27.1
+3	1584.65	24.95
+4	1591.7	27.32
+5	1593.07	25.63
+6	1596.46	26.02
+7	1597.1	31.61
+8	1599.66	34.26
+9	1599.7	34.66
+10	1604.34	33.05
+12	1607.47	37.01
+14	1603.73	40.86
+16	1604.52	41.25
+18	1608.88	36.63
+20	1612.51	44.05
+25	1611.79	45.14
+30	1626.73	47.02
+35	1640.52	54.99
+40	1661.51	57.1
+};
+\label{2000-200-80-1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1571.4	21.28
+2	1581.41	21.02
+3	1582.52	21.33
+4	1590.12	25.81
+5	1592.17	26.74
+6	1591.13	27.0
+7	1597.1	29.09
+8	1598.26	31.06
+9	1598.8	29.79
+10	1601.75	35.35
+12	1604.95	35.49
+14	1602.47	37.27
+16	1597.75	35.7
+18	1603.58	38.51
+20	1610.21	37.84
+25	1624.75	47.97
+30	1626.05	45.94
+35	1633.21	55.76
+40	1656.5	62.75
+};
+\label{2000-200-80-1900}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.35	18.91
+2	1578.71	22.15
+3	1583.46	22.82
+4	1583.75	24.92
+5	1590.34	25.89
+6	1593.47	24.85
+7	1597.9	27.33
+8	1593.72	26.02
+9	1599.37	27.72
+10	1595.99	31.33
+12	1601.89	29.27
+14	1601.24	31.03
+16	1597.03	34.61
+18	1600.52	40.54
+20	1611.65	37.06
+25	1616.04	46.2
+30	1625.15	57.34
+35	1646.89	52.67
+40	1650.6	54.06
+};
+\label{2000-200-80-2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1567.48	16.85
+2	1573.02	22.49
+3	1579.21	21.54
+4	1584.4	23.29
+5	1585.69	24.36
+6	1592.64	26.41
+7	1591.99	26.29
+8	1593.11	30.16
+9	1597.32	33.52
+10	1596.2	31.83
+12	1596.46	31.6
+14	1598.26	33.67
+16	1607.33	35.93
+18	1609.49	41.2
+20	1605.85	45.78
+25	1608.91	42.62
+30	1621.26	47.27
+35	1641.2	51.68
+40	1660.93	60.8
+};
+\label{2000-200-80-2100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1569.42	15.29
+2	1575.25	17.91
+3	1578.92	20.48
+4	1581.34	22.27
+5	1584.5	23.15
+6	1591.78	25.9
+7	1595.66	24.36
+8	1593.94	25.88
+9	1593.54	29.49
+10	1594.4	29.06
+12	1592.53	34.45
+14	1599.77	35.7
+16	1600.52	39.03
+18	1604.12	38.97
+20	1601.46	43.19
+25	1610.68	46.34
+30	1621.33	44.37
+35	1647.25	53.82
+40	1668.28	57.13
+};
+\label{2000-200-80-2200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1570.18	18.61
+2	1574.57	18.61
+3	1580.69	19.62
+4	1585.26	20.9
+5	1587.71	20.01
+6	1594.48	24.61
+7	1590.52	29.05
+8	1593.14	26.35
+9	1597.97	31.2
+10	1594.76	29.54
+12	1596.56	34.74
+14	1598.69	36.22
+16	1602.14	36.81
+18	1606.46	39.0
+20	1600.27	47.1
+25	1607.9	42.69
+30	1630.69	49.24
+35	1648.19	53.67
+40	1653.01	51.46
+};
+\label{2000-200-80-2250}
+
+\addplot[blue, samples=200] coordinates {(0,1722.200000) (100,1722.200000)};\label{human-1650}\addplot[red, samples=200] coordinates {(0,1560.380000) (100,1560.380000)};\label{human-1850}\addplot[green, samples=200] coordinates {(0,1558.120000) (100,1558.120000)};\label{human-2000}\addplot[brown, samples=200] coordinates {(0,1560.310000) (100,1560.310000)};\label{human-2100}\addplot[cyan, samples=200] coordinates {(0,1560.380000) (100,1560.380000)};\label{human-2200}\addplot[darkgray, samples=200] coordinates {(0,1558.660000) (100,1558.660000)};\label{human-2300}\addplot[gray, samples=200] coordinates {(0,1559.520000) (100,1559.520000)};\label{human-2400}\addplot[lightgray, samples=200] coordinates {(0,1556.640000) (100,1556.640000)};\label{human-2500}\addplot[lime, samples=200] coordinates {(0,1561.280000) (100,1561.280000)};\label{human-2600}\addlegendimage{/pgfplots/refstyle=r-1650-200-30-1600}
+\addlegendentry{r-1650-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-1700}
+\addlegendentry{r-1650-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-1800}
+\addlegendentry{r-1650-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-1900}
+\addlegendentry{r-1650-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2000}
+\addlegendentry{r-1650-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2100}
+\addlegendentry{r-1650-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2200}
+\addlegendentry{r-1650-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2250}
+\addlegendentry{r-1650-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2300}
+\addlegendentry{r-1650-200-30-2300}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2400}
+\addlegendentry{r-1650-200-30-2400}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2500}
+\addlegendentry{r-1650-200-30-2500}
+\addlegendimage{/pgfplots/refstyle=r-1650-200-30-2600}
+\addlegendentry{r-1650-200-30-2600}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-1600}
+\addlegendentry{r-1850-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-1700}
+\addlegendentry{r-1850-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-1800}
+\addlegendentry{r-1850-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-1900}
+\addlegendentry{r-1850-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2000}
+\addlegendentry{r-1850-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2100}
+\addlegendentry{r-1850-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2200}
+\addlegendentry{r-1850-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2250}
+\addlegendentry{r-1850-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2300}
+\addlegendentry{r-1850-200-30-2300}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2400}
+\addlegendentry{r-1850-200-30-2400}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2500}
+\addlegendentry{r-1850-200-30-2500}
+\addlegendimage{/pgfplots/refstyle=r-1850-200-30-2600}
+\addlegendentry{r-1850-200-30-2600}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-10-2000}
+\addlegendentry{r-2000-200-10-2000}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-100-2000}
+\addlegendentry{r-2000-200-100-2000}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-1600}
+\addlegendentry{r-2000-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-1700}
+\addlegendentry{r-2000-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-1800}
+\addlegendentry{r-2000-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-1900}
+\addlegendentry{r-2000-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2000}
+\addlegendentry{r-2000-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2100}
+\addlegendentry{r-2000-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2200}
+\addlegendentry{r-2000-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2250}
+\addlegendentry{r-2000-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2300}
+\addlegendentry{r-2000-200-30-2300}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2400}
+\addlegendentry{r-2000-200-30-2400}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2500}
+\addlegendentry{r-2000-200-30-2500}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-30-2600}
+\addlegendentry{r-2000-200-30-2600}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-50-2000}
+\addlegendentry{r-2000-200-50-2000}
+\addlegendimage{/pgfplots/refstyle=r-2000-200-80-2000}
+\addlegendentry{r-2000-200-80-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1600}
+\addlegendentry{1650-200-10-1600}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1700}
+\addlegendentry{1650-200-10-1700}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1800}
+\addlegendentry{1650-200-10-1800}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1900}
+\addlegendentry{1650-200-10-1900}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-2000}
+\addlegendentry{1650-200-10-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-2100}
+\addlegendentry{1650-200-10-2100}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-2200}
+\addlegendentry{1650-200-10-2200}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-2250}
+\addlegendentry{1650-200-10-2250}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-1600}
+\addlegendentry{1650-200-100-1600}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-1700}
+\addlegendentry{1650-200-100-1700}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-1800}
+\addlegendentry{1650-200-100-1800}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-1900}
+\addlegendentry{1650-200-100-1900}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-2000}
+\addlegendentry{1650-200-100-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-2100}
+\addlegendentry{1650-200-100-2100}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-2200}
+\addlegendentry{1650-200-100-2200}
+\addlegendimage{/pgfplots/refstyle=1650-200-100-2250}
+\addlegendentry{1650-200-100-2250}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1600}
+\addlegendentry{1650-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1700}
+\addlegendentry{1650-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1800}
+\addlegendentry{1650-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1900}
+\addlegendentry{1650-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-2000}
+\addlegendentry{1650-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-2100}
+\addlegendentry{1650-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-2200}
+\addlegendentry{1650-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-2250}
+\addlegendentry{1650-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1600}
+\addlegendentry{1650-200-50-1600}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1700}
+\addlegendentry{1650-200-50-1700}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1800}
+\addlegendentry{1650-200-50-1800}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1900}
+\addlegendentry{1650-200-50-1900}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-2000}
+\addlegendentry{1650-200-50-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-2100}
+\addlegendentry{1650-200-50-2100}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-2200}
+\addlegendentry{1650-200-50-2200}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-2250}
+\addlegendentry{1650-200-50-2250}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-1600}
+\addlegendentry{1650-200-80-1600}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-1700}
+\addlegendentry{1650-200-80-1700}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-1800}
+\addlegendentry{1650-200-80-1800}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-1900}
+\addlegendentry{1650-200-80-1900}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-2000}
+\addlegendentry{1650-200-80-2000}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-2100}
+\addlegendentry{1650-200-80-2100}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-2200}
+\addlegendentry{1650-200-80-2200}
+\addlegendimage{/pgfplots/refstyle=1650-200-80-2250}
+\addlegendentry{1650-200-80-2250}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-1600}
+\addlegendentry{1850-200-10-1600}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-1700}
+\addlegendentry{1850-200-10-1700}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-1800}
+\addlegendentry{1850-200-10-1800}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-1900}
+\addlegendentry{1850-200-10-1900}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-2000}
+\addlegendentry{1850-200-10-2000}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-2100}
+\addlegendentry{1850-200-10-2100}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-2200}
+\addlegendentry{1850-200-10-2200}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-2250}
+\addlegendentry{1850-200-10-2250}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-1600}
+\addlegendentry{1850-200-100-1600}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-1700}
+\addlegendentry{1850-200-100-1700}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-1800}
+\addlegendentry{1850-200-100-1800}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-1900}
+\addlegendentry{1850-200-100-1900}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-2000}
+\addlegendentry{1850-200-100-2000}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-2100}
+\addlegendentry{1850-200-100-2100}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-2200}
+\addlegendentry{1850-200-100-2200}
+\addlegendimage{/pgfplots/refstyle=1850-200-100-2250}
+\addlegendentry{1850-200-100-2250}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-1600}
+\addlegendentry{1850-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-1700}
+\addlegendentry{1850-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-1800}
+\addlegendentry{1850-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-1900}
+\addlegendentry{1850-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-2000}
+\addlegendentry{1850-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-2100}
+\addlegendentry{1850-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-2200}
+\addlegendentry{1850-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-2250}
+\addlegendentry{1850-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-1600}
+\addlegendentry{1850-200-50-1600}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-1700}
+\addlegendentry{1850-200-50-1700}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-1800}
+\addlegendentry{1850-200-50-1800}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-1900}
+\addlegendentry{1850-200-50-1900}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-2000}
+\addlegendentry{1850-200-50-2000}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-2100}
+\addlegendentry{1850-200-50-2100}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-2200}
+\addlegendentry{1850-200-50-2200}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-2250}
+\addlegendentry{1850-200-50-2250}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-1600}
+\addlegendentry{1850-200-80-1600}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-1700}
+\addlegendentry{1850-200-80-1700}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-1800}
+\addlegendentry{1850-200-80-1800}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-1900}
+\addlegendentry{1850-200-80-1900}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-2000}
+\addlegendentry{1850-200-80-2000}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-2100}
+\addlegendentry{1850-200-80-2100}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-2200}
+\addlegendentry{1850-200-80-2200}
+\addlegendimage{/pgfplots/refstyle=1850-200-80-2250}
+\addlegendentry{1850-200-80-2250}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-1600}
+\addlegendentry{2000-200-10-1600}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-1700}
+\addlegendentry{2000-200-10-1700}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-1800}
+\addlegendentry{2000-200-10-1800}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-1900}
+\addlegendentry{2000-200-10-1900}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-2000}
+\addlegendentry{2000-200-10-2000}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-2100}
+\addlegendentry{2000-200-10-2100}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-2200}
+\addlegendentry{2000-200-10-2200}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-2250}
+\addlegendentry{2000-200-10-2250}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-1600}
+\addlegendentry{2000-200-100-1600}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-1700}
+\addlegendentry{2000-200-100-1700}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-1800}
+\addlegendentry{2000-200-100-1800}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-1900}
+\addlegendentry{2000-200-100-1900}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-2000}
+\addlegendentry{2000-200-100-2000}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-2100}
+\addlegendentry{2000-200-100-2100}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-2200}
+\addlegendentry{2000-200-100-2200}
+\addlegendimage{/pgfplots/refstyle=2000-200-100-2250}
+\addlegendentry{2000-200-100-2250}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-1600}
+\addlegendentry{2000-200-30-1600}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-1700}
+\addlegendentry{2000-200-30-1700}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-1800}
+\addlegendentry{2000-200-30-1800}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-1900}
+\addlegendentry{2000-200-30-1900}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-2000}
+\addlegendentry{2000-200-30-2000}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-2100}
+\addlegendentry{2000-200-30-2100}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-2200}
+\addlegendentry{2000-200-30-2200}
+\addlegendimage{/pgfplots/refstyle=2000-200-30-2250}
+\addlegendentry{2000-200-30-2250}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-1600}
+\addlegendentry{2000-200-50-1600}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-1700}
+\addlegendentry{2000-200-50-1700}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-1800}
+\addlegendentry{2000-200-50-1800}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-1900}
+\addlegendentry{2000-200-50-1900}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-2000}
+\addlegendentry{2000-200-50-2000}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-2100}
+\addlegendentry{2000-200-50-2100}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-2200}
+\addlegendentry{2000-200-50-2200}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-2250}
+\addlegendentry{2000-200-50-2250}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-1600}
+\addlegendentry{2000-200-80-1600}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-1700}
+\addlegendentry{2000-200-80-1700}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-1800}
+\addlegendentry{2000-200-80-1800}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-1900}
+\addlegendentry{2000-200-80-1900}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-2000}
+\addlegendentry{2000-200-80-2000}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-2100}
+\addlegendentry{2000-200-80-2100}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-2200}
+\addlegendentry{2000-200-80-2200}
+\addlegendimage{/pgfplots/refstyle=2000-200-80-2250}
+\addlegendentry{2000-200-80-2250}
+\addlegendimage{/pgfplots/refstyle=human-1650}
+\addlegendentry{human-1650}
+\addlegendimage{/pgfplots/refstyle=human-1850}
+\addlegendentry{human-1850}
+\addlegendimage{/pgfplots/refstyle=human-2000}
+\addlegendentry{human-2000}
+\addlegendimage{/pgfplots/refstyle=human-2100}
+\addlegendentry{human-2100}
+\addlegendimage{/pgfplots/refstyle=human-2200}
+\addlegendentry{human-2200}
+\addlegendimage{/pgfplots/refstyle=human-2300}
+\addlegendentry{human-2300}
+\addlegendimage{/pgfplots/refstyle=human-2400}
+\addlegendentry{human-2400}
+\addlegendimage{/pgfplots/refstyle=human-2500}
+\addlegendentry{human-2500}
+\addlegendimage{/pgfplots/refstyle=human-2600}
+\addlegendentry{human-2600}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
