@@ -18,7 +18,6 @@ echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 MERGE_INFLOW=200
-
 for MAIN_INFLOW in 1610 1620 1630 1640 1650 1660 1670 1680 1690 1710 1720 1730 1740 1750 1760 1770 1780 1790
 do
 	#MAIN_HUMAN_INFLOW= xargs printf "%.*f\n" "$MAIN_HUMAN_INFLOW"
