@@ -22,10 +22,13 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvCollaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvCollaborate 
+from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
-from flow.networks.merge import ADDITIONAL_NET_PARAMS
+#from flow.networks.merge import ADDITIONAL_NET_PARAMS
+from flow.networks import HighwayRampsNetwork
+from flow.networks.highway_ramps import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
 
 # SET UP PARAMETERS FOR THE SIMULATION
@@ -46,15 +49,38 @@ MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1
 # Selfishness constant
-ETA_1 = 0.8
-ETA_2 = 0.2
+ETA_1 = 0.9
+ETA_2 = 0.1
 
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
+"""
 additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
 additional_net_params["pre_merge_length"] = 500
+"""
+
+additional_net_params.update({
+    # lengths of highway, on-ramps and off-ramps respectively
+    "highway_length": 1500,
+    "on_ramps_length": 250,
+    "off_ramps_length": 250,
+    # number of lanes on highway, on-ramps and off-ramps respectively
+    "highway_lanes": 1,
+    "on_ramps_lanes": 1,
+    "off_ramps_lanes": 1,
+    # speed limit on highway, on-ramps and off-ramps respectively
+    "highway_speed": 30,
+    "on_ramps_speed": 20,
+    "off_ramps_speed": 20,
+    # positions of the on-ramps
+    "on_ramps_pos": [500, 1000],
+    # positions of the off-ramps
+    "off_ramps_pos": [],
+    # probability for a vehicle to exit the highway at the next off-ramp
+    "next_off_ramp_proba": 0.25
+})
 
 
 
@@ -78,7 +104,7 @@ vehicles.add(
         #tau=1.5  # larger distance between cars
     ),
     #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=5)
+    num_vehicles=0)
 
 # autonomous vehicles
 vehicles.add(
@@ -94,28 +120,34 @@ vehicles.add(
 inflow = InFlows()
 inflow.add(
     veh_type="human",
-    edge="inflow_highway",
+    edge="highway_0",
     vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
     depart_lane="free",
     depart_speed=10)
 inflow.add(
     veh_type="rl",
-    edge="inflow_highway",
+    edge="highway_0",
     vehs_per_hour=RL_PENETRATION * FLOW_RATE,
     depart_lane="free",
     depart_speed=10)
 inflow.add(
     veh_type="human",
-    edge="inflow_merge",
-    vehs_per_hour=MERGE_RATE,
+    edge="on_ramp_0",
+    vehs_per_hour=200,
+    depart_lane="free",
+    depart_speed=7.5)
+inflow.add(
+    veh_type="human",
+    edge="on_ramp_1",
+    vehs_per_hour=200,
     depart_lane="free",
     depart_speed=7.5)
 
 flow_params = dict(
-    exp_tag='multiagent_highway_merge4_Collaborate_lrschedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
-    env_name=MultiAgentHighwayPOEnvCollaborate,
-    network=MergeNetwork,
+    env_name=MultiAgentHighwayPOEnvMerge4CollaborateMOR,
+    network=HighwayRampsNetwork,
     simulator='traci',
 
     #env=EnvParams(
@@ -143,6 +175,7 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
+            'merging_edges':['on_ramp_0', 'on_ramp_1']
         },
     ),
 
