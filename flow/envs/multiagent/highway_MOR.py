@@ -45,6 +45,7 @@ class MultiAgentHighwayPOEnvDistanceMergeInfoMOR(MultiAgentHighwayPOEnv):
             merge_edge_pos = float('inf')
             for e in self.env_params.additional_params['merging_edges']:
                 p = self.k.network.total_edgestarts_dict[e]
+                # TODO (yulin): edge_pos should be merge_edge_pos
                 if p < edge_pos and p > veh_x:
                     merge_edge_pos = p
                     merge_edge = e
@@ -96,6 +97,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
     @property
     def observation_space(self):
         #See class definition
+        # 5-tule + distance + merge info + ?
         return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
 
     def _closest_vehicle(self, edge, lane, base_edge):
@@ -131,7 +133,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
             return float('inf'), 0
 
     def get_state(self):
-        states = super().get_state()
+        states = super().get_state() # 5 state
         junctions = set(self.k.network.get_junction_list())
 
         # normalizing constants
@@ -142,11 +144,14 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
             veh_x = self.k.vehicle.get_x_by_id(rl_id)
             merge_edge = None
             merge_edge_pos = float('inf')
+            # find the closest merging edge
             for e in self.env_params.additional_params['merging_edges']:
                 p = self.k.network.total_edgestarts_dict[e]
                 if p < merge_edge_pos and p > veh_x:
                     merge_edge_pos = p
                     merge_edge = e
+            # obtain the distance to the merge and the velocity of the merging
+            # vehicle
             merge_distance = 1
             merge_vel = 0
             if merge_edge is not None:
@@ -155,8 +160,9 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
                 merge_dists = [(self.k.vehicle.get_position(veh), veh) for veh in merge_vehs]
                 if len(merge_dists) > 0:
                     merge_pos, merge_veh = max(merge_dists, key=lambda i:i[0])
-                    merge_distance = (len_merge - merge_pos)/len_merge
+                    merge_distance = (len_merge - merge_pos)/len_merge # normalized by len_merge 
                     merge_vel = self.k.vehicle.get_speed(merge_veh)
+            # TODO (yulin): what if there is not merging vehicle
             edge_id = self.k.vehicle.get_edge(rl_id)
             lane = self.k.vehicle.get_lane(rl_id)
             edge_len = self.k.network.edge_length(edge_id)
@@ -166,27 +172,32 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
             veh_vel = []
             
             #calculate RL distance to the center junction
-            edge = self.k.vehicle.get_edge(rl_id)
-            length = self.k.network.edge_length(edge)
+            # edge = self.k.vehicle.get_edge(rl_id)
+            # length = self.k.network.edge_length(edge)
             #rl_dist = 1
-            rl_dist = (rl_position - length)/length
+            # TODO (yulin): Is this negative?
+            rl_dist = (rl_position - edge_len)/length
+            print("check distance to merge:",rl_dist)
             #if edge in ["inflow_highway","left","center"]:
             #    rl_dist = (veh_x - center_x)/(center_x)
             #else:
             #    pass #FIXME: not yet implemented
             num_veh_ahead = 0 
+            # TODO (yulin): number of vehicles in current edge or the edge
+            # ahead ?
             for veh_id in self.k.vehicle.get_ids_by_edge(edge_id):
                 veh_position = self.k.vehicle.get_x_by_id(veh_id)
                 if veh_position > rl_x:
                     veh_vel.append(self.k.vehicle.get_speed(veh_id))
                     num_veh_ahead += 1
+            # mean speed of the vehicles ahead
             if len(veh_vel) > 0:
                 veh_vel = np.mean(veh_vel)
             else:
                 veh_vel = self.k.network.speed_limit(edge_id)
             veh_vel /= max_speed
             
-            if edge in ["center"]:
+            if edge in ["highway_2"]: # TODO (yulin): what is center? probably highway_2
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
@@ -195,6 +206,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
 
 
 class MultiAgentHighwayPOEnvMerge4CollaborateMOR(MultiAgentHighwayPOEnvMerge4MOR):
+# AAMAS policy
     def compute_reward(self, rl_actions, **kwargs):
         if rl_actions is None:
             return {}
