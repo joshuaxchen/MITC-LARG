@@ -50,6 +50,7 @@ parser.add_argument(
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
 parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
 
 args=parser.parse_args()
 
@@ -149,9 +150,12 @@ mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-flow_params = dict(
-    exp_tag='yulin_multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+exp_tag_str='multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+if args.exp_prefix:
+    exp_tag_str=args.exp_prefix+'_'+exp_tag_str  
 
+flow_params = dict(
+    exp_tag=exp_tag_str,
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
     simulator='traci',

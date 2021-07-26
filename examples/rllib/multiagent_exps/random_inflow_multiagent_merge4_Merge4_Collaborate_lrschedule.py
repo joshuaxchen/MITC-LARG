@@ -59,7 +59,7 @@ parser.add_argument(
     type=int,
     nargs="+",
     help="Manually set merge inflow configurations")
-
+parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
 
 args=parser.parse_args()
 
@@ -157,9 +157,12 @@ merge_inflow_choices=args.random_merge_inflow
 print(main_inflow_choices)
 print(merge_inflow_choices)
 
-flow_params = dict(
-    exp_tag='yulin_multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+exp_tag_str='multiagent_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+if args.exp_prefix:
+    exp_tag_str=args.exp_prefix+'_'+exp_tag_str  
 
+flow_params = dict(
+    exp_tag=exp_tag_str,
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
     simulator='traci',

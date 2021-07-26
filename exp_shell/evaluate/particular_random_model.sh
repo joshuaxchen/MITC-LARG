@@ -93,9 +93,9 @@ for I in 4 5 6 #7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
-	for MAIN_INFLOW in 1600 1650 1700 1800 1850 1900 2000 2100 2200 2250
+	for MAIN_INFLOW in 2700 2800 2900 3000
 	do
-		for AVP in 25 30 35 40
+		for AVP in 1 5 10 16 20 25 30 40
 		do
 			let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -112,6 +112,8 @@ do
 	done
 done
 
+wait
+source ~/notification_zyl.sh
 #for I in 4 
 #do
 #	echo "${TRAIN_DIR[$I]}"
