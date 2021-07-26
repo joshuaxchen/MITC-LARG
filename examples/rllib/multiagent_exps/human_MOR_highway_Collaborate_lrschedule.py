@@ -146,7 +146,7 @@ inflow.add(
     depart_speed=7.5)
 
 flow_params = dict(
-    exp_tag='multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+    exp_tag='human_multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 
     env_name=MultiAgentHighwayPOEnvMerge4CollaborateMOR,
     network=HighwayRampsNetwork,
