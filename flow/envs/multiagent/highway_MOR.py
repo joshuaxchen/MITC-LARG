@@ -176,8 +176,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
             # length = self.k.network.edge_length(edge)
             #rl_dist = 1
             # TODO (yulin): Is this negative?
-            rl_dist = (rl_position - edge_len)/length
-            print("check distance to merge:",rl_dist)
+            rl_dist = (edge_len-rl_position)/edge_len
             #if edge in ["inflow_highway","left","center"]:
             #    rl_dist = (veh_x - center_x)/(center_x)
             #else:
@@ -197,7 +196,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
                 veh_vel = self.k.network.speed_limit(edge_id)
             veh_vel /= max_speed
             
-            if edge in ["highway_2"]: # TODO (yulin): what is center? probably highway_2
+            if edge_id in ["highway_2"]: # TODO (yulin): what is center? probably highway_2
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
