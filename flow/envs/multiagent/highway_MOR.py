@@ -162,6 +162,8 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
                     merge_pos, merge_veh = max(merge_dists, key=lambda i:i[0])
                     merge_distance = (len_merge - merge_pos)/len_merge # normalized by len_merge 
                     merge_vel = self.k.vehicle.get_speed(merge_veh)
+            # TODO (yulin): normalize the speed
+            merge_vel=merge_vel/max_speed
             # TODO (yulin): what if there is not merging vehicle
             edge_id = self.k.vehicle.get_edge(rl_id)
             lane = self.k.vehicle.get_lane(rl_id)
@@ -200,7 +202,7 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
-        #print(states)
+        print(states)
         return states
 
 
