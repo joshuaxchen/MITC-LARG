@@ -95,6 +95,7 @@ do
 	mkdir ${WORKING_DIR}/${MARK[$I]}
 
 	for MERGE_INFLOW in 180 190 200 210 220 230 240 250
+	do
 		for MAIN_INFLOW in 2000
 		do
 			for AVP in 1 5 10 16 20 30 

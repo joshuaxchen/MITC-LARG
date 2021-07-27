@@ -116,6 +116,7 @@ do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
 	for MERGE_INFLOW in 180 190 200 210 220 230 240 250
+	do
 		for MAIN_INFLOW in 2000
 		do
 			for AVP in 1 5 10 16 20 30 # 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
