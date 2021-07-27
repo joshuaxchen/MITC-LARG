@@ -111,25 +111,27 @@ J=0
 # 1 2 6 7 8 12 13 14 15 
 # 1 6 wily 
 # 2 8 9 13 drperceptron slow
-for I in 1 2 3 4 5 6 7 8 9 # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
+for I in 3 4 5 # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
-	for MAIN_INFLOW in 2100 2200 2250
-	do
-		for AVP in 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40 # 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
+	for MERGE_INFLOW in 180 190 200 210 220 230 240 250
+		for MAIN_INFLOW in 2000
 		do
-			let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-			echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
-			python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
-			let J=J+1
-			if ((J == 20)); then
-				wait
-				let J=0
-				echo "another batch"
-			fi
+			for AVP in 1 5 10 16 20 30 # 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
+			do
+				let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+				let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+				echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
+				echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
+				python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+				let J=J+1
+				if ((J == 20)); then
+					wait
+					let J=0
+					echo "another batch"
+				fi
+			done
 		done
 	done
 	
