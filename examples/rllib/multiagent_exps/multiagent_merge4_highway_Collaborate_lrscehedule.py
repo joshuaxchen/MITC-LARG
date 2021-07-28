@@ -47,7 +47,7 @@ FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = 0.1
+RL_PENETRATION = 0.3
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1

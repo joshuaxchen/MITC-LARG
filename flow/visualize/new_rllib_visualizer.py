@@ -40,6 +40,7 @@ from flow.utils.rllib import get_rllib_config
 from flow.utils.rllib import get_rllib_pkl
 from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
+from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Hierarchy
 from flow.core.params import  InFlows 
 
@@ -111,7 +112,27 @@ class MyCallbacks(DefaultCallbacks):
         state = env.get_state()
         episode.user_data["initial_state"] = state
 
+def init_agent_from_policy_dir(policy_dir, checkpoint_num):
+    if checkpoint_num is None:
+        folder_names=[x[0] for x in os.walk(policy_dir)]
+        max_checkpoint=None
+        for fname in folder_names:
+            print(fname)
+            if "checkpoint_" in fname:
+                checkpoint_index=fname.index("checkpoint_")+len("checkpoint_")
+                checkpoint_num=int(fname[checkpoint_index:])
+                if max_checkpoint is None or max_checkpoint<checkpoint_num:
+                    max_checkpoint=checkpoint_num
+    else:
+        max_checkpoint=checkpoint_num
+    print("max checkpoint", max_checkpoint)
+    if max_checkpoint is not None:
+        from flow.envs.multiagent.trained_policy import init_policy_agent 
+        checkpoint_dir=os.path.join(policy_dir, 'checkpoint_'+str(max_checkpoint),'checkpoint-'+str(max_checkpoint))
+        return init_policy_agent(policy_dir, checkpoint_dir)
+    return None
 
+                
 def visualizer_rllib(args, seed=None):
     """Visualizer for RLlib experiments.
 
@@ -343,35 +364,66 @@ def visualizer_rllib(args, seed=None):
     if args.avp_to_probability:
         # convert avp to probability
         # veh perhour to probability of each vehicle per second
+        # TODO (yulin): adding inflows depending on whether it is a mor or
+        # merge4, since they have different edge name
         avp=args.avp_to_probability/100.0
         main_inflow_prob=FLOW_RATE/3600.0
         av_probability=main_inflow_prob*avp
         human_probability=main_inflow_prob*(1-avp)
-         
-        # set the inflows by probability
-        input_inflows=args.handset_inflow
+ 
         inflow = InFlows()
-        if human_probability>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_highway",
-                probability=human_probability,
-                depart_lane="free",
-                depart_speed=10)
-        if av_probability>0:
-            inflow.add(
-                veh_type="rl",
-                edge="inflow_highway",
-                probability=av_probability,
-                depart_lane="free",
-                depart_speed=10)
-        if MERGE_RATE>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_merge",
-                vehs_per_hour=MERGE_RATE,
-                depart_lane="free",
-                depart_speed=7.5)
+        if flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+            print("multiple ramps")
+            if human_probability>0:
+                inflow.add(
+                    veh_type="human",
+                    edge="highway_0",
+                    probability=human_probability,
+                    depart_lane="free",
+                    depart_speed=10)
+            if av_probability>0:
+                inflow.add(
+                    veh_type="rl",
+                    edge="highway_0",
+                    probability=av_probability,
+                    depart_lane="free",
+                    depart_speed=10)
+            if MERGE_RATE>0:
+                inflow.add(
+                    veh_type="human",
+                    edge="on_ramp_0",
+                    vehs_per_hour=MERGE_RATE,
+                    depart_lane="free",
+                    depart_speed=7.5)
+                inflow.add(
+                    veh_type="human",
+                    edge="on_ramp_1",
+                    vehs_per_hour=MERGE_RATE,
+                    depart_lane="free",
+                    depart_speed=7.5)
+        else:
+            # set the inflows by probability
+            if human_probability>0:
+                inflow.add(
+                    veh_type="human",
+                    edge="inflow_highway",
+                    probability=human_probability,
+                    depart_lane="free",
+                    depart_speed=10)
+            if av_probability>0:
+                inflow.add(
+                    veh_type="rl",
+                    edge="inflow_highway",
+                    probability=av_probability,
+                    depart_lane="free",
+                    depart_speed=10)
+            if MERGE_RATE>0:
+                inflow.add(
+                    veh_type="human",
+                    edge="inflow_merge",
+                    vehs_per_hour=MERGE_RATE,
+                    depart_lane="free",
+                    depart_speed=7.5)
         flow_params['net'].inflows=inflow
          
     if args.handset_avp:
@@ -426,6 +478,10 @@ def visualizer_rllib(args, seed=None):
     print("begin to initialize agent from checkpoint", checkpoint)
     agent = agent_cls(env=env_name, config=config)
     agent.restore(checkpoint)
+    if args.agent_action_policy_dir:
+        # TODO (yulin): load the env_name and config of the agent class
+        # restore the agent from the checkpoint
+        agent=init_agent_from_policy_dir(args.agent_action_policy_dir, None)    
     
     if hasattr(agent, "local_evaluator") and \
             os.environ.get("TEST_FLAG") != 'True':
@@ -524,11 +580,13 @@ def visualizer_rllib(args, seed=None):
             ret = {key: [0] for key in rets.keys()}
         else:
             ret = 0
-        for _ in range(env_params.horizon):
+        for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
+            print("time step:", i_k)
             if np.mean(vehicles.get_speed(vehicles.get_ids()))>0:
                 vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
+            print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
             if multiagent:
                 action = {}
@@ -787,7 +845,8 @@ def create_parser():
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     parser.add_argument('--random_inflow', action='store_true')
     parser.add_argument('--seed_dir', type=str, help='seed dir')
-    parser.add_argument('--policy_dir', type=str, help="path to the trained policy")
+    parser.add_argument('--policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy for hierarchical policies")
+    parser.add_argument('--agent_action_policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy to compute actions for the agents")
 
     parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
     parser.add_argument('--avp_to_probability', type=float, help='input an avp and we will convert it to probability automatically')
