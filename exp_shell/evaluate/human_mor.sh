@@ -1,5 +1,5 @@
 HUMAN_DIR=/home/users/flow_user/ray_results/human_multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_0573c_00000_0_2021-07-26_11-10-40
-TRAIN_DIR=/home/users/flow_user/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_661d9_00000_0_2021-07-25_22-20-16
+TRAIN_DIR=/home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_56341_00000_0_2021-07-26_18-51-03
 
 FLOW_DIR=${PWD}/../..
 
@@ -20,9 +20,9 @@ python3 ../../flow/visualize/new_rllib_visualizer.py \
 	$TRAIN_DIR\
 	$CHCKPOINT \
 	--seed_dir $FLOW_DIR \
-	> ../../exp_results/human_mor/train.txt 
+	--render_mode no_render \
+	> ../../exp_results/human_mor/update_2_on_ramp.txt 
 
-#--render_mode no_render \
 
 #--render_mode no_render \
 #--main_merge_human_inflows $MAIN_INFLOW $MERGE_INFLOW \
