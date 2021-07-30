@@ -583,8 +583,10 @@ def visualizer_rllib(args, seed=None):
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
+            #print("time step:", i_k)
             if np.mean(vehicles.get_speed(vehicles.get_ids()))>0:
                 vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
+            #print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
             if multiagent:
                 action = {}
