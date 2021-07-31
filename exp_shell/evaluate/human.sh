@@ -18,9 +18,10 @@ echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 MERGE_INFLOW=200
+J=0
 for MAIN_INFLOW in 2000 #1610 1620 1630 1640 1650 1660 1670 1680 1690 1710 1720 1730 1740 1750 1760 1770 1780 1790
 do
-	for MERGE_INFLOW in 180 190 200 210 220 230 240 250
+	for MERGE_INFLOW in 500 600 700 800 900 1000 1100 1200 1300 1400 1500 # 180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 
 	do
 		#MAIN_HUMAN_INFLOW= xargs printf "%.*f\n" "$MAIN_HUMAN_INFLOW"
 		echo $MAIN_INFLOW $MERGE_INFLOW
@@ -31,10 +32,17 @@ do
 			--seed_dir $FLOW_DIR \
 			--main_merge_human_inflows $MAIN_INFLOW $MERGE_INFLOW \
 			> ../../exp_results/human/${MAIN_INFLOW}_${MERGE_INFLOW}.txt &
+		let J=J+1
+		if ((J == 8)); then
+			wait
+			let J=0
+			echo "another batch"
+		fi
 	done
 done
 
-
+wait
+source ~/notification_zyl.sh
 
 #for AVP in 2 4 6 8 10 30 50 70 80 100
 #do
