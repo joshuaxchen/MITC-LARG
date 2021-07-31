@@ -15,14 +15,30 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 #	--seed_dir $FLOW_DIR \
 #	> ../../exp_results/human_mor/temp.txt 
 
-CHCKPOINT=500
-python3 ../../flow/visualize/new_rllib_visualizer.py \
-	$TRAIN_DIR\
-	$CHCKPOINT \
-	--seed_dir $FLOW_DIR \
-	--render_mode no_render \
-	> ../../exp_results/human_mor/update_2_on_ramp.txt 
+LOC1=500
+DIST_BETWEEN=500
+AFTER=100
 
+AVP=10
+
+for DIST_BETWEEN in 500 1000
+do
+	let LOC2=LOC1+DIST_BETWEEN
+	let TOTAL=LOC2+AFTER
+
+	python3 ../../flow/visualize/new_rllib_visualizer.py \
+		$HUMAN_DIR \
+		$CHCKPOINT \
+		--seed_dir $FLOW_DIR \
+		--render_mode no_render \
+		--avp_to_probability ${AVP} \
+		--highway_len ${TOTAL} \
+		--on_ramps ${LOC1} ${LOC2} \
+		> ../../exp_results/human_mor/mor_EVAL_2000_200_10_${LOC1}_${LOC2}.txt & 
+done
+
+wait 
+source ~/notification_zyl.sh
 
 #--render_mode no_render \
 #--main_merge_human_inflows $MAIN_INFLOW $MERGE_INFLOW \
