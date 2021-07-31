@@ -34,7 +34,8 @@ do
 	done
 done
 
-
+wait
+source ~/notification_zyl.sh
 
 #for AVP in 2 4 6 8 10 30 50 70 80 100
 #do
