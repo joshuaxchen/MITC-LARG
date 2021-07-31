@@ -6,7 +6,7 @@ AAMAS_DIR=/home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_A
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/mor/
+WORKING_DIR=$EXP_FOLDER/mor
 
 CHCKPOINT=1
 
@@ -24,26 +24,38 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 CHCKPOINT=500
 # -m pudb.run 
 
-for MERGE_INFLOW in 200
+LOC1=500
+DIST_BETWEEN=500
+AFTER=100
+AVP=10
+for DIST_BETWEEN in 500 1000
 do
-	for MAIN_INFLOW in 2000
-	do
-		for AVP in 10 # 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20
-		do
-			let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-
-			python3 $VISUALIZER \
-				$TRAIN_DIR \
-				$CHCKPOINT \
-				--agent_action_policy_dir ${AAMAS_DIR} \
-				--seed_dir $FLOW_DIR \
-				--render_mode no_render \
-				--avp_to_probability ${AVP} \
-				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-				> $WORKING_DIR/mor_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt 
-		done 
-	done
+	let LOC2=LOC1+DIST_BETWEEN
+	let TOTAL=LOC2+AFTER
+	python3 $VISUALIZER \
+		$TRAIN_DIR \
+		$CHCKPOINT \
+		--agent_action_policy_dir ${AAMAS_DIR} \
+		--seed_dir $FLOW_DIR \
+		--render_mode no_render \
+		--avp_to_probability ${AVP} \
+		--highway_len ${TOTAL} \
+		--on_ramps ${LOC1} ${LOC2} \
+		>> $WORKING_DIR/mor_EVAL_2000_200_10_${LOC1}_${LOC2}.txt &
 done
 
+wait 
+source ~/notification_zyl.sh
+#let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+#let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 
+
+#python3 $VISUALIZER \
+#				$TRAIN_DIR \
+#				$CHCKPOINT \
+#				--agent_action_policy_dir ${AAMAS_DIR} \
+#				--seed_dir $FLOW_DIR \
+#				--render_mode no_render \
+#				--avp_to_probability ${AVP} \
+#				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+#				> $WORKING_DIR/mor_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt 
