@@ -5,6 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
+import argparse
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -30,6 +31,20 @@ from flow.networks import MergeNetwork
 from flow.networks import HighwayRampsNetwork
 from flow.networks.highway_ramps import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
+
+EXAMPLE_USAGE = """
+example usage:
+    python xxxx.py --attr value
+"""
+parser = argparse.ArgumentParser( formatter_class=argparse.RawDescriptionHelpFormatter,
+    description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
+    epilog=EXAMPLE_USAGE)
+
+parser.add_argument('--length', type=int, help="Manually set the length of the highway")
+parser.add_argument('--on_ramps', type=int, nargs="+",help="Manually set position of on ramps")
+
+
+args=parser.parse_args()
 
 # SET UP PARAMETERS FOR THE SIMULATION
 
@@ -60,10 +75,17 @@ additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
 additional_net_params["pre_merge_length"] = 500
 """
+highway_length=1500
+if args.length is not None:
+    highway_length=args.length
+
+on_ramp_pos=[500,1000]
+if args.on_ramps is not None:
+    on_ramp_pos=args.on_ramps
 
 additional_net_params.update({
     # lengths of highway, on-ramps and off-ramps respectively
-    "highway_length": 1500,
+    "highway_length": highway_length,
     "on_ramps_length": 250,
     "off_ramps_length": 250,
     # number of lanes on highway, on-ramps and off-ramps respectively
@@ -75,7 +97,7 @@ additional_net_params.update({
     "on_ramps_speed": 20,
     "off_ramps_speed": 20,
     # positions of the on-ramps
-    "on_ramps_pos": [500, 1000],
+    "on_ramps_pos": on_ramp_pos,
     # positions of the off-ramps
     "off_ramps_pos": [],
     # probability for a vehicle to exit the highway at the next off-ramp

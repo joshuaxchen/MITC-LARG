@@ -360,6 +360,12 @@ def visualizer_rllib(args, seed=None):
                 print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
                 sys.exit(-1)
 
+    net_params=flow_params['net']
+    if args.highway_len and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+        net_params.additional_params['highway_length']=args.highway_len
+    if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+        net_params.additional_params['on_ramps_pos']=args.on_ramps
+
     # AV Penetration
     if args.avp_to_probability:
         # convert avp to probability
@@ -850,7 +856,8 @@ def create_parser():
 
     parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
     parser.add_argument('--avp_to_probability', type=float, help='input an avp and we will convert it to probability automatically')
-
+    parser.add_argument('--highway_len', type=int, help='input the length of the highway')
+    parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     return parser
 
 from subprocess import check_output
