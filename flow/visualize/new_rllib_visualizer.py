@@ -365,7 +365,6 @@ def visualizer_rllib(args, seed=None):
         net_params.additional_params['highway_length']=args.highway_len
     if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
         net_params.additional_params['on_ramps_pos']=args.on_ramps
-
     # AV Penetration
     if args.avp_to_probability:
         # convert avp to probability
