@@ -37,28 +37,31 @@ MAIN_INFLOW=2000
 MERGE_INFLOW=200
 
 AVP=10
-for DIST_BETWEEN in 200 400 600 800 
+for AVP in 20 #30 40
 do
-	let LOC2=LOC1+DIST_BETWEEN
-	for MAIN_INFLOW in 1800 1900 2100 2200
+	for DIST_BETWEEN in 200 400 600 800 
 	do
-		let MAIN_HUMAN_INFLOW=MAIN_INFLOW*AVP/100
-		let MAIN_RL_INFLOW=MAIN_INFLOW-MAIN_HUMAN
-		echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
-		echo $LOC1 $LOC2
-		python3 $VISUALIZER \
-			$TRAIN_DIR \
-			$CHCKPOINT \
-			--agent_action_policy_dir ${AAMAS_DIR} \
-			--seed_dir $FLOW_DIR \
-			--render_mode no_render \
-			--to_probability \
-			--highway_len ${TOTAL} \
-			--on_ramps ${LOC1} ${LOC2} \
-			--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-			>> $WORKING_DIR/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt &
+		let LOC2=LOC1+DIST_BETWEEN
+		for MAIN_INFLOW in 1800 1900 2100 2200
+		do
+			let MAIN_HUMAN_INFLOW=MAIN_INFLOW*AVP/100
+			let MAIN_RL_INFLOW=MAIN_INFLOW-MAIN_HUMAN
+			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
+			echo $LOC1 $LOC2
+			python3 $VISUALIZER \
+				$TRAIN_DIR \
+				$CHCKPOINT \
+				--agent_action_policy_dir ${AAMAS_DIR} \
+				--seed_dir $FLOW_DIR \
+				--render_mode no_render \
+				--to_probability \
+				--highway_len ${TOTAL} \
+				--on_ramps ${LOC1} ${LOC2} \
+				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+				>> $WORKING_DIR/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt &
+		done
 	done
-done
+done 
 
 wait 
 source ~/notification_zyl.sh
