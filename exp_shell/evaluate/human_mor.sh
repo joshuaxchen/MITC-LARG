@@ -29,19 +29,22 @@ LOC1=500
 MAIN_INFLOW=2000
 MERGE_INFLOW=200
 AVP=10
-for DIST_BETWEEN in 200 400 600 800
+for MAIN_INFLOW in 1800 1900 #2100 2200
 do
-	let LOC2=LOC1+DIST_BETWEEN
-	echo $LOC1 $LOC2
-	python3 ../../flow/visualize/new_rllib_visualizer.py \
-		$TRAIN_DIR \
-		$CHCKPOINT \
-		--seed_dir $FLOW_DIR \
-		--render_mode no_render \
-		--highway_len ${TOTAL} \
-		--on_ramps ${LOC1} ${LOC2} \
-		--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}\
-		> ../../exp_results/human_mor/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
+	for DIST_BETWEEN in 200 400 600 800
+	do
+		let LOC2=LOC1+DIST_BETWEEN
+		echo $LOC1 $LOC2
+		python3 ../../flow/visualize/new_rllib_visualizer.py \
+			$TRAIN_DIR \
+			$CHCKPOINT \
+			--seed_dir $FLOW_DIR \
+			--render_mode no_render \
+			--highway_len ${TOTAL} \
+			--on_ramps ${LOC1} ${LOC2} \
+			--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}\
+			> ../../exp_results/new_human_mor/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
+	done
 done
 
 wait 
