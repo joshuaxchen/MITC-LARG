@@ -8,7 +8,7 @@ AAMAS_DIR=/home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_A
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/mor
+WORKING_DIR=$EXP_FOLDER/new_mor
 
 CHCKPOINT=1
 
@@ -37,15 +37,17 @@ MAIN_INFLOW=2000
 MERGE_INFLOW=200
 
 AVP=10
-for AVP in 20 #30 40
+
+J=0
+for AVP in 10 20 #30 40 
 do
 	for DIST_BETWEEN in 200 400 600 800 
 	do
 		let LOC2=LOC1+DIST_BETWEEN
 		for MAIN_INFLOW in 1800 1900 2100 2200
 		do
-			let MAIN_HUMAN_INFLOW=MAIN_INFLOW*AVP/100
-			let MAIN_RL_INFLOW=MAIN_INFLOW-MAIN_HUMAN
+			let MAIN_RL_INFLOW=MAIN_INFLOW*AVP/100
+			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_HUMAN_INFLOW
 			echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
 			echo $LOC1 $LOC2
 			python3 $VISUALIZER \
@@ -59,6 +61,12 @@ do
 				--on_ramps ${LOC1} ${LOC2} \
 				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 				>> $WORKING_DIR/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt &
+			let J=J+1
+			if ((J == 20)); then
+				wait
+				let J=0
+				echo "another batch"
+			fi
 		done
 	done
 done 
