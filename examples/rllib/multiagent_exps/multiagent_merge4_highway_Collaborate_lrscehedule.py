@@ -55,7 +55,7 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 40
+N_CPUS = 25
 NUM_RL = 10
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -126,7 +126,7 @@ vehicles.add(
         #tau=1.5  # larger distance between cars
     ),
     #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=0)
+    num_vehicles=5)
 
 # autonomous vehicles
 vehicles.add(

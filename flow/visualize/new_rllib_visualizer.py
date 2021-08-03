@@ -117,7 +117,7 @@ def init_agent_from_policy_dir(policy_dir, checkpoint_num):
         folder_names=[x[0] for x in os.walk(policy_dir)]
         max_checkpoint=None
         for fname in folder_names:
-            print(fname)
+            #print(fname)
             if "checkpoint_" in fname:
                 checkpoint_index=fname.index("checkpoint_")+len("checkpoint_")
                 checkpoint_num=int(fname[checkpoint_index:])
@@ -125,14 +125,128 @@ def init_agent_from_policy_dir(policy_dir, checkpoint_num):
                     max_checkpoint=checkpoint_num
     else:
         max_checkpoint=checkpoint_num
-    print("max checkpoint", max_checkpoint)
+    #print("max checkpoint", max_checkpoint)
     if max_checkpoint is not None:
         from flow.envs.multiagent.trained_policy import init_policy_agent 
         checkpoint_dir=os.path.join(policy_dir, 'checkpoint_'+str(max_checkpoint),'checkpoint-'+str(max_checkpoint))
         return init_policy_agent(policy_dir, checkpoint_dir)
     return None
 
+def reset_inflows(args, env_params, net_params, env_name):
+    # Inflows        
+    # This is implemented in flow.envs.base or flow.envs.multiagent.base
+    if args.random_inflow:
+        env_params.additional_params['reset_inflow']=True
+        env_params.additional_params['inflow_range']=[0.5, 1.5]
+
+    # collect all mergers or on ramps
+    merge_names=list()
+    for inflow in net_params.inflows.get():
+        if 'merge' in inflow['edge'] or 'on_ramp' in inflow['edge']:
+            merge_names.append(inflow['edge'])
+        
+    # This is used by human baseline
+    if args.main_merge_human_inflows:
+        input_inflows=args.main_merge_human_inflows
+        inflow = InFlows()
+        main_human_inflow_rate=input_inflows[0] 
+        merge_human_inflow_rate=input_inflows[1]
+        if main_human_inflow_rate>0:
+            if env_name!=MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+                inflow.add(
+                    veh_type="human",
+                    edge="inflow_highway",
+                    vehs_per_hour=main_human_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+            else:
+                inflow.add(
+                    veh_type="human",
+                    edge="highway_0",
+                    vehs_per_hour=main_human_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+
+        if merge_human_inflow_rate>0:
+            for merge_name in merge_names:
+                inflow.add(
+                    veh_type="human",
+                    edge=merge_name,#"inflow_merge",
+                    vehs_per_hour=merge_human_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=7.5)
+        net_params.inflows=inflow
+    # set human and rl vehicles in highway, and human vehicles on every merge or on ramp
+    if args.handset_inflow:
+        # env_params.additional_params['handset_inflow']=args.handset_inflow
+        # handset_inflow
+        input_inflows=args.handset_inflow
+        main_human_inflow_rate=input_inflows[0] 
+        main_rl_inflow_rate=input_inflows[1] 
+        merge_inflow_rate=input_inflows[2]
+        inflow = InFlows()
+        if main_human_inflow_rate>0:
+            if env_name!=MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+                inflow.add(
+                    veh_type="human",
+                    edge="inflow_highway",
+                    vehs_per_hour=main_human_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+            else:
+                inflow.add(
+                    veh_type="human",
+                    edge="highway_0",
+                    vehs_per_hour=main_human_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+
+        if main_rl_inflow_rate>0:
+            if env_name!=MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+                inflow.add(
+                    veh_type="rl",
+                    edge="inflow_highway",
+                    vehs_per_hour=main_rl_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+            else:
+                inflow.add(
+                    veh_type="rl",
+                    edge="highway_0",
+                    vehs_per_hour=main_rl_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=10)
+
+        if merge_inflow_rate>0:
+            for merge_name in merge_names:
+                inflow.add(
+                    veh_type="human",
+                    edge= merge_name, #"inflow_merge",
+                    vehs_per_hour=merge_inflow_rate,
+                    depart_lane="free",
+                    depart_speed=7.5)
+        net_params.inflows=inflow
+
+    # convert all inflows to probability
+    if args.to_probability:
+        FLOW_RATE=0
+        for inflow in net_params.inflows.get(): 
+            if 'probability' in inflow:
+                continue
+            
+            if 'vehs_per_hour' in inflow:
+                FLOW_RATE=inflow['vehs_per_hour']
+                del inflow['vehs_per_hour']
+            elif 'vehsPerHour' in inflow:
+                FLOW_RATE=inflow['vehsPerHour']
+                del inflow['vehsPerHour']
+            else:
+                print(inflow.keys()) 
+                print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
+                sys.exit(-1)
+            inflow['probability']=FLOW_RATE/3600.0 
                 
+
 def visualizer_rllib(args, seed=None):
     """Visualizer for RLlib experiments.
 
@@ -268,172 +382,18 @@ def visualizer_rllib(args, seed=None):
     
     env_params = flow_params['env']
     env_params.restart_instance = True
-
-    # Inflows        
-    #if env_params.additional_params.get('reset_inflow'):
-    #    env_params.additional_params['reset_inflow']=False
-    if args.random_inflow:
-        env_params.additional_params['reset_inflow']=True
-        #env_params.additional_params['inflow_range']=[0.9, 1.1]
-        #env_params.additional_params['inflow_range']=[0.7, 1.3]
-        env_params.additional_params['inflow_range']=[0.5, 1.5]
-
-    if args.main_merge_human_inflows:
-        input_inflows=args.main_merge_human_inflows
-        inflow = InFlows()
-        main_human_inflow_rate=input_inflows[0] 
-        merge_human_inflow_rate=input_inflows[1]
-        if main_human_inflow_rate>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_highway",
-                vehs_per_hour=main_human_inflow_rate,
-                depart_lane="free",
-                depart_speed=10)
-        if merge_human_inflow_rate>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_merge",
-                vehs_per_hour=merge_human_inflow_rate,
-                depart_lane="free",
-                depart_speed=7.5)
-        flow_params['net'].inflows=inflow
-
-    if args.handset_inflow:
-        # env_params.additional_params['handset_inflow']=args.handset_inflow
-        # handset_inflow
-        input_inflows=args.handset_inflow
-        main_human_inflow_rate=input_inflows[0] 
-        main_rl_inflow_rate=input_inflows[1] 
-        merge_inflow_rate=input_inflows[2]
-        inflow = InFlows()
-        if main_human_inflow_rate>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_highway",
-                vehs_per_hour=main_human_inflow_rate,
-                depart_lane="free",
-                depart_speed=10)
-        if main_rl_inflow_rate>0:
-            inflow.add(
-                veh_type="rl",
-                edge="inflow_highway",
-                vehs_per_hour=main_rl_inflow_rate,
-                depart_lane="free",
-                depart_speed=10)
-        if merge_inflow_rate>0:
-            inflow.add(
-                veh_type="human",
-                edge="inflow_merge",
-                vehs_per_hour=merge_inflow_rate,
-                depart_lane="free",
-                depart_speed=7.5)
-        flow_params['net'].inflows=inflow
-
-    FLOW_RATE=0
-    MERGE_RATE=0
-    # compute the total flow rate
-    # the flow rate could be defined by probability or vehicles per hour
-    # this must go after the inflows are well set up, after reading from
-    # configuration file or user input
-    for inflow in flow_params['net'].inflows.get(): 
-        if inflow['edge'] =='inflow_highway':
-            if 'vehs_per_hour' in inflow:
-                FLOW_RATE+=inflow['vehs_per_hour']
-            elif 'vehsPerHour' in inflow:
-                FLOW_RATE+=inflow['vehsPerHour']
-            elif 'probability' in inflow:
-                FLOW_RATE+=inflow['probability']*3600
-            else:
-                print(inflow.keys()) 
-                print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
-                sys.exit(-1)
-        if inflow['edge'] =='inflow_merge':
-            if 'vehs_per_hour' in inflow:
-                MERGE_RATE+=inflow['vehs_per_hour']
-            elif 'vehsPerHour' in inflow:
-                MERGE_RATE+=inflow['vehsPerHour']
-            elif 'probability' in inflow:
-                MERGE_RATE+=inflow['probability']*3600
-            else:
-                print(inflow.keys()) 
-                print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
-                sys.exit(-1)
-
     net_params=flow_params['net']
+
+    # TODO:
+    reset_inflows(args, env_params, net_params, flow_params['env_name'])
+
     if args.highway_len and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
         net_params.additional_params['highway_length']=args.highway_len
     if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
         net_params.additional_params['on_ramps_pos']=args.on_ramps
-
-    # AV Penetration
-    if args.avp_to_probability:
-        # convert avp to probability
-        # veh perhour to probability of each vehicle per second
-        # TODO (yulin): adding inflows depending on whether it is a mor or
-        # merge4, since they have different edge name
-        avp=args.avp_to_probability/100.0
-        main_inflow_prob=FLOW_RATE/3600.0
-        av_probability=main_inflow_prob*avp
-        human_probability=main_inflow_prob*(1-avp)
- 
-        inflow = InFlows()
-        if flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
-            print("multiple ramps")
-            if human_probability>0:
-                inflow.add(
-                    veh_type="human",
-                    edge="highway_0",
-                    probability=human_probability,
-                    depart_lane="free",
-                    depart_speed=10)
-            if av_probability>0:
-                inflow.add(
-                    veh_type="rl",
-                    edge="highway_0",
-                    probability=av_probability,
-                    depart_lane="free",
-                    depart_speed=10)
-            if MERGE_RATE>0:
-                inflow.add(
-                    veh_type="human",
-                    edge="on_ramp_0",
-                    vehs_per_hour=MERGE_RATE,
-                    depart_lane="free",
-                    depart_speed=7.5)
-                inflow.add(
-                    veh_type="human",
-                    edge="on_ramp_1",
-                    vehs_per_hour=MERGE_RATE,
-                    depart_lane="free",
-                    depart_speed=7.5)
-        else:
-            # set the inflows by probability
-            if human_probability>0:
-                inflow.add(
-                    veh_type="human",
-                    edge="inflow_highway",
-                    probability=human_probability,
-                    depart_lane="free",
-                    depart_speed=10)
-            if av_probability>0:
-                inflow.add(
-                    veh_type="rl",
-                    edge="inflow_highway",
-                    probability=av_probability,
-                    depart_lane="free",
-                    depart_speed=10)
-            if MERGE_RATE>0:
-                inflow.add(
-                    veh_type="human",
-                    edge="inflow_merge",
-                    vehs_per_hour=MERGE_RATE,
-                    depart_lane="free",
-                    depart_speed=7.5)
-        flow_params['net'].inflows=inflow
          
-    if args.handset_avp:
-        env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
+    #if args.handset_avp:
+    #    env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     if args.policy_dir is not None:
         accel_result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
@@ -835,9 +795,6 @@ def create_parser():
         '--warmup',
         type=int,
         default=800,)
-    parser.add_argument(
-        '--handset_avp',
-        type=float)
 
     parser.add_argument(
         '--main_merge_human_inflows',
@@ -849,13 +806,14 @@ def create_parser():
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+    parser.add_argument( '--handset_avp', type=float) 
     parser.add_argument('--random_inflow', action='store_true')
     parser.add_argument('--seed_dir', type=str, help='seed dir')
     parser.add_argument('--policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy for hierarchical policies")
     parser.add_argument('--agent_action_policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy to compute actions for the agents")
 
     parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
-    parser.add_argument('--avp_to_probability', type=float, help='input an avp and we will convert it to probability automatically')
+    parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
     parser.add_argument('--highway_len', type=int, help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     return parser

@@ -185,7 +185,7 @@ class HighwayRampsNetwork(Network):
                 return [(["highway_{}".format(id_highway_node - 1)], 1)]
 
             id_ramp_node = self.ramp_pos[start_node_pos]
-
+            
             routes = get_routes(self.nodes_pos[id_highway_node + 1])
 
             if id_ramp_node.startswith("on"):
@@ -214,11 +214,16 @@ class HighwayRampsNetwork(Network):
                 ])
 
         routes = get_routes(self.nodes_pos[1])
-
+        # add suffix route (good for on ramps only)
+                     
         rts = defaultdict(list)
         for route, prob in routes:
-            rts[route[0]].append((route, prob))
+            #rts[route[0]].append((route, prob))
+            for i in range(0,len(route)):
+                    if route[i] not in rts.keys():
+                        rts[route[i]].append((route[i:], prob))
 
+        print(rts)
         return rts
 
     def specify_types(self, net_params):
