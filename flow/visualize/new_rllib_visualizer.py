@@ -151,6 +151,7 @@ def reset_inflows(args, env_params, net_params, env_name):
         inflow = InFlows()
         main_human_inflow_rate=input_inflows[0] 
         merge_human_inflow_rate=input_inflows[1]
+        print('begin set human baseline inflows')
         if main_human_inflow_rate>0:
             if env_name!=MultiAgentHighwayPOEnvMerge4CollaborateMOR:
                 inflow.add(
@@ -176,6 +177,7 @@ def reset_inflows(args, env_params, net_params, env_name):
                     depart_lane="free",
                     depart_speed=7.5)
         net_params.inflows=inflow
+        print("after set:",inflow.get())
     # set human and rl vehicles in highway, and human vehicles on every merge or on ramp
     if args.handset_inflow:
         # env_params.additional_params['handset_inflow']=args.handset_inflow
@@ -246,6 +248,7 @@ def reset_inflows(args, env_params, net_params, env_name):
                 sys.exit(-1)
             inflow['probability']=FLOW_RATE/3600.0 
                 
+    #print(net_params.inflows)
 
 def visualizer_rllib(args, seed=None):
     """Visualizer for RLlib experiments.
@@ -527,6 +530,8 @@ def visualizer_rllib(args, seed=None):
       axA.set_ylim((-5, 5))
       axR.set_ylim((-1, 1))
       initialized_plot = False
+    # check inflows
+    print(flow_params['net'].inflows.get())
 
     # record for visualization purposes
     actions = []
@@ -794,8 +799,7 @@ def create_parser():
     parser.add_argument(
         '--warmup',
         type=int,
-        default=800,)
-
+        default=800)
     parser.add_argument(
         '--main_merge_human_inflows',
         type=int,
