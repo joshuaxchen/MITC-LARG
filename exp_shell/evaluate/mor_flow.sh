@@ -8,7 +8,7 @@ AAMAS_DIR=/home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_A
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/600_100_new_mor
+WORKING_DIR=$EXP_FOLDER/600_200_new_mor
 
 CHCKPOINT=1
 
@@ -32,7 +32,7 @@ AVP=10
 
 TOTAL=1500
 LOC1=600
-END=100
+END=200
 # TOTAL-LOC2=LOC1+DIST
 MAIN_INFLOW=2000
 MERGE_INFLOW=200
@@ -42,7 +42,7 @@ AVP=10
 mkdir ${WORKING_DIR}
 
 J=0
-for AVP in 10 20 #10 20  
+for AVP in 10 20 #30 40 #10 20 #10 20  
 do
 	for DIST_BETWEEN in 200 400 600 800 
 	do
