@@ -578,7 +578,9 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
-            total_num_cars_per_step.append(infos['total_num_cars_per_step'])
+            total_num_cars_per_step=None
+            if 'total_num_cars_per_step' in infos.keys():
+                total_num_cars_per_step.append(infos['total_num_cars_per_step'])
 
             if SUMMARY_PLOTS:
               # record for visualization purposes
@@ -696,7 +698,7 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     print("Time for certain number of vehicles to exit {:.2f},{:.2f}".format((np.mean(times)),np.std(times)))
 
     # print the history of the number of vehicles in the network
-    if print_veh_num_history and i==args.num_rollouts-1:
+    if print_veh_num_history and i==args.num_rollouts-1 and total_num_cars_per_step is not None:
         fig, ax = plt.subplots() 
         ax.plot(num_steps_vec, total_num_cars_per_step, label='Total # of cars')
         ax.set_xlabel('time [sec]')  # Add an x-label to the axes.
@@ -876,7 +878,7 @@ if __name__ == '__main__':
         seed = seed_filename[i]
         print("Using seed: ", seed)
         print_veh_num_history=False
-        if i==0:
+        if i==0 and args.history_file_name is not None:
             print_veh_num_history=True
         speed, inflow, outflow, reward, info = visualizer_rllib(args, print_veh_num_history, seed)
         Speed.append(speed)
