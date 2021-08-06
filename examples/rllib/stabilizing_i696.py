@@ -33,7 +33,6 @@ from flow.controllers import IDMController, RLController, SimLaneChangeControlle
 from flow.scenarios import scenario_dir_path
 scenarios_dir = scenario_dir_path
 #from flow.scenarios import scenario_dir_path
-scenarios_dir = scenario_dir_path
 # UNCOMMENT ONE OF THE FOLLOWING 3 VARIATIONS OF I696 SCENARIO 
 #
 #one-lane (no lane-changes), smaller

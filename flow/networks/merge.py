@@ -75,7 +75,6 @@ class MergeNetwork(Network):
         for p in ADDITIONAL_NET_PARAMS.keys():
             if p not in net_params.additional_params:
                 raise KeyError('Network parameter "{}" not supplied'.format(p))
-
         super().__init__(name, vehicles, net_params, initial_config,
                          traffic_lights)
 

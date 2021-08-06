@@ -250,7 +250,7 @@ def reset_inflows(args, env_params, net_params, env_name):
                 
     #print(net_params.inflows)
 
-def visualizer_rllib(args, seed=None):
+def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     """Visualizer for RLlib experiments.
 
     This function takes args (see function create_parser below for
@@ -540,6 +540,8 @@ def visualizer_rllib(args, seed=None):
     times = []
     info = {}; info['main_inflow']=[]; info['merge_inflow']=[]
     WARMUP = args.warmup
+    total_num_cars_per_step=list()
+    num_steps_vec = np.arange(0, env_params.horizon, 1)
     for i in range(args.num_rollouts):
         vel = []
         time_to_exit = 0
@@ -551,6 +553,9 @@ def visualizer_rllib(args, seed=None):
             ret = {key: [0] for key in rets.keys()}
         else:
             ret = 0
+
+        total_num_cars_per_step=list()
+
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
@@ -572,7 +577,8 @@ def visualizer_rllib(args, seed=None):
                             state[agent_id], policy_id=policy_map_fn(agent_id))
             else:
                 action = agent.compute_action(state)
-            state, reward, done, _ = env.step(action)
+            state, reward, done, infos = env.step(action)
+            total_num_cars_per_step.append(infos['total_num_cars_per_step'])
 
             if SUMMARY_PLOTS:
               # record for visualization purposes
@@ -621,9 +627,9 @@ def visualizer_rllib(args, seed=None):
                 rets[key].append(ret[key])
         else:
             rets.append(ret)
-        outflow = vehicles.get_outflow_rate(5000)
+        outflow = vehicles.get_outflow_rate(1500) # original: 5000
         final_outflows.append(outflow)
-        inflow = vehicles.get_inflow_rate(5000)
+        inflow = vehicles.get_inflow_rate(1500)# original: 5000
         final_inflows.append(inflow)
         times.append(time_to_exit)
         if np.all(np.array(final_inflows) > 1e-5):
@@ -688,6 +694,22 @@ def visualizer_rllib(args, seed=None):
     print("Time Delay")
     print(times)
     print("Time for certain number of vehicles to exit {:.2f},{:.2f}".format((np.mean(times)),np.std(times)))
+
+    # print the history of the number of vehicles in the network
+    if print_veh_num_history and i==args.num_rollouts-1:
+        fig, ax = plt.subplots() 
+        ax.plot(num_steps_vec, total_num_cars_per_step, label='Total # of cars')
+        ax.set_xlabel('time [sec]')  # Add an x-label to the axes.
+        ax.set_ylabel('# cars')  # Add a y-label to the axes. 
+        ax.set_title("No. Cars per Step")
+        ax.legend()  # Add a legend.
+        ax.grid()
+        history_file_name='test'
+        if args.history_file_name:
+            history_file_name=args.history_file_name
+        plt.savefig('/home/users/yulin/MITC/plot/history/'+history_file_name+'.pdf')
+
+        # print("Total number of vehicles in the network: "+str(total_num_cars_per_step))
 
     #if args.output:
     #    np.savetxt(args.output, [mean_speed, std_speed,final_inflows, final_outflows,times])
@@ -820,6 +842,7 @@ def create_parser():
     parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
     parser.add_argument('--highway_len', type=int, help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
+    parser.add_argument('--history_file_name', type=str, help='input the name of the history file name') 
     return parser
 
 from subprocess import check_output
@@ -850,10 +873,12 @@ if __name__ == '__main__':
     print("Using ", len(seed_filename), " random seeds")
 
     for i in range(len(seed_filename)):
-
         seed = seed_filename[i]
         print("Using seed: ", seed)
-        speed, inflow, outflow, reward, info = visualizer_rllib(args, seed)
+        print_veh_num_history=False
+        if i==0:
+            print_veh_num_history=True
+        speed, inflow, outflow, reward, info = visualizer_rllib(args, print_veh_num_history, seed)
         Speed.append(speed)
         Inflow.append(inflow)
         Outflow.append(np.mean(outflow))

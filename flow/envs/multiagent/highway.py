@@ -290,6 +290,7 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
             done['__all__'] = False
 
         infos = {key: {} for key in states.keys()}
+        #infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
 
         # compute the reward
         if self.env_params.clip_actions:

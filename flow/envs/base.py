@@ -522,7 +522,9 @@ class Env(gym.Env):
 
         # compute the info for each agent
         infos = {}
-
+        # num_human_per_step
+        # num_controlled_per_step
+        # infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
         # compute the reward
         if self.env_params.clip_actions:
             rl_clipped = self.clip_actions(rl_actions)

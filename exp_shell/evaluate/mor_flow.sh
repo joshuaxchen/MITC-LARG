@@ -31,8 +31,8 @@ AFTER=100
 AVP=10
 
 TOTAL=1500
-LOC1=600
-END=200
+LOC1=500
+END=100
 # TOTAL-LOC2=LOC1+DIST
 MAIN_INFLOW=2000
 MERGE_INFLOW=200
@@ -42,13 +42,13 @@ AVP=10
 mkdir ${WORKING_DIR}
 
 J=0
-for AVP in 10 20 #30 40 #10 20 #10 20  
+for AVP in 10 #10 20 30 40 #30 40 #10 20 #10 20  
 do
 	for DIST_BETWEEN in 200 400 600 800 
 	do
 		let LOC2=LOC1+DIST_BETWEEN
-		let TOTAL=LOC2+END
-		for MAIN_INFLOW in 1800 1900 2000 2100 2200
+		#let TOTAL=LOC2+END
+		for MAIN_INFLOW in 2000 # 1800 1900 2000 2100 2200
 		do
 			let MAIN_RL_INFLOW=MAIN_INFLOW*AVP/100
 			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -63,8 +63,11 @@ do
 				--to_probability \
 				--highway_len ${TOTAL} \
 				--on_ramps ${LOC1} ${LOC2} \
-				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-				>> $WORKING_DIR/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt &
+				--history_file_name ${TOTAL}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+				--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
+				# >> $WORKING_DIR/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt &
+				#--history_file_name ${LOC1}_${END}_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+				#--horizon 2500 \
 			let J=J+1
 			if ((J == 20)); then
 				wait

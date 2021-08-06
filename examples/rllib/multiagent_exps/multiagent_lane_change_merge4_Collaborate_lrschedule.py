@@ -16,6 +16,7 @@ from ray.tune.registry import register_env
 from ray.tune import run_experiments
 
 from flow.controllers import RLController, SimCarFollowingController
+from flow.controllers import SimLaneChangeController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -50,7 +51,7 @@ parser.add_argument(
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
 parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
+#parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
 
 args=parser.parse_args()
 
@@ -84,7 +85,7 @@ ETA_2 = 0.1
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
-additional_net_params["highway_lanes"] = 1
+additional_net_params["highway_lanes"] = 2
 additional_net_params["pre_merge_length"] = 500
 
 
@@ -106,12 +107,26 @@ inflows = InFlows()
 vehicles.add(
     veh_id="human",
     acceleration_controller=(SimCarFollowingController, {}),
+    lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
         speed_mode=9,  # for safer behavior at the merges
         #tau=1.5  # larger distance between cars
     ),
-    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=5)
+    lane_change_params=SumoLaneChangeParams(
+        model="SL2015",
+      # Define a lane changing mode that will allow lane changes
+      # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
+      # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
+      lane_change_mode=1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+      lc_speed_gain=1000000,
+      lc_pushy=0, #0.5, #1,
+      lc_assertive=5, #20,
+      # the following two replace default values which are not read well by xml parser
+      lc_impatience=1e-8,
+      lcTimeToImpatience=1e12
+     ), 
+    num_vehicles=5
+    )
 
 # autonomous vehicles
 vehicles.add(
@@ -150,18 +165,12 @@ mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
-
-if args.exp_prefix:
-    exp_tag_str=args.exp_prefix+'_'+exp_tag_str  
+exp_tag_str='multiagent'+mark+'_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-
     env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
-
     network=MergeNetwork,
-
     simulator='traci',
 
     #env=EnvParams(

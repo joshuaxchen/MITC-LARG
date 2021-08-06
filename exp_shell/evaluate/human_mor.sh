@@ -6,7 +6,7 @@ TRAIN_DIR=/home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborat
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/600_200_new_mor
+WORKING_DIR=$EXP_FOLDER/600_200_human_mor
 
 
 CHCKPOINT=500
@@ -28,22 +28,23 @@ AFTER=100
 AVP=10
 
 TOTAL=1500
-LOC1=600
+LOC1=500
 END=200
 
 MAIN_INFLOW=2000
 MERGE_INFLOW=200
 AVP=10
-for END in 200 
+J=0
+for END in 100 #200 300 400 # 200 300 400
 do
 	WORKING_DIR=$EXP_FOLDER/${LOC1}_${END}_human_mor
 	mkdir ${WORKING_DIR}
-	for MAIN_INFLOW in 1800 1900 2000 2100 2200 #1800 1900 #
+	for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for DIST_BETWEEN in 200 400 600 800
+		for DIST_BETWEEN in 800 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 			let LOC2=LOC1+DIST_BETWEEN
-			let TOTAL=LOC2+END
+			#let TOTAL=LOC2+END
 			echo $LOC1 $LOC2
 			python3 $VISUALIZER \
 				$TRAIN_DIR \
@@ -52,8 +53,17 @@ do
 				--render_mode no_render \
 				--highway_len ${TOTAL} \
 				--on_ramps ${LOC1} ${LOC2} \
-				--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}\
-				> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
+				--horizon 3000 \
+				--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+				--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}
+				# > ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
+			let J=J+1
+			if ((J == 20)); then
+				wait
+				let J=0
+				echo "another batch"
+			fi
+		done
 	done
 done
 
