@@ -15,7 +15,7 @@ from ray import tune
 from ray.tune.registry import register_env
 from ray.tune import run_experiments
 
-from flow.controllers import RLController, SimCarFollowingController
+from flow.controllers import IDMController, RLController, SimCarFollowingController
 from flow.controllers import SimLaneChangeController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
@@ -106,14 +106,38 @@ inflows = InFlows()
 # human vehicles
 vehicles.add(
     veh_id="human",
-    acceleration_controller=(SimCarFollowingController, {}),
+    acceleration_controller=(IDMController, {}),
     lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
         speed_mode=9,  # for safer behavior at the merges
         #tau=1.5  # larger distance between cars
     ),
     lane_change_params=SumoLaneChangeParams(
-        model="SL2015",
+        model="SL2015", #"SL2015", #LC2013
+      # Define a lane changing mode that will allow lane changes
+      # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
+      # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
+      lane_change_mode=1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+      lc_speed_gain=1000000,
+      lc_pushy=1, #0.5, #1,
+      lc_assertive=5, #20,
+      # the following two replace default values which are not read well by xml parser
+      lc_impatience=1e-8,
+      lc_time_to_impatience=1e12
+     ), 
+    num_vehicles=5
+    )
+
+# autonomous vehicles
+vehicles.add(
+    veh_id="rl",
+    acceleration_controller=(RLController, {}),
+    lane_change_controller=(SimLaneChangeController, {}),
+    car_following_params=SumoCarFollowingParams(
+        speed_mode=9,
+    ),
+    lane_change_params=SumoLaneChangeParams(
+        model="SL2015", #"SL2015", #LC2013
       # Define a lane changing mode that will allow lane changes
       # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
       # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
@@ -123,18 +147,8 @@ vehicles.add(
       lc_assertive=5, #20,
       # the following two replace default values which are not read well by xml parser
       lc_impatience=1e-8,
-      lcTimeToImpatience=1e12
-     ), 
-    num_vehicles=5
-    )
-
-# autonomous vehicles
-vehicles.add(
-    veh_id="rl",
-    acceleration_controller=(RLController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
-    ),
+      lc_time_to_impatience=1e12
+     ),
     num_vehicles=0)
 
 # Vehicles are introduced from both sides of merge, with RL vehicles entering
@@ -183,6 +197,7 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
+        lateral_resolution=0.25, # determines lateral discretization of lanes
         render=False,
     ),
 

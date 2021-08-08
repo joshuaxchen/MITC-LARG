@@ -71,7 +71,7 @@ HORIZON = 3000 #128#600
 # number of rollouts per training iteration
 N_ROLLOUTS = 20#1#20
 # number of parallel workers
-N_CPUS = 0#1#8#2
+N_CPUS = 40#1#8#2
 
 # inflow rate at the highway
 FLOW_RATE = 2000
@@ -246,7 +246,7 @@ flow_params = dict(
         no_step_log=False,       # this disables log writing?
         sim_step=0.5,            # Daniel updated from osm.sumocfg
         lateral_resolution=0.25, # determines lateral discretization of lanes
-        render=True,#True,             # False for training, True for debugging
+        render=False,#True,             # False for training, True for debugging
         restart_instance=True,
     ),
 
