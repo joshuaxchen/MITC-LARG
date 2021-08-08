@@ -277,6 +277,8 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
 
     flow_params = get_flow_params(config)
 
+    if args.lateral_resolution:
+        flow_params['sim'].lateral_resolution=args.lateral_resolution
 
 
     # replace the project path to the scenario xml, if the result to be
@@ -457,7 +459,8 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
         env = agent.local_evaluator.env
     else:
         env = gym.make(env_name)
-    
+
+       
     if multiagent:
         rets = {}
         # map the agent id to its policy
@@ -489,7 +492,8 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
 
     env.restart_simulation(
         sim_params=sim_params, render=sim_params.render)
-
+    
+    
     # Simulate and collect metrics
     final_outflows = []
     final_inflows = []
@@ -845,6 +849,7 @@ def create_parser():
     parser.add_argument('--highway_len', type=int, help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--history_file_name', type=str, help='input the name of the history file name') 
+    parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
     return parser
 
 from subprocess import check_output
