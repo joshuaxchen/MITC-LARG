@@ -42,6 +42,7 @@ do
 			--seed_dir $FLOW_DIR \
 			--lateral_resolution 3.2 \
 			--render_mode sumo_gui \
+			--disable_rl_lane_change \
 			--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
 			#--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}
 			#--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \

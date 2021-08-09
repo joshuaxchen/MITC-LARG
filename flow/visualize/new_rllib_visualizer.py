@@ -42,7 +42,13 @@ from ray.rllib.agents.callbacks import DefaultCallbacks
 from flow.scenarios import scenario_dir_path
 from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Hierarchy
-from flow.core.params import  InFlows 
+from flow.core.params import InFlows, VehicleParams
+from flow.controllers import IDMController, RLController, SimCarFollowingController
+from flow.controllers import SimLaneChangeController
+from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
+                             VehicleParams, SumoParams, \
+                             SumoCarFollowingParams, SumoLaneChangeParams
+
 
 EXAMPLE_USAGE = """
 example usage:
@@ -280,7 +286,48 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     if args.lateral_resolution:
         flow_params['sim'].lateral_resolution=args.lateral_resolution
 
+    if args.disable_rl_lane_change:
+        # CREATE VEHICLE TYPES AND INFLOWS
+        vehicles = VehicleParams()
+        vehicles.add(
+            veh_id="human",
+            acceleration_controller=(IDMController, {}),
+            lane_change_controller=(SimLaneChangeController, {}),
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=9,  # for safer behavior at the merges
+            ),
+            lane_change_params=SumoLaneChangeParams(
+                model="SL2015", #"SL2015", #LC2013
+              lane_change_mode=1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+              lc_speed_gain=1000000,
+              lc_pushy=1, #0.5, #1,
+              lc_assertive=5, #20,
+              lc_impatience=1e-8,
+              lc_time_to_impatience=1e12
+             ), 
+            num_vehicles=5
+            )
 
+        # autonomous vehicles
+        vehicles.add(
+            veh_id="rl",
+            acceleration_controller=(RLController, {}),
+            lane_change_controller=(SimLaneChangeController, {}),
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=9,
+            ),
+            lane_change_params=SumoLaneChangeParams(
+                model="SL2015", #"SL2015", #LC2013
+              lane_change_mode=512, #1621, #512, #1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+              lc_speed_gain=1,#100000,
+              lc_pushy=0, #0.5, #1,
+              lc_assertive=5, #20,
+              lc_impatience=1e-8,
+              lc_time_to_impatience=1e12,
+              lc_keep_right=100000
+             ),
+            num_vehicles=0)
+        flow_params['veh']=vehicles 
     # replace the project path to the scenario xml, if the result to be
     # visualized is generated from another project.
     try:
@@ -850,6 +897,8 @@ def create_parser():
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--history_file_name', type=str, help='input the name of the history file name') 
     parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
+    parser.add_argument('--disable_rl_lane_change', action='store_true', help='disable lane changing for rl vehicle.') 
+
     return parser
 
 from subprocess import check_output

@@ -147,7 +147,8 @@ vehicles.add(
       lc_assertive=5, #20,
       # the following two replace default values which are not read well by xml parser
       lc_impatience=1e-8,
-      lc_time_to_impatience=1e12
+      lc_time_to_impatience=1e12,
+      lc_keep_right=1000000
      ),
     num_vehicles=0)
 
