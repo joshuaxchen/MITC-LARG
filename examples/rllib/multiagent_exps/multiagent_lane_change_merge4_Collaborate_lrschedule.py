@@ -72,7 +72,7 @@ if args.num_rl:
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
-MERGE_RATE = 200
+MERGE_RATE = 300
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1 
 if args.avp:
@@ -141,7 +141,7 @@ vehicles.add(
       # Define a lane changing mode that will allow lane changes
       # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
       # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
-      lane_change_mode=1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+      lane_change_mode=512, #1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
       lc_speed_gain=1000000,
       lc_pushy=0, #0.5, #1,
       lc_assertive=5, #20,
