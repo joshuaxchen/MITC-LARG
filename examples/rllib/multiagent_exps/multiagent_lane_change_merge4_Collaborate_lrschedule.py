@@ -109,7 +109,7 @@ vehicles.add(
     acceleration_controller=(IDMController, {}),
     lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
-        speed_mode=9,  # for safer behavior at the merges
+        speed_mode=6,  # for safer behavior at the merges
         #tau=1.5  # larger distance between cars
     ),
     lane_change_params=SumoLaneChangeParams(
@@ -134,7 +134,7 @@ vehicles.add(
     acceleration_controller=(RLController, {}),
     lane_change_controller=(SimLaneChangeController, {}),
     car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
+        speed_mode=6,
     ),
     lane_change_params=SumoLaneChangeParams(
         model="SL2015", #"SL2015", #LC2013

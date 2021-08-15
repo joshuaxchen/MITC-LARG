@@ -467,6 +467,11 @@ class IDMController(BaseController):
 
     def get_accel(self, env):
         """See parent class."""
+        # solve leader issues near junctions using get_lane_leaders()
+        # add from Daniel
+        env.k.vehicle.update_leader_if_near_junction(self.veh_id, junc_dist_threshold=150)
+
+
         v = env.k.vehicle.get_speed(self.veh_id)
         lead_id = env.k.vehicle.get_leader(self.veh_id)
         h = env.k.vehicle.get_headway(self.veh_id)

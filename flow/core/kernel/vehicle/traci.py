@@ -114,6 +114,44 @@ class TraCIVehicle(KernelVehicle):
         #    self.__customInflows = None
         self.__customInflows = vehicles._customInflows
 
+    # add from Daniel
+    def update_leader_if_near_junction(self, veh_id, junc_dist_threshold):
+        """ solve leader issues near junctions using get_lane_leaders()"""
+        this_pos = self.get_position(veh_id)
+        this_edge = self.get_edge(veh_id)
+        this_lane = self.get_lane(veh_id)
+        edge_length = self.master_kernel.network.edge_length(this_edge)
+        next_edge_lane = self.master_kernel.network.next_edge(this_edge, this_lane)
+        if next_edge_lane:
+            next_edge, next_lane = next_edge_lane[0]
+            dist_to_junction = edge_length - this_pos
+            if (next_edge[0] == ":" and dist_to_junction < junc_dist_threshold) or (this_edge[0] == ":"):
+                if len(self.get_lane_leaders(veh_id)) > 0:
+                    leaders_and_headways = zip(self.get_lane_leaders(veh_id), self.get_lane_headways(veh_id))
+                    closest = min(leaders_and_headways, key=lambda x : x[1])
+                    self.update_leader(veh_id, closest)
+
+    def update_leader(self, veh_id, headway):
+        # check for a collided vehicle or a vehicle with no leader
+        if headway is None:
+            self.__vehicles[veh_id]["leader"] = None
+            self.__vehicles[veh_id]["follower"] = None
+            self.__vehicles[veh_id]["headway"] = 1e+3
+            self.__vehicles[veh_id]["follower_headway"] = 1e+3
+        else:
+            min_gap = self.minGap[self.get_type(veh_id)]
+            self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
+            self.__vehicles[veh_id]["leader"] = headway[0]
+            if headway[0] in self.__vehicles:
+                leader = self.__vehicles[headway[0]]
+                # if veh_id is closer from leader than another follower
+                # (in case followers are in different converging edges)
+                if ("follower_headway" not in leader or
+                        headway[1] + min_gap < leader["follower_headway"]):
+                    leader["follower"] = veh_id
+                    leader["follower_headway"] = headway[1] + min_gap
+
+
     def update(self, reset):
         """See parent class.
 
@@ -244,40 +282,46 @@ class TraCIVehicle(KernelVehicle):
             except TypeError:
                 print(traceback.format_exc())
             headway = vehicle_obs.get(veh_id, {}).get(tc.VAR_LEADER, None)
-            # check for a collided vehicle or a vehicle with no leader
-            if headway is None:
-                self.__vehicles[veh_id]["leader"] = None
-                self.__vehicles[veh_id]["follower"] = None
-                self.__vehicles[veh_id]["headway"] = 1e+3
-                self.__vehicles[veh_id]["follower_headway"] = 1e+3
-            else:
-                min_gap = self.minGap[self.get_type(veh_id)] #FIXME what role does min_gap play
-                #min_gap = 0
-                '''
-                if headway[1]>=0:
-                    self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
-                    self.__vehicles[veh_id]["leader"] = headway[0]
-                
-                else:
-                    self.__vehicles[veh_id]["headway"] = 50
-                    self.__vehicles[veh_id]["leader"] = None
-                '''
-                if headway[1] + min_gap >= 0:
-                    self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
-                    self.__vehicles[veh_id]["leader"] = headway[0]
-                else:
-                    self.__vehicles[veh_id]["leader"] = None
-                    self.__vehicles[veh_id]["headway"] = 1e+3
+
+            ## comment from Daniel
+            ## check for a collided vehicle or a vehicle with no leader
+            #if headway is None:
+            #    self.__vehicles[veh_id]["leader"] = None
+            #    self.__vehicles[veh_id]["follower"] = None
+            #    self.__vehicles[veh_id]["headway"] = 1e+3
+            #    self.__vehicles[veh_id]["follower_headway"] = 1e+3
+            #else:
+            #    min_gap = self.minGap[self.get_type(veh_id)] #FIXME what role does min_gap play
+            #    #min_gap = 0
+            #    '''
+            #    if headway[1]>=0:
+            #        self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
+            #        self.__vehicles[veh_id]["leader"] = headway[0]
+            #    
+            #    else:
+            #        self.__vehicles[veh_id]["headway"] = 50
+            #        self.__vehicles[veh_id]["leader"] = None
+            #    '''
+            #    if headway[1] + min_gap >= 0:
+            #        self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
+            #        self.__vehicles[veh_id]["leader"] = headway[0]
+            #    else:
+            #        self.__vehicles[veh_id]["leader"] = None
+            #        self.__vehicles[veh_id]["headway"] = 1e+3
  
-                if headway[0] in self.__vehicles:
-                    leader = self.__vehicles[headway[0]]
-                    # if veh_id is closer from leader than another follower
-                    # (in case followers are in different converging edges)
-                    if (("follower_headway" not in leader or
-                            headway[1] + min_gap < leader["follower_headway"]) and
-                            headway[1] + min_gap > 0):
-                        leader["follower"] = veh_id
-                        leader["follower_headway"] = headway[1] + min_gap
+            #    if headway[0] in self.__vehicles:
+            #        leader = self.__vehicles[headway[0]]
+            #        # if veh_id is closer from leader than another follower
+            #        # (in case followers are in different converging edges)
+            #        if (("follower_headway" not in leader or
+            #                headway[1] + min_gap < leader["follower_headway"]) and
+            #                headway[1] + min_gap > 0):
+            #            leader["follower"] = veh_id
+            #            leader["follower_headway"] = headway[1] + min_gap
+
+            # Refactored original code
+            self.update_leader(veh_id, headway)
+ 
 
         # update the sumo observations variable
         self.__sumo_obs = vehicle_obs.copy()
@@ -770,7 +814,9 @@ class TraCIVehicle(KernelVehicle):
                 for lane in range(max_lanes):
                     edge_dict[edge][lane].sort(key=lambda x: x[1])
 
-        for veh_id in self.get_rl_ids():
+        # replace for loop from Daniel 
+        for veh_id in self.get_rl_ids()+ self.get_controlled_ids():
+        #for veh_id in self.get_rl_ids():
             # collect the lane leaders, followers, headways, and tailways for
             # each vehicle
             edge = self.get_edge(veh_id)
