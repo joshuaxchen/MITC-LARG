@@ -192,6 +192,58 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             rewards[rl_id] = reward
         return rewards
 
+    def set_rl_observed(self, rl_id):
+        # Genralize for multi-lanes
+        lane_id=self.k.vehicle.get_lane(rl_id)
+        #lead_id = env.k.vehicle.get_leader(self.veh_id)
+        # Fix the leader to be the leader on the same lane
+        lead_ids = self.k.vehicle.get_lane_leaders(rl_id)
+        lead_id=lead_ids[lane_id]
+
+        if lead_id:
+            self.k.vehicle.set_observed(lead_id)
+        # follower
+        # follow_id = self.k.vehicle.get_follower(rl_id)
+        # Fix the follower to be on the same lane
+
+        follower_ids = self.k.vehicle.get_lane_followers(rl_id)
+        follower_id=follower_ids[lane_id]
+        if follower_id:
+            self.k.vehicle.set_observed(follower_id)
+
+    def set_speed_and_lane_change_modes(self):
+        # update the speed mode for each vehicle in a lane
+        # the vehicles on lane 0 (right lane) is set to 9
+        # the vehicles on lane 1 (left lane) is set to 7 
+        rl_ids=self.k.vehicle.get_rl_ids()
+        for veh_id in self.k.vehicle.get_ids():
+            lane_index= self.k.vehicle.get_lane(veh_id)
+            if veh_id in rl_ids:
+                self.k.vehicle.set_speed_mode(veh_id, 15)
+            elif lane_index==0:
+                self.k.vehicle.set_speed_mode(veh_id, 15)
+            else:
+                self.k.vehicle.set_speed_mode(veh_id, 7)
+
+            if veh_id not in rl_ids and "human_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
+                human_speed_modes=ADDITIONAL_ENV_PARAMS["human_speed_modes"]
+                speed_mode=human_speed_modes[lane_index]
+                self.k.vehicle.set_speed_mode(veh_id, speed_mode)
+            elif veh_id in rl_ids and "rl_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
+                print(lane_index)
+                rl_speed_modes=ADDITIONAL_ENV_PARAMS["rl_speed_modes"]
+                speed_mode=rl_speed_modes[lane_index] 
+                self.k.vehicle.set_speed_mode(veh_id, speed_mode)
+
+            if veh_id not in rl_ids and "human_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
+                human_lane_change_modes=ADDITIONAL_ENV_PARAMS["human_lane_change_modes"]
+                lc_mode=human_lane_change_modes[lane_index]
+                self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+            elif veh_id in rl_ids and "rl_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
+                rl_lane_change_modes=ADDITIONAL_ENV_PARAMS["rl_lane_change_modes"]
+                lc_mode=rl_lane_change_modes[lane_index]
+                self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+
     def additional_command(self):
         """See parent class.
 
@@ -199,26 +251,17 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         """
         # specify observed vehicles
         for rl_id in self.k.vehicle.get_rl_ids():
-            # leader
-            lead_id = self.k.vehicle.get_leader(rl_id)
-            if lead_id:
-                self.k.vehicle.set_observed(lead_id)
-            # follower
-            follow_id = self.k.vehicle.get_follower(rl_id)
-            if follow_id:
-                self.k.vehicle.set_observed(follow_id)
-
-        # TODO: make this flexible
-        # update the speed mode for each vehicle in a lane
-        # the vehicles on lane 0 (right lane) is set to 9
-        # the vehicles on lane 1 (left lane) is set to 7 
-        for veh_id in self.k.vehicle.get_ids():
-            lane_index= self.k.vehicle.get_lane(veh_id)
-            if lane_index==0:
-                self.k.vehicle.set_speed_mode(veh_id, 9)
-            else:
-                self.k.vehicle.set_speed_mode(veh_id, 7)
-
+            ## leader
+            #lead_id = self.k.vehicle.get_leader(rl_id)
+            #if lead_id:
+            #    self.k.vehicle.set_observed(lead_id)
+            ## follower
+            #follow_id = self.k.vehicle.get_follower(rl_id)
+            #if follow_id:
+            #    self.k.vehicle.set_observed(follow_id)
+            self.set_rl_observed(rl_id)
+        self.set_speed_and_lane_change_modes()
+        
 class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         for p in ADDITIONAL_ENV_PARAMS.keys():
@@ -384,6 +427,7 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
 
         Define which vehicles are observed for visualization purposes.
         """
+        self.set_speed_and_lane_change_modes()
         if 'ignore_edges' not in self.env_params.additional_params:
                 super().additional_command()
         else:
@@ -416,13 +460,10 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
                 # specify observed vehicles
                 for rl_id in self.rl_veh:
                     # leader
-                    lead_id = self.k.vehicle.get_leader(rl_id)
-                    if lead_id:
-                        self.k.vehicle.set_observed(lead_id)
-                    # follower
-                    follow_id = self.k.vehicle.get_follower(rl_id)
-                    if follow_id:
-                        self.k.vehicle.set_observed(follow_id)
+                    # lead_id = self.k.vehicle.get_leader(rl_id)
+                    # Genralize for multi-lanes
+                    self.set_rl_observed(rl_id)
+                    
                 #print(self.exiting_rl_veh)
 
 
@@ -510,13 +551,17 @@ class MultiAgentHighwayPOEnvAvgVel(MultiAgentHighwayPOEnv):
         # specify observed vehicles
         for rl_id in self.k.vehicle.get_rl_ids():
             # leader
-            lead_id = self.k.vehicle.get_leader(rl_id)
-            if lead_id:
-                self.k.vehicle.set_observed(lead_id)
-            # follower
-            follow_id = self.k.vehicle.get_follower(rl_id)
-            if follow_id:
-                self.k.vehicle.set_observed(follow_id)
+            #lead_id = self.k.vehicle.get_leader(rl_id)
+            #if lead_id:
+            #    self.k.vehicle.set_observed(lead_id)
+            ## follower
+            #follow_id = self.k.vehicle.get_follower(rl_id)
+            #if follow_id:
+            #    self.k.vehicle.set_observed(follow_id)
+
+            self.set_rl_observed(rl_id)
+
+        self.set_speed_and_lane_change_modes()
 
 
 class MultiAgentHighwayPOEnvLocalReward(MultiAgentHighwayPOEnv):

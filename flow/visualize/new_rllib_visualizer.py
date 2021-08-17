@@ -247,15 +247,27 @@ def reset_inflows(args, flow_params):
         net_params.inflows=inflow
 
     merge_inflow_rate=200
+    # see lane change mode https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html#lane_change_mode_0xb6
+    no_lane_change_mode=512
+    lane_change_mode=1621
     if args.preset_inflow==0:
         # pattern 1: this is a replication of our AAMAS setting where there is no lane change and the rl vehicle is only on the right lane
-        print("begin to set preset inflows")
+        #print("begin to set preset inflows")
+
         vehicles=VehicleParams()            
-        add_vehicles_no_lane_change(vehicles, "human_r", 9, 5)
+        add_vehicles_no_lane_change(vehicles, "human_r", 15, 5)
         add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 6, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 9, 0)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
         flow_params['veh']=vehicles 
+
+        # see speed mode 
+        # https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html#speed_mode_0xb3
+        # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
+        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
+        env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
         inflow = InFlows()
         highway_right_lane=2000
@@ -312,13 +324,18 @@ def reset_inflows(args, flow_params):
         print("set inflow",inflow)
     elif args.preset_inflow==1:
         # pattern 2: this is AAMAS setting with human driver change lanes to escape from right lane
-        print("begin to set preset inflows")
         vehicles=VehicleParams()            
-        add_vehicles_with_lane_change(vehicles, "human_r", 9, 5)
+        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5)
         add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 6, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 9, 0)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
         flow_params['veh']=vehicles 
+
+        # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
+        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_lane_change_modes"]=[lane_change_mode, no_lane_change_mode]
+        env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
         inflow = InFlows()
         highway_right_lane=2000
@@ -372,18 +389,23 @@ def reset_inflows(args, flow_params):
                     depart_speed=10)
 
         net_params.inflows=inflow
-        print("set inflow",inflow)
 
     elif args.preset_inflow==2:
         # Pattern 3: rl vehicles on the left lane but there is human drivers cut in from the right lane.
-        print("begin to set preset inflows")
+
+        #print("begin to set preset inflows")
         vehicles=VehicleParams()            
-        add_vehicles_with_lane_change(vehicles, "human_r", 9, 5)
-        add_vehicles_no_lane_change(vehicles, "human_l", 6, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 6, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 9, 0)
+        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5)
+        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
         flow_params['veh']=vehicles 
 
+        # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
+        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_lane_change_modes"]=[lane_change_mode, no_lane_change_mode]
+        env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
         inflow = InFlows()
         highway_right_lane=2000
@@ -464,7 +486,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles)
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller=SimCarFollowingController#IDMController
+        controller= IDMController #SimCarFollowingController#
 
     # CREATE VEHICLE TYPES AND INFLOWS
     vehicles.add(

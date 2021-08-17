@@ -1205,6 +1205,8 @@ class TraCIVehicle(KernelVehicle):
         # set the speed mode for the vehicle
         self.kernel_api.vehicle.setSpeedMode(veh_id, speed_mode)
 
+    def set_lane_change_mode(self, veh_id, lc_mode):
+        self.kernel_api.vehicle.setLaneChangeMode(veh_id, lc_mode)
 
     def close(self):
         """See parent class."""
