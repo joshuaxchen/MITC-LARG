@@ -125,6 +125,7 @@ class TraCIVehicle(KernelVehicle):
         if next_edge_lane:
             next_edge, next_lane = next_edge_lane[0]
             dist_to_junction = edge_length - this_pos
+            # if the next edge is a junction or the current edge is a junction
             if (next_edge[0] == ":" and dist_to_junction < junc_dist_threshold) or (this_edge[0] == ":"):
                 if len(self.get_lane_leaders(veh_id)) > 0:
                     leaders_and_headways = zip(self.get_lane_leaders(veh_id), self.get_lane_headways(veh_id))
@@ -139,17 +140,38 @@ class TraCIVehicle(KernelVehicle):
             self.__vehicles[veh_id]["headway"] = 1e+3
             self.__vehicles[veh_id]["follower_headway"] = 1e+3
         else:
-            min_gap = self.minGap[self.get_type(veh_id)]
-            self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
-            self.__vehicles[veh_id]["leader"] = headway[0]
+            min_gap = self.minGap[self.get_type(veh_id)] #FIXME what role does min_gap play
+            #min_gap = 0
+            '''
+            if headway[1]>=0:
+                self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
+                self.__vehicles[veh_id]["leader"] = headway[0]
+            
+            else:
+                self.__vehicles[veh_id]["headway"] = 50
+                self.__vehicles[veh_id]["leader"] = None
+            '''
+            # update the leader of current vehicle
+            if headway[1] + min_gap >= 0:
+                self.__vehicles[veh_id]["headway"] = headway[1] + min_gap
+                self.__vehicles[veh_id]["leader"] = headway[0]
+            else:
+                self.__vehicles[veh_id]["leader"] = None
+                self.__vehicles[veh_id]["headway"] = 1e+3
+
+            # update the follower of its leader
             if headway[0] in self.__vehicles:
                 leader = self.__vehicles[headway[0]]
                 # if veh_id is closer from leader than another follower
                 # (in case followers are in different converging edges)
-                if ("follower_headway" not in leader or
-                        headway[1] + min_gap < leader["follower_headway"]):
+                if (("follower_headway" not in leader or
+                        headway[1] + min_gap < leader["follower_headway"]) and
+                        headway[1] + min_gap > 0):
                     leader["follower"] = veh_id
                     leader["follower_headway"] = headway[1] + min_gap
+
+            # TODO: update the observed
+
 
 
     def update(self, reset):
@@ -1101,6 +1123,7 @@ class TraCIVehicle(KernelVehicle):
         """
         for veh_id in self.get_rl_ids():
             try:
+                # print("set red for ", veh_id)
                 # color rl vehicles red
                 self.set_color(veh_id=veh_id, color=RED)
             except (FatalTraCIError, TraCIException) as e:
@@ -1178,6 +1201,11 @@ class TraCIVehicle(KernelVehicle):
         else:
             return error
     
+    def set_speed_mode(self, veh_id, speed_mode):
+        # set the speed mode for the vehicle
+        self.kernel_api.vehicle.setSpeedMode(veh_id, speed_mode)
+
+
     def close(self):
         """See parent class."""
         if self.kernel_api:

@@ -469,7 +469,7 @@ class IDMController(BaseController):
         """See parent class."""
         # solve leader issues near junctions using get_lane_leaders()
         # add from Daniel
-        env.k.vehicle.update_leader_if_near_junction(self.veh_id, junc_dist_threshold=150)
+        env.k.vehicle.update_leader_if_near_junction(self.veh_id, junc_dist_threshold=1000)#150)
 
 
         v = env.k.vehicle.get_speed(self.veh_id)

@@ -25,13 +25,13 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 #	> ../../exp_results/human_mor/temp.txt 
 
 MAIN_INFLOW=2000
-MERGE_INFLOW=300
+MERGE_INFLOW=400
 AVP=10
 J=0
 mkdir ${WORKING_DIR}
-for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for MAIN_INFLOW in 3000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for AVP in 10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+	for AVP in 0 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 	do
 		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -42,8 +42,10 @@ do
 			--seed_dir $FLOW_DIR \
 			--lateral_resolution 3.2 \
 			--render_mode sumo_gui \
-			--disable_rl_lane_change \
-			--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
+			--preset_inflow 2
+			# --disable_rl_lane_change \
+			# --rl_right \
+			#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
 			#--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}
 			#--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
 			# > ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 

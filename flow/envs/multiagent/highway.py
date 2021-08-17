@@ -208,6 +208,17 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             if follow_id:
                 self.k.vehicle.set_observed(follow_id)
 
+        # TODO: make this flexible
+        # update the speed mode for each vehicle in a lane
+        # the vehicles on lane 0 (right lane) is set to 9
+        # the vehicles on lane 1 (left lane) is set to 7 
+        for veh_id in self.k.vehicle.get_ids():
+            lane_index= self.k.vehicle.get_lane(veh_id)
+            if lane_index==0:
+                self.k.vehicle.set_speed_mode(veh_id, 9)
+            else:
+                self.k.vehicle.set_speed_mode(veh_id, 7)
+
 class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         for p in ADDITIONAL_ENV_PARAMS.keys():
