@@ -79,7 +79,7 @@ HORIZON = 2000
 # number of parallel workers
 N_CPUS = 40
 if args.cpu:
-    NUM_CPUS=args.cpu
+    N_CPUS=args.cpu
 
 NUM_RL = 10
 if args.num_rl:
