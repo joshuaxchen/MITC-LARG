@@ -64,6 +64,8 @@ parser.add_argument(
         nargs="+",
         help="This is often used for evaluating human baseline")
 
+parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
+
 args=parser.parse_args()
 
 # SET UP PARAMETERS FOR THE SIMULATION
@@ -76,6 +78,8 @@ N_ROLLOUTS = 30
 HORIZON = 2000
 # number of parallel workers
 N_CPUS = 40
+if args.cpu:
+    NUM_CPUS=args.cpu
 
 NUM_RL = 10
 if args.num_rl:
