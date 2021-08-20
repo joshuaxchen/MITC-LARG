@@ -103,6 +103,20 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                 self.k.vehicle.apply_acceleration(rl_id, accel)
                 # self.k.vehicle.apply_lane_change(rl_id, lane_change_action)
 
+    def get_leader_follower_headway_from_same_lane(self, veh_id):
+        lane_id=self.k.vehicle.get_lane(veh_id)
+        lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+        lead_id=lead_ids[lane_id]
+
+        follow_ids = self.k.vehicle.get_lane_followers(veh_id)
+        follow_id=follow_ids[lane_id]
+
+        headways=self.k.vehicle.get_lane_headways(veh_id)
+        h=headways[lane_id] 
+
+        return lead_id, follow_id, h
+
+
     def get_state(self):
         """See class definition."""
         obs = {}
@@ -114,8 +128,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         max_length = 1000.0
         for rl_id in self.k.vehicle.get_rl_ids():
             this_speed = self.k.vehicle.get_speed(rl_id)
-            lead_id = self.k.vehicle.get_leader(rl_id)
-            follower = self.k.vehicle.get_follower(rl_id)
+            #lead_id = self.k.vehicle.get_leader(rl_id)
+            #follower = self.k.vehicle.get_follower(rl_id)
+            lead_id, follower, h=self.get_leader_follower_headway_from_same_lane(rl_id)
 
             if lead_id in ["", None]:
                 # in case leader is not visible
@@ -123,7 +138,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                 lead_head = max_length
             else:
                 lead_speed = self.k.vehicle.get_speed(lead_id)
-                lead_head = self.k.vehicle.get_headway(rl_id)
+                # lead_head = self.k.vehicle.get_headway(rl_id)
+                lead_head=h
 
             if follower in ["", None]:
                 # in case follower is not visible
@@ -131,7 +147,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                 follow_head = max_length
             else:
                 follow_speed = self.k.vehicle.get_speed(follower)
-                follow_head = self.k.vehicle.get_headway(follower)
+                #follow_head = self.k.vehicle.get_headway(follower)
+                _, _, follow_head=self.get_leader_follower_headway_from_same_lane(follower)
             
             observation = np.array([
                 this_speed / max_speed,
@@ -986,7 +1003,6 @@ class MultiAgentHighwayPOEnvMerge4CollaborateAdvantage(MultiAgentHighwayPOEnvMer
         for rl_id in self.k.vehicle.get_rl_ids():
             rewards[rl_id] = reward
         return rewards
-
 
 
 

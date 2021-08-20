@@ -9,7 +9,10 @@ export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 MERGE_INFLOW=200
 
 
-python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py --exp_folder_mark yulin
+python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py \
+	--exp_folder_mark yulin0 \
+	--lateral_resolution 3.2 \
+	--preset_inflow 0
 #python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_merge4_Merge4_Collaborate_lrschedule.py
 #--exp_folder_mark yulin
 

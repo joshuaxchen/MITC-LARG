@@ -41,8 +41,8 @@ do
 			$CHCKPOINT \
 			--seed_dir $FLOW_DIR \
 			--lateral_resolution 3.2 \
-			--render_mode sumo_gui \
-			--preset_inflow 2
+			--render_mode sumo_gui 
+			# --preset_inflow 0
 			# --disable_rl_lane_change \
 			# --rl_right \
 			#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 

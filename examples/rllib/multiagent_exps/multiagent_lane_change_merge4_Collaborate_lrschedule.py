@@ -6,6 +6,7 @@ highway with ramps network.
 import json
 import ray
 import argparse
+import sys
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -29,6 +30,7 @@ from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
+from flow.visualize.visualizer_util import reset_inflows
 
 EXAMPLE_USAGE = """
 example usage:
@@ -51,7 +53,16 @@ parser.add_argument(
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
 parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
+parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
+parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
 #parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
+parser.add_argument('--random_inflow', action='store_true')
+parser.add_argument(
+        '--main_merge_human_inflows',
+        type=int,
+        nargs="+",
+        help="This is often used for evaluating human baseline")
 
 args=parser.parse_args()
 
@@ -72,7 +83,7 @@ if args.num_rl:
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
-MERGE_RATE = 300
+MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1 
 if args.avp:
@@ -88,99 +99,20 @@ additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 2
 additional_net_params["pre_merge_length"] = 500
 
-
-
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
-if args.handset_inflow:
-    #additional_env_params['handset_inflow']=args.handset_inflow
-    FLOW_RATE=args.handset_inflow[0]+args.handset_inflow[1] 
-    print("main flow rate:",FLOW_RATE)
 
-
-# CREATE VEHICLE TYPES AND INFLOWS
-vehicles = VehicleParams()
-inflows = InFlows()
-
-# human vehicles
-vehicles.add(
-    veh_id="human",
-    acceleration_controller=(IDMController, {}),
-    lane_change_controller=(SimLaneChangeController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=6,  # for safer behavior at the merges
-        #tau=1.5  # larger distance between cars
-    ),
-    lane_change_params=SumoLaneChangeParams(
-        model="SL2015", #"SL2015", #LC2013
-      # Define a lane changing mode that will allow lane changes
-      # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
-      # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
-      lane_change_mode=1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-      lc_speed_gain=1000000,
-      lc_pushy=1, #0.5, #1,
-      lc_assertive=5, #20,
-      # the following two replace default values which are not read well by xml parser
-      lc_impatience=1e-8,
-      lc_time_to_impatience=1e12
-     ), 
-    num_vehicles=5
-    )
-
-# autonomous vehicles
-vehicles.add(
-    veh_id="rl",
-    acceleration_controller=(RLController, {}),
-    lane_change_controller=(SimLaneChangeController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=6,
-    ),
-    lane_change_params=SumoLaneChangeParams(
-        model="SL2015", #"SL2015", #LC2013
-      # Define a lane changing mode that will allow lane changes
-      # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
-      # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
-      lane_change_mode=512, #1621,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-      lc_speed_gain=1000000,
-      lc_pushy=0, #0.5, #1,
-      lc_assertive=5, #20,
-      # the following two replace default values which are not read well by xml parser
-      lc_impatience=1e-8,
-      lc_time_to_impatience=1e12,
-      lc_keep_right=1000000
-     ),
-    num_vehicles=0)
-
-# Vehicles are introduced from both sides of merge, with RL vehicles entering
-# from the highway portion as well
-inflow = InFlows()
-if 1-RL_PENETRATION>0:
-    inflow.add(
-        veh_type="human",
-        edge="inflow_highway",
-        vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
-        depart_lane="free",
-        depart_speed=10)
-if RL_PENETRATION>0:
-    inflow.add(
-        veh_type="rl",
-        edge="inflow_highway",
-        vehs_per_hour=RL_PENETRATION * FLOW_RATE,
-        depart_lane="free",
-        depart_speed=10)
-inflow.add(
-    veh_type="human",
-    edge="inflow_merge",
-    vehs_per_hour=MERGE_RATE,
-    depart_lane="free",
-    depart_speed=7.5)
 
 mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
 exp_tag_str='multiagent'+mark+'_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+
+lateral_resolution=3.2
+if args.lateral_resolution:
+        lateral_resolution=args.lateral_resolution
 
 flow_params = dict(
     exp_tag=exp_tag_str,
@@ -198,7 +130,7 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
-        lateral_resolution=0.25, # determines lateral discretization of lanes
+        lateral_resolution=lateral_resolution, # determines lateral discretization of lanes
         render=False,
     ),
 
@@ -218,14 +150,15 @@ flow_params = dict(
     ),
 
     net=NetParams(
-        inflows=inflow,
+        inflows=None,
         additional_params=additional_net_params,
     ),
 
-    veh=vehicles,
+    veh=None,
     initial=InitialConfig(),
 )
 
+reset_inflows(args, flow_params)
 
 # SET UP EXPERIMENT
 
