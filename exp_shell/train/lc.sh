@@ -8,15 +8,15 @@ export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 # Even vehicle placement
 MERGE_INFLOW=200
 
-inflow_type=1
+inflow_type=0
 python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py \
 	--exp_folder_mark yulin${inflow_type} \
 	--lateral_resolution 3.2 \
 	--cpu 30 \
 	--to_probability \
-	--preset_inflow ${inflow_type}
+	--preset_inflow ${inflow_type} &
 
-inflow_type=2
+inflow_type=1
 python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py \
 	--exp_folder_mark yulin${inflow_type} \
 	--lateral_resolution 3.2 \

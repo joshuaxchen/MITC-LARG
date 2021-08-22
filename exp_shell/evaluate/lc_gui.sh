@@ -4,7 +4,7 @@ TRAIN_DIR=/home/users/flow_user/ray_results/multiagent_yulin_lanechange_merge4_F
 
 TRAIN_DIR1=/home/users/flow_user/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_352ab_00000_0_2021-08-06_22-47-37/
 
-TRAIN_DIR2=/home/users/flow_user/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_7f52b_00000_0_2021-08-07_08-08-02/
+TRAIN_DIR2=${HOME}/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_7f52b_00000_0_2021-08-07_08-08-02/
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
@@ -41,8 +41,13 @@ do
 			$CHCKPOINT \
 			--seed_dir $FLOW_DIR \
 			--lateral_resolution 3.2 \
-			--render_mode sumo_gui 
-			# --preset_inflow 0
+			--render_mode no_render \
+			--human_inflows 1800 2000 \
+			--rl_inflows 200 0 \
+			--human_lane_change 0 0 \
+			--rl_lane_change 0 0 \
+			--merge_inflow 200 
+			#--preset_inflow 0
 			# --disable_rl_lane_change \
 			# --rl_right \
 			#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 

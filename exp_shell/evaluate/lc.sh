@@ -2,10 +2,14 @@ HUMAN_DIR=/home/users/flow_user/ray_results/human_multiagent_highway_merge4_MOR_
 
 TRAIN_DIR=/home/users/flow_user/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_6e090_00000_0_2021-08-05_18-04-04/
 
+TRAIN_DIR2=/home/users/yulin/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_7f52b_00000_0_2021-08-07_08-08-02/
+
+Preset_DIR0=${HOME}/ray_results/multiagent_yulin0_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_bc799_00000_0_2021-08-19_22-07-21
+
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/lane_change
+WORKING_DIR=$EXP_FOLDER/human_lane_change
 
 
 CHCKPOINT=500
@@ -21,30 +25,31 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 #	> ../../exp_results/human_mor/temp.txt 
 
 MAIN_INFLOW=2000
-MERGE_INFLOW=200
+MERGE_INFLOW=300
 AVP=10
 J=0
 mkdir ${WORKING_DIR}
-for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+
+for AVP in 0 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 do
-	for AVP in 10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
-	do
-		#WORKING_DIR=$EXP_FOLDER/
-		python3 $VISUALIZER \
-			$TRAIN_DIR \
-			$CHCKPOINT \
-			--seed_dir $FLOW_DIR \
-			--render_mode sumo_gui \
-			--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}
-			#--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
-			# > ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
-		let J=J+1
-		if ((J == 20)); then
-			wait
-			let J=0
-			echo "another batch"
-		fi
-	done
+	#let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+	#let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+	#WORKING_DIR=$EXP_FOLDER/
+	python3 $VISUALIZER \
+		$TRAIN_DIR2 \
+		$CHCKPOINT \
+		--seed_dir $FLOW_DIR \
+		--lateral_resolution 3.2 \
+		--render_mode no_render \
+		--preset_inflow 0 \
+		> ${WORKING_DIR}/EVAL_2000_200.txt &
+		# --history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+	let J=J+1
+	if ((J == 20)); then
+		wait
+		let J=0
+		echo "another batch"
+	fi
 done
 
 wait 

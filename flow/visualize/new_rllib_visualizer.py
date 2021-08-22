@@ -277,7 +277,6 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     env_params = flow_params['env']
     env_params.restart_instance = True
     net_params=flow_params['net']
-    veh_params=flow_params['veh'] 
 
 
     if args.highway_len and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
@@ -287,7 +286,8 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
 
     # handset inflows, reset main merge inflows for human baseline, or convert inflows to probabaility depending on user input 
     reset_inflows(args, flow_params)
-
+    #print(flow_params['net'].inflows.get())
+    
     if args.policy_dir is not None:
         accel_result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
@@ -740,9 +740,11 @@ def create_parser():
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--history_file_name', type=str, help='input the name of the history file name') 
     parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
-    parser.add_argument('--rl_right', action='store_true', help="Set the vehicle to right lane")
-    parser.add_argument('--rl_left', action='store_true', help="Set the vehicle to left lane")
-
+    parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
+    parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
+    parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
+    parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
+    parser.add_argument('--merge_inflow', type=int, help='the rl inflows for both lanes.') 
     return parser
 
 from subprocess import check_output
