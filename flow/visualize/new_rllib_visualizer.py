@@ -743,8 +743,9 @@ def create_parser():
     parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
     parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
     parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
-    parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
-    parser.add_argument('--merge_inflow', type=int, help='the rl inflows for both lanes.') 
+    parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
+    parser.add_argument('--merge_inflow', type=int, help='merge inflow.') 
+    parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
     return parser
 
 from subprocess import check_output

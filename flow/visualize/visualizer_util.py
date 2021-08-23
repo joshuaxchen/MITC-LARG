@@ -6,7 +6,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.controllers import SimLaneChangeController
 import sys
 
-def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles):                
+def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, aggressive):                
     controller=None
     if "rl" in veh_type:
         controller=RLController
@@ -25,22 +25,22 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles)
             model="SL2015", #"SL2015", #LC2013
           lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
           lc_speed_gain=1000000,
-          lc_pushy=1, #0.5, #1,
-          lc_assertive=5, #20,
-          lc_impatience=1e-8,
+          lc_pushy=aggressive, #0.5, #1,
+          lc_assertive=1, #5 #20,
+          lc_impatience=0, #1e-8,
           lc_time_to_impatience=1e12
          ), 
         num_vehicles=num_vehicles
         )
 
     #print(net_params.inflows)
-def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles):
-    add_vehicles(vehicles, veh_type, 512, speed_mode, num_vehicles)
+def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive):
+    add_vehicles(vehicles, veh_type, 512, speed_mode, num_vehicles, 0)
 
-def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles):
-    add_vehicles(vehicles, veh_type, 1621, speed_mode, num_vehicles)
+def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive):
+    add_vehicles(vehicles, veh_type, 1621, speed_mode, num_vehicles, aggressive)
 
-def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change):
+def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change, aggressive):
     # rl_inflows: [0, 0] for right and left lanes
     # rl_lane_change: [0, 0] for right and left lanes
     # human_inflows: [2000, 2000] for right and left lanes
@@ -53,7 +53,7 @@ def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_la
             rl_veh_left_or_right+= 2**i
         if rl_lane_change[i]>0:
             rl_veh_lane_change+= 2**i
-    print("rl_veh_left_or_right", rl_veh_left_or_right)
+    #print("rl_veh_left_or_right", rl_veh_left_or_right)
 
     human_veh_left_or_right=0
     human_veh_lane_change=0
@@ -62,28 +62,30 @@ def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_la
             human_veh_left_or_right+= 2**i
         if human_lane_change[i]>0:
             human_veh_lane_change+= 2**i
-    print("human_veh_left_or_right", human_veh_left_or_right)
+    #print("human_veh_left_or_right", human_veh_left_or_right)
 
-    human_names=add_specified_vehicles(vehicle_params, edge+"_human", human_veh_left_or_right, human_veh_lane_change)
-    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl", rl_veh_left_or_right, rl_veh_lane_change)
-  
-    for i in range(0, len(rl_inflows)):
-        if i<len(rl_names):
-            veh_type=rl_names[i]
-        else:
-            veh_type=rl_names[-1]
-        if veh_type is None:
-            continue
-        add_specified_inflow(inflows, veh_type, edge, i, rl_inflows[i])
+    human_names=add_specified_vehicles(vehicle_params, edge+"_human", human_veh_left_or_right, human_veh_lane_change, aggressive)
+    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl", rl_veh_left_or_right, rl_veh_lane_change, aggressive)
 
-    for i in range(0, len(human_inflows)):
-        if i<len(human_names):
-            veh_type=human_names[i]
-        else:
-            veh_type=human_names[-1]
-        if veh_type is None:
-            continue
-        add_specified_inflow(inflows, veh_type, edge, i, human_inflows[i])
+    if rl_veh_left_or_right>0: 
+        for i in range(0, len(rl_inflows)):
+            if i<len(rl_names):
+                veh_type=rl_names[i]
+            else:
+                veh_type=rl_names[-1]
+            if veh_type is None:
+                continue
+            add_specified_inflow(inflows, veh_type, edge, i, rl_inflows[i])
+
+    if human_veh_left_or_right>0:
+        for i in range(0, len(human_inflows)):
+            if i<len(human_names):
+                veh_type=human_names[i]
+            else:
+                veh_type=human_names[-1]
+            if veh_type is None:
+                continue
+            add_specified_inflow(inflows, veh_type, edge, i, human_inflows[i])
 
   
 def add_specified_inflow(inflows, veh_type, edge, lane_index, inflow_rate):
@@ -103,7 +105,7 @@ def add_specified_inflow(inflows, veh_type, edge, lane_index, inflow_rate):
         depart_speed=7.5
     inflows.add(veh_type=veh_type, edge=edge, vehs_per_hour=inflow_rate, depart_lane=lane_index, depart_speed=depart_speed)
 
-def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, veh_lane_change):
+def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, veh_lane_change, aggressive):
     # This is for two-lane case, should be able to be generalized
     # veh_right_left_or_both: 
     #   1 (01) - veh right (the first lane)
@@ -155,7 +157,7 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         elif "rl" in veh_name:
             speed_mode=15
             veh_num=0
-        operator(vehicle_params, veh_name, speed_mode, veh_num)
+        operator(vehicle_params, veh_name, speed_mode, veh_num, aggressive)
     return veh_names
     
 def add_preset_inflows(inflow_type, flow_params):
@@ -166,15 +168,16 @@ def add_preset_inflows(inflow_type, flow_params):
     env_params = flow_params['env']
     net_params=flow_params['net']
 
+    aggressive=1
     if inflow_type==0:
         # pattern 1: this is a replication of our AAMAS setting where there is no lane change and the rl vehicle is only on the right lane
         #print("begin to set preset inflows")
 
         vehicles=VehicleParams()            
-        add_vehicles_no_lane_change(vehicles, "human_r", 15, 5)
-        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
+        add_vehicles_no_lane_change(vehicles, "human_r", 15, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0, aggressive)
         flow_params['veh']=vehicles 
 
         # see speed mode 
@@ -241,10 +244,10 @@ def add_preset_inflows(inflow_type, flow_params):
     elif inflow_type==1:
         # pattern 2: this is AAMAS setting with human driver change lanes to escape from right lane
         vehicles=VehicleParams()            
-        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5)
-        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
+        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0, aggressive)
         flow_params['veh']=vehicles 
 
         # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
@@ -311,10 +314,10 @@ def add_preset_inflows(inflow_type, flow_params):
 
         #print("begin to set preset inflows")
         vehicles=VehicleParams()            
-        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5)
-        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "human", 7, 5)
-        add_vehicles_no_lane_change(vehicles, "rl", 15, 0)
+        add_vehicles_with_lane_change(vehicles, "human_r", 15, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "human", 7, 5, aggressive)
+        add_vehicles_no_lane_change(vehicles, "rl", 15, 0, aggressive)
         flow_params['veh']=vehicles 
 
         # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
@@ -484,7 +487,7 @@ def reset_inflows(args, flow_params):
     if args.preset_inflow is not None:
         add_preset_inflows(args.preset_inflow, flow_params)
 
-    if args.human_inflows and args.rl_inflows and args.rl_lane_change and args.human_lane_change and args.merge_inflow:
+    if args.human_inflows and args.rl_inflows and args.rl_lane_change and args.human_lane_change and args.merge_inflow and args.aggressive:
         # check whether human inflows only contains 0 or 1
         for e in args.human_lane_change+args.rl_lane_change:
             if e not in [0,1]:
@@ -494,8 +497,10 @@ def reset_inflows(args, flow_params):
         inflows = InFlows()
 
         veh_params=VehicleParams()
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change)
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", [], [], [args.merge_inflow], [0])
+        print("aggressive", args.aggressive)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.aggressive)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", [], [], [args.merge_inflow], [0], args.aggressive)
+
         #print("rl_inflows", args.rl_inflows)
         #print("rl_lane_change", args.rl_lane_change)
         #print("human_inflows", args.human_inflows)
@@ -505,9 +510,11 @@ def reset_inflows(args, flow_params):
         net_params.inflows=inflows
         flow_params['net']=net_params
         flow_params['veh']=veh_params
+        #print("lane change params:")
         #for veh_id, dict_value in veh_params.type_parameters.items():
-        #    print(veh_id, dict_value['car_following_params'].speed_mode)
-        #    print(veh_id, dict_value['lane_change_params'].lane_change_mode)
+        #    #print(veh_id, dict_value['car_following_params'].speed_mode)
+        #    #print(veh_id, dict_value['lane_change_params'].lane_change_mode)
+        #    print(veh_id, dict_value['lane_change_params'].controller_params['lcPushy'])
     # convert all inflows to probability
     net_params=flow_params['net']
     if args.to_probability:
