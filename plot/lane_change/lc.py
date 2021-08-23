@@ -115,7 +115,7 @@ def plot_against_aggressive(summary):
     xlabel="Aggressiveness" 
     ylabel="Outflow" 
     plot=PlotWriter(xlabel, ylabel) 
-
+    plot.add_human=False
     for i in range(0, len(data)):
         data[i].sort()
         plot.add_plot("Setting_%d" % i, data[i])
