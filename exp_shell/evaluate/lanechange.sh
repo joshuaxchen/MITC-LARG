@@ -37,62 +37,62 @@ J=0
 WORKING_DIR=$EXP_FOLDER/preset_0
 mkdir ${WORKING_DIR}
 
-for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
-do
-	for AVP in 10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
-	do
-		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-
-		for RL_RIGHT_LEFT in 0
-		do
-			if ((RL_RIGHT_LEFT == 0)); then
-				RL_INFLOW_LEFT=0
-				RL_INFLOW_RIGHT=${MAIN_RL_INFLOW}
-				HUMAN_INFLOW_LEFT=${MAIN_INFLOW}
-				HUMAN_INFLOW_RIGHT=${MAIN_HUMAN_INFLOW}
-			else # otherwise, rl vehicles on the left
-				RL_INFLOW_LEFT=${MAIN_RL_INFLOW}
-				RL_INFLOW_RIGHT=0
-				HUMAN_INFLOW_LEFT=${MAIN_HUMAN_INFLOW}
-				HUMAN_INFLOW_RIGHT=${MAIN_INFLOW}
-			fi
-			echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
-			echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
-
-			for RIGHT_HUMAN_LANE_CHANGE in 0
-			do 
-				for AGGRESSIVE in 0.2 0.4 0.6 0.8 1
-				do
-					for ASSERTIVE in 0.5 1 #0.4 0.6 0.8 1
-					do
-						python3 $VISUALIZER \
-							$PRESET_0 \
-							$CHCKPOINT \
-							--seed_dir $FLOW_DIR \
-							--lateral_resolution 3.2 \
-							--render_mode no_render \
-							--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
-							--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
-							--human_lane_change ${RIGHT_HUMAN_LANE_CHANGE} 0 \
-							--rl_lane_change 0 0 \
-							--merge_inflow ${MERGE_INFLOW} \
-							--aggressive ${AGGRESSIVE} \
-							--assertive ${ASSERTIVE} \
-							>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}.txt &
-
-						let J=J+1
-						if ((J == 20)); then
-							wait
-							let J=0
-							echo "another batch"
-						fi
-					done
-				done
-			done
-		done
-	done
-done
+#for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+#do
+#	for AVP in 10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+#	do
+#		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+#		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+#
+#		for RL_RIGHT_LEFT in 0
+#		do
+#			if ((RL_RIGHT_LEFT == 0)); then
+#				RL_INFLOW_LEFT=0
+#				RL_INFLOW_RIGHT=${MAIN_RL_INFLOW}
+#				HUMAN_INFLOW_LEFT=${MAIN_INFLOW}
+#				HUMAN_INFLOW_RIGHT=${MAIN_HUMAN_INFLOW}
+#			else # otherwise, rl vehicles on the left
+#				RL_INFLOW_LEFT=${MAIN_RL_INFLOW}
+#				RL_INFLOW_RIGHT=0
+#				HUMAN_INFLOW_LEFT=${MAIN_HUMAN_INFLOW}
+#				HUMAN_INFLOW_RIGHT=${MAIN_INFLOW}
+#			fi
+#			echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
+#			echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
+#
+#			for RIGHT_HUMAN_LANE_CHANGE in 0
+#			do 
+#				for AGGRESSIVE in 0.2 0.4 0.6 0.8 1
+#				do
+#					for ASSERTIVE in 0.5 1 #0.4 0.6 0.8 1
+#					do
+#						python3 $VISUALIZER \
+#							$PRESET_0 \
+#							$CHCKPOINT \
+#							--seed_dir $FLOW_DIR \
+#							--lateral_resolution 3.2 \
+#							--render_mode no_render \
+#							--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
+#							--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
+#							--human_lane_change ${RIGHT_HUMAN_LANE_CHANGE} 0 \
+#							--rl_lane_change 0 0 \
+#							--merge_inflow ${MERGE_INFLOW} \
+#							--aggressive ${AGGRESSIVE} \
+#							--assertive ${ASSERTIVE} \
+#							>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}.txt &
+#
+#						let J=J+1
+#						if ((J == 20)); then
+#							wait
+#							let J=0
+#							echo "another batch"
+#						fi
+#					done
+#				done
+#			done
+#		done
+#	done
+#done
 
 WORKING_DIR=$EXP_FOLDER/preset_1
 mkdir ${WORKING_DIR}
@@ -120,7 +120,7 @@ do
 			echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
 			echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-			for RIGHT_HUMAN_LANE_CHANGE in 0
+			for RIGHT_HUMAN_LANE_CHANGE in 1
 			do 
 				for AGGRESSIVE in 0.2 0.4 0.6 0.8 1
 				do
@@ -164,7 +164,7 @@ do
 		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 
-		for RL_RIGHT_LEFT in 0
+		for RL_RIGHT_LEFT in 1
 		do
 			if ((RL_RIGHT_LEFT == 0)); then
 				RL_INFLOW_LEFT=0
@@ -180,7 +180,7 @@ do
 			echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
 			echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-			for RIGHT_HUMAN_LANE_CHANGE in 0
+			for RIGHT_HUMAN_LANE_CHANGE in 1
 			do 
 				for AGGRESSIVE in 0.2 0.4 0.6 0.8 1
 				do
