@@ -66,26 +66,30 @@ do
 			do 
 				for AGGRESSIVE in 0.2 #0.4 0.6 0.8 1
 				do
-					python3 $VISUALIZER \
-						$PRESET_1 \
-						$CHCKPOINT \
-						--seed_dir $FLOW_DIR \
-						--lateral_resolution 3.2 \
-						--render_mode sumo_gui \
-						--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
-						--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
-						--human_lane_change ${RIGHT_HUMAN_LANE_CHANGE} 0 \
-						--rl_lane_change 0 0 \
-						--merge_inflow ${MERGE_INFLOW} \
-						--aggressive ${AGGRESSIVE} 
-						#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}.txt &
+					for ASSERTIVE in 5 #0.4 0.6 0.8 1
+					do
+						python3 $VISUALIZER \
+							$PRESET_1 \
+							$CHCKPOINT \
+							--seed_dir $FLOW_DIR \
+							--lateral_resolution 3.2 \
+							--render_mode sumo_gui \
+							--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
+							--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
+							--human_lane_change ${RIGHT_HUMAN_LANE_CHANGE} 0 \
+							--rl_lane_change 0 0 \
+							--merge_inflow ${MERGE_INFLOW} \
+							--aggressive ${AGGRESSIVE} \
+							--assertive ${ASSERTIVE} 
+							#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}.txt &
 
-					let J=J+1
-					if ((J == 20)); then
-						wait
-						let J=0
-						echo "another batch"
-					fi
+						let J=J+1
+						if ((J == 20)); then
+							wait
+							let J=0
+							echo "another batch"
+						fi
+					done
 				done
 			done
 		done
