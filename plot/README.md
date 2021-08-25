@@ -1,0 +1,1 @@
+# Tikz_plot.py is used to generate a tikz plot from template.tex. Examples can be found in each subdirectories, where each code read the evalution result files and use tikz_plot.py to generate the plot.

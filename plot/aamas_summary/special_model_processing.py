@@ -1,6 +1,8 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Inflow"
+random_human_only=True
+
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -62,6 +64,8 @@ def retrieve_special_exp_data(working_dir):
         model_exp_dict[folder_name]=dict()
         for file_name in files_in_each_folder[folder_name]:
             if file_name=='summary.txt':
+                continue
+            if "_200_" not in file_name:
                 continue
             fname=os.path.join(folder_path, file_name)
             data=LastNlines(fname, 6, 2)
@@ -325,12 +329,13 @@ def plot_special_model_flow(summary):
                     var=float(mean_var_list[1].strip())
                     data_map[legend_label].append((int(eval_flow_merge_avp_list[0]), mean, var))
     xlabel="Evaluated Main InFlow" 
-    ylabel="Outflow" 
+    ylabel=attr_name #"Outflow" 
     plot=PlotWriter(xlabel, ylabel) 
     #print(data_map.keys())
     for model_key in avp30_models+avp80_models:            
-        #if model_key.startswith("1650_200_30") or model_key.startswith("1850_200_80"):
-        #    continue
+        if random_human_only:
+            if model_key.startswith("1650_200") or model_key.startswith("1850_200"):
+                continue
         for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
             legend_label=model_key+"_"+str(avp)
             data_map[legend_label].sort()
@@ -369,11 +374,12 @@ def plot_special_model_av(summary):
                     var=float(mean_var_list[1].strip())
                     data_map[legend_label].append((int(eval_flow_merge_avp_list[1]), mean, var))
     xlabel="Evaluated AVP" 
-    ylabel="Outflow" 
+    ylabel=attr_name #"Outflow" 
     plot=PlotWriter(xlabel, ylabel) 
     for model_key in avp30_models+avp80_models:            
-        #if model_key.startswith("1650_200_30") or model_key.startswith("1850_200_80"):
-            #continue
+        if random_human_only:
+            if model_key.startswith("1650_200") or model_key.startswith("1850_200"):
+                continue
         for flow in eval_flows:
             legend_label=model_key+"_"+str(flow)
             data_map[legend_label].sort()
@@ -440,7 +446,7 @@ def plot_special_random_even_models(random_data, even_data):
                     data_map[legend_label].append((int(eval_flow_merge_avp_list[1]), mean, var))
 
     xlabel="Evaluated AVP" 
-    ylabel="Outflow" 
+    ylabel=attr_name
     plot=PlotWriter(xlabel, ylabel) 
     for model_key in random_models:            
     # first order the model

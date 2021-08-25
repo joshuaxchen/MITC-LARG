@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Inflow"
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -28,18 +28,10 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-special_random_evaluation_name="special_models_random"
-special_even_evaluation_name="special_models_even"
-special_evaluation_name="special_models"
-special_random_models_dir=os.path.join("..","..","exp_results", special_random_evaluation_name) 
-special_even_models_dir=os.path.join("..","..","exp_results", special_even_evaluation_name) 
+working_dir=os.path.join("..","..","exp_results","lane_change_1") 
 
-working_dir=os.path.join("..","..","exp_results","lane_change") 
-
-eval_flows=[1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
 
 def retrive_evaluations(working_dir):
-    print(working_dir)
     files=obtain_file_names(working_dir)
     model_exp_dict=dict()
     for file_name in files:
@@ -47,9 +39,9 @@ def retrive_evaluations(working_dir):
             continue
         fname=os.path.join(working_dir, file_name)
         data=LastNlines(fname, 6, 2)
-        file_name_breakdown=file_name.split(".")[0].split("_")
-        main_merge_avp_rlrightleft_righthumanlc_aggressive_text="_".join(file_name_breakdown[1:])
-        eval_label=main_merge_avp_rlrightleft_righthumanlc_aggressive_text
+        file_name_breakdown=file_name.split(".txt")[0].split("_")
+        eval_label="_".join(file_name_breakdown[1:])
+        #eval_label=main_merge_avp_rlrightleft_righthumanlc_aggressive_text
         exp_summary=dict()
         print(working_dir, file_name)
         for attr_value in data:
@@ -66,32 +58,6 @@ def extract_mean_var(e_data, attr_name):
     var=float(mean_var_list[1].strip())
     return (mean, var)
 
-def sort_model_keys(category_summary):
-    model_exp_list=list()
-    #print("category_summary keys:", category_summary.keys())
-    for model_key, model_eval_value in category_summary.items():
-        model_int_label_list=list()
-        for label in model_key.split("_"):
-            model_int_label_list.append(int(label))
-        model_exp_list.append((model_int_label_list[0], \
-                model_int_label_list[1], model_int_label_list[2], \
-                model_eval_value))
-    model_exp_list.sort() 
-    # add each model to plot 
-    sorted_key_list=list()
-    for k1, k2, k3, m in model_exp_list:
-        model_key="%d_%d_%d" % (k1, k2, k3)
-        sorted_key_list.append(model_key) 
-    return sorted_key_list
-
-def extract_sorted_data(model_data):
-    sorted_e_data=list()
-    for e_key, e_data in model_data.items():
-        (mean, var)=extract_mean_var(e_data, attr_name)
-        sorted_e_data.append((int(e_key), mean, var)) 
-    sorted_e_data.sort()
-    return sorted_e_data
-
 def plot_against_aggressive(summary):
     trained_models=summary.keys
     setting_0="0_0" # rl on the right, with human no lane change
@@ -101,28 +67,101 @@ def plot_against_aggressive(summary):
     settings=[setting_0, setting_1, setting_2]
     inflow_desc="2000_200_10"
      
-    data=[[], [], []]
-    for setting in settings:
+    data=dict()
+    for i in range(0, len(settings)):
+        setting=settings[i]
         for model_key, evaluate in summary.items():
+            model_index=int(model_key[-1])
+            print(i, model_index)
+            if i !=model_index:
+                continue
             for eval_label, value in evaluate.items():
-                setting_index=int(setting[-1])
-                eval_label_to_match=inflow_desc+"_"+setting
-                if eval_label_to_match in eval_label:
-                    aggressive=float(eval_label.split("_")[-1])
-                    mean, var=extract_mean_var(value, attr_name)
-                    data[setting_index].append((aggressive, mean, var))
+                print(eval_label)
+                for assertive in [0.5, 1]:
+                    if eval_label.endswith(str(assertive)):
+                        eval_label_to_match=inflow_desc+"_"+setting
+                        if eval_label_to_match in eval_label:
+                            #print(eval_label_to_match, eval_label)
+                            aggressive=float(eval_label.split("_")[-2])
+                            assertive=float(eval_label.split("_")[-1])
+                            mean, var=extract_mean_var(value, attr_name)
+                            legend="Setting_%d_%f" % (i, assertive)
+                            if legend not in data.keys():
+                                data[legend]=[]
+                            data[legend].append((aggressive, mean, var))
 
     xlabel="Aggressiveness" 
     ylabel="Outflow" 
     plot=PlotWriter(xlabel, ylabel) 
     plot.add_human=False
-    for i in range(0, len(data)):
-        data[i].sort()
-        plot.add_plot("Setting_%d" % i, data[i])
+    for legend, value in data.items():
+        data[legend].sort()
+        plot.add_plot(legend, data[legend])
     
     plot.write_plot("setting_aggressiveness.tex", 1)
 
-  
+def plot_against_assertive(summary):
+    trained_models=summary.keys
+    setting_0="0_0" # rl on the right, with human no lane change
+    setting_1="0_1" # rl on the right, with human lane change on the right
+    setting_2="1_1" # rl on the left, with human change on the right
+    setting_3="1_0" # rl on the left, with no human change on the right
+    settings=[setting_0, setting_1, setting_2]
+    data_inflow_desc="2000_200_10"
+    human_inflow_desc="2000_200_0"
+
+    data_legends=["RL_right_human_no_lc", "RL_right_human_lc_to_left", "RL_left_human_lc_to_left"]
+    human_legends=["Human_no_lc", "Human_lc_to_left", "Human_lc_to_left"]
+     
+    data=dict()
+    human=dict()
+    for i in range(0, len(settings)):
+        setting=settings[i]
+        for model_key, evaluate in summary.items():
+            model_index=int(model_key[-1])
+            print(i, model_index)
+            if i !=model_index:
+                continue
+            for eval_label, value in evaluate.items():
+                print(eval_label)
+                for assertive in [0.1, 0.3, 0.5, 0.7, 0.9, 1]:
+                    to_add=None
+                    prefix=None
+                    legends=None
+                    if eval_label.startswith(data_inflow_desc):
+                        to_add=data 
+                        prefix=data_inflow_desc
+                        legends=data_legends
+                    else:
+                        to_add=human
+                        prefix=human_inflow_desc
+                        legends=human_legends
+                    if eval_label.endswith(str(assertive)):
+                        eval_label_to_match=prefix+"_"+setting
+                        if eval_label_to_match in eval_label:
+                            #print(eval_label_to_match, eval_label)
+                            aggressive=float(eval_label.split("_")[-2])
+                            assertive=float(eval_label.split("_")[-1])
+                            mean, var=extract_mean_var(value, attr_name)
+                            legend=legends[i]
+                            if legend not in to_add.keys():
+                                to_add[legend]=[]
+                            to_add[legend].append((assertive, mean, var))
+
+    xlabel="Assertative" 
+    ylabel=attr_name
+    plot=PlotWriter(xlabel, ylabel) 
+    plot.add_human=False
+    for legend, value in data.items():
+        data[legend].sort()
+        plot.add_plot(legend, data[legend])
+    for legend, value in human.items():
+        human[legend].sort()
+        plot.add_plot(legend, human[legend])
+
+    plot.write_plot("setting_assertiveness.tex", 1)
+
+ 
         
 if __name__ == "__main__":
     # retrive random models and random evaluation
@@ -136,5 +175,5 @@ if __name__ == "__main__":
         data[preset_i]=data_i
 
     plot_against_aggressive(data)
-
+    plot_against_assertive(data)
 
