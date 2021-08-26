@@ -133,8 +133,8 @@ def compare_av_placement(summary):
             sorted_e_data=extract_sorted_data(inflow_random_summary[model_key])
             inflow_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
             
-        avp_plot.write_plot(evaluation_name+"/placement_avp_"+inflow+".tex",7)
-        inflow_plot.write_plot(evaluation_name+"/placement_inflow_"+inflow+".tex",7)
+        avp_plot.write_plot(evaluation_name+"/placement_avp_"+inflow+".tex",5)
+        inflow_plot.write_plot(evaluation_name+"/placement_inflow_"+inflow+".tex",5)
 
 def plot_each_inflow_each_category(summary):
     for category, category_summary in summary.items():  

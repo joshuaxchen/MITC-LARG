@@ -1,6 +1,7 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Inflow"
+random_human_only=True
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -34,6 +35,7 @@ special_evaluation_name="special_models"
 special_random_models_dir=os.path.join("..","..","exp_results", special_random_evaluation_name) 
 special_even_models_dir=os.path.join("..","..","exp_results", special_even_evaluation_name) 
 
+#human_mor_dir=os.path.join("..","..","exp_results", "600_100_human_mor")
 human_mor_dir=os.path.join("..","..","exp_results", "new_human_mor")
 mor_dir=os.path.join("..","..","exp_results", "new_mor")
 mor_flow_dir=os.path.join("..","..","exp_results", "mor_flow")
@@ -500,10 +502,13 @@ def plot_again_dist(mor_summary, human_summary):
     dist_list.sort()
 
     xlabel="evaluated distance between two ramps" 
-    ylabel="outflow" 
+    ylabel=attr_name
     print(mor_data.keys())
     plot=PlotWriter(xlabel, ylabel) 
     for key in mor_category_list:
+        if random_human_only:
+            if "1650_200" in mor_category_list or "1850_200" in mor_category_list:
+                continue
         legend="random_"+key
         mor_data[key].sort()
         plot.add_plot(legend, mor_data[key])
