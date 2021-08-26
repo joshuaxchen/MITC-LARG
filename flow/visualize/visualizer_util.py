@@ -6,6 +6,15 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.controllers import SimLaneChangeController
 import sys
 
+LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP=1621
+LANE_CHANGE_REPECT_COLLISION_AVOID=1365
+LANE_CHANGE_NO_REPECT_OTHERS=1109
+LANE_CHANGE_OVERRIDING=2218
+NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK=512
+
+LANE_CHANGE_MODE=LANE_CHANGE_OVERRIDING #LANE_CHANGE_NO_REPECT_OTHERS
+NO_LANE_CHANGE_MODE=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
+
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, aggressive, assertive):                
     controller=None
     if "rl" in veh_type:
@@ -25,20 +34,21 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
             model="SL2015", #"SL2015", #LC2013
           lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
           lc_speed_gain=1000000,
+          lc_keep_right=0,
           lc_pushy=aggressive, #0.5, #1,
           lc_assertive=assertive, #5 #20,
           lc_impatience=0, #1e-8,
-          lc_time_to_impatience=1e12
+          lc_time_to_impatience=1e12,
          ), 
         num_vehicles=num_vehicles
         )
 
     #print(net_params.inflows)
 def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive):
-    add_vehicles(vehicles, veh_type, 512, speed_mode, num_vehicles, aggressive, assertive)
+    add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive)
 
 def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive):
-    add_vehicles(vehicles, veh_type, 1621, speed_mode, num_vehicles, aggressive, assertive)
+    add_vehicles(vehicles, veh_type, LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive)
 
 
 def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change, aggressive, assertive):
@@ -164,8 +174,8 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
 def add_preset_inflows(inflow_type, flow_params):
     merge_inflow_rate=200
     # see lane change mode https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html#lane_change_mode_0xb6
-    no_lane_change_mode=512
-    lane_change_mode=1621
+    no_lane_change_mode=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
+    lane_change_mode=LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP
     env_params = flow_params['env']
     net_params=flow_params['net']
 
@@ -506,8 +516,8 @@ def reset_inflows(args, flow_params):
         # set the lane change mode for both lanes in the highway edge 
         env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
         env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
-        no_lane_change_mode=512
-        lane_change_mode=1621
+        no_lane_change_mode=NO_LANE_CHANGE_MODE
+        lane_change_mode=LANE_CHANGE_MODE #LANE_CHANGE_REPECT_COLLISION_AVOID #LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP
         if args.human_lane_change[0]==0 and args.human_lane_change[1]==0:
             env_params.additional_params["human_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
         elif args.human_lane_change[0]==1 and args.human_lane_change[1]==0:
