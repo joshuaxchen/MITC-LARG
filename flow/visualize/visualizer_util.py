@@ -3,7 +3,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
 
-from flow.controllers import SimLaneChangeController
+from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger
 import sys
 
 LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP=1621
@@ -26,7 +26,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     vehicles.add(
         veh_id=veh_type,
         acceleration_controller=(controller, {}),
-        lane_change_controller=(SimLaneChangeController, {}),
+        lane_change_controller=(SimpleMergeLaneChanger, {}), #(SimLaneChangeController, {}),
         car_following_params=SumoCarFollowingParams(
             speed_mode=speed_mode,  # for safer behavior at the merges
         ),
@@ -35,7 +35,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
           lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
           lc_speed_gain=1000000,
           lc_keep_right=0,
-          lc_pushy=aggressive, #0.5, #1,
+          lc_pushy_gap=aggressive, #0.5, #1,
           lc_assertive=assertive, #5 #20,
           lc_impatience=0, #1e-8,
           lc_time_to_impatience=1e12,

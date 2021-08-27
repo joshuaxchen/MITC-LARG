@@ -24,3 +24,30 @@ class StaticLaneChanger(BaseLaneChangeController):
     def get_lane_change_action(self, env):
         """See parent class."""
         return 0
+
+class SimpleMergeLaneChanger(BaseLaneChangeController):
+    """A lane-changing model to control the amount of vehicles to do lane changing
+    """
+
+    def get_lane_change_action(self, env):
+    """Specify the lane change action to be performed.
+
+        If discrete lane changes are being performed, the action is a direction
+
+        * -1: lane change right
+        * 0: no lane change
+        * 1: lane change left
+
+        Parameters
+        ----------
+        env : flow.envs.Env
+            state of the environment at the current time step
+
+        Returns
+        -------
+        float or int
+            requested lane change action
+        """
+
+        return 1
+    
