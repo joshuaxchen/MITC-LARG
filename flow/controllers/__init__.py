@@ -22,7 +22,7 @@ from flow.controllers.velocity_controllers import FollowerStopper, \
 from flow.controllers.base_lane_changing_controller import \
     BaseLaneChangeController
 from flow.controllers.lane_change_controllers import StaticLaneChanger, \
-    SimLaneChangeController
+    SimLaneChangeController, SimpleMergeLaneChanger
 
 # routing controllers
 from flow.controllers.base_routing_controller import BaseRouter

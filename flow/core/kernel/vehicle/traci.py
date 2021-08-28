@@ -19,7 +19,6 @@ WHITE = (255, 255, 255)
 CYAN = (0, 255, 255)
 RED = (255, 0, 0)
 
-
 class TraCIVehicle(KernelVehicle):
     """Flow kernel for the TraCI API.
 
@@ -1207,6 +1206,24 @@ class TraCIVehicle(KernelVehicle):
 
     def set_lane_change_mode(self, veh_id, lc_mode):
         self.kernel_api.vehicle.setLaneChangeMode(veh_id, lc_mode)
+
+    def get_color_t(self, veh_id):
+        """See parent class.
+
+        This does not pass the last term (i.e. transparency).
+        """
+        r, g, b, t = self.kernel_api.vehicle.getColor(veh_id)
+        return r, g, b, t
+
+    def set_color_t(self, veh_id, color):
+        """See parent class.
+
+        The last term for sumo (transparency) is set to 255.
+        """
+        if self._color_vehicles:
+            r, g, b, t= color
+            self.kernel_api.vehicle.setColor(
+                vehID=veh_id, color=(r, g, b, t))
 
     def close(self):
         """See parent class."""
