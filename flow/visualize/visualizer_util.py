@@ -2,6 +2,7 @@ from flow.controllers import IDMController, RLController, SimCarFollowingControl
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
+from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 
 from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger
 import sys
