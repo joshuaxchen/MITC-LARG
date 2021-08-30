@@ -836,7 +836,7 @@ class TraCIVehicle(KernelVehicle):
                     edge_dict[edge][lane].sort(key=lambda x: x[1])
 
         # replace for loop from Daniel 
-        for veh_id in self.get_rl_ids()+ self.get_controlled_ids():
+        for veh_id in self.get_ids(): #self.get_rl_ids()+ self.get_controlled_ids():
         #for veh_id in self.get_rl_ids():
             # collect the lane leaders, followers, headways, and tailways for
             # each vehicle
