@@ -114,7 +114,10 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         headways=self.k.vehicle.get_lane_headways(veh_id)
         h=headways[lane_id] 
 
-        return lead_id, follow_id, h
+        tailways=self.k.vehicle.get_lane_tailways(veh_id)
+        t=tailways[lane_id] 
+
+        return lead_id, follow_id, h, t
 
 
     def get_state(self):
@@ -130,7 +133,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             this_speed = self.k.vehicle.get_speed(rl_id)
             #lead_id = self.k.vehicle.get_leader(rl_id)
             #follower = self.k.vehicle.get_follower(rl_id)
-            lead_id, follower, h=self.get_leader_follower_headway_from_same_lane(rl_id)
+            lead_id, follower, h, t=self.get_leader_follower_headway_from_same_lane(rl_id)
 
             if lead_id in ["", None]:
                 # in case leader is not visible
@@ -148,7 +151,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             else:
                 follow_speed = self.k.vehicle.get_speed(follower)
                 #follow_head = self.k.vehicle.get_headway(follower)
-                _, _, follow_head=self.get_leader_follower_headway_from_same_lane(follower)
+                #_, _, follow_head, t=self.get_leader_follower_headway_from_same_lane(follower)
+                follow_head=t
             
             observation = np.array([
                 this_speed / max_speed,
