@@ -18,7 +18,7 @@ RL_RIGHT_MODEL=${HOME}/ray_results/multiagent_yulin_rl_right_lanechange_merge4_F
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lane_change_5
+EXP_FOLDER=$FLOW_DIR/exp_results/lane_change_4
 
 
 CHCKPOINT=500
@@ -33,17 +33,16 @@ AVP=10
 J=0
 
 mkdir ${EXP_FOLDER}
-RIGHT_MAIN_INFLOW=2000
-
-WORKING_DIR=$EXP_FOLDER/human
+WORKING_DIR=$EXP_FOLDER/preset_1
 mkdir ${WORKING_DIR}
+RIGHT_MAIN_INFLOW=2000
 
 
 for RIGHT_MAIN_INFLOW in 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1300 1400 1500 1600 1700 1800 1900 2000 #1300 1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1700 #1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for AVP in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for AVP in 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 			let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -66,11 +65,11 @@ do
 
 				for RIGHT_HUMAN_LANE_CHANGE in 1
 				do 
-					for AGGRESSIVE in 5 #0.2 0.4 #0.6 0.8 1
+					for AGGRESSIVE in 1 #0.2 0.4 0.6 0.8 1
 					do
-						for ASSERTIVE in 0.2 0.4 0.6 0.8 1
+						for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
 						do
-							for LC_PROB in -1 #0.2 0.4 0.6 0.8 1
+							for LC_PROB in 0.2 0.8 # 0.2 0.4 0.6 0.8 1
 							do
 								python3 $VISUALIZER \
 									$RL_MODEL \
@@ -89,7 +88,7 @@ do
 									>> ${WORKING_DIR}/EVAL_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}_${LC_PROB}.txt &
 
 								let J=J+1
-								if ((J == 30)); then
+								if ((J == 20)); then
 									wait
 									let J=0
 									echo "another batch"
@@ -102,7 +101,6 @@ do
 		done
 	done
 done
-
 
 wait 
 source ~/notification_zyl.sh

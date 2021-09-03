@@ -16,19 +16,24 @@ NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK=512
 LANE_CHANGE_MODE=LANE_CHANGE_REPECT_COLLISION_AVOID#LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_NO_REPECT_OTHERS##LANE_CHANGE_NO_REPECT_OTHERS
 NO_LANE_CHANGE_MODE=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
 
+
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, aggressive, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller= IDMController #SimCarFollowingController#
+        controller= IDMController # SimCarFollowingController#
 
-    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
+    my_lane_change_controller=(SimLaneChangeController, {})
+    if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
+        simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
+        my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
+
     # CREATE VEHICLE TYPES AND INFLOWS
     vehicles.add(
         veh_id=veh_type,
         acceleration_controller=(controller, {}),
-        lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change}), #(SimLaneChangeController, {}),
+        lane_change_controller=my_lane_change_controller, #(SimLaneChangeController, {}),
         car_following_params=SumoCarFollowingParams(
             speed_mode=speed_mode,  # for safer behavior at the merges
         ),
@@ -39,7 +44,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
           lc_keep_right=0,
           lc_pushy_gap=aggressive, #0.5, #1,
           lc_assertive=assertive, #5 #20,
-          lc_impatience=0, #1e-8,
+          lc_impatience=1e-8, #1e-8,
           lc_time_to_impatience=1e12,
          ), 
         num_vehicles=num_vehicles

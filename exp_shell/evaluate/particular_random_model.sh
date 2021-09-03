@@ -96,7 +96,7 @@ do
 
 	for MERGE_INFLOW in 200 #400 600 800 #180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 500 600 700 800 900 1000 
 	do
-		for MAIN_INFLOW in 1600 1650 #2000 #1850 1650
+		for MAIN_INFLOW in 1600 #1650 #2000 #1850 1650
 		do
 			for AVP in 10 #1 5 10 16 20 30 40
 			do
@@ -110,9 +110,7 @@ do
 					--render_mode no_render \
 					--seed_dir $FLOW_DIR \
 					--to_probability \
-					--history_file_name random_${MARK[$I]}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
-					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-					>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
 				let J=J+1
 				if ((J == 20)); then
 					wait
@@ -123,6 +121,9 @@ do
 		done
 	done 
 done
+
+#--history_file_name random_${MARK[$I]}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
+#>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
 
 				#python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --to_probability --history_file_name random_${MARK[$I]}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
 
