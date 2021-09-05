@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Inflow"
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -28,7 +28,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","lane_change_4") 
+working_dir=os.path.join("..","..","exp_results","lane_change_5") 
 
 
 def retrive_evaluations(working_dir):
@@ -70,13 +70,55 @@ def read_from_formatted_string(input_str):
     assertive=float(texts[6])
     lc_prob=float(texts[7])
     #return left_main_inflow, merge_inflow, avp, rl_right_left, right_human_lane_change, aggressive, lc_prob
-    return left_main_inflow, avp, rl_right_left, right_human_lane_change, lc_prob
+    return left_main_inflow, avp, rl_right_left, right_human_lane_change, rl_right_left, assertive, lc_prob
+
+rl_configs=["rl_right", "rl_left"]
+lc_configs=["nlc","lc"]
+def obtain_config(rl_right_left, right_human_lane_change):
+    rl_config=rl_configs[rl_right_left]
+    lc_config=lc_configs[right_human_lane_change]
+    return rl_config, lc_config
+     
 def obtain_setting_index(settings, rl_right_left, right_human_lane_change):
     for i in range(0, len(settings)):
         (rl, lc)=settings[i]
         if rl==rl_right_left and lc==right_human_lane_change:
             return i
     return None
+    
+def plot_against_inflow(summary):
+    data=dict()
+    for model_key, evaluate in summary.items():
+        for eval_label, value in evaluate.items():
+            print(eval_label)
+            left_main_inflow, avp, rl_right_left, right_human_lane_change, rl_right_left, assertive, lc_prob=read_from_formatted_string(eval_label)
+            rl_config, lc_config=obtain_config(rl_right_left, right_human_lane_change)                
+            legend=rl_config+"_"+lc_config
+
+            mean, var=extract_mean_var(value, attr_name)
+            key=model_key+"_"+legend+"_%.1f" % (assertive)
+            if key not in data.keys():
+                data[key]=list()
+            data[key].append((left_main_inflow, mean, var))
+
+        xlabel="Left-Inflow" 
+        ylabel=attr_name
+        right_plot=PlotWriter(xlabel, ylabel) 
+        left_plot=PlotWriter(xlabel, ylabel) 
+        right_plot.add_human=False
+        left_plot.add_human=False
+        for legend, value in data.items():
+            data[legend].sort()
+            if "right" in legend:
+                right_plot.add_plot(legend, data[legend])
+            else:
+                left_plot.add_plot(legend, data[legend])
+                
+       
+        right_plot.write_plot("%s_inflow_right.tex" % model_key, 1)
+        left_plot.write_plot("%s_inflow_left.tex" % model_key, 1)
+
+  
     
 def plot_against_aggressive(summary):
     trained_models=summary.keys
@@ -102,7 +144,7 @@ def plot_against_aggressive(summary):
             data=preset_2
 
         for eval_label, value in evaluate.items():
-            left_main_inflow, avp, rl_right_left, right_human_lane_change, lc_prob=read_from_formatted_string(eval_label)
+            left_main_inflow, avp, rl_right_left, right_human_lane_change, rl_right_left, assertive, lc_prob=read_from_formatted_string(eval_label)
             if "human" in model_key and avp!=0:
                 continue
             if "human" not in model_key and avp!=10:
@@ -137,11 +179,12 @@ if __name__ == "__main__":
     #random_model_exp_summary=retrieve_special_exp_data(random_aamas_avp_dir) 
     # retrieve special models
     data=dict()
-    for preset_i in ["human", "preset_1_dr_light"]:
+    #for preset_i in ["human", "preset_1_dr_light"]:
+    for preset_i in ["human"]:
         preset_dir=os.path.join(working_dir, preset_i)
         data_i=retrive_evaluations(preset_dir)
         data[preset_i]=data_i
-
-    plot_against_aggressive(data)
+    
+    plot_against_inflow(data)
     #plot_against_assertive(data)
 
