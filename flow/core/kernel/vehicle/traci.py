@@ -18,6 +18,7 @@ from copy import deepcopy
 WHITE = (255, 255, 255)
 CYAN = (0, 255, 255)
 RED = (255, 0, 0)
+GREEN= (0, 255, 0)
 
 class TraCIVehicle(KernelVehicle):
     """Flow kernel for the TraCI API.
@@ -76,6 +77,9 @@ class TraCIVehicle(KernelVehicle):
             self._color_vehicles = sim_params.color_vehicles
         except AttributeError:
             self._color_vehicles = False
+
+        # keep track of the human drivers that change lanes, which is used for visualization
+        self.__change_lane_human_ids=[]
 
     def initialize(self, vehicles):
         """Initialize vehicle state information.
@@ -241,6 +245,7 @@ class TraCIVehicle(KernelVehicle):
             self._departed_ids.clear()
             self._arrived_ids.clear()
             self._arrived_rl_ids.clear()
+            self.__change_lane_human_ids.clear()
             #self._delays.clear()
 
             # add vehicles from a network template, if applicable
@@ -258,6 +263,12 @@ class TraCIVehicle(KernelVehicle):
                         veh_id, 'route{}_0'.format(veh_id), **vals)
         else:
             self.time_counter += 1
+            # TODO(zyl): add code to find lane changing vehicles
+            for veh_id in self.get_human_ids():
+                prev_lane = self.get_lane(veh_id)
+                if vehicle_obs[veh_id][tc.VAR_LANE_INDEX] != prev_lane:
+                    self.__change_lane_human_ids.append(veh_id)
+
             # update the "last_lc" variable
             for veh_id in self.__rl_ids:
                 prev_lane = self.get_lane(veh_id)
@@ -500,6 +511,10 @@ class TraCIVehicle(KernelVehicle):
                 self.__controlled_ids.remove(veh_id)
             if veh_id in self.__controlled_lc_ids:
                 self.__controlled_lc_ids.remove(veh_id)
+
+        if veh_id in self.__change_lane_human_ids:
+            self.__change_lane_human_ids.remove(veh_id)
+
         elif veh_id in self.__rl_ids:
             self.__rl_ids.remove(veh_id)
             # make sure that the rl ids remain sorted
@@ -1135,6 +1150,23 @@ class TraCIVehicle(KernelVehicle):
                 self.set_color(veh_id=veh_id, color=color)
             except (FatalTraCIError, TraCIException) as e:
                 print('Error when updating human vehicle colors:', e)
+        
+        # color human drivers that change lane
+        to_remove_from_change_lane_human_drivers=[]
+        for veh_id in self.__change_lane_human_ids:
+            try:
+                if veh_id in self.get_human_ids():
+                    self.set_color(veh_id=veh_id, color=GREEN)
+                else:
+                    to_remove_from_change_lane_human_drivers.append(veh_id)
+            except (FatalTraCIError, TraCIException) as e:
+                #self.__change_lane_human_ids.remove(veh_id)
+                print('Error when updating human vehicle colors:', e)
+
+        # remove the human drivers that are not in the network anymore 
+        for veh_id in to_remove_from_change_lane_human_drivers:
+            if veh_id in self.__change_lane_human_ids:
+                self.__change_lane_human_ids.remove(veh_id)
 
         # clear the list of observed vehicles
         for veh_id in self.get_observed_ids():
