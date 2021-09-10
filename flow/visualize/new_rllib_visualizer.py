@@ -51,6 +51,8 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows
 
+from tools.tikz_plot import PlotWriter
+
 EXAMPLE_USAGE = """
 example usage:
     python ./visualizer_rllib.py /ray_results/experiment_dir/result_dir 1
@@ -64,6 +66,9 @@ Here the arguments are:
 PRINT_TO_SCREEN = False
 SUMMARY_PLOTS = False
 REALTIME_PLOTS = False
+# The averge metrics (including inflow, outflow, speed) is measured as an
+# average of the recent 1000 time steps, if MEASUREMENT_RATE=1000
+MEASUREMENT_RATE=1000
 
 def generateHtmlplots(actions, rewards, states):
     import plotly.graph_objs as go
@@ -140,7 +145,7 @@ def init_agent_from_policy_dir(policy_dir, checkpoint_num):
     return None
 
 
-def visualizer_rllib(args, print_veh_num_history=False, seed=None):
+def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     """Visualizer for RLlib experiments.
 
     This function takes args (see function create_parser below for
@@ -433,7 +438,7 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     times = []
     info = {}; info['main_inflow']=[]; info['merge_inflow']=[]
     WARMUP = args.warmup
-    total_num_cars_per_step=list()
+    #total_num_cars_per_step=list()
     num_steps_vec = np.arange(0, env_params.horizon, 1)
     for i in range(args.num_rollouts):
         vel = []
@@ -447,16 +452,29 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
         else:
             ret = 0
 
-        total_num_cars_per_step=list()
+        #total_num_cars_per_step=list()
 
+        # record the inflow, outflow, avg speed, reward if necessary        
+        inflow_per_time_step=None
+        outflow_per_time_step=None
+        avg_speed_per_time_step=None
+        reward_per_time_step=None
+        if do_print_metric_per_time_step and i==args.num_rollouts-1: # last rollouts
+            inflow_per_time_step=[]
+            outflow_per_time_step=[]
+            avg_speed_per_time_step=[]
+            reward_per_time_step=[]
+   
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
             #print("time step:", i_k)
-            if np.mean(vehicles.get_speed(vehicles.get_ids()))>0:
-                vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
+            avg_speed_at_k=np.mean(vehicles.get_speed(vehicles.get_ids()))
+            if avg_speed_at_k>0:
+                vel.append(avg_speed_at_k)
             #print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
+
             if multiagent:
                 action = {}
                 for agent_id in state.keys():
@@ -471,10 +489,22 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
-            total_num_cars_per_step=None
-            if 'total_num_cars_per_step' in infos.keys():
-                total_num_cars_per_step.append(infos['total_num_cars_per_step'])
 
+            if inflow_per_time_step is not None:
+                inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE) 
+                inflow_per_time_step.append((i_k, inflow, 0)) 
+
+            if outflow_per_time_step is not None:
+                outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) 
+                outflow_per_time_step.append((i_k, outflow, 0)) 
+
+            if avg_speed_per_time_step is not None:
+                avg_speed_per_time_step.append((i_k, avg_speed_at_k, 0)) 
+
+            if reward_per_time_step is not None:
+                reward_per_time_step.append((i_k, reward, 0)) 
+
+            
             if SUMMARY_PLOTS:
               # record for visualization purposes
               actions.append(action)
@@ -522,9 +552,38 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
                 rets[key].append(ret[key])
         else:
             rets.append(ret)
-        outflow = vehicles.get_outflow_rate(1500) # original: 5000
+
+        # plot the inflows, outflow, avg_speed, reward at each time step
+        # handles to print the metrics along the history
+        inflow_plot=None
+        outflow_plot=None
+        speed_plot=None
+        reward_plot=None
+
+        if do_print_metric_per_time_step and i==0:
+            inflow_plot=PlotWriter("Time steps", "Inflow") 
+            outflow_plot=PlotWriter("Time steps", "Outflow") 
+            speed_plot=PlotWriter("Time steps", "Speed") 
+            reward_plot=PlotWriter("Time steps", "Reward") 
+            # This is a default design of plot, which added human baseline automataicaly. We may want to change this. Here I do not want to break the existing code for plot.
+            inflow_plot.add_human=False
+            outflow_plot.add_human=False
+            speed_plot.add_human=False
+            reward_plot.add_human=False
+        
+            inflow_plot.add_plot("Inflow", inflow_per_time_step)
+            outflow_plot.add_plot("Outflow", outflow_per_time_step)
+            speed_plot.add_plot("Speed", avg_speed_per_time_step)
+            reward_plot.add_plot("Reward", reward_per_time_step)
+
+            inflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_inflow.tex", 1)
+            outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_outflow.tex", 1)
+            speed_plot.write_plot(args.print_metric_per_time_step_in_file+"_speed.tex", 1)
+            reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
+
+        outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) # original: 5000
         final_outflows.append(outflow)
-        inflow = vehicles.get_inflow_rate(1500)# original: 5000
+        inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE)# original: 5000
         final_inflows.append(inflow)
         times.append(time_to_exit)
         if np.all(np.array(final_inflows) > 1e-5):
@@ -541,6 +600,7 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
         else:
             print('Round {}, Return: {}'.format(i, ret))
 
+    
     print('==== Summary of results ====')
     print("Return:")
     env.close()
@@ -590,21 +650,21 @@ def visualizer_rllib(args, print_veh_num_history=False, seed=None):
     print(times)
     print("Time for certain number of vehicles to exit {:.2f},{:.2f}".format((np.mean(times)),np.std(times)))
 
-    # print the history of the number of vehicles in the network
-    if print_veh_num_history and i==args.num_rollouts-1 and total_num_cars_per_step is not None:
-        fig, ax = plt.subplots() 
-        ax.plot(num_steps_vec, total_num_cars_per_step, label='Total # of cars')
-        ax.set_xlabel('time [sec]')  # Add an x-label to the axes.
-        ax.set_ylabel('# cars')  # Add a y-label to the axes. 
-        ax.set_title("No. Cars per Step")
-        ax.legend()  # Add a legend.
-        ax.grid()
-        history_file_name='test'
-        if args.history_file_name:
-            history_file_name=args.history_file_name
-        plt.savefig('/home/users/yulin/MITC/plot/history/'+history_file_name+'.pdf')
+    # print the metrics, including the inflow, outflow, avg speed and reward at every time step
+    #if do_print_metric_per_time_step and i==args.num_rollouts-1:
+    #    fig, ax = plt.subplots() 
+    #    ax.plot(num_steps_vec, total_num_cars_per_step, label='Total # of cars')
+    #    ax.set_xlabel('time [sec]')  # Add an x-label to the axes.
+    #    ax.set_ylabel('# cars')  # Add a y-label to the axes. 
+    #    ax.set_title("No. Cars per Step")
+    #    ax.legend()  # Add a legend.
+    #    ax.grid()
+    #    print_metric_per_time_step_in_file='test'
+    #    if args.print_metric_per_time_step_in_file:
+    #        print_metric_per_time_step_in_file=args.print_metric_per_time_step_in_file
+    #    plt.savefig('/home/users/yulin/MITC/plot/history/'+print_metric_per_time_step_in_file+'.pdf')
 
-        # print("Total number of vehicles in the network: "+str(total_num_cars_per_step))
+    #    # print("Total number of vehicles in the network: "+str(total_num_cars_per_step))
 
     #if args.output:
     #    np.savetxt(args.output, [mean_speed, std_speed,final_inflows, final_outflows,times])
@@ -738,7 +798,7 @@ def create_parser():
     parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
     parser.add_argument('--highway_len', type=int, help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
-    parser.add_argument('--history_file_name', type=str, help='input the name of the history file name') 
+    parser.add_argument('--print_metric_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
     parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
     parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
     parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
@@ -780,10 +840,10 @@ if __name__ == '__main__':
     for i in range(len(seed_filename)):
         seed = seed_filename[i]
         print("Using seed: ", seed)
-        print_veh_num_history=False
-        if i==0 and args.history_file_name is not None:
-            print_veh_num_history=True
-        speed, inflow, outflow, reward, info = visualizer_rllib(args, print_veh_num_history, seed)
+        do_print_metric_per_time_step=False
+        if i==0 and args.print_metric_per_time_step_in_file is not None:
+            do_print_metric_per_time_step=True
+        speed, inflow, outflow, reward, info = visualizer_rllib(args, do_print_metric_per_time_step, seed)
         Speed.append(speed)
         Inflow.append(inflow)
         Outflow.append(np.mean(outflow))
