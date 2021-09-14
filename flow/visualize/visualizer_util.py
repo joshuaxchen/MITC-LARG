@@ -22,7 +22,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller= IDMController # SimCarFollowingController#
+        controller=SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
     if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
@@ -459,6 +459,28 @@ def reset_inflows(args, flow_params):
     if args.handset_inflow:
         # env_params.additional_params['handset_inflow']=args.handset_inflow
         # handset_inflow
+        #vehicles = VehicleParams()
+        ## human vehicles
+        #vehicles.add(
+        #    veh_id="human",
+        #    acceleration_controller=(SimCarFollowingController, {}),
+        #    car_following_params=SumoCarFollowingParams(
+        #        speed_mode=15,  # for safer behavior at the merges
+        #        #tau=1.5  # larger distance between cars
+        #    ),
+        #    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+        #    num_vehicles=5)
+
+        ## autonomous vehicles
+        #vehicles.add(
+        #    veh_id="rl",
+        #    acceleration_controller=(RLController, {}),
+        #    car_following_params=SumoCarFollowingParams(
+        #        speed_mode=9,
+        #    ),
+        #    num_vehicles=0)
+        #flow_params['veh']=vehicles
+
         input_inflows=args.handset_inflow
         main_human_inflow_rate=input_inflows[0] 
         main_rl_inflow_rate=input_inflows[1] 
@@ -560,6 +582,8 @@ def reset_inflows(args, flow_params):
     if args.to_probability:
         FLOW_RATE=0
         for inflow in net_params.inflows.get(): 
+            #if "merge" in inflow['edge']:
+            #    continue
             if 'probability' in inflow:
                 continue
             

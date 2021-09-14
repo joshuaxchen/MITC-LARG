@@ -19,6 +19,10 @@ TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Coll
 # fix length
 TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_db37f_00000_0_2021-09-13_19-15-24
 
+# simple merge
+TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_e2773_00000_0_2021-09-13_19-29-55
+
+
 CHCKPOINT=501
 
 
@@ -28,20 +32,49 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 mkdir ${EXP_FOLDER}
 RIGHT_MAIN_INFLOW=2000
 
-WORKING_DIR=$EXP_FOLDER/trial_6
+WORKING_DIR=$EXP_FOLDER/trial_8
 mkdir ${WORKING_DIR}
 
 
 MERGE_INFLOW=200
 MAIN_INFLOW=2000
+AVP=0 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+J=0
+let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+
+CHCKPOINT=500
+WINDOW_LEFT=-1
+python3 $VISUALIZER \
+	$POLICY_DIR \
+	$CHCKPOINT \
+	--seed_dir $FLOW_DIR \
+	--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+	--to_probability \
+	--render_mode no_render \
+	>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+
 AVP=10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 J=0
 let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 
+CHCKPOINT=500
+WINDOW_LEFT=-1
+python3 $VISUALIZER \
+	$POLICY_DIR \
+	$CHCKPOINT \
+	--seed_dir $FLOW_DIR \
+	--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+	--to_probability \
+	--render_mode no_render \
+	>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+
+CHCKPOINT=501
 WINDOW_RIGHT=0
-for WINDOW_LEFT in 200 300 400 500 600 700 800 900 1000 2000 3000 4000
+for WINDOW_LEFT in 10 30 50 70 100 200 300 400 500 600 700 
 do 
 	python3 $VISUALIZER \
 		$TRAIN_DIR \
