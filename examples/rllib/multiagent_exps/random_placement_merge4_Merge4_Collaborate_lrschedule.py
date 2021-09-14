@@ -50,7 +50,28 @@ parser.add_argument(
     help="The percentage of autonomous vehicles. value between 0-100")
 parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
 parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
+parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
+parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
+parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
+#parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
+parser.add_argument('--random_inflow', action='store_true')
+parser.add_argument(
+        '--main_merge_human_inflows',
+        type=int,
+        nargs="+",
+        help="This is often used for evaluating human baseline")
+
+parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
+
+parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
+parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
+parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
+parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
+parser.add_argument('--merge_inflow', type=int, help='merge inflow used for multilane highway.') 
+parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
+parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
+parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
+
 
 args=parser.parse_args()
 
@@ -64,6 +85,8 @@ N_ROLLOUTS = 30
 HORIZON = 2000
 # number of parallel workers
 N_CPUS = 40
+if args.cpu:
+    N_CPUS=args.cpu
 
 NUM_RL = 10
 if args.num_rl:
@@ -100,64 +123,17 @@ additional_net_params["pre_merge_length"] = 500
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 
 
-# CREATE VEHICLE TYPES AND INFLOWS
-vehicles = VehicleParams()
-inflows = InFlows()
-
-# human vehicles
-vehicles.add(
-    veh_id="human",
-    acceleration_controller=(SimCarFollowingController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=9,  # for safer behavior at the merges
-        #tau=1.5  # larger distance between cars
-    ),
-    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=5)
-
-# autonomous vehicles
-vehicles.add(
-    veh_id="rl",
-    acceleration_controller=(RLController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
-    ),
-    num_vehicles=0)
-
-# veh perhour to probability of each vehicle per second
-main_inflow_prob=FLOW_RATE/3600.0
-
-# Vehicles are introduced from both sides of merge, with RL vehicles entering
-# from the highway portion as well
-inflow = InFlows()
-if 1-RL_PENETRATION>0:
-    inflow.add(
-        veh_type="human",
-        edge="inflow_highway",
-        probability=main_inflow_prob*(1-RL_PENETRATION),
-        #vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
-        depart_lane="free",
-        depart_speed=10)
-if RL_PENETRATION>0:
-    inflow.add(
-        veh_type="rl",
-        edge="inflow_highway",
-        probability=main_inflow_prob*RL_PENETRATION,
-        #vehs_per_hour=RL_PENETRATION * FLOW_RATE,
-        depart_lane="free",
-        depart_speed=10)
-inflow.add(
-    veh_type="human",
-    edge="inflow_merge",
-    vehs_per_hour=MERGE_RATE,
-    depart_lane="free",
-    depart_speed=7.5)
-
 mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='random_placement_multiagent'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
+
+
+# CREATE VEHICLE TYPES AND INFLOWS
+vehicles = VehicleParams()
+inflows = InFlows()
+
+exp_tag_str='random_all_placement_multiagent'+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2),
 if args.exp_prefix:
     exp_tag_str=args.exp_prefix+'_'+exp_tag_str  
 
@@ -197,14 +173,15 @@ flow_params = dict(
     ),
 
     net=NetParams(
-        inflows=inflow,
+        inflows=None,
         additional_params=additional_net_params,
     ),
 
-    veh=vehicles,
+    veh=None,
     initial=InitialConfig(),
 )
 
+reset_inflows(args, flow_params)
 
 # SET UP EXPERIMENT
 

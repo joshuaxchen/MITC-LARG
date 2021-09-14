@@ -36,9 +36,8 @@ WORKING_DIR=$EXP_FOLDER/trial_8
 mkdir ${WORKING_DIR}
 
 
-MERGE_INFLOW=200
 MAIN_INFLOW=2000
-AVP=0 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+AVP=10 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 J=0
 let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -46,14 +45,16 @@ echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}
 
 CHCKPOINT=500
 WINDOW_LEFT=-1
+
+MERGE_INFLOW=300
 python3 $VISUALIZER \
 	$POLICY_DIR \
 	$CHCKPOINT \
 	--seed_dir $FLOW_DIR \
-	--main_merge_human_inflows 2000 200 \
+	--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 	--to_probability \
-	--render_mode no_render 
+	--render_mode sumo_gui 
 	#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
-	#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+	#--main_merge_human_inflows 2000 300 \
 
 
