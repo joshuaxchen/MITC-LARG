@@ -19,7 +19,7 @@ RL_RIGHT_MODEL=${HOME}/ray_results/multiagent_yulin_rl_right_lanechange_merge4_F
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/lane_change_5
-
+METRICS_FILE_PREFIX=${PWD}/test
 
 CHCKPOINT=500
 
@@ -39,9 +39,9 @@ WORKING_DIR=$EXP_FOLDER/human_3
 mkdir ${WORKING_DIR}
 
 
-for RIGHT_MAIN_INFLOW in 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 6000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1300 1400 1500 1600 1700 1800 1900 2000 #1300 1400 1500 1600 1700 1800 1900 2000 #1300 1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1300 # 1400 1500 1600 1700 1800 1900 2000 #1300 1400 1500 1600 1700 1800 1900 2000 #1300 1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -68,7 +68,7 @@ do
 				do 
 					for AGGRESSIVE in 5 #0.2 0.4 #0.6 0.8 1
 					do
-						for ASSERTIVE in 0.2 0.4 0.6 0.8 1 #0.2 0.4 0.6 0.8 1
+						for ASSERTIVE in 1 # 0.2 0.4 0.6 0.8 1 #0.2 0.4 0.6 0.8 1
 						do
 							for LC_PROB in -1 #0.2 0.4 0.6 0.8 1
 							do
@@ -85,8 +85,9 @@ do
 									--merge_inflow ${MERGE_INFLOW} \
 									--aggressive ${AGGRESSIVE} \
 									--assertive ${ASSERTIVE} \
-									--lc_probability ${LC_PROB} \
-									>> ${WORKING_DIR}/EVAL_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}_${LC_PROB}.txt &
+									--lc_probability ${LC_PROB} 
+									# --print_metric_per_time_step_in_file $METRICS_FILE_PREFIX
+									# >> ${WORKING_DIR}/EVAL_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}_${LC_PROB}.txt &
 
 								let J=J+1
 								if ((J == 30)); then

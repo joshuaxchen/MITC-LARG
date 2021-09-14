@@ -26,7 +26,9 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvAblationConjestionDistance,\
                         MultiAgentHighwayPOEnvAblationConjestionDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfo,\
-                        MultiAgentHighwayPOEnvAblationConjestionMergeInfoCollaborate
+                        MultiAgentHighwayPOEnvAblationConjestionMergeInfoCollaborate,\
+                        MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate
+
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive

@@ -5,8 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
-import argparse
-import sys
+import os
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -15,9 +14,9 @@ from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
 from ray import tune
 from ray.tune.registry import register_env
 from ray.tune import run_experiments
+from flow.networks import Network
+from flow.controllers import SimCarFollowingController,IDMController, RLController, SimLaneChangeController, ContinuousRouter
 
-from flow.controllers import IDMController, RLController, SimCarFollowingController
-from flow.controllers import SimLaneChangeController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -25,13 +24,16 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate #MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
+#from argparse import ArgumentParser
+import argparse 
 from flow.visualize.visualizer_util import reset_inflows
 
+# SET UP PARAMETERS FOR THE SIMULATION
 EXAMPLE_USAGE = """
 example usage:
     python xxxx.py --attr value
@@ -41,31 +43,22 @@ parser = argparse.ArgumentParser(
     description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
     epilog=EXAMPLE_USAGE)
 # optional input parameters
-parser.add_argument(
-    '--avp',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument(
-    '--num_rl',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations (main_human_inflow, main_rl_inflow, merge_inflow), notice the order of inflows when they were added to the configuration")
 parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
-parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
 parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
-#parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
-parser.add_argument('--random_inflow', action='store_true')
+parser.add_argument('--random_inflow', action='store_true', help='This is used to generate random inflow in the training data set during different rollouts')
 parser.add_argument(
         '--main_merge_human_inflows',
         type=int,
         nargs="+",
-        help="This is often used for evaluating human baseline")
+        help="This is often used for evaluating human baseline. If you want to add rl inflow as well, check --handset_inflow")
 
 parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
+parser.add_argument('--restore', type=str, help='restore from which checkpoint?')
+parser.add_argument('--window_size', type=int, nargs="+", help='a window size specified by the distance to the junction')
 
+### The parameters belows are only used by multilane experiment, but they cannot be removed since they are needed by reset_inflows in visualization_util.py
+parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
 parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
 parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
 parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
@@ -75,62 +68,114 @@ parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to
 parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
 parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
 
-args=parser.parse_args()
+args = parser.parse_args()
 
-# SET UP PARAMETERS FOR THE SIMULATION
-
+if args.window_size is not None:
+    if len(args.window_size)!=2:
+        print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
+        exit(-1)
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
-N_ROLLOUTS = 30 
+N_ROLLOUTS = 1 
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 40
+N_CPUS = 0
 if args.cpu:
     N_CPUS=args.cpu
 
-NUM_RL = 10
-if args.num_rl:
-    NUM_RL=args.num_rl
+NUM_RL = 10 
+
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = 0.1 
-if args.avp:
-    RL_PENETRATION = (args.avp/100.0) 
-# Selfishness constant
+RL_PENETRATION = 0.1
+# selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
 
+window_size=tuple(args.window_size)
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
-additional_net_params["highway_lanes"] = 2
-additional_net_params["pre_merge_length"] = 500
+additional_net_params["highway_lanes"] = 1
+additional_net_params["pre_merge_length"] = 3031
+additional_net_params["post_merge_length"] = 5077 #1878
+additional_net_params["merge_length"] = 1778
 
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
+if args.handset_inflow:
+    #additional_env_params['handset_inflow']=args.handset_inflow
+    FLOW_RATE=args.handset_inflow[0]+args.handset_inflow[1] 
+    print("main flow rate:",FLOW_RATE)
 
+# CREATE VEHICLE TYPES AND INFLOWS
+vehicles = VehicleParams()
+inflows = InFlows()
+
+# human vehicles
+vehicles.add(
+    veh_id="human",
+    acceleration_controller=(SimCarFollowingController, {}),
+    car_following_params=SumoCarFollowingParams(
+        speed_mode=9,  # for safer behavior at the merges
+        #tau=1.5  # larger distance between cars
+    ),
+    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+    num_vehicles=5)
+
+# autonomous vehicles
+vehicles.add(
+    veh_id="rl",
+    acceleration_controller=(RLController, {}),
+    car_following_params=SumoCarFollowingParams(
+        speed_mode=9,
+    ),
+    num_vehicles=0)
+
+# Vehicles are introduced from both sides of merge, with RL vehicles entering
+# from the highway portion as well
+inflow = InFlows()
+if 1-RL_PENETRATION>0:
+    inflow.add(
+        veh_type="human",
+        edge="inflow_highway",
+        vehs_per_hour=(1 - RL_PENETRATION) * FLOW_RATE,
+        depart_lane="free",
+        depart_speed=10)
+if RL_PENETRATION>0:
+    inflow.add(
+        veh_type="rl",
+        edge="inflow_highway",
+        vehs_per_hour=RL_PENETRATION * FLOW_RATE,
+        depart_lane="free",
+        depart_speed=10)
+inflow.add(
+    veh_type="human",
+    edge="inflow_merge",
+    vehs_per_hour=MERGE_RATE,
+    depart_lane="free",
+    depart_speed=7.5)
 
 mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='multiagent'+mark+'_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
-
-lateral_resolution=3.2
-if args.lateral_resolution:
-        lateral_resolution=args.lateral_resolution
+exp_tag_str='multiagent'+mark+'_window_size_long_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
+
+    env_name=MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate, #MultiAgentHighwayPOEnvMerge4WindowSizeCollaborate,
+
     network=MergeNetwork,
+
     simulator='traci',
 
     #env=EnvParams(
@@ -143,7 +188,6 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
-        lateral_resolution=lateral_resolution, # determines lateral discretization of lanes
         render=False,
     ),
 
@@ -159,15 +203,16 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
+            "window_size": window_size,
         },
     ),
 
     net=NetParams(
-        inflows=None,
+        inflows=inflow,
         additional_params=additional_net_params,
     ),
 
-    veh=None,
+    veh=vehicles,
     initial=InitialConfig(),
 )
 
@@ -197,16 +242,11 @@ def setup_exps(flow_params):
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 4096
+    config['sgd_minibatch_size'] = 128
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
     config['model'].update({'fcnet_hiddens': [100, 50, 25]})
-    #config['lr'] = tune.grid_search([5e-4, 1e-4])
-    config['lr_schedule'] = [
-            [0, 5e-4],
-            [1000000, 1e-4],
-            [4000000, 1e-5],
-            [8000000, 1e-6]]
+    config['lr'] = 0.0
     config['horizon'] = HORIZON
     config['clip_actions'] = False
     config['observation_filter'] = 'NoFilter'
@@ -267,13 +307,13 @@ if __name__ == '__main__':
         flow_params['exp_tag']: {
             'run': alg_run,
             'env': env_name,
-            'checkpoint_freq': 5,
-            'max_failures': 999,
+            'checkpoint_freq': 1,
             'checkpoint_at_end': True,
             'stop': {
-                'training_iteration': N_TRAINING_ITERATIONS
+                'training_iteration': 1
             },
             'config': config,
             'num_samples':1,
+            'restore':args.restore,
         },
     })

@@ -310,6 +310,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         checkpoint_dir=env_params.additional_params['checkpoint']
     #trained_agent_ref=init_policy_agent(result_dir, checkpoint_dir)
 
+    if args.window_size is not None:
+        env_params.additional_params['window_size']=tuple(args.window_size)
+
     # Remove previous env; Create and register a gym+rllib env
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
@@ -808,17 +811,24 @@ def create_parser():
     parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
     parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
     parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
+    parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
     return parser
 
 from subprocess import check_output
 import signal
+import json
+
 def get_pid(name):
     return  check_output(["pidof", name]).split()
     
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
-    import json
+    if args.window_size is not None:
+        if len(args.window_size)!=2:
+            print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
+            exit(-1)
+
     Speed = []
     Inflow = []
     Outflow = []

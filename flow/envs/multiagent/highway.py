@@ -284,7 +284,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             self.set_rl_observed(rl_id)
         self.set_speed_and_lane_change_modes()
         
+
 class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
+
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         for p in ADDITIONAL_ENV_PARAMS.keys():
             if p not in env_params.additional_params:
@@ -394,6 +396,7 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
                 #                                       p=lane_change_softmax)
                 self.k.vehicle.apply_acceleration(rl_id, accel)
                 # self.k.vehicle.apply_lane_change(rl_id, lane_change_action)
+
     def get_state(self):
         """See class definition."""
         obs = {}
@@ -488,8 +491,6 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
                     
                 #print(self.exiting_rl_veh)
 
-
-
     def reset(self):
         self.rl_queue = collections.deque()
         self.rl_veh = []
@@ -498,6 +499,7 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
         self.follower = []
         self.exiting_rl_id = []
         return super().reset()
+
 
 class MultiAgentHighwayPOEnvWindowCollaborate(MultiAgentHighwayPOEnvWindow):
     def compute_reward(self, rl_actions, **kwargs):
@@ -524,6 +526,8 @@ class MultiAgentHighwayPOEnvWindowCollaborate(MultiAgentHighwayPOEnvWindow):
         for rl_id in self.rl_veh:
             rewards[rl_id] = reward
         return rewards
+
+
 
 class MultiAgentHighwayPOEnvAvgVel(MultiAgentHighwayPOEnv):
   
@@ -976,6 +980,205 @@ class MultiAgentHighwayPOEnvMerge4(MultiAgentHighwayPOEnv):
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
         #print(states)
         return states
+
+class MultiAgentHighwayPOEnvMerge4ParameterizedWindowSize2(MultiAgentHighwayPOEnvMerge4):
+
+    def __init__(self, env_params, sim_params, network, simulator='traci'):
+        if "window_size" not in env_params.additional_params:
+                raise KeyError(
+                    'Environment parameter "{}" not supplied'.format("window_size"))
+
+        self.junction_left, self.junction_right=env_params.additional_params['window_size']
+
+        super().__init__(env_params, sim_params, network, simulator)
+
+    def step(self, rl_actions):
+        """Advance the environment by one step.
+
+        Assigns actions to autonomous and human-driven agents (i.e. vehicles,
+        traffic lights, etc...). Actions that are not assigned are left to the
+        control of the simulator. The actions are then used to advance the
+        simulator by the number of time steps requested per environment step.
+
+        Results from the simulations are processed through various classes,
+        such as the Vehicle and TrafficLight kernels, to produce standardized
+        methods for identifying specific network state features. Finally,
+        results from the simulator are used to generate appropriate
+        observations.
+
+        Parameters
+        ----------
+        rl_actions : array_like
+            an list of actions provided by the rl algorithm
+
+        Returns
+        -------
+        observation : array_like
+            agent's observation of the current environment
+        reward : float
+            amount of reward associated with the previous state/action pair
+        done : bool
+            indicates whether the episode has ended
+        info : dict
+            contains other diagnostic information from the previous action
+        """
+        for _ in range(self.env_params.sims_per_step):
+            self.time_counter += 1
+            self.step_counter += 1
+
+            # compute the rl vehicles that are not inside the window
+            rl_outside_window=list()
+            junction_start_x= self.k.network.total_edgestarts_dict["center"]
+            #print("junction_start_x", junction_start_x)
+            for rl_id in self.k.vehicle.get_rl_ids():
+                veh_x = self.k.vehicle.get_x_by_id(rl_id)
+                if junction_start_x-veh_x>self.junction_left or veh_x-junction_start_x>self.junction_right:
+                    rl_outside_window.append(rl_id)
+                    if rl_id in rl_actions.keys():
+                        del rl_actions[rl_id]
+            
+            # perform acceleration actions for rl vehicles that are not inside the window
+            accel=[]
+            for rl_id in rl_outside_window:
+                # using default SUMO action
+                accel.append(None)
+            self.k.vehicle.apply_acceleration(rl_outside_window, accel)
+
+            # perform acceleration actions for controlled human-driven vehicles
+            if len(self.k.vehicle.get_controlled_ids()) > 0:
+                accel = []
+                for veh_id in self.k.vehicle.get_controlled_ids():
+                    accel_contr = self.k.vehicle.get_acc_controller(veh_id)
+                    action = accel_contr.get_action(self)
+                    accel.append(action)
+                self.k.vehicle.apply_acceleration(
+                    self.k.vehicle.get_controlled_ids(), accel)
+
+            # perform lane change actions for controlled human-driven vehicles
+            if len(self.k.vehicle.get_controlled_lc_ids()) > 0:
+                direction = []
+                for veh_id in self.k.vehicle.get_controlled_lc_ids():
+                    target_lane = self.k.vehicle.get_lane_changing_controller(
+                        veh_id).get_action(self)
+                    direction.append(target_lane)
+                self.k.vehicle.apply_lane_change(
+                    self.k.vehicle.get_controlled_lc_ids(),
+                    direction=direction)
+
+            # perform (optionally) routing actions for all vehicle in the
+            # network, including rl and sumo-controlled vehicles
+            routing_ids = []
+            routing_actions = []
+            for veh_id in self.k.vehicle.get_ids():
+                if self.k.vehicle.get_routing_controller(veh_id) is not None:
+                    routing_ids.append(veh_id)
+                    route_contr = self.k.vehicle.get_routing_controller(veh_id)
+                    routing_actions.append(route_contr.choose_route(self))
+            self.k.vehicle.choose_routes(routing_ids, routing_actions)
+
+            # apply actions for rl vehicles within window
+            self.apply_rl_actions(rl_actions)
+
+            #self.additional_command()
+
+            # advance the simulation in the simulator by one step
+            self.k.simulation.simulation_step()
+
+            # store new observations in the vehicles and traffic lights class
+            self.k.update(reset=False)
+            #print ("ANOTHER ADDITIONAL COMMAND")
+            self.additional_command()
+    
+            # update the colors of vehicles
+            if self.sim_params.render:
+                self.k.vehicle.update_vehicle_colors()
+            
+            # crash encodes whether the simulator experienced a collision
+            crash = self.k.simulation.check_collision()
+
+            # stop collecting new simulation steps if there is a collision
+            #if crash:
+            #    print("Crash!!!!!!")
+            #    break
+
+            # render a frame
+            self.render()
+
+        states = self.get_state() # TODO-zyl
+        # compute the rl vehicles outside the network
+        rl_outside_window=list()
+        junction_start_x= self.k.network.total_edgestarts_dict["center"]
+        #print("junction_start_x", junction_start_x)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            veh_x = self.k.vehicle.get_x_by_id(rl_id)
+            if junction_start_x-veh_x>self.junction_left or veh_x-junction_start_x>self.junction_right:
+                rl_outside_window.append(rl_id)
+
+        # remove the state of the rl vehicle that is not inside the window 
+        # Then the network will not compute the actions
+        for rl_id in rl_outside_window:
+            del states[rl_id]
+
+        # collect information of the state of the network based on the
+        # environment class used
+        #self.state = np.asarray(states).T
+
+        # collect observation new state associated with action
+        #next_observation = np.copy(states)
+        next_observation=states
+        
+        done = {key: key in self.k.vehicle.get_arrived_ids() for key in states.keys()}
+        if crash:
+            done['__all__'] = True
+        else:
+            done['__all__'] = False
+
+        # compute the info for each agent
+        infos = {key: {} for key in states.keys()}
+
+        # compute the reward
+        if self.env_params.clip_actions:
+            clipped_actions = self.clip_actions(rl_actions)
+            reward = self.compute_reward(clipped_actions, fail=crash)
+        else:
+            reward = self.compute_reward(rl_actions, fail=crash)
+        
+        # remove the state of the rl vehicle that is not inside the window 
+        arrived_rl_ids=self.k.vehicle.get_arrived_rl_ids()
+        for rl_id in reward.keys():
+            if rl_id in rl_outside_window or rl_id in arrived_rl_ids:
+                reward[rl_id]=20
+                next_observation[rl_id] = np.zeros(self.observation_space.shape[0])
+                if rl_id in arrived_rl_ids:
+                    done[rl_id]=True
+
+        if set(reward.keys())!= set(next_observation.keys()):
+            print("reward keys:", reward.keys())
+            print("obs keys:", states.keys())
+            print("previous_rl_inside_window:", previous_rl_inside_window) 
+            print("rl_outside_window:", rl_outside_window) 
+                
+
+        return next_observation, reward, done, infos
+
+
+class MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate(MultiAgentHighwayPOEnvMerge4ParameterizedWindowSize2):
+
+    def compute_reward(self, rl_actions, **kwargs):
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+        reward1 = -0.1
+        reward2 = average_velocity(self)/300
+        reward  = reward1 * eta1 + reward2 * eta2
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rewards[rl_id] = reward
+        return rewards
+
 
 class MultiAgentHighwayPOEnvMerge4Negative(MultiAgentHighwayPOEnvMerge4):
     def compute_reward(self, rl_actions, **kwargs):
