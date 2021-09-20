@@ -1,6 +1,6 @@
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/window_size
+EXP_FOLDER=$FLOW_DIR/exp_results/random_merge
 
 POLICY_DIR1=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_740c0_00000_0_2021-07-04_14-31-39
 MARK='2000_200_30'
@@ -56,47 +56,52 @@ J=0
 CHCKPOINT=500
 WINDOW_LEFT=-1
 
-WORKING_DIR=$EXP_FOLDER/modified_state_three_merge_2000_300_30_random_merge_even_test
+WORKING_DIR=$EXP_FOLDER/2000_200_30
 mkdir ${WORKING_DIR}
 
 MERGE_INFLOW=200
-for AVP in 2 4 6 8 10 20 30 40
+for RAND_MERGE_PROB in 2 #4 6 8 10 15 20 30 40
 do
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+	for AVP in 10  #2 4 6 8 10 20 30 40
+	do
+		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+		echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 
-	python3 $VISUALIZER \
-		$POLICY_DIR5 \
-		$CHCKPOINT \
-		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--render_mode no_render \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
-		#--main_merge_human_inflows 2000 300 \
-		#--to_probability \
+		python3 $VISUALIZER \
+			$POLICY_DIR5 \
+			$CHCKPOINT \
+			--seed_dir $FLOW_DIR \
+			--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+			--merge_random_inflow_percentage ${RAND_MERGE_PROB} \
+			--render_mode no_render \
+			#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RAND_MERGE_PROB}.txt &
+			#--main_merge_human_inflows 2000 300 \
+			#--to_probability \
+	done
 done
 
-WORKING_DIR=$EXP_FOLDER/modified_state_three_merge_2000_200_30_random_merge_even_test
-mkdir ${WORKING_DIR}
+#for RAND_MERGE_PROB in 2 4 6 8 10 15 20 30 40
+#do
+#	for AVP in 0  #2 4 6 8 10 20 30 40
+#	do
+#		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+#		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+#		echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+#
+#		python3 $VISUALIZER \
+#			$POLICY_DIR5 \
+#			$CHCKPOINT \
+#			--seed_dir $FLOW_DIR \
+#			--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+#			--merge_random_inflow_percentage ${RAND_MERGE_PROB} \
+#			--render_mode no_render \
+#			>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RAND_MERGE_PROB}.txt &
+#			#--main_merge_human_inflows 2000 300 \
+#			#--to_probability \
+#	done
+#done
 
-MERGE_INFLOW=200
-for AVP in 2 4 6 8 10 20 30 40
-do
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-
-	python3 $VISUALIZER \
-		$POLICY_DIR6 \
-		$CHCKPOINT \
-		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--render_mode no_render \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
-		#--main_merge_human_inflows 2000 300 \
-		#--to_probability \
-done
 
 wait
 

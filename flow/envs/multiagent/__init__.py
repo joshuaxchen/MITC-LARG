@@ -27,7 +27,10 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvAblationConjestionDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfo,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfoCollaborate,\
-                        MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate
+                        MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate,\
+                        MultiAgentHighwayPOEnvMerge4RandomMergeCollaborate,\
+                        MultiAgentHighwayPOEnvMerge4RandomMergeModifyDistCollaborate,\
+                        MultiAgentHighwayPOEnvMerge4ModifyDistCollaborate
 
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate

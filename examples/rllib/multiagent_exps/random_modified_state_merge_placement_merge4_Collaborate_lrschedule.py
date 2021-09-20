@@ -23,7 +23,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4RandomMergeModifyDistCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -133,13 +133,13 @@ if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
 random_prefix="Even"
-if args.to_probability is not None:
+if args.to_probability==True:
    random_prefix="Random" 
-exp_tag_str='{}_all_placement'.format(random_prefix)+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+exp_tag_str='{}_modified_state_merge_placement_augmented'.format(random_prefix)+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=MultiAgentHighwayPOEnvMerge4Collaborate,
+    env_name=MultiAgentHighwayPOEnvMerge4RandomMergeModifyDistCollaborate, #MultiAgentHighwayPOEnvMerge4Collaborate,
     network=MergeNetwork,
     simulator='traci',
 

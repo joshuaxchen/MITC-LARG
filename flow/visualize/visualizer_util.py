@@ -408,6 +408,9 @@ def reset_inflows(args, flow_params):
     veh_params=flow_params['veh'] 
     env_name=flow_params['env_name']
 
+    if veh_params is None:
+        veh_params=VehicleParams()
+
     # Inflows        
     # This is implemented in flow.envs.base or flow.envs.multiagent.base
     if args.random_inflow:
@@ -419,9 +422,11 @@ def reset_inflows(args, flow_params):
     for inflow in net_params.inflows.get():
         if 'merge' in inflow['edge'] or 'on_ramp' in inflow['edge']:
             merge_names.append(inflow['edge'])
+    # for training, the net_params may be empty, we add inflow_merge as the default one
+    if len(merge_names)==0:
+        merge_names.append("inflow_merge")
         
     # This is used by human baseline
-    print("set main merge human inflows")
     if args.main_merge_human_inflows:
         input_inflows=args.main_merge_human_inflows
         inflow = InFlows()
@@ -455,32 +460,33 @@ def reset_inflows(args, flow_params):
         net_params.inflows=inflow
         print("after set:",inflow.get())
     # set human and rl vehicles in highway, and human vehicles on every merge or on ramp
-    print("handset inflows")
     if args.handset_inflow:
         # env_params.additional_params['handset_inflow']=args.handset_inflow
         # handset_inflow
         #vehicles = VehicleParams()
         ## human vehicles
-        #vehicles.add(
-        #    veh_id="human",
-        #    acceleration_controller=(SimCarFollowingController, {}),
-        #    car_following_params=SumoCarFollowingParams(
-        #        speed_mode=15,  # for safer behavior at the merges
-        #        #tau=1.5  # larger distance between cars
-        #    ),
-        #    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-        #    num_vehicles=5)
+        if "human" not in veh_params.type_parameters.keys():
+            veh_params.add(
+                veh_id="human",
+                acceleration_controller=(SimCarFollowingController, {}),
+                car_following_params=SumoCarFollowingParams(
+                    speed_mode=9,  # for safer behavior at the merges
+                    #tau=1.5  # larger distance between cars
+                ),
+                #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+                num_vehicles=5)
 
         ## autonomous vehicles
-        #vehicles.add(
-        #    veh_id="rl",
-        #    acceleration_controller=(RLController, {}),
-        #    car_following_params=SumoCarFollowingParams(
-        #        speed_mode=9,
-        #    ),
-        #    num_vehicles=0)
-        #flow_params['veh']=vehicles
+        if "rl" not in veh_params.type_parameters.keys():
+            veh_params.add(
+                veh_id="rl",
+                acceleration_controller=(RLController, {}),
+                car_following_params=SumoCarFollowingParams(
+                    speed_mode=9,
+                ),
+                num_vehicles=0)
 
+        print("handset inflows")
         input_inflows=args.handset_inflow
         main_human_inflow_rate=input_inflows[0] 
         main_rl_inflow_rate=input_inflows[1] 
@@ -598,4 +604,38 @@ def reset_inflows(args, flow_params):
                 print("The inflow is not set by vehs_per_hour or probability. Please add their support to extrate FLOW_RATE.")
                 sys.exit(-1)
             inflow['probability']=FLOW_RATE/3600.0 
+
+    if args.merge_random_inflow_percentage:
+        total_merge_inflow=0
+        inflows_to_remove=list()
+        # find the total inflows from merge
+        for inflow in net_params.inflows.get(): 
+            if 'merge' in inflow['edge']:
+                if 'vehs_per_hour' in inflow:
+                    total_merge_inflow+=inflow['vehs_per_hour']
+                if 'vehsPerHour' in inflow:
+                    total_merge_inflow+=inflow['vehsPerHour']
+                if 'probablity' in inflow:
+                    total_merge_inflow+=inflow['probability']*3600
+                inflows_to_remove.append(inflow)
+
+        # remove all the inflows from merge
+        for inflow in inflows_to_remove:
+            net_params.inflows.get().remove(inflow)
+
+        # set the merge inflows according to the percentage of random and even inflows
+        random_percentage=args.merge_random_inflow_percentage/100.0
+        even_percentage=1-random_percentage
+        if random_percentage>0:
+            random_inflow_rate=total_merge_inflow*random_percentage
+            probability=random_inflow_rate/3600
+            net_params.inflows.add(veh_type="human", edge="inflow_merge",
+                    probability=probability, depart_lane="free",
+                    depart_speed=7.5)
+        if even_percentage>0:
+            even_inflow_rate=total_merge_inflow*even_percentage
+            net_params.inflows.add(veh_type="human", edge="inflow_merge",
+                    vehs_per_hour=even_inflow_rate, depart_lane="free",
+                    depart_speed=7.5)
+
 

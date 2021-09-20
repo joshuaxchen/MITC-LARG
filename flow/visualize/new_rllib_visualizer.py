@@ -812,6 +812,7 @@ def create_parser():
     parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
     parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
     parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
+    parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
     return parser
 
 from subprocess import check_output
