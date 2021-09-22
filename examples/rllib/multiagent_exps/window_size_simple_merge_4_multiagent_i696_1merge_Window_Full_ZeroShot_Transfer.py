@@ -80,7 +80,7 @@ N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
 N_ROLLOUTS = 1 
 # number of steps per rollout
-HORIZON = 3000
+HORIZON = 2000
 # number of parallel workers
 N_CPUS = 0
 if args.cpu:
@@ -104,10 +104,10 @@ window_size=tuple(args.window_size)
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
-#additional_net_params["pre_merge_length"] = 500
-additional_net_params["pre_merge_length"] = 3031
-additional_net_params["post_merge_length"] = 5077 #1878
-additional_net_params["merge_length"] = 1778
+additional_net_params["pre_merge_length"] = 500
+#additional_net_params["pre_merge_length"] = 3031
+#additional_net_params["post_merge_length"] = 5077 #1878
+#additional_net_params["merge_length"] = 1778
 
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 

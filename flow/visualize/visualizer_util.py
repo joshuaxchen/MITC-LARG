@@ -588,8 +588,8 @@ def reset_inflows(args, flow_params):
     if args.to_probability:
         FLOW_RATE=0
         for inflow in net_params.inflows.get(): 
-            #if "merge" in inflow['edge']:
-            #    continue
+            if "merge" in inflow['edge']:
+                continue
             if 'probability' in inflow:
                 continue
             
