@@ -638,4 +638,36 @@ def reset_inflows(args, flow_params):
                     vehs_per_hour=even_inflow_rate, depart_lane="free",
                     depart_speed=7.5)
 
+    if args.main_random_inflow_percentage:
+        total_main_human_inflow=0
+        inflows_to_remove=list()
+        for inflow in net_params.inflows.get():
+            if 'merge' in flow['edge']:
+                continue
+            if 'human' in flow['veh_type']:
+                if 'vehs_per_hour' in inflow:
+                    total_main_human_inflow+=inflow['vehs_per_hour']
+                if 'vehsPerHour' in inflow:
+                    total_main_human_inflow+=inflow['vehsPerHour']
+                if 'probablity' in inflow:
+                    total_main_human_inflow+=inflow['probability']*3600
+                inflows_to_remove.append(inflow)
+        # remove all the inflows from merge
+        for inflow in inflows_to_remove:
+            net_params.inflows.get().remove(inflow)
+
+        # set the main human inflows according to the percentage of random and even inflows
+        random_percentage=args.main_random_inflow_percentage/100.0
+        even_percentage=1-random_percentage
+        if random_percentage>0:
+            random_inflow_rate=total_main_human_inflow*random_percentage
+            probability=random_inflow_rate/3600
+            net_params.inflows.add(veh_type="human", edge="inflow_highway",
+                    probability=probability, depart_lane="free",
+                    depart_speed=7.5)
+        if even_percentage>0:
+            even_inflow_rate=total_main_human_inflow*even_percentage
+            net_params.inflows.add(veh_type="human", edge="inflow_highway",
+                    vehs_per_hour=even_inflow_rate, depart_lane="free",
+                    depart_speed=7.5)
 
