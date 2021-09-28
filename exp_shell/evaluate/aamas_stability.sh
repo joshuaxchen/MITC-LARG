@@ -111,21 +111,21 @@ J=0
 # 1 2 6 7 8 12 13 14 15 
 # 1 6 wily 
 # 2 8 9 13 drperceptron slow
-for I in 1 2 6 7 8 9 #10 11 12 13 14 15 #3 4 5  # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
+for I in 5 #1 2 6 7 8 9 #10 11 12 13 14 15 #3 4 5  # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
 	for MERGE_INFLOW in 200 #180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 500 600 700 800 900 1000 
 	do
-		for MAIN_INFLOW in 1600 1700 1800 1900 2000 #1850 1650 
+		for MAIN_INFLOW in 1800 #1600 1700 1800 1900 2000 #1850 1650 
 		do
-			for AVP in 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40
+			for AVP in 0 #1 2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40
 			do
 				let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 				let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 				echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 				echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
-				python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --to_probability --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW >> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+				python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --to_probability --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW --print_metric_per_time_step_in_file ${PWD}/2000_200_30_${AVP}
 				let J=J+1
 				if ((J == 20)); then
 					wait
