@@ -133,8 +133,8 @@ def compare_av_placement(summary):
             sorted_e_data=extract_sorted_data(inflow_random_summary[model_key])
             inflow_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
             
-        avp_plot.write_plot(evaluation_name+"/placement_avp_"+inflow+".tex")
-        inflow_plot.write_plot(evaluation_name+"/placement_inflow_"+inflow+".tex")
+        avp_plot.write_plot(evaluation_name+"/placement_avp_"+inflow+".tex", 5)
+        inflow_plot.write_plot(evaluation_name+"/placement_inflow_"+inflow+".tex", 5)
 
 def plot_each_inflow_each_category(summary):
     for category, category_summary in summary.items():  
@@ -187,9 +187,9 @@ def plot_each_inflow_each_category(summary):
                 sorted_e_data.sort()
                 plot_2000.add_plot(label_prefix+model_key, sorted_e_data)
                 #print(model_key, sorted_e_data)
-        plot_1650.write_plot(evaluation_name+"/"+category+"_1650.tex")
-        plot_1850.write_plot(evaluation_name+"/"+category+"_1850.tex")
-        plot_2000.write_plot(evaluation_name+"/"+category+"_2000.tex")
+        plot_1650.write_plot(evaluation_name+"/"+category+"_1650.tex", 1)
+        plot_1850.write_plot(evaluation_name+"/"+category+"_1850.tex", 1)
+        plot_2000.write_plot(evaluation_name+"/"+category+"_2000.tex", 1)
 
 def plot_each_category(summary):
     for category, category_summary in summary.items():  
@@ -218,7 +218,7 @@ def plot_each_category(summary):
             sorted_e_data.sort()
             plot.add_plot(label_prefix+model_key, sorted_e_data)
             #print(model_key, sorted_e_data)
-        plot.write_plot(evaluation_name+"/"+category+".tex")
+        plot.write_plot(evaluation_name+"/"+category+".tex", 1)
 
 def retrieve_all_data_and_plot():
     summary=dict()

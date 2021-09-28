@@ -10,7 +10,7 @@ class PlotWriter:
         self.xmax=0
         self.xlabel=xlabel
         self.ylabel=ylabel
-        self.add_human=True
+        self.add_human=False
         #self.template_plot="\\addplot[thick, mark options={mark size=2 pt}, error bars/.cd, y dir=both, y explicit] table [x=a, y=b, y error=c] {\na\t b\t c\n%s};\n\\label{%s}\n\n" 
         #self.template_plot="\\addplot table [x=a, y=b, y error=c] {\na\t b\t c\n%s};\n\\label{%s}\n\n" 
         self.template_plot="\\addplot table [x=a, y=b] {\na\t b\t c\n%s};\n\\label{%s}\n\n" 
@@ -84,7 +84,7 @@ class PlotWriter:
 
         # add human baseline
         human_template="\\addplot[%s, samples=200] coordinates {(0,%f) (100,%f)};\label{human-%d}"
-        if self.xlabel.endswith("AVP"):
+        if self.add_human and self.xlabel.endswith("AVP"):
             if "Outflow" in self.ylabel:
                 mean_1650=1734.55
                 mean_1850=1560.38
@@ -95,7 +95,7 @@ class PlotWriter:
                 mean_2400=1559.52
                 mean_2500=1556.64
                 mean_2600=1561.28
-            elif "Speed" in self.ylabel:
+            elif self.add_human and "Speed" in self.ylabel:
                 mean_1650=17.70
                 mean_1850=7.72
                 mean_2000=7.32
@@ -105,7 +105,7 @@ class PlotWriter:
                 mean_2400=7.07
                 mean_2500=7.04
                 mean_2600=7.07
-            elif "Inflow" in self.ylabel:
+            elif self.add_human and "Inflow" in self.ylabel:
                 mean_1650=1823.33
                 mean_1850=1728.50
                 mean_2000=1728.86
@@ -211,8 +211,8 @@ class PlotWriter:
                     (2600, 1727.96, 11.69)
                 ]
 
-               
-            self.add_plot("human", human_data)
+            if self.add_human:   
+                self.add_plot("human", human_data)
 
         content=header+axis_setup+self.plot_content+self.legend+"\n\n"+tail
         file=open(filename, "w")

@@ -1,0 +1,618 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\small},
+      every y tick label/.append style={font=\small},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	 blue,  every mark/.append style={fill=blue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dashed every mark/.append style={fill=blue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 blue, dashed every mark/.append style={fill=blue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 blue, densely dotted every mark/.append style={fill=blue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 blue, loosely dotted every mark/.append style={fill=blue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashed every mark/.append style={fill=red!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dashdotted every mark/.append style={fill=red!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dashdottted every mark/.append style={fill=red!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 red,  every mark/.append style={fill=red!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 red, densely dashed every mark/.append style={fill=red!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 green, dashed every mark/.append style={fill=green!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dotted every mark/.append style={fill=green!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 green, loosely dotted every mark/.append style={fill=green!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 green, loosely dashed every mark/.append style={fill=green!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 green, densely dashdotted every mark/.append style={fill=green!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 brown, loosely dashdottted every mark/.append style={fill=brown!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 brown,  every mark/.append style={fill=brown!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dashed every mark/.append style={fill=brown!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 brown, dashed every mark/.append style={fill=brown!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 brown, densely dotted every mark/.append style={fill=brown!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dotted every mark/.append style={fill=cyan!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dashed every mark/.append style={fill=cyan!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, densely dashdotted every mark/.append style={fill=cyan!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 cyan, loosely dashdottted every mark/.append style={fill=cyan!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 cyan,  every mark/.append style={fill=cyan!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dashed every mark/.append style={fill=darkgray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, dashed every mark/.append style={fill=darkgray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, densely dotted every mark/.append style={fill=darkgray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dotted every mark/.append style={fill=darkgray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 darkgray, loosely dashed every mark/.append style={fill=darkgray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dashdotted every mark/.append style={fill=gray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 gray, loosely dashdottted every mark/.append style={fill=gray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 gray,  every mark/.append style={fill=gray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 gray, densely dashed every mark/.append style={fill=gray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 gray, dashed every mark/.append style={fill=gray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dotted every mark/.append style={fill=lightgray!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dotted every mark/.append style={fill=lightgray!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashed every mark/.append style={fill=lightgray!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, densely dashdotted every mark/.append style={fill=lightgray!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 lightgray, loosely dashdottted every mark/.append style={fill=lightgray!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 lime,  every mark/.append style={fill=lime!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dashed every mark/.append style={fill=lime!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 lime, dashed every mark/.append style={fill=lime!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 lime, densely dotted every mark/.append style={fill=lime!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 lime, loosely dotted every mark/.append style={fill=lime!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashed every mark/.append style={fill=magenta!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dashdotted every mark/.append style={fill=magenta!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, loosely dashdottted every mark/.append style={fill=magenta!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 magenta,  every mark/.append style={fill=magenta!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 magenta, densely dashed every mark/.append style={fill=magenta!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 olive, dashed every mark/.append style={fill=olive!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dotted every mark/.append style={fill=olive!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 olive, loosely dotted every mark/.append style={fill=olive!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 olive, loosely dashed every mark/.append style={fill=olive!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 olive, densely dashdotted every mark/.append style={fill=olive!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 orange, loosely dashdottted every mark/.append style={fill=orange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 orange,  every mark/.append style={fill=orange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dashed every mark/.append style={fill=orange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 orange, dashed every mark/.append style={fill=orange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 orange, densely dotted every mark/.append style={fill=orange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dotted every mark/.append style={fill=pink!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dashed every mark/.append style={fill=pink!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 pink, densely dashdotted every mark/.append style={fill=pink!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 pink, loosely dashdottted every mark/.append style={fill=pink!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 pink,  every mark/.append style={fill=pink!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dashed every mark/.append style={fill=purple!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 purple, dashed every mark/.append style={fill=purple!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 purple, densely dotted every mark/.append style={fill=purple!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dotted every mark/.append style={fill=purple!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 purple, loosely dashed every mark/.append style={fill=purple!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dashdotted every mark/.append style={fill=teal!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 teal, loosely dashdottted every mark/.append style={fill=teal!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 teal,  every mark/.append style={fill=teal!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 teal, densely dashed every mark/.append style={fill=teal!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 teal, dashed every mark/.append style={fill=teal!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dotted every mark/.append style={fill=violet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dotted every mark/.append style={fill=violet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashed every mark/.append style={fill=violet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 violet, densely dashdotted every mark/.append style={fill=violet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 violet, loosely dashdottted every mark/.append style={fill=violet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 yellow,  every mark/.append style={fill=yellow!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dashed every mark/.append style={fill=yellow!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, dashed every mark/.append style={fill=yellow!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, densely dotted every mark/.append style={fill=yellow!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 yellow, loosely dotted every mark/.append style={fill=yellow!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashed every mark/.append style={fill=Bittersweet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dashdotted every mark/.append style={fill=Bittersweet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, loosely dashdottted every mark/.append style={fill=Bittersweet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet,  every mark/.append style={fill=Bittersweet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Bittersweet, densely dashed every mark/.append style={fill=Bittersweet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, dashed every mark/.append style={fill=BlueViolet!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dotted every mark/.append style={fill=BlueViolet!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, loosely dotted every mark/.append style={fill=BlueViolet!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, loosely dashed every mark/.append style={fill=BlueViolet!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BlueViolet, densely dashdotted every mark/.append style={fill=BlueViolet!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, loosely dashdottted every mark/.append style={fill=BrickRed!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed,  every mark/.append style={fill=BrickRed!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dashed every mark/.append style={fill=BrickRed!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, dashed every mark/.append style={fill=BrickRed!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BrickRed, densely dotted every mark/.append style={fill=BrickRed!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dotted every mark/.append style={fill=BurntOrange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dashed every mark/.append style={fill=BurntOrange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, densely dashdotted every mark/.append style={fill=BurntOrange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange, loosely dashdottted every mark/.append style={fill=BurntOrange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 BurntOrange,  every mark/.append style={fill=BurntOrange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dashed every mark/.append style={fill=CadetBlue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, dashed every mark/.append style={fill=CadetBlue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, densely dotted every mark/.append style={fill=CadetBlue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dotted every mark/.append style={fill=CadetBlue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 CadetBlue, loosely dashed every mark/.append style={fill=CadetBlue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dashdotted every mark/.append style={fill=CarnationPink!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, loosely dashdottted every mark/.append style={fill=CarnationPink!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink,  every mark/.append style={fill=CarnationPink!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, densely dashed every mark/.append style={fill=CarnationPink!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 CarnationPink, dashed every mark/.append style={fill=CarnationPink!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dotted every mark/.append style={fill=Cerulean!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dotted every mark/.append style={fill=Cerulean!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashed every mark/.append style={fill=Cerulean!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, densely dashdotted every mark/.append style={fill=Cerulean!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Cerulean, loosely dashdottted every mark/.append style={fill=Cerulean!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion,  every mark/.append style={fill=Dandelion!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dashed every mark/.append style={fill=Dandelion!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, dashed every mark/.append style={fill=Dandelion!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, densely dotted every mark/.append style={fill=Dandelion!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Dandelion, loosely dotted every mark/.append style={fill=Dandelion!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashed every mark/.append style={fill=DarkOrchid!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dashdotted every mark/.append style={fill=DarkOrchid!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, loosely dashdottted every mark/.append style={fill=DarkOrchid!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid,  every mark/.append style={fill=DarkOrchid!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 DarkOrchid, densely dashed every mark/.append style={fill=DarkOrchid!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, dashed every mark/.append style={fill=Emerald!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dotted every mark/.append style={fill=Emerald!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, loosely dotted every mark/.append style={fill=Emerald!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, loosely dashed every mark/.append style={fill=Emerald!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Emerald, densely dashdotted every mark/.append style={fill=Emerald!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, loosely dashdottted every mark/.append style={fill=Fuchsia!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia,  every mark/.append style={fill=Fuchsia!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dashed every mark/.append style={fill=Fuchsia!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, dashed every mark/.append style={fill=Fuchsia!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Fuchsia, densely dotted every mark/.append style={fill=Fuchsia!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dotted every mark/.append style={fill=GreenYellow!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dashed every mark/.append style={fill=GreenYellow!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, densely dashdotted every mark/.append style={fill=GreenYellow!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow, loosely dashdottted every mark/.append style={fill=GreenYellow!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 GreenYellow,  every mark/.append style={fill=GreenYellow!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dashed every mark/.append style={fill=Magenta!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, dashed every mark/.append style={fill=Magenta!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, densely dotted every mark/.append style={fill=Magenta!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dotted every mark/.append style={fill=Magenta!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Magenta, loosely dashed every mark/.append style={fill=Magenta!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dashdotted every mark/.append style={fill=Maroon!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, loosely dashdottted every mark/.append style={fill=Maroon!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon,  every mark/.append style={fill=Maroon!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, densely dashed every mark/.append style={fill=Maroon!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Maroon, dashed every mark/.append style={fill=Maroon!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dotted every mark/.append style={fill=MidnightBlue!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dotted every mark/.append style={fill=MidnightBlue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashed every mark/.append style={fill=MidnightBlue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, densely dashdotted every mark/.append style={fill=MidnightBlue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 MidnightBlue, loosely dashdottted every mark/.append style={fill=MidnightBlue!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Orange,  every mark/.append style={fill=Orange!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dashed every mark/.append style={fill=Orange!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, dashed every mark/.append style={fill=Orange!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, densely dotted every mark/.append style={fill=Orange!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Orange, loosely dotted every mark/.append style={fill=Orange!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashed every mark/.append style={fill=OrangeRed!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dashdotted every mark/.append style={fill=OrangeRed!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, loosely dashdottted every mark/.append style={fill=OrangeRed!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed,  every mark/.append style={fill=OrangeRed!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 OrangeRed, densely dashed every mark/.append style={fill=OrangeRed!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, dashed every mark/.append style={fill=Orchid!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dotted every mark/.append style={fill=Orchid!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, loosely dotted every mark/.append style={fill=Orchid!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, loosely dashed every mark/.append style={fill=Orchid!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Orchid, densely dashdotted every mark/.append style={fill=Orchid!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, loosely dashdottted every mark/.append style={fill=Periwinkle!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle,  every mark/.append style={fill=Periwinkle!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dashed every mark/.append style={fill=Periwinkle!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, dashed every mark/.append style={fill=Periwinkle!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 Periwinkle, densely dotted every mark/.append style={fill=Periwinkle!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dotted every mark/.append style={fill=RawSienna!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dashed every mark/.append style={fill=RawSienna!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, densely dashdotted every mark/.append style={fill=RawSienna!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna, loosely dashdottted every mark/.append style={fill=RawSienna!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 RawSienna,  every mark/.append style={fill=RawSienna!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+} %end of colors
+
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large Outflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large Evaluated AVP},
+	legend columns=15,
+	transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+	cycle list name=mycolorlist,
+	 xmax=40
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1588.43	29.76
+2	1602.36	31.39
+3	1610.93	28.33
+4	1617.73	33.43
+5	1621.98	39.46
+6	1626.77	34.15
+7	1621.76	34.83
+8	1625.51	39.65
+9	1628.71	41.53
+10	1624.54	44.44
+12	1624.39	43.06
+14	1616.76	45.63
+16	1615.5	44.1
+18	1608.95	55.57
+20	1600.63	51.84
+25	1592.5	54.04
+30	1572.73	52.19
+35	1569.92	57.09
+40	1552.43	61.38
+};
+\label{random-1650-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1576.69	26.26
+2	1585.73	28.14
+3	1595.92	28.43
+4	1599.55	32.08
+5	1605.28	30.46
+6	1614.24	33.45
+7	1619.24	34.89
+8	1622.59	34.43
+9	1628.1	44.52
+10	1633.28	48.5
+12	1639.84	48.96
+14	1651.79	50.51
+16	1660.07	50.82
+18	1678.39	50.1
+20	1683.47	51.28
+25	1707.84	48.66
+30	1718.28	45.77
+35	1723.1	44.07
+40	1725.73	35.07
+};
+\label{random-1650-200-30}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1584.11	26.43
+2	1593.47	30.57
+3	1602.97	27.31
+4	1608.52	28.11
+5	1610.71	32.15
+6	1613.41	29.03
+7	1615.39	33.59
+8	1620.14	32.42
+9	1626.41	33.24
+10	1623.38	36.53
+12	1633.25	41.04
+14	1632.46	44.46
+16	1631.23	42.77
+18	1638.54	45.01
+20	1655.03	47.54
+25	1671.52	45.8
+30	1699.78	54.1
+35	1719.83	52.22
+40	1741.32	55.3
+};
+\label{random-1650-200-50}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1584.0	24.05
+2	1595.12	26.88
+3	1601.42	23.88
+4	1608.05	25.36
+5	1615.54	24.53
+6	1619.21	25.42
+7	1620.04	28.49
+8	1626.98	27.34
+9	1627.67	30.67
+10	1630.3	30.07
+12	1630.55	32.92
+14	1634.87	35.53
+16	1643.15	34.31
+18	1645.42	41.22
+20	1653.08	38.87
+25	1670.51	46.55
+30	1685.66	49.1
+35	1698.12	46.22
+40	1729.87	54.51
+};
+\label{random-1650-200-80}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1558.87	23.69
+2	1556.46	32.24
+3	1562.8	23.15
+4	1563.88	24.33
+5	1566.97	24.55
+6	1573.38	22.58
+7	1571.11	24.09
+8	1574.86	22.51
+9	1577.52	26.06
+10	1576.15	25.04
+12	1582.34	26.35
+14	1589.08	31.38
+16	1593.18	26.99
+18	1598.76	26.26
+20	1605.28	28.63
+25	1620.22	33.76
+30	1622.7	29.57
+35	1630.37	33.14
+40	1638.43	38.46
+};
+\label{random-1650-200-100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1591.88	29.58
+2	1603.04	28.05
+3	1614.96	32.59
+4	1624.03	32.44
+5	1631.52	35.09
+6	1633.61	34.58
+7	1632.82	36.66
+8	1641.28	39.7
+9	1639.12	41.02
+10	1642.36	44.57
+12	1640.56	41.56
+14	1640.66	48.36
+16	1640.3	44.94
+18	1643.36	48.93
+20	1644.91	44.91
+25	1650.24	53.1
+30	1649.2	47.54
+35	1653.77	52.27
+40	1650.71	48.18
+};
+\label{random-1850-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1580.11	28.34
+2	1588.93	27.46
+3	1596.82	27.16
+4	1602.11	29.05
+5	1609.02	32.35
+6	1618.78	31.39
+7	1621.22	28.64
+8	1626.52	30.8
+9	1634.29	39.49
+10	1642.93	38.55
+12	1651.86	46.51
+14	1660.14	44.66
+16	1662.91	50.72
+18	1674.04	49.95
+20	1688.04	50.41
+25	1717.45	46.26
+30	1734.7	45.76
+35	1742.72	52.27
+40	1764.07	45.7
+};
+\label{random-1850-200-30}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.16	25.19
+2	1571.29	28.08
+3	1572.66	21.88
+4	1579.32	24.09
+5	1580.26	26.21
+6	1588.32	24.88
+7	1593.32	31.2
+8	1603.08	33.79
+9	1609.78	31.81
+10	1618.67	35.23
+12	1625.87	38.2
+14	1637.93	39.9
+16	1644.55	40.55
+18	1647.9	41.4
+20	1660.72	46.55
+25	1685.63	51.37
+30	1701.9	54.88
+35	1718.82	57.01
+40	1739.45	41.51
+};
+\label{random-1850-200-50}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1568.52	22.5
+2	1570.61	26.08
+3	1573.6	22.28
+4	1578.82	23.35
+5	1576.15	25.17
+6	1585.01	25.1
+7	1586.16	26.41
+8	1587.92	28.3
+9	1593.43	31.23
+10	1594.76	26.93
+12	1605.71	29.49
+14	1616.44	37.13
+16	1621.33	33.1
+18	1629.07	37.28
+20	1633.68	35.73
+25	1639.22	36.76
+30	1647.32	42.04
+35	1657.51	49.93
+40	1675.19	52.82
+};
+\label{random-1850-200-80}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1566.94	23.28
+2	1567.48	25.35
+3	1567.51	21.23
+4	1568.77	21.19
+5	1566.83	24.44
+6	1568.3	22.66
+7	1569.31	20.32
+8	1569.96	22.51
+9	1570.32	27.24
+10	1568.45	26.65
+12	1573.63	24.13
+14	1577.74	32.29
+16	1585.01	30.29
+18	1589.94	28.73
+20	1595.45	28.5
+25	1610.39	30.01
+30	1624.68	34.69
+35	1641.6	32.32
+40	1650.46	31.95
+};
+\label{random-1850-200-100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1592.86	30.01
+2	1607.33	34.42
+3	1616.29	30.85
+4	1622.12	30.97
+5	1629.22	33.78
+6	1631.09	32.72
+7	1626.95	34.84
+8	1631.45	36.99
+9	1633.68	41.94
+10	1627.16	42.98
+12	1630.55	47.8
+14	1621.76	44.47
+16	1624.82	46.43
+18	1629.9	51.58
+20	1622.09	47.69
+25	1619.86	48.82
+30	1627.7	57.49
+35	1638.07	56.89
+40	1636.49	64.73
+};
+\label{random-2000-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1578.71	29.24
+2	1586.63	27.48
+3	1593.47	24.68
+4	1602.54	28.5
+5	1607.33	30.46
+6	1616.26	31.13
+7	1618.13	33.57
+8	1625.8	36.85
+9	1627.13	39.38
+10	1631.34	39.8
+12	1645.09	46.27
+14	1657.8	50.12
+16	1663.74	52.0
+18	1675.15	51.11
+20	1693.37	57.27
+25	1722.78	56.93
+30	1751.76	53.04
+35	1770.66	47.58
+40	1786.64	41.61
+};
+\label{random-2000-200-30}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1562.0	28.57
+2	1565.5	34.25
+3	1575.0	28.81
+4	1582.38	23.1
+5	1591.31	26.66
+6	1597.0	27.23
+7	1600.67	30.91
+8	1604.09	28.59
+9	1611.07	33.31
+10	1609.13	29.57
+12	1619.46	34.32
+14	1623.42	35.24
+16	1631.84	34.45
+18	1643.0	35.52
+20	1654.63	37.76
+25	1693.69	47.04
+30	1727.78	44.87
+35	1748.92	41.49
+40	1745.17	38.27
+};
+\label{random-2000-200-50}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1585.48	27.83
+2	1596.89	29.44
+3	1604.23	28.72
+4	1610.42	27.68
+5	1616.22	28.01
+6	1622.81	27.94
+7	1624.46	29.54
+8	1632.17	31.4
+9	1633.46	35.92
+10	1635.84	33.33
+12	1646.06	35.55
+14	1648.08	40.32
+16	1655.89	38.61
+18	1653.91	36.13
+20	1663.42	37.5
+25	1680.7	41.24
+30	1687.9	43.15
+35	1702.76	44.87
+40	1721.59	46.68
+};
+\label{random-2000-200-80}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	1550.74	28.8
+2	1545.91	27.59
+3	1548.25	27.84
+4	1548.43	27.04
+5	1548.83	26.99
+6	1555.13	30.27
+7	1551.31	32.46
+8	1556.06	32.66
+9	1562.04	39.58
+10	1566.43	33.96
+12	1573.6	34.39
+14	1580.51	39.64
+16	1592.17	35.37
+18	1601.1	35.74
+20	1608.62	37.34
+25	1630.51	35.12
+30	1653.34	37.02
+35	1675.26	37.11
+40	1682.39	42.18
+};
+\label{random-2000-200-100}
+
+\addlegendimage{/pgfplots/refstyle=random-1650-200-10}
+\addlegendentry{random-1650-200-10}
+\addlegendimage{/pgfplots/refstyle=random-1650-200-30}
+\addlegendentry{random-1650-200-30}
+\addlegendimage{/pgfplots/refstyle=random-1650-200-50}
+\addlegendentry{random-1650-200-50}
+\addlegendimage{/pgfplots/refstyle=random-1650-200-80}
+\addlegendentry{random-1650-200-80}
+\addlegendimage{/pgfplots/refstyle=random-1650-200-100}
+\addlegendentry{random-1650-200-100}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-10}
+\addlegendentry{random-1850-200-10}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-30}
+\addlegendentry{random-1850-200-30}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-50}
+\addlegendentry{random-1850-200-50}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-80}
+\addlegendentry{random-1850-200-80}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-100}
+\addlegendentry{random-1850-200-100}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-10}
+\addlegendentry{random-2000-200-10}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-30}
+\addlegendentry{random-2000-200-30}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-50}
+\addlegendentry{random-2000-200-50}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-80}
+\addlegendentry{random-2000-200-80}
+\addlegendimage{/pgfplots/refstyle=random-2000-200-100}
+\addlegendentry{random-2000-200-100}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
