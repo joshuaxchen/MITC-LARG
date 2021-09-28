@@ -11,8 +11,8 @@
 \begin{tikzpicture}[scale=1]
   \pgfplotsset{
       scale only axis,
-      every x tick label/.append style={font=\Large},
-      every y tick label/.append style={font=\Large},
+      every x tick label/.append style={font=\small},
+      every y tick label/.append style={font=\small},
 	legend style={at={(1.05,0.95)},anchor=north west}
   }
 
@@ -213,6 +213,7 @@
 	%xticklabel style = {font=\small,xshift=0.5ex},
 	xlabel={\Large Evaluated Main Inflow},
 	legend columns=15,
+	xmax=2000,
 	transpose legend,
 	/tikz/column /.style={
                 column sep=5pt,
@@ -360,24 +361,24 @@ a	 b	 c
 };
 \label{random-1850-200-100}
 
-\addplot table [x=a, y=b] {
-a	 b	 c
-1600	1791.11	27.33
-1650	1823.33	50.56
-1700	1824.8	78.54
-1750	1813.5	93.96
-1800	1739.7	41.3
-1850	1728.5	15.99
-1900	1727.5	13.75
-2000	1728.86	13.63
-2100	1728.29	13.18
-2200	1728.43	12.55
-2300	1726.56	13.57
-2400	1726.81	13.03
-2500	1724.33	13.38
-2600	1727.96	11.69
-};
-\label{human}
+%\addplot table [x=a, y=b] {
+%a	 b	 c
+%1600	1791.11	27.33
+%1650	1823.33	50.56
+%1700	1824.8	78.54
+%1750	1813.5	93.96
+%1800	1739.7	41.3
+%1850	1728.5	15.99
+%1900	1727.5	13.75
+%2000	1728.86	13.63
+%2100	1728.29	13.18
+%2200	1728.43	12.55
+%2300	1726.56	13.57
+%2400	1726.81	13.03
+%2500	1724.33	13.38
+%2600	1727.96	11.69
+%};
+%\label{human}
 
 \addlegendimage{/pgfplots/refstyle=1850-200-10}
 \addlegendentry{1850-200-10}
@@ -399,8 +400,8 @@ a	 b	 c
 \addlegendentry{random-1850-200-80}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-100}
 \addlegendentry{random-1850-200-100}
-\addlegendimage{/pgfplots/refstyle=human}
-\addlegendentry{human}
+%\addlegendimage{/pgfplots/refstyle=human}
+%\addlegendentry{human}
 
 
 \end{axis}

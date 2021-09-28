@@ -159,7 +159,8 @@ def extract_sorted_data(model_data):
     sorted_e_data.sort()
     return sorted_e_data
 
-def compare_av_placement(summary, best_models, extra_data):
+def compare_av_placement_in_random_evaluation(summary, best_models, extra_data,
+eval_key):
     # extract aamas without random 
     sorted_model_keys=sort_model_keys(summary['avp'])
     inflows_keys=[1650, 1850, 2000]
@@ -194,6 +195,7 @@ def compare_av_placement(summary, best_models, extra_data):
             inflow_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
 
         # add extra_data to avp plot
+        best_models=[]
         if extra_data is not None:
             for model_key, model_value in extra_data.items():
                 if str(inflow) in model_key or model_key not in best_models:
@@ -210,8 +212,8 @@ def compare_av_placement(summary, best_models, extra_data):
                 avp_plot.add_plot("random_"+model_key, sorted_e_data)
            
         # add extra_data to flow plot
-        avp_plot.write_plot(evaluation_name+"/placement_avp_"+str(inflow)+".tex",5)
-        inflow_plot.write_plot(evaluation_name+"/placement_inflow_"+str(inflow)+".tex",5)
+        avp_plot.write_plot(evaluation_name+"/%s_avp_" % eval_key+str(inflow)+".tex",5)
+        inflow_plot.write_plot(evaluation_name+"/%s_inflow_"% eval_key+str(inflow)+".tex",5)
 
 def plot_each_inflow_each_category(summary):
     for category, category_summary in summary.items():  
@@ -389,7 +391,7 @@ def plot_special_model_av(summary):
             plot.add_plot(legend_label1, data_map[legend_label])
     plot.write_plot(special_random_evaluation_name+"/"+"avp.tex",len(eval_flows))
 
-def retrieve_all_data_and_plot(extra_data):
+def retrieve_all_data_and_plot(extra_data, eval_key):
     summary=dict()
     for category, working_dir in results_dict.items():
         model_exp_summary=retrieve_exp_data(working_dir) 
@@ -397,7 +399,8 @@ def retrieve_all_data_and_plot(extra_data):
         plot_each_category(summary)     
     plot_each_inflow_each_category(summary)
     best_models=["1650_200_30", "1850_200_30", "2000_200_30"]
-    compare_av_placement(summary, best_models, extra_data)
+    compare_av_placement_in_random_evaluation(summary, best_models, extra_data,
+    eval_key)
 
 def plot_special_random_even_models(random_data, even_data):
     random_models=list()
@@ -470,6 +473,9 @@ def plot_special_random_even_models(random_data, even_data):
             # third, order the avp
             plot.add_plot(legend_label, data_map[legend_label])
     plot.write_plot(special_evaluation_name+"/"+"avp.tex",len(eval_flows))
+
+    # used for paper 
+    # plot random against even under inflow 1800
   
 if __name__ == "__main__":
     # retrive random models and random evaluation
@@ -485,10 +491,12 @@ if __name__ == "__main__":
         if model_key not in special_random_summary.keys():
             special_random_summary[model_key]=model_value 
             print("added", model_key)
-    extra_data=special_random_summary
+    extra_data_random_eval=special_random_summary
+
 
     # print(extra_data)
-    retrieve_all_data_and_plot(extra_data)
+    retrieve_all_data_and_plot(extra_data_random_eval, "random_eval")
+    #retrieve_all_data_and_plot(special_even_summary, "even_eval")
     plot_special_random_even_models(special_random_summary, special_even_summary)
     print(len(special_random_summary.keys()))
 
