@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Inflow"
+attr_name="Outflow"
 random_human_only=True
 
 def obtain_file_names(folder_path):
@@ -457,8 +457,9 @@ def plot_special_random_even_models(random_data, even_data):
 
     # used for paper 
     # plot random against even under inflow 1800
-def find_best_training_avp(summary):
+def find_best_training_avp_against_flow(summary):
     # only evaluted at avp 10
+    evaluted_avp="30"
     data_map=dict()
     for model_key, model_data in summary.items():
         trained_labels=model_key.split("_")
@@ -470,9 +471,9 @@ def find_best_training_avp(summary):
                 avp_str=labels[1]
                 if flow_str!=str(flow):
                     continue
-                if avp_str!="10": #evaluated avp
+                if avp_str!=evaluted_avp: #evaluated avp
                     continue
-                legend_label=model_key+"_"+flow_str
+                legend_label=model_key
                 if legend_label not in data_map.keys():
                     data_map[legend_label]=list()
                 mean_var_list=eval_value[attr_name].split(",")
@@ -480,18 +481,80 @@ def find_best_training_avp(summary):
                 var=float(mean_var_list[1].strip())
                 avp=labels[-1]
                 data_map[legend_label].append((flow, mean, var))
-
+    
     xlabel="Evaluated main inflow" 
     ylabel=attr_name #"Outflow" 
     plot=PlotWriter(xlabel, ylabel) 
     #print(data_map.keys())
+    keys=data_map.keys()
+    keys.sort()
+    keys.remove("1650_200_100")
+    keys.remove("1850_200_100")
+    keys.remove("2000_200_100")
+    index1=keys.index("1650_200_80")
+    keys.insert(index1+1, "1650_200_100")
+    index2=keys.index("1850_200_80")
+    keys.insert(index2+1, "1850_200_100")
+    index3=keys.index("2000_200_80")
+    keys.insert(index3+1, "2000_200_100")
+    legend_prefix="random_"
+    for legend_label in keys: 
+        data=data_map[legend_label]
+    #for model_key, model_data in summary.items():
+        #for flow in [1600, 1700, 1800, 1900, 2000]:
+        data.sort()
+        legend_label1=legend_prefix+legend_label
+        plot.add_plot(legend_label1, data)
+    plot.write_plot("./aamas/"+"best_avp_vs_inflow.tex",5)
+
+    # used for paper 
+    # plot random against even under inflow 1800
+def find_best_training_avp_against_avp(summary):
+    # only evaluted at avp 10
+    evaluted_inflow="1800"
+    data_map=dict()
     for model_key, model_data in summary.items():
-        for flow in [1600, 1700, 1800, 1900, 2000]:
-            legend_label=model_key+"_"+str(flow)
-            data_map[legend_label].sort()
-            legend_label1=legend_label
-            plot.add_plot(legend_label1, data_map[legend_label])
-    plot.write_plot("./aamas/"+"best_avp.tex",5)
+        trained_labels=model_key.split("_")
+        trained_avp=trained_labels[2]
+        for eval_label, eval_value in model_data.items():
+            labels=eval_label.split("_")
+            flow_str=labels[0]
+            avp_str=labels[1]
+            if flow_str!=str(evaluted_inflow):
+                continue
+            legend_label=model_key
+            if legend_label not in data_map.keys():
+                data_map[legend_label]=list()
+            mean_var_list=eval_value[attr_name].split(",")
+            mean=float(mean_var_list[0].strip())
+            var=float(mean_var_list[1].strip())
+            avp=int(labels[-1])
+            data_map[legend_label].append((avp, mean, var))
+    
+    xlabel="Evaluated AVP" 
+    ylabel=attr_name #"Outflow" 
+    plot=PlotWriter(xlabel, ylabel) 
+    #print(data_map.keys())
+    keys=data_map.keys()
+    keys.sort()
+    keys.remove("1650_200_100")
+    keys.remove("1850_200_100")
+    keys.remove("2000_200_100")
+    index1=keys.index("1650_200_80")
+    keys.insert(index1+1, "1650_200_100")
+    index2=keys.index("1850_200_80")
+    keys.insert(index2+1, "1850_200_100")
+    index3=keys.index("2000_200_80")
+    keys.insert(index3+1, "2000_200_100")
+    legend_prefix="random_"
+    for legend_label in keys: 
+        data=data_map[legend_label]
+    #for model_key, model_data in summary.items():
+        #for flow in [1600, 1700, 1800, 1900, 2000]:
+        data.sort()
+        legend_label1=legend_prefix+legend_label
+        plot.add_plot(legend_label1, data)
+    plot.write_plot("./aamas/"+"best_avp_vs_avp.tex",5)
 
 
  
@@ -502,7 +565,8 @@ if __name__ == "__main__":
     special_random_summary=retrieve_special_exp_data(special_random_models_dir)
     #model_key="2000_200_30"
     #plot_special_model_flow(model_key, special_random_summary[model_key])
-    find_best_training_avp(special_random_summary)
+    find_best_training_avp_against_flow(special_random_summary)
+    find_best_training_avp_against_avp(special_random_summary)
 
     #special_even_summary=retrieve_special_exp_data(special_even_models_dir)
 
