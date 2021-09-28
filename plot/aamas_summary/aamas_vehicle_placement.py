@@ -120,17 +120,18 @@ def compare_av_placement(summary, evaluation_key="even_evalution", inflows_keys=
         inflow_plot.set_plot_range(1600, 2000)
 
         # add even placement data
+        even_label_prefix="even_"
         for model_key in sorted_model_keys:
             if not model_key.startswith(inflow):
                 continue
 
             avp_aamas_summary=summary['avp']
             sorted_e_data=extract_sorted_data(avp_aamas_summary[model_key])
-            avp_plot.add_plot(model_key, sorted_e_data)
+            avp_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
 
             inflow_aamas_summary=summary['inflow']
             sorted_e_data=extract_sorted_data(inflow_aamas_summary[model_key])
-            inflow_plot.add_plot(model_key, sorted_e_data)
+            inflow_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
 
         # add random placement data
         random_label_prefix="random_"

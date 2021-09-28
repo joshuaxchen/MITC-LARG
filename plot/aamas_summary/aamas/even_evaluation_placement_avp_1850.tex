@@ -11,8 +11,8 @@
 \begin{tikzpicture}[scale=1]
   \pgfplotsset{
       scale only axis,
-      every x tick label/.append style={font=\Large},
-      every y tick label/.append style={font=\Large},
+      every x tick label/.append style={font=\small},
+      every y tick label/.append style={font=\small},
 	legend style={at={(1.05,0.95)},anchor=north west}
   }
 
@@ -242,7 +242,7 @@ a	 b	 c
 80	1608.59	19.57
 100	1588.82	19.68
 };
-\label{1850-200-10}
+\label{even-1850-200-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -265,7 +265,7 @@ a	 b	 c
 80	1794.2	39.43
 100	1770.77	34.31
 };
-\label{1850-200-30}
+\label{even-1850-200-30}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -288,7 +288,7 @@ a	 b	 c
 80	1662.48	29.64
 100	1581.84	27.82
 };
-\label{1850-200-50}
+\label{even-1850-200-50}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -311,7 +311,7 @@ a	 b	 c
 80	1726.2	38.14
 100	1593.11	30.61
 };
-\label{1850-200-80}
+\label{even-1850-200-80}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -334,7 +334,7 @@ a	 b	 c
 80	1791.29	29.53
 100	1724.83	27.83
 };
-\label{1850-200-100}
+\label{even-1850-200-100}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -451,16 +451,16 @@ a	 b	 c
 };
 \label{random-1850-200-100}
 
-\addplot[blue, samples=200] coordinates {(0,1734.550000) (100,1734.550000)};\label{human-1650}\addplot[red, samples=200] coordinates {(0,1560.380000) (100,1560.380000)};\label{human-1850}\addplot[green, samples=200] coordinates {(0,1558.120000) (100,1558.120000)};\label{human-2000}\addplot[brown, samples=200] coordinates {(0,1560.310000) (100,1560.310000)};\label{human-2100}\addplot[cyan, samples=200] coordinates {(0,1560.380000) (100,1560.380000)};\label{human-2200}\addplot[darkgray, samples=200] coordinates {(0,1558.660000) (100,1558.660000)};\label{human-2300}\addplot[gray, samples=200] coordinates {(0,1559.520000) (100,1559.520000)};\label{human-2400}\addplot[lightgray, samples=200] coordinates {(0,1556.640000) (100,1556.640000)};\label{human-2500}\addplot[lime, samples=200] coordinates {(0,1561.280000) (100,1561.280000)};\label{human-2600}\addlegendimage{/pgfplots/refstyle=1850-200-10}
-\addlegendentry{1850-200-10}
-\addlegendimage{/pgfplots/refstyle=1850-200-30}
-\addlegendentry{1850-200-30}
-\addlegendimage{/pgfplots/refstyle=1850-200-50}
-\addlegendentry{1850-200-50}
-\addlegendimage{/pgfplots/refstyle=1850-200-80}
-\addlegendentry{1850-200-80}
-\addlegendimage{/pgfplots/refstyle=1850-200-100}
-\addlegendentry{1850-200-100}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-10}
+\addlegendentry{even-1850-200-10}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-30}
+\addlegendentry{even-1850-200-30}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-50}
+\addlegendentry{even-1850-200-50}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-80}
+\addlegendentry{even-1850-200-80}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-100}
+\addlegendentry{even-1850-200-100}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-10}
 \addlegendentry{random-1850-200-10}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-30}
@@ -471,24 +471,6 @@ a	 b	 c
 \addlegendentry{random-1850-200-80}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-100}
 \addlegendentry{random-1850-200-100}
-\addlegendimage{/pgfplots/refstyle=human-1650}
-\addlegendentry{human-1650}
-\addlegendimage{/pgfplots/refstyle=human-1850}
-\addlegendentry{human-1850}
-\addlegendimage{/pgfplots/refstyle=human-2000}
-\addlegendentry{human-2000}
-\addlegendimage{/pgfplots/refstyle=human-2100}
-\addlegendentry{human-2100}
-\addlegendimage{/pgfplots/refstyle=human-2200}
-\addlegendentry{human-2200}
-\addlegendimage{/pgfplots/refstyle=human-2300}
-\addlegendentry{human-2300}
-\addlegendimage{/pgfplots/refstyle=human-2400}
-\addlegendentry{human-2400}
-\addlegendimage{/pgfplots/refstyle=human-2500}
-\addlegendentry{human-2500}
-\addlegendimage{/pgfplots/refstyle=human-2600}
-\addlegendentry{human-2600}
 
 
 \end{axis}

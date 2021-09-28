@@ -11,8 +11,8 @@
 \begin{tikzpicture}[scale=1]
   \pgfplotsset{
       scale only axis,
-      every x tick label/.append style={font=\Large},
-      every y tick label/.append style={font=\Large},
+      every x tick label/.append style={font=\small},
+      every y tick label/.append style={font=\small},
 	legend style={at={(1.05,0.95)},anchor=north west}
   }
 
@@ -232,7 +232,7 @@ a	 b	 c
 1950	1557.83	13.34
 2000	1558.87	14.51
 };
-\label{1850-200-10}
+\label{even-1850-200-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -246,7 +246,7 @@ a	 b	 c
 1950	1757.41	49.44
 2000	1754.17	46.62
 };
-\label{1850-200-30}
+\label{even-1850-200-30}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -260,7 +260,7 @@ a	 b	 c
 1950	1769.94	27.93
 2000	1776.17	29.93
 };
-\label{1850-200-50}
+\label{even-1850-200-50}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -274,7 +274,7 @@ a	 b	 c
 1950	1726.7	34.92
 2000	1726.2	38.14
 };
-\label{1850-200-80}
+\label{even-1850-200-80}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -288,7 +288,7 @@ a	 b	 c
 1950	1725.41	22.6
 2000	1724.83	27.83
 };
-\label{1850-200-100}
+\label{even-1850-200-100}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -360,16 +360,16 @@ a	 b	 c
 };
 \label{random-1850-200-100}
 
-\addlegendimage{/pgfplots/refstyle=1850-200-10}
-\addlegendentry{1850-200-10}
-\addlegendimage{/pgfplots/refstyle=1850-200-30}
-\addlegendentry{1850-200-30}
-\addlegendimage{/pgfplots/refstyle=1850-200-50}
-\addlegendentry{1850-200-50}
-\addlegendimage{/pgfplots/refstyle=1850-200-80}
-\addlegendentry{1850-200-80}
-\addlegendimage{/pgfplots/refstyle=1850-200-100}
-\addlegendentry{1850-200-100}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-10}
+\addlegendentry{even-1850-200-10}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-30}
+\addlegendentry{even-1850-200-30}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-50}
+\addlegendentry{even-1850-200-50}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-80}
+\addlegendentry{even-1850-200-80}
+\addlegendimage{/pgfplots/refstyle=even-1850-200-100}
+\addlegendentry{even-1850-200-100}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-10}
 \addlegendentry{random-1850-200-10}
 \addlegendimage{/pgfplots/refstyle=random-1850-200-30}
