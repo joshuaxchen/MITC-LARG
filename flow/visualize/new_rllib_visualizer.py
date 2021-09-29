@@ -455,7 +455,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         else:
             ret = 0
 
-        #total_num_cars_per_step=list()
+        total_num_cars_per_step=list()
 
         # record the inflow, outflow, avg speed, reward if necessary        
         inflow_per_time_step=None
@@ -492,6 +492,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
+
+            # update the number of vehicles in the network
+            if args.print_vehicles_per_time_step_in_file is not None and i==0:
+                total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))
 
             if inflow_per_time_step is not None:
                 inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE) 
@@ -558,6 +562,13 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         # plot the inflows, outflow, avg_speed, reward at each time step
         # handles to print the metrics along the history
+
+        if args.print_vehicles_per_time_step_in_file is not None and i==0:
+            veh_plot=PlotWriter("Time steps", "Number of vehicles") 
+            veh_plot.add_human=False
+            veh_plot.add_plot("model", total_num_cars_per_step)
+            veh_plot.write_plot(args.print_vehicles_per_time_step_in_file+"_veh.tex", 1)
+
         inflow_plot=None
         outflow_plot=None
         speed_plot=None
@@ -802,6 +813,7 @@ def create_parser():
     parser.add_argument('--highway_len', type=int, help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--print_metric_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
+    parser.add_argument('--print_vehicles_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
     parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
     parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
     parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 

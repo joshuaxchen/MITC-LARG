@@ -584,6 +584,7 @@ def reset_inflows(args, flow_params):
         #    #print(veh_id, dict_value['lane_change_params'].lane_change_mode)
         #    print(veh_id, dict_value['lane_change_params'].controller_params['lcPushy'])
     # convert all inflows to probability
+    print("before to probability", net_params.inflows.get())
     net_params=flow_params['net']
     if args.to_probability:
         FLOW_RATE=0
@@ -615,7 +616,7 @@ def reset_inflows(args, flow_params):
                     total_merge_inflow+=inflow['vehs_per_hour']
                 if 'vehsPerHour' in inflow:
                     total_merge_inflow+=inflow['vehsPerHour']
-                if 'probablity' in inflow:
+                if 'probability' in inflow:
                     total_merge_inflow+=inflow['probability']*3600
                 inflows_to_remove.append(inflow)
 
@@ -629,27 +630,31 @@ def reset_inflows(args, flow_params):
         if random_percentage>0:
             random_inflow_rate=total_merge_inflow*random_percentage
             probability=random_inflow_rate/3600
-            net_params.inflows.add(veh_type="human", edge="inflow_merge",
+            net_params.inflows.add(name="inflow_human_merge", veh_type="human", edge="inflow_merge",
                     probability=probability, depart_lane="free",
                     depart_speed=7.5)
         if even_percentage>0:
             even_inflow_rate=total_merge_inflow*even_percentage
-            net_params.inflows.add(veh_type="human", edge="inflow_merge",
+            net_params.inflows.add(name="inflow_human_merge", veh_type="human", edge="inflow_merge",
                     vehs_per_hour=even_inflow_rate, depart_lane="free",
                     depart_speed=7.5)
 
+    print("before main randomness", net_params.inflows.get())
     if args.main_random_inflow_percentage:
         total_main_human_inflow=0
         inflows_to_remove=list()
         for inflow in net_params.inflows.get():
-            if 'merge' in flow['edge']:
+            print(inflow)
+            print("edge", inflow['edge'])
+            print("vtype", inflow['vtype'])
+            if 'merge' in inflow['edge']:
                 continue
-            if 'human' in flow['veh_type']:
+            if 'human' in inflow['vtype']:
                 if 'vehs_per_hour' in inflow:
                     total_main_human_inflow+=inflow['vehs_per_hour']
                 if 'vehsPerHour' in inflow:
                     total_main_human_inflow+=inflow['vehsPerHour']
-                if 'probablity' in inflow:
+                if 'probability' in inflow:
                     total_main_human_inflow+=inflow['probability']*3600
                 inflows_to_remove.append(inflow)
         # remove all the inflows from merge
@@ -658,16 +663,20 @@ def reset_inflows(args, flow_params):
 
         # set the main human inflows according to the percentage of random and even inflows
         random_percentage=args.main_random_inflow_percentage/100.0
-        even_percentage=1-random_percentage
+        even_percentage=1.0-random_percentage
         if random_percentage>0:
             random_inflow_rate=total_main_human_inflow*random_percentage
-            probability=random_inflow_rate/3600
-            net_params.inflows.add(veh_type="human", edge="inflow_highway",
+            probability=random_inflow_rate/3600.0
+            net_params.inflows.add(name="inflow_human_highway", veh_type="human", edge="inflow_highway",
                     probability=probability, depart_lane="free",
                     depart_speed=7.5)
         if even_percentage>0:
+            print("even_percentage",even_percentage)
+            print("total_main_human_inflow",total_main_human_inflow)
             even_inflow_rate=total_main_human_inflow*even_percentage
-            net_params.inflows.add(veh_type="human", edge="inflow_highway",
+            print("even_inflow_rate",even_inflow_rate)
+            net_params.inflows.add(name="inflow_human_highway", veh_type="human", edge="inflow_highway",
                     vehs_per_hour=even_inflow_rate, depart_lane="free",
                     depart_speed=7.5)
 
+    print("after main randomness", net_params.inflows.get())
