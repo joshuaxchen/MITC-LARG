@@ -584,7 +584,6 @@ def reset_inflows(args, flow_params):
         #    #print(veh_id, dict_value['lane_change_params'].lane_change_mode)
         #    print(veh_id, dict_value['lane_change_params'].controller_params['lcPushy'])
     # convert all inflows to probability
-    print("before to probability", net_params.inflows.get())
     net_params=flow_params['net']
     if args.to_probability:
         FLOW_RATE=0
@@ -639,14 +638,10 @@ def reset_inflows(args, flow_params):
                     vehs_per_hour=even_inflow_rate, depart_lane="free",
                     depart_speed=7.5)
 
-    print("before main randomness", net_params.inflows.get())
     if args.main_random_inflow_percentage:
         total_main_human_inflow=0
         inflows_to_remove=list()
         for inflow in net_params.inflows.get():
-            print(inflow)
-            print("edge", inflow['edge'])
-            print("vtype", inflow['vtype'])
             if 'merge' in inflow['edge']:
                 continue
             if 'human' in inflow['vtype']:
@@ -671,12 +666,8 @@ def reset_inflows(args, flow_params):
                     probability=probability, depart_lane="free",
                     depart_speed=7.5)
         if even_percentage>0:
-            print("even_percentage",even_percentage)
-            print("total_main_human_inflow",total_main_human_inflow)
             even_inflow_rate=total_main_human_inflow*even_percentage
-            print("even_inflow_rate",even_inflow_rate)
             net_params.inflows.add(name="inflow_human_highway", veh_type="human", edge="inflow_highway",
                     vehs_per_hour=even_inflow_rate, depart_lane="free",
                     depart_speed=7.5)
 
-    print("after main randomness", net_params.inflows.get())
