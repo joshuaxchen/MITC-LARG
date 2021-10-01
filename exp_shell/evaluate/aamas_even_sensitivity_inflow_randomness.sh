@@ -3,63 +3,77 @@
 declare -A TRAIN_DIR
 declare -A MARK 
 
-TRAIN_DIR[1]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp10_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_b6165_00000_0_2021-07-03_10-52-46
-MARK[1]='1650_200_10'
 
-TRAIN_DIR[2]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp10_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_803da_00000_0_2021-07-03_16-56-20 
-MARK[2]='1850_200_10'
+TRAIN_DIR[1]=${HOME}/ray_results/yulin_multiagent_Even_Avp10_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_d59fc_00000_0_2021-06-30_12-08-48
+MARK[1]='1650_200_10'
+AVPS[1]=10
+
+TRAIN_DIR[2]=${HOME}/ray_results/yulin_multiagent_Even_Avp10_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_1cf3e_00000_0_2021-06-30_18-51-39 
+MARK[2]='2000_200_10'
+AVPS[2]=10
 
 # AVP30
-TRAIN_DIR[3]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp10_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_74d88_00000_0_2021-07-03_21-20-52
-MARK[3]='2000_200_10'
-###############
+TRAIN_DIR[3]=${HOME}/ray_results/yulin_multiagent_Even_Avp30_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_ee3b1_00000_0_2021-06-30_18-43-11
+MARK[3]='1650_200_30'
+AVPS[3]=30
 
-TRAIN_DIR[4]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_a9c72_00000_0_2021-07-04_01-25-44
-MARK[4]='1650_200_30'
-
-
-TRAIN_DIR[5]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
-MARK[5]='1850_200_30'
+TRAIN_DIR[4]=${HOME}/ray_results/yulin_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_d1a31_00000_0_2021-07-01_00-47-28
+MARK[4]='1850_200_30'
+AVPS[4]=30
 
 
-TRAIN_DIR[6]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_740c0_00000_0_2021-07-04_14-31-39
-MARK[6]='2000_200_30'
+TRAIN_DIR[5]=${HOME}/ray_results/yulin_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_7c1f0_00000_0_2021-07-01_07-25-56
+MARK[5]='2000_200_30'
+AVPS[5]=30
 
 
-TRAIN_DIR[7]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp50_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_6328a_00000_0_2021-07-04_21-04-53
-MARK[7]='1650_200_50'
-
-TRAIN_DIR[8]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp50_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_6fb5c_00000_0_2021-07-05_05-40-37
-MARK[8]='1850_200_50'
-
-
-TRAIN_DIR[9]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp50_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_3688f_00000_0_2021-07-05_14-07-16
-MARK[9]='2000_200_50'
-
-##############
-TRAIN_DIR[10]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp80_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_5a6ae_00000_0_2021-07-04_01-52-09
-MARK[10]='1650_200_80'
+# AVP50
+TRAIN_DIR[6]=${HOME}/ray_results/yulin_multiagent_Even_Avp50_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_08b48_00000_0_2021-07-01_14-03-34
+MARK[6]='1650_200_50'
+AVPS[6]=50
 
 
-TRAIN_DIR[11]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp80_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_2ad89_00000_0_2021-07-04_11-52-07
-MARK[11]='1850_200_80'
+TRAIN_DIR[7]=${HOME}/ray_results/yulin_multiagent_Even_Avp50_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_9a8de_00000_0_2021-07-01_21-45-47
+MARK[7]='1850_200_50'
+AVPS[7]=50
 
-########new############
-TRAIN_DIR[12]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp80_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_cb311_00000_0_2021-07-07_12-50-18
-MARK[12]='2000_200_80'
-# already have
 
-TRAIN_DIR[13]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp100_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_e4471_00000_0_2021-07-07_15-07-01
-MARK[13]='1650_200_100'
-# already have
+TRAIN_DIR[8]=${HOME}/ray_results/yulin_multiagent_Even_Avp50_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_77c29_00000_0_2021-07-02_05-58-43
+MARK[8]='2000_200_50'
+AVPS[8]=50
 
-TRAIN_DIR[14]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp100_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_54bf7_00000_0_2021-07-07_16-28-54
+
+# AVP80
+TRAIN_DIR[9]=${HOME}/ray_results/yulin_multiagent_Even_Avp80_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_f1df5_00000_0_2021-07-02_14-37-32
+MARK[9]='1650_200_80'
+AVPS[9]=80
+
+TRAIN_DIR[10]=${HOME}/ray_results/yulin_multiagent_Even_Avp80_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_811d5_00000_0_2021-07-03_00-50-00
+MARK[10]='1850_200_80'
+AVPS[10]=80
+
+TRAIN_DIR[11]=${HOME}/ray_results/yulin_multiagent_Even_Avp80_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_ba955_00000_0_2021-07-03_11-43-00
+MARK[11]='2000_200_80'
+AVPS[11]=80
+
+TRAIN_DIR[12]=${HOME}/ray_results/yulin_multiagent_Even_Avp100_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_1d245_00000_0_2021-07-05_11-43-23
+MARK[12]='1650_200_100'
+AVPS[12]=100
+
+TRAIN_DIR[13]=${HOME}/ray_results/yulin_multiagent_Even_Avp100_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_8a7f3_00000_0_2021-07-01_16-08-53
+MARK[13]='2000_200_100'
+AVPS[13]=100
+
+#####new##########
+TRAIN_DIR[14]=${HOME}/ray_results/yulin_multiagent_Even_Avp100_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_d6d8e_00000_0_2021-07-07_12-07-41
 MARK[14]='1850_200_100'
-# dr-wily
+AVPS[14]=100
+# neymar
 
-TRAIN_DIR[15]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp100_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_56c3a_00000_0_2021-07-07_23-38-27
-MARK[15]='2000_200_100'
-# dr-light 
+TRAIN_DIR[15]=${HOME}/ray_results/yulin_multiagent_Even_Avp10_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_e7ee4_00000_0_2021-07-07_23-49-40
+MARK[15]='1850_200_10'
+AVPS[15]=10
+# commander 
 
 
 #echo "curious: ${TRAIN_DIR[1]}"
@@ -69,11 +83,7 @@ CHCKPOINT=500
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/randomness_maininflow/
-
-# 1. 1650_200_30 I=4
-# 2. 1850_200_30 I=5
-# 3. 2000_200_30 I=6
+WORKING_DIR=$EXP_FOLDER/randomness_maininflow_even/
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:$FLOW_DIR"
@@ -88,7 +98,7 @@ MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
 J=0
-for I in 6 # 2 3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
+for I in 5 # 2 3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
