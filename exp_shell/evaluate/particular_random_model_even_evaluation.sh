@@ -15,7 +15,7 @@ MARK[3]='2000_200_10'
 ###############
 
 TRAIN_DIR[4]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1650_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_a9c72_00000_0_2021-07-04_01-25-44
-MARK[4]='1650_200_30'
+mark[4]='1650_200_30'
 
 
 TRAIN_DIR[5]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
@@ -88,7 +88,7 @@ MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
 J=0
-for I in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 #3 4 5  # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
+for I in 5 6 7 8 9 #10 11 12 13 14 15 #3 4 5  # 10 11 12 13 14 15 # 1 2 3 4 5 6 7 8 9 10 
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
