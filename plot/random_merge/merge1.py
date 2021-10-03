@@ -63,13 +63,14 @@ def read_from_formatted_string(input_str):
     main_inflow=int(texts[0])
     merge_inflow=int(texts[1])
     avp=int(texts[2])
+    randomness=int(texts[3])
     #rl_right_left=int(texts[3])
     #right_human_lane_change=int(texts[4])
     #aggressive=float(texts[5])
     #assertive=float(texts[6])
     #lc_prob=float(texts[7])
     #return left_main_inflow, merge_inflow, avp, rl_right_left, right_human_lane_change, aggressive, lc_prob
-    return main_inflow, merge_inflow, avp
+    return main_inflow, merge_inflow, avp, randomness
 
     
 def obtain_setting_index(settings, rl_right_left, right_human_lane_change):
@@ -79,20 +80,23 @@ def obtain_setting_index(settings, rl_right_left, right_human_lane_change):
             return i
     return None
     
-def plot_against_avp(summary):
+def plot_against_randomness(summary):
     data=dict()
     for model_key, evaluate in summary.items():
         for eval_label, value in evaluate.items():
             print(eval_label)
-            main_inflow, merge_inflow, avp=read_from_formatted_string(eval_label)
+            main_inflow, merge_inflow, avp, randomness=read_from_formatted_string(eval_label)
 
             mean, var=extract_mean_var(value, attr_name)
-            key=model_key
+            if avp==0:
+                key="human"
+            else:
+                key=model_key
             if key not in data.keys():
                 data[key]=list()
-            data[key].append((avp, mean, var))
+            data[key].append((randomness, mean, var))
 
-    xlabel="AVP" 
+    xlabel="Randomness (percentage)" 
     ylabel=attr_name
     plot=PlotWriter(xlabel, ylabel) 
     plot.add_human=False
@@ -100,7 +104,7 @@ def plot_against_avp(summary):
         data[legend].sort()
         plot.add_plot(legend, data[legend])
             
-    plot.write_plot("random_merge_avp.tex", 1)
+    plot.write_plot("random_merge_randomness.tex", 1)
 
     
         
@@ -111,8 +115,8 @@ if __name__ == "__main__":
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
 
-    working_dir=os.path.join("..","..","exp_results","window_size") #"window_size")#"random_merge") 
-    for preset_i in ["2000_200_30_even_merge", "2000_200_30_random_merge", "three_merge_2000_300_30_random_merge","three_merge_2000_200_30_random_merge"]:
+    working_dir=os.path.join("..","..","exp_results","random_merge") #"window_size")#"random_merge") 
+    for preset_i in ["2000_200_30"]:
     #for preset_i in ["modified_state_three_merge_2000_300_30_random_merge","modified_state_three_merge_2000_200_30_random_merge"]:
     #for preset_i in ["three_merge_2000_200_30_random_merge", "modified_state_three_merge_2000_200_30_random_merge"]:
     #for preset_i in ["2000_200_30_even_merge", "2000_200_30_random_merge"]:
@@ -120,6 +124,6 @@ if __name__ == "__main__":
         data_i=retrive_evaluations(preset_dir)
         data[preset_i]=data_i
     
-    plot_against_avp(data)
+    plot_against_randomness(data)
     #plot_against_assertive(data)
 

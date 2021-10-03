@@ -28,6 +28,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
+working_dir=os.path.join("..","..","exp_results","window_size") 
 
 
 def retrive_evaluations(working_dir):
@@ -63,44 +64,62 @@ def read_from_formatted_string(input_str):
     main_inflow=int(texts[0])
     merge_inflow=int(texts[1])
     avp=int(texts[2])
-    #rl_right_left=int(texts[3])
-    #right_human_lane_change=int(texts[4])
-    #aggressive=float(texts[5])
-    #assertive=float(texts[6])
-    #lc_prob=float(texts[7])
+    window_size=int(texts[3])
     #return left_main_inflow, merge_inflow, avp, rl_right_left, right_human_lane_change, aggressive, lc_prob
-    return main_inflow, merge_inflow, avp
+    return main_inflow, merge_inflow, avp, window_size 
 
     
-def obtain_setting_index(settings, rl_right_left, right_human_lane_change):
-    for i in range(0, len(settings)):
-        (rl, lc)=settings[i]
-        if rl==rl_right_left and lc==right_human_lane_change:
-            return i
-    return None
-    
-def plot_against_avp(summary):
+   
+def plot_against_window(summary):
     data=dict()
     for model_key, evaluate in summary.items():
+        human_data=None
+        window_sizes=list()
+        no_window_data=None
         for eval_label, value in evaluate.items():
             print(eval_label)
-            main_inflow, merge_inflow, avp=read_from_formatted_string(eval_label)
-
+            main_inflow, merge_inflow, avp, window_size=read_from_formatted_string(eval_label)
             mean, var=extract_mean_var(value, attr_name)
+            if avp==0:
+                human_data=(mean, var)
+                continue
+            if window_size==-1:
+                no_window_data=(mean, var)
+                continue
+
             key=model_key
+            if window_size==-1:
+                key=key+"_no_window"
             if key not in data.keys():
                 data[key]=list()
-            data[key].append((avp, mean, var))
+            data[key].append((window_size, mean, var))
+            window_sizes.append(window_size)
 
-    xlabel="AVP" 
-    ylabel=attr_name
-    plot=PlotWriter(xlabel, ylabel) 
-    plot.add_human=False
-    for legend, value in data.items():
-        data[legend].sort()
-        plot.add_plot(legend, data[legend])
-            
-    plot.write_plot("random_merge_avp.tex", 1)
+        window_sizes.sort()
+           
+        xlabel="Window size" 
+        ylabel=attr_name
+        plot=PlotWriter(xlabel, ylabel) 
+        plot.add_human=False
+        for legend, value in data.items():
+            data[legend].sort()
+            plot.add_plot(legend, data[legend])
+
+        if human_data is not None:
+            print("human_data", human_data)
+            human=list()
+            for window_size in window_sizes:
+                human.append((window_size, human_data[0], human_data[1]))    
+            plot.add_plot("human", human)
+
+        if no_window_data is not None:
+            print("no_window_data", no_window_data)
+            no_window=list()
+            for window_size in window_sizes:
+                no_window.append((window_size, no_window_data[0], no_window_data[1]))    
+            plot.add_plot("no_window", no_window)
+
+        plot.write_plot("window.tex", 1)
 
     
         
@@ -110,16 +129,11 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-
-    working_dir=os.path.join("..","..","exp_results","window_size") #"window_size")#"random_merge") 
-    for preset_i in ["2000_200_30_even_merge", "2000_200_30_random_merge", "three_merge_2000_300_30_random_merge","three_merge_2000_200_30_random_merge"]:
-    #for preset_i in ["modified_state_three_merge_2000_300_30_random_merge","modified_state_three_merge_2000_200_30_random_merge"]:
-    #for preset_i in ["three_merge_2000_200_30_random_merge", "modified_state_three_merge_2000_200_30_random_merge"]:
-    #for preset_i in ["2000_200_30_even_merge", "2000_200_30_random_merge"]:
+    for preset_i in ["long_merge"]:
         preset_dir=os.path.join(working_dir, preset_i)
         data_i=retrive_evaluations(preset_dir)
         data[preset_i]=data_i
     
-    plot_against_avp(data)
+    plot_against_window(data)
     #plot_against_assertive(data)
 

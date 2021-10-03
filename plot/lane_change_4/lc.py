@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Inflow"
+attr_name="Outflow"
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    for preset_i in ["human"]:
+    for preset_i in ["human_3"]:
         preset_dir=os.path.join(working_dir, preset_i)
         data_i=retrive_evaluations(preset_dir)
         data[preset_i]=data_i

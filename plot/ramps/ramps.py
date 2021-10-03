@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Inflow"
+attr_name="Outflow"
 random_human_only=True
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
@@ -45,7 +45,8 @@ results_dict={
 "mor": mor_dir,
 }
 
-eval_flows=[1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
+#eval_flows=[1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
+eval_flows=[2000]
 
 def retrive_evaluations(working_dir):
     # print(working_dir)
@@ -467,6 +468,9 @@ def plot_again_dist(mor_summary, human_summary):
     mor_category_list=list()
     dist_list=list()
     for eval_key, eval_value in human_summary.items():
+        if "1800" not in eval_key:
+            continue
+
         main_merge_avp_loc1_loc2_text=eval_key
         params=main_merge_avp_loc1_loc2_text.split("_")
         loc1=params[3]
@@ -481,6 +485,9 @@ def plot_again_dist(mor_summary, human_summary):
     
     mor_data=dict()
     for eval_key, eval_value in mor_summary.items():
+        if "1800" not in eval_key:
+            continue
+
         main_merge_avp_loc1_loc2_text=eval_key
         print(main_merge_avp_loc1_loc2_text)
         params=main_merge_avp_loc1_loc2_text.split("_")
@@ -501,7 +508,7 @@ def plot_again_dist(mor_summary, human_summary):
     mor_category_list.sort() 
     dist_list.sort()
 
-    xlabel="evaluated distance between two ramps" 
+    xlabel="Evaluated distance between two ramps" 
     ylabel=attr_name
     print(mor_data.keys())
     plot=PlotWriter(xlabel, ylabel) 
@@ -509,12 +516,15 @@ def plot_again_dist(mor_summary, human_summary):
         if random_human_only:
             if "1650_200" in mor_category_list or "1850_200" in mor_category_list:
                 continue
-        legend="random_"+key
+        legend="Evalauting AVP={}".format(key.split("_")[-1])
         mor_data[key].sort()
         plot.add_plot(legend, mor_data[key])
 
     for key in human_category_list:
-        legend="human_"+key
+        print(key)
+        if "1800" not in key:
+            continue
+        legend="human_baseline"
         human_data[key].sort()
         plot.add_plot(legend, human_data[key])
     plot.add_human=False
