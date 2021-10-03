@@ -34,6 +34,10 @@ even_evaluation_random_aamas_avp_dir=os.path.join("..","..","exp_results", evalu
 even_evaluation_aamas_inflows_dir=os.path.join("..","..","exp_results", evaluation_name, "aamas_models_inflows")
 even_evaluation_random_aamas_inflows_dir=os.path.join("..","..","exp_results", evaluation_name, "aamas_models_random_inflow")
 
+human_dir=os.path.join("..","..","exp_results", "human_baselines")
+even_evaluation_human_inflows_dir=os.path.join("..","..","exp_results", "even_human_baseline")
+random_evaluation_human_inflows_dir=os.path.join("..","..","exp_results", "random_human_baseline")
+
 even_evaluation_results_dict={
 "avp": even_evaluation_aamas_avp_dir,
 "inflow": even_evaluation_aamas_inflows_dir,
@@ -110,7 +114,7 @@ def extract_sorted_data(model_data):
     sorted_e_data.sort()
     return sorted_e_data
 
-def compare_av_placement(summary, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
+def compare_av_placement(summary, human, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
     # extract aamas without random 
     sorted_model_keys=sort_model_keys(summary['avp'])
     for inflow in inflows_keys:
@@ -125,33 +129,47 @@ def compare_av_placement(summary, evaluation_key="even_evalution", inflows_keys=
             if not model_key.startswith(inflow):
                 continue
 
+            avp_str=model_key.split("_")[-1]
             avp_aamas_summary=summary['avp']
             sorted_e_data=extract_sorted_data(avp_aamas_summary[model_key])
             avp_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
 
             inflow_aamas_summary=summary['inflow']
             sorted_e_data=extract_sorted_data(inflow_aamas_summary[model_key])
-            inflow_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
+            inflow_plot.add_plot(even_label_prefix+model_key+"_"+avp_str, sorted_e_data)
 
         # add random placement data
         random_label_prefix="random_"
         for model_key in sorted_model_keys:
             if not model_key.startswith(inflow):
                 continue
-
+            avp_str=model_key.split("_")[-1]
             avp_random_summary=summary['avp_random']
             sorted_e_data=extract_sorted_data(avp_random_summary[model_key])
             avp_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
 
             inflow_random_summary=summary['inflow_random']
             sorted_e_data=extract_sorted_data(inflow_random_summary[model_key])
-            inflow_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
+            inflow_plot.add_plot(random_label_prefix+model_key+"_"+avp_str, sorted_e_data)
 
-        avp_plot.add_human=False
+        avp_plot.add_human=True
         inflow_plot.add_human=False
-            
-        avp_plot.write_plot("./aamas/"+evaluation_key+"_placement_avp_"+inflow+".tex", 5)
-        inflow_plot.write_plot("./aamas/"+evaluation_key+"_placement_inflow_"+inflow+".tex", 5)
+        key_list=human.keys()
+        key_list.sort()
+        sorted_e_data=list()
+        for e_key in key_list:
+            mean_var_list=human[e_key][attr_name].split(",")
+            mean=float(mean_var_list[0].strip())
+            var=float(mean_var_list[1].strip())
+            sorted_e_data.append((int(e_key), mean, var)) 
+        if "even" in evaluation_key:
+            inflow_plot.set_title("Training inflow=even or random 1850, Training AVP=Evaluating AVP,\\\\ Evaluating inflow=\\textit{even} [1600, 2000]")
+        else:
+            inflow_plot.set_title("Training inflow=even or random 1850, Training AVP=Evaluating AVP,\\\\ Evaluating inflow=\\textit{random} [1600, 2000]")
+        inflow_plot.add_plot("human_baseline", sorted_e_data)
+
+        avp_plot.write_plot("./aamas/"+evaluation_key+"_placement_avp_"+inflow+".tex", 5, color_same=True)
+        inflow_plot.write_plot("./aamas/"+evaluation_key+"_placement_inflow_"+inflow+".tex", 5, color_same=True)
 
 def compare_inflow_training(summary, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
     # extract aamas without random 
@@ -279,11 +297,13 @@ def retrieve_all_data_and_plot():
         random_evaluation_summary[category]=model_exp_summary
 
     # plot against avp and inflow for model 1850
-
+    human=retrieve_exp_data(human_dir)
+    even_human=human['even_human_baseline']
+    random_human=human['random_human_baseline']
     #plot_each_category(summary)     
     #plot_each_inflow_each_category(summary)
-    compare_av_placement(even_evaluation_summary, evaluation_key="even_evaluation", inflows_keys=["1850"])
-    compare_av_placement(random_evaluation_summary, evaluation_key="random_evaluation", inflows_keys=["1850"])
+    compare_av_placement(even_evaluation_summary, even_human, evaluation_key="even_evaluation", inflows_keys=["1850"])
+    compare_av_placement(random_evaluation_summary, random_human, evaluation_key="random_evaluation", inflows_keys=["1850"])
     #compare_inflow_training(random_evaluation_summary, evaluation_key="random_evaluation", inflows_keys=["1650", "1850", "2000"])
     
 

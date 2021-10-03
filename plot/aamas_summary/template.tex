@@ -3,6 +3,7 @@
 % graphics
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{calc}
 \usepackage{pgfplots}
 \usepackage{siunitx}
 
@@ -269,6 +270,7 @@ a	b   	c
 
 
 
+\node[above,font=\large\bfseries] at (current bounding box.north) {Some title};
 
 \end{axis}
 \end{tikzpicture}

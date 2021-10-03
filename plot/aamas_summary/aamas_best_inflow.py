@@ -1,6 +1,8 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Inflow"
+import collections
+
+attr_name="Outflow"
 random_human_only=True
 
 def obtain_file_names(folder_path):
@@ -35,6 +37,9 @@ special_even_evaluation_name="special_models_even"
 special_evaluation_name="special_models"
 special_random_models_dir=os.path.join("..","..","exp_results", special_random_evaluation_name) 
 special_even_models_dir=os.path.join("..","..","exp_results", special_even_evaluation_name) 
+
+
+human_dir=os.path.join("..","..","exp_results", "human_baselines")
 
 evaluation_name="random_evaluation"
 aamas_avp_dir=os.path.join("..","..","exp_results", evaluation_name, "aamas_models")
@@ -457,7 +462,7 @@ def plot_special_random_even_models(random_data, even_data):
 
     # used for paper 
     # plot random against even under inflow 1800
-def find_best_training_inflow(summary):
+def find_best_training_inflow_vs_inflow(summary, human):
     data_map=dict()
     for model_key, model_data in summary.items():
         for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
@@ -475,20 +480,88 @@ def find_best_training_inflow(summary):
                 var=float(mean_var_list[1].strip())
                 data_map[legend_label].append((int(flow), mean, var))
 
-    xlabel="Evaluated Main InFlow" 
-    ylabel=attr_name #"Outflow" 
-    plot=PlotWriter(xlabel, ylabel) 
-    #print(data_map.keys())
-    for model_key, model_data in summary.items():
-        for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
+        #print(data_map.keys())
+
+    key_list=human.keys()
+    key_list.sort()
+    sorted_e_data=list()
+    for e_key in key_list:
+        mean_var_list=human[e_key][attr_name].split(",")
+        mean=float(mean_var_list[0].strip())
+        var=float(mean_var_list[1].strip())
+        sorted_e_data.append((int(e_key), mean, var)) 
+
+    print(sorted_e_data)
+
+    #for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
+    for avp in [1, 20, 40]:
+        xlabel="Evaluated Main InFlow" 
+        ylabel=attr_name #"Outflow" 
+        plot=PlotWriter(xlabel, ylabel) 
+        plot.set_plot_range(1600,2000)
+        plot.set_title('Training inflow=random [1600,2000], Training AVP=30\\%,\\\\ Evaluating AVP={}\\%, Evaluating inflow=random [1600,2000]'.format(avp)) 
+        for model_key, model_data in summary.items():
             legend_label=model_key+"_"+str(avp)
             data_map[legend_label].sort()
-            legend_label1=legend_label
+            legend_label1="random_"+legend_label
             plot.add_plot(legend_label1, data_map[legend_label])
-    plot.write_plot("./aamas/"+"flow.tex",8)
+
+        plot.add_plot("human_baseline", sorted_e_data)
+        plot.write_plot("./aamas/best_flow_%d.tex" % avp, 4, color_same=False)
 
 
- 
+def find_best_training_inflow_vs_avp(summary, human):
+    data_map=dict()
+    for model_key, model_data in summary.items():
+        for inflow in [1600, 1700, 1800, 1900, 2000]:
+            for eval_label, eval_value in model_data.items():
+                labels=eval_label.split("_")
+                flow_str=labels[0]
+                avp_str=labels[-1]
+                if flow_str!=str(inflow):
+                    continue
+                flow=labels[0]
+                legend_label=model_key+"_"+flow_str
+                if legend_label not in data_map.keys():
+                    data_map[legend_label]=list()
+                mean_var_list=eval_value[attr_name].split(",")
+                mean=float(mean_var_list[0].strip())
+                var=float(mean_var_list[1].strip())
+                data_map[legend_label].append((int(avp_str), mean, var))
+
+        #print(data_map.keys())
+
+    key_list=human.keys()
+    key_list.sort()
+    sorted_e_data=list()
+    for e_key in key_list:
+        mean_var_list=human[e_key][attr_name].split(",")
+        mean=float(mean_var_list[0].strip())
+        var=float(mean_var_list[1].strip())
+        sorted_e_data.append((int(e_key), mean, var)) 
+
+
+    #for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
+    for inflow in [1600, 1800, 2000]:
+        xlabel="Evaluated AVP" 
+        ylabel=attr_name #"Outflow" 
+        plot=PlotWriter(xlabel, ylabel) 
+        plot.set_title('Training inflow=random [1600,2000], Training AVP=30\\%,\\\\ Evaluating AVP=[0,40\\%], Evaluating inflow=random {}'.format(inflow)) 
+        for model_key, model_data in summary.items():
+            legend_label=model_key+"_"+str(inflow)
+            data_map[legend_label].sort()
+            legend_label1="random_"+legend_label
+            plot.add_plot(legend_label1, data_map[legend_label])
+
+        mean_var_list=human[str(inflow)][attr_name].split(",")
+        mean=float(mean_var_list[0].strip())
+        var=float(mean_var_list[1].strip())
+        human_data=[(0,mean, var), (40, mean, var)]
+        plot.add_plot("human_baseline", human_data)
+        plot.write_plot("./aamas/best_flow_vs_avp_%d.tex" % inflow, 4, color_same=False)
+
+
+
 if __name__ == "__main__":
     # retrive random models and random evaluation
     #random_model_exp_summary=retrieve_special_exp_data(random_aamas_avp_dir) 
@@ -496,7 +569,12 @@ if __name__ == "__main__":
     special_random_summary=retrieve_special_exp_data(special_random_models_dir)
     #model_key="2000_200_30"
     #plot_special_model_flow(model_key, special_random_summary[model_key])
-    find_best_training_inflow(special_random_summary)
+    human=retrieve_exp_data(human_dir)
+    random_human=human['random_human_baseline']
+
+    special_random_summary= collections.OrderedDict(sorted(special_random_summary.items()))
+    find_best_training_inflow_vs_inflow(special_random_summary, random_human)
+    find_best_training_inflow_vs_avp(special_random_summary, random_human)
 
     #special_even_summary=retrieve_special_exp_data(special_even_models_dir)
 
