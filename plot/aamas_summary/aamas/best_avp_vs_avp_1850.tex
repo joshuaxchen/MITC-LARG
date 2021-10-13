@@ -3,6 +3,7 @@
 % graphics
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{calc}
 \usepackage{pgfplots}
 \usepackage{siunitx}
 
@@ -209,7 +210,7 @@
     legend style={font=\small},
 	ylabel={\Large Outflow},
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
-	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	y label style={at={(axis description cs:0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
 	xlabel={\Large Evaluated AVP},
 	legend columns=15,
@@ -217,8 +218,7 @@
 	/tikz/column /.style={
                 column sep=5pt,
             },
-	cycle list name=mycolorlist,
-	 xmax=40
+	cycle list name=mycolorlist
 ]
 %end of axis
 \addplot table [x=a, y=b] {

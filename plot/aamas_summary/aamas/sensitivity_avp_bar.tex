@@ -1,0 +1,226 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usetikzlibrary{patterns}
+
+\begin{document}
+
+
+\begin{tikzpicture}
+\pgfplotsset{
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large}
+  }
+
+ \begin{axis}[
+        ybar,
+        bar width=15pt,
+	width=1.9\textwidth,
+	nodes near coords,
+        % (changed from `xtick`)
+        xtick distance=1,
+        ylabel={\huge Outflow},
+        xlabel={\huge Main inflow}, % (changed to an absolute value)
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.6)}, anchor=south},
+        %enlarge x limits={abs=0.5},
+	enlarge y limits={value=0.2,upper},
+        % ---------------------------------------------------------------------
+        % changes to get what you want
+        % ---------------------------------------------------------------------
+	xtick={1600, 1700, 1800, 1900, 2000},
+        scaled ticks=false,
+	xmin=1550,
+	xmax=2050,
+	legend pos=north east,
+	point meta=explicit symbolic,
+        % remove the `xticks`
+        xtick style={
+            /pgfplots/major tick length=0pt,
+        },
+%        % `ybar interval` is not what you want here I guess, because then e.g.
+%        % the last bar is not drawn. To simulate that ...
+%        % ... add `extra x ticks` between the `xticks` ...
+%        extra x ticks={1.5,...,8.5},
+%        % ... without stating any label ...
+%        extra x tick labels={},
+%        % ... and show the major gridlines
+%        extra x tick style={
+%            xmajorgrids,
+%        },
+    ]
+
+	\addplot+ [
+		black,
+		fill=white,
+		pattern color=.,
+            error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+       ] coordinates {
+	(1600,1577.34)+-(0, 29.66)
+	(1700,1578.02)+-(0, 34.83)
+	(1800,1566.94)+-(0, 23.02)
+	(1900,1567.22)+-(0, 21.26)
+	(2000,1563.30)+-(0, 16.07)
+        };
+
+	\addplot+ [
+		%pattern=grid,
+		%pattern color=red,
+            error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+        ] coordinates {
+	(1600,1588.14) +- (0, 30.60) 
+	(1700,1587.13) +- (0, 33.11)
+	(1800,1578.71) +- (0, 29.24)
+	(1900,1574.32) +- (0, 20.31)
+	(2000,1572.41) +- (0, 19.98)
+        };\legend{AVP1} 
+
+	
+	\addplot+ [
+		%pattern=dots,
+		%pattern color=brown,
+            error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+       ] coordinates {
+	(1600,1597.07)+-(0,30.24)
+	(1700,1595.66)+-(0,35.27)
+	(1800,1586.63)+-(0,27.48)
+	(1900,1587.24)+-(0,24.18)
+	(2000,1582.13)+-(0,24.09)
+        };\legend{AVP2}
+
+	\addplot+ [
+	    error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+       ] coordinates {
+	(1600,1610.32)+-(0, 30.33)
+	(1700,1599.8 )+-(0, 31.85)
+	(1800,1593.47)+-(0, 24.68)
+	(1900,1592.46)+-(0, 28.49)
+	(2000,1591.6 )+-(0, 26.05)
+        };\legend{AVP3}
+
+	\addplot+ [
+		%pattern=crosshatch,
+		%pattern color=purple,
+            error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+       ] coordinates {
+	(1600,1608.80)+-(0, 34.48)
+	(1700,1609.78)+-(0, 37.35)
+	(1800,1602.54)+-(0, 28.50)
+	(1900,1598.76)+-(0, 27.40)
+	(2000,1600.56)+-(0, 25.34)
+        };\legend{AVP4}
+
+	\addplot+ [
+		%pattern=crosshatch dots,%fivepointed stars,
+		%pattern color=green,
+            error bars/.cd,
+                y dir=both,
+                % (changed from `y explicit` so the error bars are (clearly)
+                % visible
+                y explicit,
+       ] coordinates {
+	(1600,1616.33)+-(0, 41.77)
+	(1700,1614.53)+-(0, 36.66)
+	(1800,1607.33)+-(0, 30.46)
+	(1900,1604.48)+-(0, 29.11)
+	(2000,1609.85)+-(0, 29.94)
+        };\legend{AVP5}
+
+
+	\legend{human-baseline, AVP=1\%, AVP=2\%, AVP=3\%, AVP=4\%, AVP=5\%}
+
+	\coordinate (A11) at (30,46);
+	\coordinate (A12) at (43,55);
+	\coordinate (A13) at (57,68);
+	\coordinate (A14) at (71,67);
+	\coordinate (A15) at (85,75);
+
+	\coordinate (A21) at (130,46);
+	\coordinate (A22) at (143,54);
+	\coordinate (A23) at (157,58);
+	\coordinate (A24) at (171,68);
+	\coordinate (A25) at (185,73);
+
+	\coordinate (A31) at (230,37);
+	\coordinate (A32) at (243,45);
+	\coordinate (A33) at (257,52);
+	\coordinate (A34) at (271,61);
+	\coordinate (A35) at (285,66);
+
+	\coordinate (A41) at (330,33);
+	\coordinate (A42) at (343,45);
+	\coordinate (A43) at (357,51);
+	\coordinate (A44) at (371,57);
+	\coordinate (A45) at (385,63);
+
+	\coordinate (A51) at (430,31);
+	\coordinate (A52) at (443,41);
+	\coordinate (A53) at (457,50);
+	\coordinate (A54) at (471,59);
+	\coordinate (A55) at (485,68);
+
+        %\legend{
+        %    x data,
+        %    y values,
+        %}
+    \end{axis}
+
+\node at (A11) {\huge *};
+\node at (A12) {\huge *};
+\node at (A13) {\huge *};
+\node at (A14) {\huge *};
+\node at (A15) {\huge *};
+
+\node at (A21) {\huge *};
+\node at (A22) {\huge *};
+\node at (A23) {\huge *};
+\node at (A24) {\huge *};
+\node at (A25) {\huge *};
+
+\node at (A31) {\huge *};
+\node at (A32) {\huge *};
+\node at (A33) {\huge *};
+\node at (A34) {\huge *};
+\node at (A35) {\huge *};
+
+\node at (A41) {\huge *};
+\node at (A42) {\huge *};
+\node at (A43) {\huge *};
+\node at (A44) {\huge *};
+\node at (A45) {\huge *};
+
+%\node at (A51) {\huge *};
+\node at (A52) {\huge *};
+\node at (A53) {\huge *};
+\node at (A54) {\huge *};
+\node at (A55) {\huge *};
+
+\node[above,font=\huge, align=left] at (current bounding box.north) {Training: random vehicle placement, main inflow 2000, AVP=30\%,\\ Evaluation:
+random vehicle placement, main inflow [1600,1800], AVP=[0,5\%]};
+\end{tikzpicture}
+\end{document}

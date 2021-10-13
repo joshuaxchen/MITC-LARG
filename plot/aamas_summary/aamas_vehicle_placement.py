@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Speed"
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
         if x[0]==folder_path:
@@ -117,11 +117,19 @@ def extract_sorted_data(model_data):
 def compare_av_placement(summary, human, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
     # extract aamas without random 
     sorted_model_keys=sort_model_keys(summary['avp'])
+    eval_inflow=inflows_keys[0]
+    star_text="*"
     for inflow in inflows_keys:
         ylabel=attr_name
         avp_plot=PlotWriter("Evaluated AVP", ylabel) 
         inflow_plot=PlotWriter("Evaluated Main Inflow", ylabel) 
-        inflow_plot.set_plot_range(1600, 2000)
+        if attr_name=="Speed":
+            inflow_plot.set_plot_range(1600, 2000, 5, 21)
+            avp_plot.set_plot_range(0, 40, 5, 21)
+        elif attr_name=="Outflow":
+            inflow_plot.set_plot_range(1600, 2000, 1500, 1850)
+            avp_plot.set_plot_range(0, 40, 1500, 1850)
+
 
         # add even placement data
         even_label_prefix="even_"
@@ -132,11 +140,13 @@ def compare_av_placement(summary, human, evaluation_key="even_evalution", inflow
             avp_str=model_key.split("_")[-1]
             avp_aamas_summary=summary['avp']
             sorted_e_data=extract_sorted_data(avp_aamas_summary[model_key])
-            avp_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
+            legend=even_label_prefix+model_key+":"+eval_inflow+"-"+star_text
+            avp_plot.add_plot(legend, sorted_e_data)
 
             inflow_aamas_summary=summary['inflow']
             sorted_e_data=extract_sorted_data(inflow_aamas_summary[model_key])
-            inflow_plot.add_plot(even_label_prefix+model_key+"_"+avp_str, sorted_e_data)
+            legend=even_label_prefix+model_key+":"+star_text+"-"+avp_str
+            inflow_plot.add_plot(legend, sorted_e_data)
 
         # add random placement data
         random_label_prefix="random_"
@@ -146,15 +156,17 @@ def compare_av_placement(summary, human, evaluation_key="even_evalution", inflow
             avp_str=model_key.split("_")[-1]
             avp_random_summary=summary['avp_random']
             sorted_e_data=extract_sorted_data(avp_random_summary[model_key])
-            avp_plot.add_plot(random_label_prefix+model_key, sorted_e_data)
+            legend=random_label_prefix+model_key+":"+eval_inflow+"-"+star_text
+            avp_plot.add_plot(legend, sorted_e_data)
 
             inflow_random_summary=summary['inflow_random']
             sorted_e_data=extract_sorted_data(inflow_random_summary[model_key])
-            inflow_plot.add_plot(random_label_prefix+model_key+"_"+avp_str, sorted_e_data)
+            legend=random_label_prefix+model_key+":"+star_text+"-"+avp_str
+            inflow_plot.add_plot(legend, sorted_e_data)
 
         avp_plot.add_human=True
         inflow_plot.add_human=False
-        key_list=human.keys()
+        key_list=list(human.keys())
         key_list.sort()
         sorted_e_data=list()
         for e_key in key_list:
@@ -163,13 +175,13 @@ def compare_av_placement(summary, human, evaluation_key="even_evalution", inflow
             var=float(mean_var_list[1].strip())
             sorted_e_data.append((int(e_key), mean, var)) 
         if "even" in evaluation_key:
-            inflow_plot.set_title("Training inflow=even or random 1850, Training AVP=Evaluating AVP,\\\\ Evaluating inflow=\\textit{even} [1600, 2000]")
+            inflow_plot.set_title("Training: even or random vehicle placement, main inflow 1850, train and evaluate at the same AVP,\\\\ Evaluation: \\textbf{even} vehicle placement, main inflow= [1600, 2000]") 
         else:
-            inflow_plot.set_title("Training inflow=even or random 1850, Training AVP=Evaluating AVP,\\\\ Evaluating inflow=\\textit{random} [1600, 2000]")
+            inflow_plot.set_title("Training: even or random vehicle placement, main inflow 1850, train and evaluate at the same AVP,\\\\ Evaluating: \\textbf{random} vehicle placement, main inflow= [1600, 2000]")
         inflow_plot.add_plot("human_baseline", sorted_e_data)
 
-        avp_plot.write_plot("./aamas/"+evaluation_key+"_placement_avp_"+inflow+".tex", 5, color_same=True)
-        inflow_plot.write_plot("./aamas/"+evaluation_key+"_placement_inflow_"+inflow+".tex", 5, color_same=True)
+        avp_plot.write_plot("./aamas/"+evaluation_key+"_placement_avp_"+inflow+"_{}.tex".format(attr_name), 5, color_same=True)
+        inflow_plot.write_plot("./aamas/"+evaluation_key+"_placement_inflow_"+inflow+"_{}.tex".format(attr_name), 5, color_same=True)
 
 def compare_inflow_training(summary, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
     # extract aamas without random 
@@ -179,7 +191,12 @@ def compare_inflow_training(summary, evaluation_key="even_evalution", inflows_ke
     inflow_plot=PlotWriter("Evaluated Main Inflow", ylabel) 
     avp_plot.add_human=False
     inflow_plot.add_human=False
-    inflow_plot.set_plot_range(1600, 2000)
+    if attr_name=="Speed":
+        inflow_plot.set_plot_range(1600, 2000, 5, 21)
+    elif attr_name=="Outflow":
+        inflow_plot.set_plot_range(1600, 2000, 1500, 1850)
+
+
 
     for inflow in inflows_keys:
         # add random placement data
@@ -309,5 +326,9 @@ def retrieve_all_data_and_plot():
 
     # plot against inflow for different models 
 if __name__ == "__main__":
+    attr_name="Speed"
     retrieve_all_data_and_plot()
+    attr_name="Outflow"
+    retrieve_all_data_and_plot()
+
 
