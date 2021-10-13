@@ -208,6 +208,10 @@ class MultiAgentHighwayPOEnvMerge4MOR(MultiAgentHighwayPOEnv):
 
 class MultiAgentHighwayPOEnvMerge4CollaborateMOR(MultiAgentHighwayPOEnvMerge4MOR):
 # AAMAS policy
+
+    def set_speed_and_lane_change_modes(self):
+        return
+
     def compute_reward(self, rl_actions, **kwargs):
         if rl_actions is None:
             return {}
