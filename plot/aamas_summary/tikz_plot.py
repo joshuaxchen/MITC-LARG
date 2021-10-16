@@ -17,18 +17,25 @@ class PlotWriter:
         self.template_plot="\\addplot table [x=a, y=b] {\na\t b\t c\n%s};\n\\label{%s}\n\n" 
         self.template_legend="\\addlegendimage{/pgfplots/refstyle=%s}\n\\addlegendentry{%s}\n"
         self.template_color="\t %s, %s every mark/.append style={fill=%s!20}, mark=%s, error bars/.cd, y dir=both, y explicit\\\\"
-    def set_plot_range(self, xmin, xmax):
+    def set_plot_range(self, xmin, xmax, ymin, ymax):
         self.fname_suffix="_min%d_max%d" % (xmin, xmax)
         self.xmin=xmin
         self.xmax=xmax
+        self.ymin=ymin
+        self.ymax=ymax
                 
     def add_plot(self, label, data):
         label=label.replace("_","-")
         content_str=""
         for value in data:
             content_str+="%s\t%s\t%s\n" % value
-        self.plot_content+=self.template_plot % (content_str, label)  
-        self.legend+=self.template_legend % (label, label)
+        label1=label
+        label2=label
+        if "*" in label:
+            star_text="\\textasteriskcentered{}"
+            label2=label.replace("*", star_text)
+        self.plot_content+=self.template_plot % (content_str, label1)  
+        self.legend+=self.template_legend % (label1, label2)
 
     def generate_color_lines(self, period, color_same=True):
         j=0
@@ -61,7 +68,7 @@ class PlotWriter:
         header=""
         if self.title:
             #title_statement="\\node[above,font=\\large\\bfseries] at (current bounding box.north) {%s};\n" % self.title
-            title_statement="\\node[above,font=\\normalsize, align=left] at (current bounding box.north west) {%s};\n" % self.title
+            title_statement="\\node[above,font=\\Large, align=left] at (current bounding box.north) {%s};\n" % self.title
             tail="\\end{axis}\n%s\\end{tikzpicture}\n\\end{document}\n" % title_statement
         else:
             tail="\\end{axis}\n\\end{tikzpicture}\n\\end{document}\n"
@@ -83,8 +90,9 @@ class PlotWriter:
         while True:          
             line=lines[i]
             i+=1
-            if "*range*" in line and self.xmin and self.xmax:
-                line=line.replace("*range*", ",\n\t xmax={},\n\t xmin={}".format(self.xmax, self.xmin))
+            if "*range*" in line:
+                line=line.replace("*range*", ",\n\t xmax={},\n\t xmin={},\n\t ymin={},\n\t ymax={}".format(self.xmax, self.xmin, self.ymin, self.ymax))
+                print(filename, "range set")
                 #if self.xlabel.endswith("AVP"):
                 #    line=line.replace("*range*", ",\n\t xmax=40")
             elif "*range*" in line:

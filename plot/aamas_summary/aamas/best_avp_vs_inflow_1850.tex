@@ -3,6 +3,7 @@
 % graphics
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{calc}
 \usepackage{pgfplots}
 \usepackage{siunitx}
 
@@ -246,7 +247,7 @@
     legend style={font=\small},
 	ylabel={\Large Outflow},
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
-	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	y label style={at={(axis description cs:0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
 	xlabel={\Large Evaluated main inflow},
 	legend columns=15,
@@ -259,53 +260,53 @@
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	1622.45	37.44
-1700	1626.73	33.32
-1800	1624.68	34.69
-1900	1625.58	25.08
-2000	1624.93	32.2
+1600	1577.92	35.97
+1700	1574.14	29.81
+1800	1568.45	26.65
+1900	1566.72	25.04
+2000	1566.07	20.04
 };
-\label{random-1850-200-100-30}
+\label{random-1850-200-100-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	1643.15	53.48
-1700	1646.35	51.39
-1800	1649.2	47.54
-1900	1652.33	43.97
-2000	1650.17	47.64
+1600	1628.71	41.06
+1700	1631.7	42.58
+1800	1642.36	44.57
+1900	1640.92	41.24
+2000	1634.87	46.0
 };
-\label{random-1850-200-10-30}
+\label{random-1850-200-10-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	1698.59	55.16
-1700	1714.93	50.94
-1800	1734.7	45.76
-1900	1727.57	51.06
-2000	1735.74	51.38
+1600	1640.12	44.98
+1700	1645.67	46.02
+1800	1642.93	38.55
+1900	1641.31	35.01
+2000	1640.48	37.07
 };
-\label{random-1850-200-30-30}
+\label{random-1850-200-30-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	1687.1	51.83
-1700	1705.54	50.34
-1800	1701.9	54.88
-1900	1714.1	50.46
-2000	1713.78	48.44
+1600	1628.64	43.49
+1700	1621.76	37.41
+1800	1618.67	35.23
+1900	1609.56	29.35
+2000	1607.8	33.62
 };
-\label{random-1850-200-50-30}
+\label{random-1850-200-50-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	1650.96	46.65
-1700	1655.57	45.07
-1800	1647.32	42.04
-1900	1645.27	45.11
-2000	1650.53	38.83
+1600	1609.67	38.98
+1700	1602.4	33.9
+1800	1594.76	26.93
+1900	1595.2	23.67
+2000	1593.47	24.7
 };
-\label{random-1850-200-80-30}
+\label{random-1850-200-80-10}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -321,21 +322,21 @@ a	 b	 c
 };
 \label{human-baseline}
 
-\addlegendimage{/pgfplots/refstyle=random-1850-200-100-30}
-\addlegendentry{random-1850-200-100-30}
-\addlegendimage{/pgfplots/refstyle=random-1850-200-10-30}
-\addlegendentry{random-1850-200-10-30}
-\addlegendimage{/pgfplots/refstyle=random-1850-200-30-30}
-\addlegendentry{random-1850-200-30-30}
-\addlegendimage{/pgfplots/refstyle=random-1850-200-50-30}
-\addlegendentry{random-1850-200-50-30}
-\addlegendimage{/pgfplots/refstyle=random-1850-200-80-30}
-\addlegendentry{random-1850-200-80-30}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-100-10}
+\addlegendentry{random-1850-200-100-10}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-10-10}
+\addlegendentry{random-1850-200-10-10}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-30-10}
+\addlegendentry{random-1850-200-30-10}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-50-10}
+\addlegendentry{random-1850-200-50-10}
+\addlegendimage{/pgfplots/refstyle=random-1850-200-80-10}
+\addlegendentry{random-1850-200-80-10}
 \addlegendimage{/pgfplots/refstyle=human-baseline}
 \addlegendentry{human-baseline}
 
 
 \end{axis}
-\node[above,font=\normalsize, align=left] at (current bounding box.north) {Training inflow=random 1850, Training AVP=[0,100\%],\\ Evaluating AVP=30\%, Evaluating inflow=random [1600,2000]};
+\node[above,font=\normalsize, align=left] at (current bounding box.north) {Training inflow=random 1850, Training AVP=[0,100\%],\\ Evaluating AVP=10\%, Evaluating inflow=random [1600,2000]};
 \end{tikzpicture}
 \end{document}

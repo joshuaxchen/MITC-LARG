@@ -1,6 +1,6 @@
 import os
 from tikz_plot import PlotWriter
-attr_name="Outflow"
+attr_name="Speed"
 random_human_only=True
 
 def obtain_file_names(folder_path):
@@ -461,7 +461,8 @@ def plot_special_random_even_models(random_data, even_data):
     # plot random against even under inflow 1800
 def find_best_training_avp_against_flow(summary, human):
     # only evaluted at avp 10
-    evaluted_avp="30"
+    evaluated_avp="10"
+    star_text="*"
     data_map=dict()
     for model_key, model_data in summary.items():
         trained_labels=model_key.split("_")
@@ -473,9 +474,9 @@ def find_best_training_avp_against_flow(summary, human):
                 avp_str=labels[1]
                 if flow_str!=str(flow):
                     continue
-                if avp_str!=evaluted_avp: #evaluated avp
+                if avp_str!=evaluated_avp: #evaluated avp
                     continue
-                legend_label=model_key+"_"+avp_str
+                legend_label=model_key+":"+star_text+"-"+avp_str
                 if legend_label not in data_map.keys():
                     data_map[legend_label]=list()
                 mean_var_list=eval_value[attr_name].split(",")
@@ -485,8 +486,17 @@ def find_best_training_avp_against_flow(summary, human):
                 data_map[legend_label].append((flow, mean, var))
     
     #print(data_map.keys())
-    keys=data_map.keys()
+    keys=list(data_map.keys())
     keys.sort()
+    to_remove=list()
+    for key in keys:
+        if "100" in key:
+            to_remove.append(key)
+    for key in to_remove:
+        keys.remove(key)
+    for key in to_remove:
+        keys.append(key)
+    print("sorted keys:", keys)
     #keys.remove("1650_200_100")
     #keys.remove("1850_200_100")
     #keys.remove("2000_200_100")
@@ -498,7 +508,7 @@ def find_best_training_avp_against_flow(summary, human):
     #keys.insert(index3+1, "2000_200_100")
     legend_prefix="random_"
 
-    key_list=human.keys()
+    key_list=list(human.keys())
     key_list.sort()
     sorted_e_data=list()
     for e_key in key_list:
@@ -511,7 +521,14 @@ def find_best_training_avp_against_flow(summary, human):
         xlabel="Evaluated main inflow" 
         ylabel=attr_name #"Outflow" 
         plot=PlotWriter(xlabel, ylabel) 
-        plot.set_title('Training inflow=random {}, Training AVP=[0,100\\%],\\\\ Evaluating AVP=30\\%, Evaluating inflow=random [1600,2000]'.format(main_inflow)) 
+    
+        if attr_name=="Speed":
+            plot.set_plot_range(1600, 2000, 5, 21)
+        elif attr_name=="Outflow":
+            plot.set_plot_range(1600, 2000, 1500, 1850)
+
+
+        plot.set_title('Training: random vehicle placement, main inflow \\textbf{%s}, AVP=[0,100\\%%],\\\\ Evaluation: random vehicle placement, \\textit{main inflow [1600,2000]}, AVP=%s\\%%' % (main_inflow, evaluated_avp)) 
 
         for legend_label in keys: 
             if main_inflow in legend_label:
@@ -520,13 +537,14 @@ def find_best_training_avp_against_flow(summary, human):
                 legend_label1=legend_prefix+legend_label
                 plot.add_plot(legend_label1, data)
         plot.add_plot("human_baseline", sorted_e_data)
-        plot.write_plot("./aamas/"+"best_avp_vs_inflow_%s.tex" % main_inflow ,6, color_same=False)
+        plot.write_plot("./aamas/"+"best_avp_vs_inflow_%s_%s.tex" % (main_inflow, attr_name) ,6, color_same=False)
 
     # used for paper 
     # plot random against even under inflow 1800
 def find_best_training_avp_against_avp(summary, human):
     # only evaluted at avp 10
     evaluted_inflow="1800"
+    star_text="*"
     data_map=dict()
     for model_key, model_data in summary.items():
         trained_labels=model_key.split("_")
@@ -537,7 +555,7 @@ def find_best_training_avp_against_avp(summary, human):
             avp_str=labels[1]
             if flow_str!=str(evaluted_inflow):
                 continue
-            legend_label=model_key+"_"+flow_str
+            legend_label=model_key+":"+flow_str+"-"+star_text
             if legend_label not in data_map.keys():
                 data_map[legend_label]=list()
             mean_var_list=eval_value[attr_name].split(",")
@@ -547,8 +565,17 @@ def find_best_training_avp_against_avp(summary, human):
             data_map[legend_label].append((avp, mean, var))
     
     #print(data_map.keys())
-    keys=data_map.keys()
+    keys=list(data_map.keys())
     keys.sort()
+    avp_100_key=None
+    to_remove=list()
+    for key in keys:
+        if "100" in key:
+            to_remove.append(key)
+    for key in to_remove:
+        keys.remove(key)
+    for key in to_remove:
+        keys.append(key)
     #keys.remove("1650_200_100")
     #keys.remove("1850_200_100")
     #keys.remove("2000_200_100")
@@ -564,7 +591,12 @@ def find_best_training_avp_against_avp(summary, human):
         xlabel="Evaluated AVP" 
         ylabel=attr_name #"Outflow" 
         plot=PlotWriter(xlabel, ylabel) 
-        plot.set_title('Training inflow=random {}, Training AVP=[0,100\\%],\\\\ Evaluating AVP=[0,40\\%], Evaluating inflow=random 1800'.format(main_inflow)) 
+        if attr_name=="Speed":
+            plot.set_plot_range(0, 40, 5, 21)
+        elif attr_name=="Outflow":
+            plot.set_plot_range(0, 40, 1500, 1850)
+
+        plot.set_title('Training: random vehicle placement, main inflow \\textbf{%s}, AVP=[0,100\\%%],\\\\ Evaluation: random vehicle placement, main inflow 1800, \\textit{AVP=[0,40\\%%]}' % (main_inflow)) 
         for legend_label in keys: 
             if main_inflow in legend_label:
                 data=data_map[legend_label]
@@ -577,16 +609,23 @@ def find_best_training_avp_against_avp(summary, human):
         var=float(mean_var_list[1].strip())
         human_data=[(0, mean, var), (40, mean, var)]
         plot.add_plot("human_baseline", human_data)
-        plot.write_plot("./aamas/"+"best_avp_vs_avp_%s.tex" % main_inflow,5, color_same=False)
-
-
-
+        plot.write_plot("./aamas/"+"best_avp_vs_avp_%s_%s.tex" % (main_inflow, attr_name),5, color_same=False)
 
  
 if __name__ == "__main__":
     # retrive random models and random evaluation
     #random_model_exp_summary=retrieve_special_exp_data(random_aamas_avp_dir) 
     # retrieve special models
+    attr_name='Speed'
+    special_random_summary=retrieve_special_exp_data(special_random_models_dir)
+    #model_key="2000_200_30"
+    #plot_special_model_flow(model_key, special_random_summary[model_key])
+    human=retrieve_exp_data(human_dir)
+    random_human=human['random_human_baseline']
+    find_best_training_avp_against_flow(special_random_summary, random_human)
+    find_best_training_avp_against_avp(special_random_summary, random_human)
+
+    attr_name='Outflow'
     special_random_summary=retrieve_special_exp_data(special_random_models_dir)
     #model_key="2000_200_30"
     #plot_special_model_flow(model_key, special_random_summary[model_key])

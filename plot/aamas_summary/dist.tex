@@ -22,7 +22,7 @@
 	 blue, densely dashed every mark/.append style={fill=blue!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
 	 blue, dashed every mark/.append style={fill=blue!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
 	 blue, densely dotted every mark/.append style={fill=blue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
-	 red, loosely dotted every mark/.append style={fill=red!20}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 red, loosely dotted every mark/.append style={fill=red!20}, mark=square*, error bars/.cd, y dir=both, y explicit\\
 	 red, loosely dashed every mark/.append style={fill=red!20}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
 	 red, densely dashdotted every mark/.append style={fill=red!20}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
 	 red, loosely dashdottted every mark/.append style={fill=red!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
@@ -242,7 +242,7 @@ a	 b	 c
 \end{axis}
 
 \node[above,font=\normalsize, align=left] at (current bounding box.north)
-{Policy=random-2000-200-30, Evaluating AVP=[0,40\%],\\ Evaluating inflow=random
-main inflow 1800, even merge inflow 200 on each ramp};
+{Training: random vehicle placement, main inflow 1800, merge inflow 200, AVP=30\%,\\ 
+Evaluation: random vehicle placement, main inflow 1800,  merge inflow 200 for each ramp, AVP=[0,40\%]};
 \end{tikzpicture}
 \end{document}

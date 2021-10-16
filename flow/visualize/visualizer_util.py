@@ -22,7 +22,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller=SimCarFollowingController#IDMController #
+        controller=IDMController #SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
     if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
@@ -589,6 +589,8 @@ def reset_inflows(args, flow_params):
         FLOW_RATE=0
         for inflow in net_params.inflows.get(): 
             if "merge" in inflow['edge'] or 'on_ramp' in inflow['edge']:
+                continue
+            if "on_ramp" in inflow['edge']:
                 continue
             if 'probability' in inflow:
                 continue

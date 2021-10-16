@@ -34,6 +34,9 @@ even_evaluation_random_aamas_avp_dir=os.path.join("..","..","exp_results", evalu
 even_evaluation_aamas_inflows_dir=os.path.join("..","..","exp_results", evaluation_name, "aamas_models_inflows")
 even_evaluation_random_aamas_inflows_dir=os.path.join("..","..","exp_results", evaluation_name, "aamas_models_random_inflow")
 
+
+human_dir=os.path.join("..","..","exp_results", "human_baselines")
+
 even_evaluation_results_dict={
 "avp": even_evaluation_aamas_avp_dir,
 "inflow": even_evaluation_aamas_inflows_dir,
@@ -110,13 +113,17 @@ def extract_sorted_data(model_data):
     sorted_e_data.sort()
     return sorted_e_data
 
-def compare_inflow(summary, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
+def compare_inflow(summary, human, evaluation_key="even_evalution", inflows_keys=["1650", "1850", "2000"]):
     # extract aamas without random 
     sorted_model_keys=sort_model_keys(summary['avp'])
     for inflow in inflows_keys:
         ylabel=attr_name
         inflow_plot=PlotWriter("Evaluated Main Inflow", ylabel) 
-        inflow_plot.set_plot_range(1600, 2000)
+        if attr_name=="Speed":
+            inflow_plot.set_plot_range(1600, 2000, 5, 21)
+        elif attr_name=="Outflow":
+            inflow_plot.set_plot_range(1600, 2000, 1500, 1800)
+
 
         # add even placement data
         even_label_prefix="even_"
@@ -130,8 +137,18 @@ def compare_inflow(summary, evaluation_key="even_evalution", inflows_keys=["1650
             sorted_e_data=extract_sorted_data(inflow_aamas_summary[model_key])
             inflow_plot.add_plot(even_label_prefix+model_key, sorted_e_data)
 
-        inflow_plot.add_human=True
-        inflow_plot.write_plot("./aamas/motivation_"+evaluation_key+"inflow_"+inflow+".tex", 2)
+        key_list=list(human.keys())
+        print(key_list)
+        key_list.sort()
+        sorted_e_data=list()
+        for e_key in key_list:
+            mean_var_list=human[e_key][attr_name].split(",")
+            mean=float(mean_var_list[0].strip())
+            var=float(mean_var_list[1].strip())
+            sorted_e_data.append((int(e_key), mean, var)) 
+        inflow_plot.add_plot("human_baseline", sorted_e_data)
+
+        inflow_plot.write_plot("./aamas/motivation_"+evaluation_key+"inflow_"+inflow+"_"+attr_name+".tex", 2, color_same=False)
 
 def retrieve_all_data_and_plot():
     even_evaluation_summary=dict()
@@ -145,14 +162,21 @@ def retrieve_all_data_and_plot():
         random_evaluation_summary[category]=model_exp_summary
 
     # plot against avp and inflow for model 1850
+    human=retrieve_exp_data(human_dir)
+    even_human=human['even_human_baseline']
+
+    # plot against avp and inflow for model 1850
 
     #plot_each_category(summary)     
     #plot_each_inflow_each_category(summary)
-    compare_inflow(even_evaluation_summary, evaluation_key="even_evaluation", inflows_keys=["1650"])
+    compare_inflow(even_evaluation_summary, even_human, evaluation_key="even_evaluation", inflows_keys=["1650"])
     #compare_inflow_training(random_evaluation_summary, evaluation_key="random_evaluation", inflows_keys=["1650", "1850", "2000"])
     
 
     # plot against inflow for different models 
 if __name__ == "__main__":
+    attr_name="Outflow"
+    retrieve_all_data_and_plot()
+    attr_name="Speed"
     retrieve_all_data_and_plot()
 
