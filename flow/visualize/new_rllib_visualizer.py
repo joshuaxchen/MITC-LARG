@@ -156,6 +156,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     result_dir = args.result_dir if args.result_dir[-1] != '/' \
         else args.result_dir[:-1]
 
+    print(result_dir)
     config = get_rllib_config(result_dir)
 
     # check if we have a multiagent environment but in a
@@ -576,10 +577,20 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         reward_plot=None
 
         if do_print_metric_per_time_step and i==0:
+
             inflow_plot=PlotWriter("Time steps", "Inflow") 
+            inflow_plot.set_title("inflow") 
+            inflow_plot.set_plot_range(0, 5000, 0, 2000) 
             outflow_plot=PlotWriter("Time steps", "Outflow") 
+            outflow_plot.set_title("outflow") 
+            outflow_plot.set_plot_range(0, 5000, 0, 2000) 
             speed_plot=PlotWriter("Time steps", "Speed") 
+            speed_plot.set_title("speed") 
+            speed_plot.set_plot_range(0, 5000, 0, 2000) 
             reward_plot=PlotWriter("Time steps", "Reward") 
+            reward_plot.set_title("reward") 
+            reward_plot.set_plot_range(0, 5000, 0, 2000) 
+
             # This is a default design of plot, which added human baseline automataicaly. We may want to change this. Here I do not want to break the existing code for plot.
             inflow_plot.add_human=False
             outflow_plot.add_human=False

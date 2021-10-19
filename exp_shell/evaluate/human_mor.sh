@@ -1,7 +1,7 @@
 HUMAN_DIR=/home/users/flow_user/ray_results/human_multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_0573c_00000_0_2021-07-26_11-10-40
 TRAIN_DIR=/home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_56341_00000_0_2021-07-26_18-51-03
 
-TRAIN_DIR=/home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57
+TRAIN_DIR=${HOME}/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
@@ -39,9 +39,9 @@ for END in 100 #200 300 400 # 200 300 400
 do
 	WORKING_DIR=$EXP_FOLDER/${LOC1}_${END}_human_mor
 	mkdir ${WORKING_DIR}
-	for MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for MAIN_INFLOW in 1800 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for DIST_BETWEEN in 800 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for DIST_BETWEEN in 200 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 			let LOC2=LOC1+DIST_BETWEEN
 			#let TOTAL=LOC2+END
@@ -53,10 +53,11 @@ do
 				--render_mode no_render \
 				--highway_len ${TOTAL} \
 				--on_ramps ${LOC1} ${LOC2} \
-				--horizon 3000 \
-				--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+				--to_probability \
 				--main_merge_human_inflows ${MAIN_INFLOW} ${MERGE_INFLOW}
 				# > ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LOC1}_${LOC2}.txt & 
+				#--history_file_name human_mor_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${DIST_BETWEEN} \
+				#--horizon 3000 \
 			let J=J+1
 			if ((J == 20)); then
 				wait

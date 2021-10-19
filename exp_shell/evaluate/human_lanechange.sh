@@ -31,7 +31,7 @@ RIGHT_MAIN_INFLOW=2000
 
 for RIGHT_MAIN_INFLOW in 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1600 1500 1400 1300 1200 1100 1000 #1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1600 #1500 1400 1300 1200 1100 1000 #1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP in 0 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -54,18 +54,18 @@ do
 
 				for RIGHT_HUMAN_LANE_CHANGE in 1
 				do 
-					for AGGRESSIVE in 1 #0.2 0.4 0.6 0.8 1
+					for AGGRESSIVE in 0 #0.2 0.4 0.6 0.8 1
 					do
-						for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
+						for ASSERTIVE in 0 #0.5 #5 #0.4 0.6 0.8 1
 						do
-							for LC_PROB in 0.2 0.4 0.6 0.8 1
+							for LC_PROB in -1 #0.2 0.4 0.6 0.8 1
 							do
 								python3 $VISUALIZER \
 									$RL_RIGHT_MODEL \
 									$CHCKPOINT \
 									--seed_dir $FLOW_DIR \
 									--lateral_resolution 3.2 \
-									--render_mode no_render \
+									--render_mode sumo_gui \
 									--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 									--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
 									--human_lane_change ${RIGHT_HUMAN_LANE_CHANGE} 0 \
@@ -73,8 +73,8 @@ do
 									--merge_inflow ${MERGE_INFLOW} \
 									--aggressive ${AGGRESSIVE} \
 									--assertive ${ASSERTIVE} \
-									--lc_probability ${LC_PROB} \
-									>> ${WORKING_DIR}/EVAL_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}_${LC_PROB}.txt &
+									--lc_probability ${LC_PROB} 
+									#>> ${WORKING_DIR}/EVAL_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${RL_RIGHT_LEFT}_${RIGHT_HUMAN_LANE_CHANGE}_${AGGRESSIVE}_${ASSERTIVE}_${LC_PROB}.txt &
 
 								let J=J+1
 								if ((J == 30)); then
