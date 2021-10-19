@@ -25,10 +25,10 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         controller=IDMController #SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
-    if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
-        simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
-        my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
-
+    #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
+    #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
+    #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
+    print("set parameters:", aggressive, assertive, lc_probability)
     # CREATE VEHICLE TYPES AND INFLOWS
     vehicles.add(
         veh_id=veh_type,
@@ -537,7 +537,7 @@ def reset_inflows(args, flow_params):
     if args.preset_inflow is not None:
         add_preset_inflows(args.preset_inflow, flow_params)
 
-    if args.human_inflows and args.rl_inflows and args.rl_lane_change and args.human_lane_change and args.merge_inflow and args.aggressive and args.assertive and args.lc_probability:
+    if args.human_inflows is not None and args.rl_inflows is not None and args.rl_lane_change is not None and args.human_lane_change is not None and args.merge_inflow is not None and args.aggressive is not None and args.assertive is not None and args.lc_probability is not None :
         # check whether human inflows only contains 0 or 1
         for e in args.human_lane_change+args.rl_lane_change:
             if e not in [0,1]:
