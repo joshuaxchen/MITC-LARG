@@ -68,6 +68,7 @@ parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to
 parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
 parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
 parser.add_argument('--merge_random_inflow_percentage', type=float, help='the percentage of random placement in merge inflows') 
+parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
 
 args = parser.parse_args()
 
@@ -80,7 +81,7 @@ N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
 N_ROLLOUTS = 1 
 # number of steps per rollout
-HORIZON = 3000
+HORIZON = 4000
 # number of parallel workers
 N_CPUS = 0
 if args.cpu:
@@ -105,9 +106,10 @@ additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
 #additional_net_params["pre_merge_length"] = 500
+#additional_net_params["pre_merge_length"] = 3031
 additional_net_params["pre_merge_length"] = 3031
 additional_net_params["post_merge_length"] = 5077 #1878
-additional_net_params["merge_length"] = 1778
+#additional_net_params["merge_length"] = 1778
 
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 

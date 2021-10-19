@@ -992,6 +992,14 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowSize2(MultiAgentHighwayPOEn
 
         super().__init__(env_params, sim_params, network, simulator)
 
+    def get_state(self):
+        states = super().get_state()
+        center_x = self.k.network.total_edgestarts_dict["center"]
+        for rl_id in states:
+            states[rl_id][5]=np.clip(states[rl_id][5]*center_x/self.junction_left, -1, 1)
+            #obs.update({rl_id: observation})
+        return states
+
     def step(self, rl_actions):
         """Advance the environment by one step.
 
