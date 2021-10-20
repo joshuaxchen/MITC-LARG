@@ -134,7 +134,7 @@ if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
 random_prefix="Even"
-if args.to_probability is not None:
+if args.to_probability is not None and args.to_probability is True:
    random_prefix="Random" 
 exp_tag_str='{}_placement'.format(random_prefix)+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
