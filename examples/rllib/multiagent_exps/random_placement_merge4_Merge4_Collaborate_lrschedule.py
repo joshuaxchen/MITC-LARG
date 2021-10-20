@@ -72,7 +72,8 @@ parser.add_argument('--merge_inflow', type=int, help='merge inflow used for mult
 parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
 parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
 parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
-
+parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
+parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
 
 args=parser.parse_args()
 
@@ -133,9 +134,9 @@ if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
 random_prefix="Even"
-if args.to_probability is not None:
+if args.to_probability is not None and args.to_probability is True:
    random_prefix="Random" 
-exp_tag_str='{}_all_placement'.format(random_prefix)+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+exp_tag_str='{}_placement'.format(random_prefix)+mark+'_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
 flow_params = dict(
     exp_tag=exp_tag_str,
