@@ -294,6 +294,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     reset_inflows(args, flow_params)
     #print(flow_params['net'].inflows.get())
     
+
+    # AV Penetration
+    if args.handset_avp:
+        env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     if args.policy_dir is not None:
         accel_result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
@@ -797,13 +801,15 @@ def create_parser():
         type=int,
         nargs="+",
         help="This is often used for evaluating human baseline")
+    parser.add_argument(
+        '--handset_avp',
+        type=int)
 
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
     parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
-    parser.add_argument('--handset_avp', type=float) 
     parser.add_argument('--random_inflow', action='store_true')
     parser.add_argument('--seed_dir', type=str, help='This is used when running the code with shell, and the working directory is not in flow root folder. In this case, seed dir helps to point to the correct seed folder.')
     parser.add_argument('--policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy for hierarchical policies")
@@ -861,10 +867,12 @@ if __name__ == '__main__':
         seed_filename = glob.glob("eval_seeds/*/seeds.pkl")
     print(seed_filename)
     print("Using ", len(seed_filename), " random seeds")
-
+    import random
     for i in range(len(seed_filename)):
-        seed = seed_filename[i]
-        print("Using seed: ", seed)
+        k=random.choice(np.arange(len(seed_filename)))
+        k=i
+        seed = seed_filename[k]
+        print("Using seed ",k,": ", seed)
         do_print_metric_per_time_step=False
         if i==0 and args.print_metric_per_time_step_in_file is not None:
             do_print_metric_per_time_step=True

@@ -25,31 +25,30 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         controller=IDMController #SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
-    if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
-        simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
-        my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
+    #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
+    #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
+    #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
 
     # CREATE VEHICLE TYPES AND INFLOWS
     vehicles.add(
-        veh_id=veh_type,
-        acceleration_controller=(controller, {}),
-        lane_change_controller=my_lane_change_controller, #(SimLaneChangeController, {}),
-        car_following_params=SumoCarFollowingParams(
-            speed_mode=speed_mode,  # for safer behavior at the merges
-        ),
-        lane_change_params=SumoLaneChangeParams(
-            model="SL2015", #"SL2015", #LC2013
-          lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-          lc_speed_gain=1000000,
-          lc_keep_right=0,
-          lc_pushy_gap=aggressive, #0.5, #1,
-          lc_assertive=assertive, #5 #20,
-          lc_impatience=1e-8, #1e-8,
-          lc_time_to_impatience=1e12,
-         ), 
-        num_vehicles=num_vehicles
-        )
-
+            veh_id=veh_type,
+            acceleration_controller=(controller, {}),
+            lane_change_controller=my_lane_change_controller,
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=speed_mode,  # for safer behavior at the merges
+            ),
+            lane_change_params=SumoLaneChangeParams(
+                model="SL2015", #"SL2015", #LC2013
+                lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+                lc_speed_gain=1000000,
+                lc_keep_right=0,
+                lc_pushy_gap=aggressive, #0.5, #1,
+                lc_assertive=assertive, #5 #20,
+                lc_impatience=1e-8, #1e-8,
+                lc_time_to_impatience=1e12,
+                ), 
+            num_vehicles=num_vehicles
+            )
     #print(net_params.inflows)
 def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive, lc_probability):
     add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive, lc_probability)
@@ -537,7 +536,7 @@ def reset_inflows(args, flow_params):
     if args.preset_inflow is not None:
         add_preset_inflows(args.preset_inflow, flow_params)
 
-    if args.human_inflows and args.rl_inflows and args.rl_lane_change and args.human_lane_change and args.merge_inflow and args.aggressive and args.assertive and args.lc_probability:
+    if args.human_inflows is not None and args.rl_inflows is not None and args.rl_lane_change is not None and args.human_lane_change is not None and args.merge_inflow is not None and args.aggressive is not None and args.assertive is not None and args.lc_probability is not None:
         # check whether human inflows only contains 0 or 1
         for e in args.human_lane_change+args.rl_lane_change:
             if e not in [0,1]:
