@@ -91,7 +91,7 @@ do
 	do
 		echo "work"
 		echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
-		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode no_render --seed_dir $FLOW_DIR --avp_to_probability ${AVP} >> $EXP_FOLDER/aamas_models/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
+		python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT --render_mode sumo_gui --seed_dir $FLOW_DIR --avp_to_probability ${AVP} >> $EXP_FOLDER/aamas_models/${MARK[$I]}/merge4_${MARK[$I]}_EAVP_${AVP}.txt &
 	done
 	if ((I==4 || I==8 || I==12)); then
 		wait

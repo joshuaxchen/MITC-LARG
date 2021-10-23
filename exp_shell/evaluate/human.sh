@@ -28,7 +28,7 @@ do
 		python3 ../../flow/visualize/new_rllib_visualizer.py \
 			$HUMAN_DIR \
 			$CHCKPOINT \
-			--render_mode no_render \
+			--render_mode sumo_gui \
 			--seed_dir $FLOW_DIR \
 			--history_file_name human_${MAIN_INFLOW}_${MERGE_INFLOW} \
 			--main_merge_human_inflows $MAIN_INFLOW $MERGE_INFLOW \
