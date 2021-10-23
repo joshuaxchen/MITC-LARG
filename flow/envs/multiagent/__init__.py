@@ -31,6 +31,7 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvMerge4RandomMergeCollaborate,\
                         MultiAgentHighwayPOEnvMerge4RandomMergeModifyDistCollaborate,\
                         MultiAgentHighwayPOEnvMerge4ModifyDistCollaborate
+from flow.envs.multiagent.highway_normalization import MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance, MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToTime 
 
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate

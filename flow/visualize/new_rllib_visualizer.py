@@ -49,7 +49,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
 
-from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows
+from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696
 
 from tools.tikz_plot import PlotWriter
 
@@ -292,7 +292,12 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         net_params.additional_params['on_ramps_pos']=args.on_ramps
 
     # handset inflows, reset main merge inflows for human baseline, or convert inflows to probabaility depending on user input 
-    reset_inflows(args, flow_params)
+    if args.i696 is True:
+        print("reset inflows for i696")
+        reset_inflows_i696(args, flow_params)
+    else:
+        print("reset inflows")
+        reset_inflows(args, flow_params)
     #print(flow_params['net'].inflows.get())
     
 
@@ -844,6 +849,7 @@ def create_parser():
     parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
     parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
     parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
+    parser.add_argument('--i696', action='store_true', help='input an avp and we will convert it to probability automatically')
     return parser
 
 from subprocess import check_output

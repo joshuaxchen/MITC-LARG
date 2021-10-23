@@ -5,7 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
-import os
+import argparse
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -14,9 +14,8 @@ from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
 from ray import tune
 from ray.tune.registry import register_env
 from ray.tune import run_experiments
-from flow.networks import Network
-from flow.controllers import SimCarFollowingController,IDMController, RLController, SimLaneChangeController, ContinuousRouter
 
+from flow.controllers import RLController, SimCarFollowingController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -24,55 +23,71 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate #MultiAgentHighwayPOEnvWindowFullCollaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToTime
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
-#from argparse import ArgumentParser
-from flow.visualize.visualizer_util import reset_inflows, set_argument
+
+EXAMPLE_USAGE = """
+example usage:
+    python xxxx.py --attr value
+"""
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
+    epilog=EXAMPLE_USAGE)
+# optional input parameters
+parser.add_argument(
+    '--avp',
+    type=int,
+    default=10,
+    help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument(
+    '--num_rl',
+    type=int,
+    default=10,
+    help="The percentage of autonomous vehicles. value between 0-100")
+parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
+parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
+
+args=parser.parse_args()
 
 # SET UP PARAMETERS FOR THE SIMULATION
-args=set_argument()
 
-if args.window_size is not None:
-    if len(args.window_size)!=2:
-        print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
-        exit(-1)
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
 # number of rollouts per training iteration
-N_ROLLOUTS = 1 
+N_ROLLOUTS = 30 
 # number of steps per rollout
-HORIZON = 4000
+HORIZON = 2000
 # number of parallel workers
-N_CPUS = 0
-if args.cpu:
-    N_CPUS=args.cpu
+N_CPUS = 40
 
-NUM_RL = 10 
-
+NUM_RL = 10
+if args.num_rl:
+    NUM_RL=args.num_rl
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = 0.1
-# selfishness constant
+RL_PENETRATION = 0.1 
+if args.avp:
+    RL_PENETRATION = (args.avp/100.0) 
+# Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
 
-window_size=tuple(args.window_size)
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
-#additional_net_params["pre_merge_length"] = 500
-#additional_net_params["pre_merge_length"] = 3031
-additional_net_params["pre_merge_length"] = 3031
-additional_net_params["post_merge_length"] = 5077 #1878
-#additional_net_params["merge_length"] = 1778
+additional_net_params["pre_merge_length"] = 500
+
+
 
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
@@ -81,6 +96,7 @@ if args.handset_inflow:
     #additional_env_params['handset_inflow']=args.handset_inflow
     FLOW_RATE=args.handset_inflow[0]+args.handset_inflow[1] 
     print("main flow rate:",FLOW_RATE)
+
 
 # CREATE VEHICLE TYPES AND INFLOWS
 vehicles = VehicleParams()
@@ -134,12 +150,13 @@ mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='multiagent'+mark+'_window_size_long_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+exp_tag_str='multiagent_normalized_time'+mark+'_highway_merge4_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+
 
 flow_params = dict(
     exp_tag=exp_tag_str,
 
-    env_name=MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate, #MultiAgentHighwayPOEnvMerge4WindowSizeCollaborate,
+    env_name=MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToTime,
 
     network=MergeNetwork,
 
@@ -170,7 +187,6 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
-            "window_size": window_size,
         },
     ),
 
@@ -183,7 +199,6 @@ flow_params = dict(
     initial=InitialConfig(),
 )
 
-reset_inflows(args, flow_params)
 
 # SET UP EXPERIMENT
 
@@ -209,11 +224,16 @@ def setup_exps(flow_params):
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 128
+    config['sgd_minibatch_size'] = 4096
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
     config['model'].update({'fcnet_hiddens': [100, 50, 25]})
-    config['lr'] = 0.0
+    #config['lr'] = tune.grid_search([5e-4, 1e-4])
+    config['lr_schedule'] = [
+            [0, 5e-4],
+            [1000000, 1e-4],
+            [4000000, 1e-5],
+            [8000000, 1e-6]]
     config['horizon'] = HORIZON
     config['clip_actions'] = False
     config['observation_filter'] = 'NoFilter'
@@ -274,13 +294,13 @@ if __name__ == '__main__':
         flow_params['exp_tag']: {
             'run': alg_run,
             'env': env_name,
-            'checkpoint_freq': 1,
+            'checkpoint_freq': 5,
+            'max_failures': 999,
             'checkpoint_at_end': True,
             'stop': {
-                'training_iteration': 1
+                'training_iteration': N_TRAINING_ITERATIONS
             },
             'config': config,
             'num_samples':1,
-            'restore':args.restore,
         },
     })

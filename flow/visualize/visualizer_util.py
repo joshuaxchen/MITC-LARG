@@ -7,6 +7,8 @@ from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4Collabo
 from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger
 import sys
 
+import argparse 
+
 LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP=1621
 LANE_CHANGE_REPECT_COLLISION_AVOID=1365
 LANE_CHANGE_NO_REPECT_OTHERS=1109
@@ -15,6 +17,47 @@ NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK=512
 
 LANE_CHANGE_MODE=LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_REPECT_COLLISION_AVOID#LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_NO_REPECT_OTHERS##LANE_CHANGE_NO_REPECT_OTHERS
 NO_LANE_CHANGE_MODE=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
+
+def set_argument():
+    EXAMPLE_USAGE = """
+    example usage:
+        python xxxx.py --attr value
+    """
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
+        epilog=EXAMPLE_USAGE)
+    # optional input parameters
+    parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations (main_human_inflow, main_rl_inflow, merge_inflow), notice the order of inflows when they were added to the configuration")
+    parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+    parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
+    parser.add_argument('--random_inflow', action='store_true', help='This is used to generate random inflow in the training data set during different rollouts')
+    parser.add_argument(
+            '--main_merge_human_inflows',
+            type=int,
+            nargs="+",
+            help="This is often used for evaluating human baseline. If you want to add rl inflow as well, check --handset_inflow")
+
+    parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
+    parser.add_argument('--restore', type=str, help='restore from which checkpoint?')
+    parser.add_argument('--window_size', type=int, nargs="+", help='a window size specified by the distance to the junction')
+
+    ### The parameters belows are only used by multilane experiment, but they cannot be removed since they are needed by reset_inflows in visualization_util.py
+    parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
+    parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
+    parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
+    parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
+    parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
+    parser.add_argument('--merge_inflow', type=int, help='merge inflow used for multilane highway.') 
+    parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
+    parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
+    parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
+    parser.add_argument('--merge_random_inflow_percentage', type=float, help='the percentage of random placement in merge inflows') 
+    parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
+
+    args = parser.parse_args()
+    return args
+
 
 
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, aggressive, assertive, lc_probability):                
@@ -404,6 +447,72 @@ def add_preset_inflows(inflow_type, flow_params):
         net_params.inflows=inflow
 
     
+def reset_inflows_i696(args, flow_params):
+    vehicles = VehicleParams()
+    # human vehicles
+    vehicles.add(
+        veh_id="human",
+        acceleration_controller=(IDMController, {}), #SimCarFollowingController IDMController 
+        car_following_params=SumoCarFollowingParams(
+            speed_mode=15,  # for safer behavior at the merges
+            #tau=1.5  # larger distance between cars
+        ),
+        #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+        num_vehicles=0)
+
+    # autonomous vehicles
+    vehicles.add(
+        veh_id="rl",
+        acceleration_controller=(RLController, {}),
+        car_following_params=SumoCarFollowingParams(
+            speed_mode=9,
+        ),
+        num_vehicles=0)
+
+    flow_params['veh']=vehicles
+
+    inflow = InFlows()
+    inflow.add(
+        veh_type="human",
+        edge="59440544#0", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = 4000, #(1 - RL_PENETRATION)*FLOW_RATE,
+        departSpeed=10,
+        departLane="free",
+        )
+    inflow.add(
+        veh_type="human",
+        edge="124433709.427", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
+        departSpeed=10,
+        departLane="free",
+        )
+    inflow.add(
+        veh_type="human",
+        edge="8666737", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
+        departSpeed=10,
+        departLane="free",
+        )
+
+    inflow.add(
+        veh_type="human",
+        edge="178253095", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = 400, #(1 - RL_PENETRATION)*FLOW_RATE,
+        departSpeed=10,
+        departLane="free",
+        )
+
+    net_params=flow_params['net']
+    net_params.inflows=inflow
+
 def reset_inflows(args, flow_params):
     env_params = flow_params['env']
     net_params=flow_params['net']
