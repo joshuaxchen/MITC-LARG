@@ -762,8 +762,7 @@ def get_pid(name):
     return  check_output(["pidof", name]).split()
     
 if __name__ == '__main__':
-    parser = create_parser()
-    args = parser.parse_args()
+    args= create_parser()
     if args.window_size is not None:
         if len(args.window_size)!=2:
             print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
