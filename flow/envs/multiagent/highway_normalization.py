@@ -154,7 +154,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnv):
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
-            print(rl_id,len(states[rl_id]))
+            #print(rl_id,len(states[rl_id]))
         return states
 
 class MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance(MultiAgentHighwayPOEnvMerge4NormalizedToDistance):
