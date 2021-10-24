@@ -53,6 +53,8 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnvMerge4):
         return total_length, vehs_ahead
 
     def first_veh_at_edge_and_its_prev(self, from_edge, to_edge):
+        # return the absolute distance and speed of the first merging vehicle.
+        # if there is no merging vehicle, then the distance is close to inf, and the velocity is 0
         veh_ids_on_edge=None
         edge_with_first_veh=None
         while from_edge != to_edge:
@@ -128,9 +130,11 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnvMerge4):
             merge_distance = 1
             max_distance=1 # TODO: set up the maximum distance to be the length of the window
             max_distance=self.junction_before
-            if dist_of_first_merge_veh_to_junction < max_distance:
-                dist_of_first_merge_veh_to_junction/=max_distance
-                        
+            len_merge=200
+            if dist_of_first_merge_veh_to_junction < len_merge:
+                dist_of_first_merge_veh_to_junction=(len_merge-2*dist_of_first_merge_veh_to_junction)/len_merge
+            else:
+                dist_of_first_merge_veh_to_junction=1
             states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh])
         return states
 
