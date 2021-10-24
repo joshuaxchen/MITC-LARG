@@ -18,7 +18,8 @@ NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK=512
 LANE_CHANGE_MODE=LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_REPECT_COLLISION_AVOID#LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_NO_REPECT_OTHERS##LANE_CHANGE_NO_REPECT_OTHERS
 NO_LANE_CHANGE_MODE=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
 
-def set_argument():
+
+def set_argument(evaluate=False):
     EXAMPLE_USAGE = """
     example usage:
         python xxxx.py --attr value
@@ -27,34 +28,96 @@ def set_argument():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
         epilog=EXAMPLE_USAGE)
+
+    # required input parameters
+    if evaluate:
+        parser.add_argument(
+            'result_dir', type=str, help='Directory containing results')
+        parser.add_argument('checkpoint_num', type=str, help='Checkpoint number.')
+
     # optional input parameters
-    parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations (main_human_inflow, main_rl_inflow, merge_inflow), notice the order of inflows when they were added to the configuration")
-    parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-    parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
-    parser.add_argument('--random_inflow', action='store_true', help='This is used to generate random inflow in the training data set during different rollouts')
     parser.add_argument(
-            '--main_merge_human_inflows',
-            type=int,
-            nargs="+",
-            help="This is often used for evaluating human baseline. If you want to add rl inflow as well, check --handset_inflow")
+        '--run',
+        type=str,
+        help='The algorithm or model to train. This may refer to '
+             'the name of a built-on algorithm (e.g. RLLib\'s DQN '
+             'or PPO), or a user-defined trainable function or '
+             'class registered in the tune registry. '
+             'Required for results trained with flow-0.2.0 and before.')
+    parser.add_argument(
+        '--num_rollouts',
+        type=int,
+        default=1,
+        help='The number of rollouts to visualize.')
+    parser.add_argument(
+        '--gen_emission',
+        action='store_true',
+        help='Specifies whether to generate an emission file from the '
+             'simulation')
+    parser.add_argument(
+        '--evaluate',
+        action='store_true',
+        help='Specifies whether to use the \'evaluate\' reward '
+             'for the environment.')
+    parser.add_argument(
+        '--render_mode',
+        type=str,
+        default='sumo_gui',
+        help='Pick the render mode. Options include sumo_web3d, '
+             'rgbd and sumo_gui')
+    parser.add_argument(
+        '--save_render',
+        action='store_true',
+        help='Saves a rendered video to a file. NOTE: Overrides render_mode '
+             'with pyglet rendering.')
+    parser.add_argument(
+        '--horizon',
+        type=int,
+        help='Specifies the horizon.')
+    parser.add_argument(
+        '--warmup',
+        type=int,
+        default=800)
+    parser.add_argument(
+        '--main_merge_human_inflows',
+        type=int,
+        nargs="+",
+        help="This is often used for evaluating human baseline")
 
-    parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
-    parser.add_argument('--restore', type=str, help='restore from which checkpoint?')
-    parser.add_argument('--window_size', type=int, nargs="+", help='a window size specified by the distance to the junction')
 
-    ### The parameters belows are only used by multilane experiment, but they cannot be removed since they are needed by reset_inflows in visualization_util.py
+    parser.add_argument('-o','--output',type=str,help='output file')
+    parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
+    parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
+    parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
     parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
+    parser.add_argument('--handset_avp', type=float) 
+    parser.add_argument('--random_inflow', action='store_true')
+    parser.add_argument('--seed_dir', type=str, help='This is used when running the code with shell, and the working directory is not in flow root folder. In this case, seed dir helps to point to the correct seed folder.')
+    parser.add_argument('--policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy for hierarchical policies")
+    parser.add_argument('--agent_action_policy_dir', type=str, help="path to the pre-trained policy, which serves as a base policy to compute actions for the agents")
+
+    parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
+    parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
+    parser.add_argument('--highway_len', type=int, help='input the length of the highway')
+    parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
+    parser.add_argument('--print_metric_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
+    parser.add_argument('--print_vehicles_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
+    parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
     parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
     parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
     parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
     parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
-    parser.add_argument('--merge_inflow', type=int, help='merge inflow used for multilane highway.') 
+    parser.add_argument('--merge_inflow', type=int, help='merge inflow.') 
     parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
     parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
-    parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
-    parser.add_argument('--merge_random_inflow_percentage', type=float, help='the percentage of random placement in merge inflows') 
+    parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
+    parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
+    parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
     parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
-
+    parser.add_argument('--i696', action='store_true', help='input an avp and we will convert it to probability automatically')
+    parser.add_argument('--cpu', type=int, help='the number of cpus used for training')
+    parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+    parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
     args = parser.parse_args()
     return args
 
@@ -65,7 +128,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller=IDMController #SimCarFollowingController#IDMController #
+        controller=SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
     #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
