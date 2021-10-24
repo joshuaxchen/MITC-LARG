@@ -15,7 +15,7 @@ do
 		let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 		let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 		echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_merge4_normalized_distance.py \
+		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_merge4_normalized_time.py \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
 		--cpu 30 \
