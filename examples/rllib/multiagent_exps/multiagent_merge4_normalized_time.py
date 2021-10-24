@@ -28,33 +28,10 @@ from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
-
-EXAMPLE_USAGE = """
-example usage:
-    python xxxx.py --attr value
-"""
-parser = argparse.ArgumentParser(
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
-    epilog=EXAMPLE_USAGE)
-# optional input parameters
-parser.add_argument(
-    '--avp',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument(
-    '--num_rl',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
-parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
-
-args=parser.parse_args()
+from flow.visualize.visualizer_util import reset_inflows, set_argument
 
 # SET UP PARAMETERS FOR THE SIMULATION
+args=set_argument()
 
 # number of training iterations
 N_TRAINING_ITERATIONS = 500
@@ -66,16 +43,12 @@ HORIZON = 2000
 N_CPUS = 40
 
 NUM_RL = 10
-if args.num_rl:
-    NUM_RL=args.num_rl
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1 
-if args.avp:
-    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
@@ -199,6 +172,8 @@ flow_params = dict(
     initial=InitialConfig(),
 )
 
+
+reset_inflows(args, flow_params)
 
 # SET UP EXPERIMENT
 

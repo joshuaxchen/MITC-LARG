@@ -14,38 +14,6 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToDistance(MultiAgentHighwayPOEnv):
         #See class definition
         return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
 
-    def _closest_vehicle(self, edge, lane, base_edge):
-        if edge == base_edge: return float('inf'), 0
-        if edge == '': return float('inf'), 0
-        veh = self.k.vehicle.get_ids_by_edge(edge)
-        if len(veh) == 0:
-            veh_pos = 0
-            veh_id = None
-        else:
-            veh_ind = np.argmax(self.k.vehicle.get_position(veh))
-            veh_id = veh[veh_ind]
-            veh_pos = self.k.vehicle.get_position(veh_id)
-        veh_dist = self.k.network.edge_length(edge)-veh_pos
-        if veh_id:
-            veh_speed = self.k.vehicle.get_speed(veh_id)
-        else:
-            veh_speed = 0
-        return veh_dist, veh_speed
-
-    def _merging_vehicle_backward_pass(self, edge, lane, base_edge, junctions):
-        try:
-            return min(self._merging_vehicle_backward_pass(e, l, base_edge, junctions) if e in junctions else self._closest_vehicle(e, l, base_edge)
-                    for e,l in self.k.network.prev_edge(edge, lane))
-        except ValueError:
-            return float('inf'), 0
-
-    def _merging_vehicle_forward_pass(self, edge, lane, base_edge, junctions):
-        try:
-            return min(self._merging_vehicle_forward_pass(e, l, base_edge, junctions) if e in junctions else self._merging_vehicle_backward_pass(e, l, base_edge, junctions)
-                    for e,l in self.k.network.next_edge(edge, lane))
-        except ValueError:
-            return float('inf'), 0
-
     def get_state(self): # modification on the merge distance 
         states = super().get_state()
         junctions = set(self.k.network.get_junction_list())
@@ -114,7 +82,11 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToDistance(MultiAgentHighwayPOEnv):
         #print(states)
         return states
 
-class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnvMerge4NormalizedToDistance):
+class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnv):
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
 
     def get_state(self): # modification on the merge distance 
         states = super().get_state()
@@ -134,6 +106,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnvMerge4N
         merge_vel = 0
         len_merge = self.k.network.edge_length("bottom") + self.k.network.edge_length("inflow_merge")
         start_position = self.k.network.total_edgestarts_dict["inflow_merge"]
+        max_merging_time=100
         if len(merge_vehs)>0: # if no merging vehicles are detected, then merge_vel=0 and merge_distance=1
             first_merge=None
             max_pos=0
@@ -143,8 +116,8 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnvMerge4N
                     first_merge=veh
                     max_pos=veh_pos
             max_pos+=merge_distance_base
-            merge_dist = (len_merge - max_pos)/len_merge #TODO: normalize with speed?
             merge_vel = self.k.vehicle.get_speed(first_merge)/max_speed
+            merge_dist = (len_merge - max_pos)/(merge_vel*max_speed*max_merging_time) #TODO: normalize with speed?
                 
         for rl_id in states:
             edge_id = self.k.vehicle.get_edge(rl_id)
@@ -181,7 +154,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnvMerge4N
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
-        #print(states)
+            print(rl_id,len(states[rl_id]))
         return states
 
 class MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance(MultiAgentHighwayPOEnvMerge4NormalizedToDistance):
