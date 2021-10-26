@@ -24,7 +24,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvCollaborate, MultiAgentI696POEnvParameterizedWindowSizeCollaborate
+from flow.envs.multiagent import MultiAgentI696POEnvParameterizedWindowSizeCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
@@ -49,7 +49,10 @@ N_ROLLOUTS = 30
 # number of steps per rollout
 HORIZON = 2000
 # number of parallel workers
-N_CPUS = 15
+N_CPUS = 1
+if args.cpu:
+    N_CPUS=args.cpu
+
 NUM_RL = 30
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000

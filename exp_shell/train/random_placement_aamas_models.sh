@@ -18,9 +18,9 @@ do
 
 		python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/random_placement_merge4_Merge4_Collaborate_lrschedule.py \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--to_probability \
-		--cpu 30 \
+		--cpu 20 \
 		--exp_folder_mark PostAAMAS_Avp${AVP}_Main${MAIN_INFLOW}_Merge${MERGE_INFLOW}
+		#--to_probability \
 	done
 done
 
