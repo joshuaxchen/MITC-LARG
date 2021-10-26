@@ -2,8 +2,7 @@ import numpy as np
 from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
-from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv,MultiAgentHighwayPOEnvWindow,MultiAgentHighwayPOEnvMerge4
-from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate #MultiAgentHighwayPOEnvWindowFullCollaborate
+from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv
 import collections
 import os
 ADDITIONAL_ENV_PARAMS = {
@@ -29,14 +28,24 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
                 raise KeyError(
                     'Environment parameter "{}" not supplied'.format("window_size"))
 
-        self.junction_before, self.junction_after=env_params.additional_params['window_size']
-
         super().__init__(env_params, sim_params, network, simulator)
+        self.junction_before, self.junction_after=env_params.additional_params['window_size']
+        self.rl_to_ignore=list()
+
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
 
     def collect_next_edge(self, edge_id):
-        next_junction=self.k.network.next_edge(edge_id, 0)[0][0]
-        next_edge=self.k.network.next_edge(next_junction, 0)[0][0]
-        return next_edge
+        next_junction=self.k.network.next_edge(edge_id, 0)
+        if len(next_junction)==0:
+            #print("no next_junction for",edge_id)
+            return None
+        #print("next_junction", next_junction)
+        next_edge=self.k.network.next_edge(next_junction[0][0], 0)
+        #print("next_edge", next_edge)
+        return next_edge[0][0]
 
     def from_veh_to_edge(self, veh_id, target_edge_id):
         vehs_ahead=list()
@@ -51,10 +60,10 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
                 vehs_ahead.append(v_id)
         next_edge_id=self.collect_next_edge(veh_edge_id)
         # next_edge_id [(':4308145956_0', 0)]
-        while next_edge_id != target_edge_id:
+        while next_edge_id is not None and next_edge_id != target_edge_id: 
             veh_ids_on_edge=self.k.vehicle.get_ids_by_edge(next_edge_id)
             vehs_ahead.extend(veh_ids_on_edge)
-            next_edge_id=self.collect_next_edge(veh_edge_id)
+            next_edge_id=self.collect_next_edge(next_edge_id)
         return vehs_ahead
 
     def first_veh_at_edge_and_its_prev(self, from_edge, to_edge):
@@ -91,43 +100,40 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
 
     def get_state(self):
         states = super().get_state()
-        junctions = set(self.k.network.get_junction_list())
+        #junctions = set(self.k.network.get_junction_list())
 
         # normalizing constants
         max_speed = 30.0 #self.k.network.max_speed()
         max_length = 1000.0#self.k.network.length()
         merge_vehs = self.k.vehicle.get_ids_by_edge(["bottom","inflow_merge"])
         #merge_dists = [self.k.vehicle.get_x(veh) for veh in merge_vehs]
-               
+        self.rl_to_ignore=list()       
         for rl_id in states:
+            #print("original len", len(states[rl_id]))
             # compute the closest junction to the rl vehicle
             within_junctions=list()
-            for rl_id in self.k.vehicle.get_rl_ids():
-                rl_x=self.k.vehicle.get_x_by_id(rl_id)
-                smallest_dist=-1
-                closest_edge=None
-                for junction_start in main_roads_after_junction_from_right_to_left:
-                    edge_start=self.k.network.total_edgestarts_dict[junction_start]
-                    if edge_start>rl_x:
-                        continue
-                    if rl_x-edge_start<self.junction_before or smallest_dist<0:
-                        smallest_dist=rl_x-edge_start
-                        closest_edge=junction_start
-            vehs_ahead=self.from_veh_to_edge(rl_id, closest_edge)
-            within_junctions.append((closet_edge, smallest_dist, vehs_ahead))
-            #for junction_start in main_roads_after_junction_from_right_to_left:
-            #    for rl_id in self.k.vehicle.get_rl_ids():
-            #        dist_from_rl_to_junction, vehs_ahead=self.from_veh_to_edge(rl_id, junction_start)
-            #        if dist_from_rl_to_junction<self.junction_before: # TODO: junction_after?
-            #            within_junctions.append((junction_start, dist_from_rl_to_junction,vehs_ahead))
+            rl_x=self.k.vehicle.get_x_by_id(rl_id)
+            smallest_dist=-1
+            closest_edge=None
+            for junction_start in main_roads_after_junction_from_right_to_left:
+                edge_start=self.k.network.total_edgestarts_dict[junction_start]
+                if edge_start>rl_x:
+                    continue
+                if rl_x-edge_start<smallest_dist or smallest_dist<0:
+                    smallest_dist=rl_x-edge_start
+                    closest_edge=junction_start
+            if closest_edge is not None and smallest_dist<=self.junction_before:
+                vehs_ahead=self.from_veh_to_edge(rl_id, closest_edge)
+                within_junctions.append((closest_edge, smallest_dist, vehs_ahead))
+            
             if len(within_junctions)>1:
                 print("There are multiple junctions close to ", rl_id, ":", ",".join(within_junctions))
                 exit(-1)
-            elif len(within_junction)==0: # The vehicle is not within any window. It should behave like a human
+            elif len(within_junctions)==0: # The vehicle is not within any window. It should behave like a human
                 # None observation
-                del states[rl_id]
+                self.rl_to_ignore.append(rl_id)
                 continue
-
+            #print("within_junction", within_junctions)
             # compute the average velocity of the vehicles ahead
             closest_junction, dist_from_rl_to_junction, vehs_ahead=within_junctions[0]
             rl_dist=dist_from_rl_to_junction/self.junction_before
@@ -137,12 +143,14 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             if len(veh_vel) > 0:
                 veh_vel = np.mean(veh_vel)
             else:
-                veh_vel = self.k.network.speed_limit(edge_id)
+                rl_edge_id= self.k.vehicle.get_edge(rl_id)
+                veh_vel = self.k.network.speed_limit(rl_edge_id)
             
+            #print("veh_vel", veh_vel)
             # compute the merge information 
-            junction_index=main_roads_after_junction_from_right_to_left.index(closet_junction)
+            junction_index=main_roads_after_junction_from_right_to_left.index(closest_junction)
             merge_edge=merge_roads_from_right_to_left[junction_index]
-            first_merge_veh, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh=first_veh_at_edge_and_its_prev(merge_edge, closet_junction)
+            first_merge_veh, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh=self.first_veh_at_edge_and_its_prev(merge_edge, closest_junction)
             vel_of_first_merge_veh/=max_speed 
             merge_distance = 1
             max_distance=1 # TODO: set up the maximum distance to be the length of the window
@@ -152,7 +160,18 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
                 dist_of_first_merge_veh_to_junction=(len_merge-2*dist_of_first_merge_veh_to_junction)/len_merge
             else:
                 dist_of_first_merge_veh_to_junction=1
+            #if len(states[rl_id])==9:
+            #    states[rl_id][-4] = rl_dist
+            #    states[rl_id][-3] = veh_vel
+            #    states[rl_id][-2] = dist_of_first_merge_veh_to_junction
+            #    states[rl_id][-1] = vel_of_first_merge_veh
+            #elif len(states[rl_id]==5):
             states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh])
+            #print("state", states[rl_id])
+            #print("state", rl_id, len(states[rl_id]))
+            #states[rl_id]=np.array([1]*9)
+        for rl_id in self.rl_to_ignore:
+            del states[rl_id]
         return states
 
 
@@ -171,6 +190,8 @@ class MultiAgentI696POEnvParameterizedWindowSizeCollaborate(MultiAgentI696POEnvP
         reward  = reward1 * eta1 + reward2 * eta2
         for rl_id in self.k.vehicle.get_rl_ids():
             rewards[rl_id] = reward
+        for rl_id in self.rl_to_ignore:
+            del rewards[rl_id]
         return rewards
 
 
