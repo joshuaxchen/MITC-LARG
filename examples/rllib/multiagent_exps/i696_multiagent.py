@@ -24,12 +24,21 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs.multiagent import MultiAgentHighwayPOEnvCollaborate
+from flow.envs.multiagent import MultiAgentHighwayPOEnvCollaborate, MultiAgentI696POEnvParameterizedWindowSizeCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
 from flow.controllers import IDMController
+from flow.visualize.visualizer_util import reset_inflows, set_argument
+
+# SET UP PARAMETERS FOR THE SIMULATION
+args=set_argument()
+
+if args.window_size is not None:
+    if len(args.window_size)!=2:
+        print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
+        exit(-1)
 
 # SET UP PARAMETERS FOR THE SIMULATION
 
@@ -48,7 +57,11 @@ FLOW_RATE = 2000
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1
+ETA_1 = 0.9
+ETA_2 = 0.1
 
+
+window_size=tuple(args.window_size)
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
@@ -101,33 +114,23 @@ vehicles.add(
 # Vehicles are introduced from both sides of merge, with RL vehicles entering
 # from the highway portion as well
 inflow = InFlows()
+
 inflow.add(
-    veh_type="human",
+    veh_type="rl",
     edge="59440544#0", # flow id sw2w1 from xml file
     begin=10,#0,
     end=90000,
-    #probability=(1 - RL_PENETRATION), #* FLOW_RATE,
-    vehs_per_hour = MERGE_RATE,#(1 - RL_PENETRATION)*FLOW_RATE,
+    vehs_per_hour = RL_PENETRATION * FLOW_RATE,
     departSpeed=7.5,
-    departLane="free",
+    depart_lane="free",
     )
-
-#inflow.add(
-#    veh_type="rl",
-#    edge="404969345#0", # flow id sw2w1 from xml file
-#    begin=10,#0,
-#    end=90000,
-#    vehs_per_hour = RL_PENETRATION * FLOW_RATE,
-#    depart_speed="max",
-#    depart_lane="free",
-#    )
 #"404969345#0", "124433709.427", "8666737", "178253095"
 inflow.add(
     veh_type="human",
     edge="59440544#0", # flow id se2w1 from xml file
     begin=10,#0,
     end=90000,
-    vehs_per_hour = 2000, #(1 - RL_PENETRATION)*FLOW_RATE,
+    vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
     departSpeed=10,
     departLane="free",
     )
@@ -159,10 +162,16 @@ inflow.add(
     departLane="free",
     )
 
-flow_params = dict(
-    exp_tag='multiagent_highway_i696_1merge_Collaborate_lrschedule',
+mark=""
+if args.exp_folder_mark:
+    mark="_"+args.exp_folder_mark
 
-    env_name=MultiAgentHighwayPOEnvCollaborate,
+exp_tag_str='multiagent'+mark+'_i696_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+
+
+flow_params = dict(
+    exp_tag=exp_tag_str, #'multiagent_highway_i696_1merge_Collaborate_lrschedule'
+    env_name=MultiAgentI696POEnvParameterizedWindowSizeCollaborate,
     network=Network, #MergeNetwork,
     simulator='traci',
 
@@ -189,6 +198,9 @@ flow_params = dict(
             "max_decel": 4.5,
             "target_velocity": 30,
             "num_rl": NUM_RL, # used by WaveAttenuationMergePOEnv e.g. to fix action dimension
+            "eta1": ETA_1,
+            "eta2": ETA_2,
+            "window_size": window_size
             #"max_inflow":FLOW_RATE + 3*MERGE_RATE,
         },
     ),
@@ -306,11 +318,13 @@ if __name__ == '__main__':
         flow_params['exp_tag']: {
             'run': alg_run,
             'env': env_name,
-            'checkpoint_freq': 5,
+            'checkpoint_freq': 1,
             'checkpoint_at_end': True,
             'stop': {
                 'training_iteration': N_TRAINING_ITERATIONS
             },
             'config': config,
+            'restore': args.restore,
+            'num_samples':1,
         },
     })

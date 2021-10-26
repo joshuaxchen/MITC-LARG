@@ -128,6 +128,7 @@ class MyCallbacks(DefaultCallbacks):
 def init_agent_from_policy_dir(policy_dir, checkpoint_num):
     if checkpoint_num is None:
         folder_names=[x[0] for x in os.walk(policy_dir)]
+        print("folder_names", folder_names)
         max_checkpoint=None
         for fname in folder_names:
             #print(fname)
@@ -757,6 +758,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
 def create_parser():
     """Create the parser to capture CLI arguments."""
+    """
+    return args
+    """
     return set_argument(evaluate=True) 
 from subprocess import check_output
 import signal

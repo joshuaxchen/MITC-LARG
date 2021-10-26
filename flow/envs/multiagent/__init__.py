@@ -35,6 +35,7 @@ from flow.envs.multiagent.highway_normalization import MultiAgentHighwayPOEnvMer
 
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate
+from flow.envs.multiagent.i696 import MultiAgentI696POEnvParameterizedWindowSizeCollaborate
 from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive
 from flow.envs.multiagent.adaptive_headway import MultiAgentHighwayPOEnvMerge4AdaptiveHeadway, MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead
 #,MultiAgentHighwayPOEnvMerge4HierarchicalAdaptiveHeadway
