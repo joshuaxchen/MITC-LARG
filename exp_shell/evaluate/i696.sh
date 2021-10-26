@@ -12,6 +12,9 @@ CHCKPOINT=1
 
 TRAIN_DIR_2=${HOME}/ray_results/multiagent_normalized_distance_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance-v0_92974_00000_0_2021-10-24_15-25-47
 
+
+TRAIN_DIR_i696=${HOME}/ray_results/multiagent_yulin_i696_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_296ca_00000_0_2021-10-25_21-33-53
+
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
