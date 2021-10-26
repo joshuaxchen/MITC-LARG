@@ -23,6 +23,7 @@ do
 	#python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/window_size_long_merge_4_multiagent_i696_1merge_Window_Full_ZeroShot_Transfer.py \
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/i696_multiagent.py \
 	--exp_folder_mark yulin \
+	--cpu 10 \
 	--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} 
 	#--restore ${TRAIN_DIR}/checkpoint_500/checkpoint-500 \
 	#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
