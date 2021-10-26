@@ -41,7 +41,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToDistance(MultiAgentHighwayPOEnv):
                     first_merge=veh
                     max_pos=veh_pos
             max_pos+=merge_distance_base
-            merge_dist = (len_merge - max_pos)/len_merge #TODO: normalize with speed?
+            merge_dist = (len_merge - 2*max_pos)/len_merge # TODO: normalize with speed?
             merge_vel = self.k.vehicle.get_speed(first_merge)/max_speed
                 
         for rl_id in states:
@@ -117,7 +117,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnv):
                     max_pos=veh_pos
             max_pos+=merge_distance_base
             merge_vel = self.k.vehicle.get_speed(first_merge)/max_speed
-            merge_dist = (len_merge - max_pos)/(merge_vel*max_speed*max_merging_time) #TODO: normalize with speed?
+            merge_dist = (len_merge - 2*max_pos)/(merge_vel*max_speed*max_merging_time) #TODO: normalize with speed?
                 
         for rl_id in states:
             edge_id = self.k.vehicle.get_edge(rl_id)
@@ -154,7 +154,7 @@ class MultiAgentHighwayPOEnvMerge4NormalizedToTime(MultiAgentHighwayPOEnv):
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, 1.0, 0.0])
             else:
                 states[rl_id] = np.array(list(states[rl_id]) + [rl_dist, veh_vel, merge_distance, merge_vel])
-            print(rl_id,len(states[rl_id]))
+            #print(rl_id,len(states[rl_id]))
         return states
 
 class MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance(MultiAgentHighwayPOEnvMerge4NormalizedToDistance):
