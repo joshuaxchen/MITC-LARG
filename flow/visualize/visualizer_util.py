@@ -116,6 +116,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--i696', action='store_true', help='input an avp and we will convert it to probability automatically')
     parser.add_argument('--cpu', type=int, help='the number of cpus used for training')
     parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+    parser.add_argument('--restore', type=str, help="the path to the model that is used for training")
     args = parser.parse_args()
     return args
 
@@ -507,70 +508,88 @@ def add_preset_inflows(inflow_type, flow_params):
 
     
 def reset_inflows_i696(args, flow_params):
-    vehicles = VehicleParams()
-    # human vehicles
-    vehicles.add(
-        veh_id="human",
-        acceleration_controller=(IDMController, {}), #SimCarFollowingController IDMController 
-        car_following_params=SumoCarFollowingParams(
-            speed_mode=15,  # for safer behavior at the merges
-            #tau=1.5  # larger distance between cars
-        ),
-        #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-        num_vehicles=0)
+    if args.handset_inflow:
+        print("handset inflows")
 
-    # autonomous vehicles
-    vehicles.add(
-        veh_id="rl",
-        acceleration_controller=(RLController, {}),
-        car_following_params=SumoCarFollowingParams(
-            speed_mode=9,
-        ),
-        num_vehicles=0)
+        input_inflows=args.handset_inflow
+        main_human_inflow_rate=input_inflows[0] 
+        main_rl_inflow_rate=input_inflows[1] 
+        merge_inflow_rate=input_inflows[2]
 
-    flow_params['veh']=vehicles
+        vehicles = VehicleParams()
+        # human vehicles
+        vehicles.add(
+            veh_id="human",
+            acceleration_controller=(IDMController, {}), #SimCarFollowingController IDMController 
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=15,  # for safer behavior at the merges
+                #tau=1.5  # larger distance between cars
+            ),
+            #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+            num_vehicles=0)
 
-    inflow = InFlows()
-    inflow.add(
-        veh_type="human",
-        edge="59440544#0", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = 4000, #(1 - RL_PENETRATION)*FLOW_RATE,
-        departSpeed=10,
-        departLane="free",
-        )
-    inflow.add(
-        veh_type="human",
-        edge="124433709.427", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
-        departSpeed=10,
-        departLane="free",
-        )
-    inflow.add(
-        veh_type="human",
-        edge="8666737", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
-        departSpeed=10,
-        departLane="free",
-        )
+        # autonomous vehicles
+        vehicles.add(
+            veh_id="rl",
+            acceleration_controller=(RLController, {}),
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=9,
+            ),
+            num_vehicles=0)
 
-    inflow.add(
-        veh_type="human",
-        edge="178253095", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = 400, #(1 - RL_PENETRATION)*FLOW_RATE,
-        departSpeed=10,
-        departLane="free",
-        )
+        flow_params['veh']=vehicles
 
-    net_params=flow_params['net']
-    net_params.inflows=inflow
+        inflow = InFlows()
+        inflow.add(
+            veh_type="rl",
+            edge="59440544#0", # flow id se2w1 from xml file
+            begin=10,#0,
+            end=90000,
+            vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+            departSpeed=10,
+            departLane="free",
+            )
+
+        inflow.add(
+            veh_type="human",
+            edge="59440544#0", # flow id se2w1 from xml file
+            begin=10,#0,
+            end=90000,
+            vehs_per_hour = main_human_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+            departSpeed=10,
+            departLane="free",
+            )
+        inflow.add(
+            veh_type="human",
+            edge="124433709.427", # flow id se2w1 from xml file
+            begin=10,#0,
+            end=90000,
+            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+            departSpeed=10,
+            departLane="free",
+            )
+        inflow.add(
+            veh_type="human",
+            edge="8666737", # flow id se2w1 from xml file
+            begin=10,#0,
+            end=90000,
+            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+            departSpeed=10,
+            departLane="free",
+            )
+
+        inflow.add(
+            veh_type="human",
+            edge="178253095", # flow id se2w1 from xml file
+            begin=10,#0,
+            end=90000,
+            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+            departSpeed=10,
+            departLane="free",
+            )
+
+        net_params=flow_params['net']
+        net_params.inflows=inflow
 
 def reset_inflows(args, flow_params):
     env_params = flow_params['env']

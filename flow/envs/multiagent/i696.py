@@ -2,7 +2,7 @@ import numpy as np
 from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
-from flow.envs.multiagent.highway import MultiAgentHighwayPOEnvWindow,MultiAgentHighwayPOEnvMerge4
+from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv,MultiAgentHighwayPOEnvWindow,MultiAgentHighwayPOEnvMerge4
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate #MultiAgentHighwayPOEnvWindowFullCollaborate
 import collections
 import os
@@ -22,7 +22,7 @@ ADDITIONAL_ENV_PARAMS = {
 main_roads_after_junction_from_right_to_left=["422314897#0", "40788302", "124433730#2-AddedOnRampEdge"]
 merge_roads_from_right_to_left=["124433709.427", "8666737", "178253095"]
 
-class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnvMerge4):
+class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
 
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         if "window_size" not in env_params.additional_params:
@@ -44,10 +44,12 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnvMerge4):
             v_pos=self.k.vehicle.get_position(v_id)
             if v_pos>total_length: # ahead of veh_id
                 vehs_ahead.append(v_id)
-        next_edge_id=self.k.network.next_edge(veh_edge_id,0)
+        next_edge_id=self.k.network.next_edge(veh_edge_id, 0)[0][0]
+        print("next_edge_id", next_edge_id)
+        # next_edge_id [(':4308145956_0', 0)]
         while next_edge_id != target_edge_id:
             total_length+=self.k.network.edge_length(next_edge_id)
-            next_edge_id=self.k.network.next_edge(veh_edge_id,0)
+            next_edge_id=self.k.network.next_edge(veh_edge_id,0)[0][0]
             veh_ids_on_edge=self.k.vehicle.get_ids_by_edge(veh_edge_id)
             vehs_ahead.extend(veh_ids_on_edge)
         return total_length, vehs_ahead
@@ -92,11 +94,12 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnvMerge4):
         merge_vehs = self.k.vehicle.get_ids_by_edge(["bottom","inflow_merge"])
         #merge_dists = [self.k.vehicle.get_x(veh) for veh in merge_vehs]
                
-        
+        print("The x coordinate of the junctions") 
         for rl_id in states:
             # compute the closest junction to the rl vehicle
             within_junctions=list()
             for junction_start in main_roads_after_junction_from_right_to_left:
+                print(junction_start, self.k.network.edge_starts(junction_start))
                 for rl_id in self.k.vehicle.get_rl_ids():
                     dist_from_rl_to_junction, vehs_ahead=self.from_veh_to_edge(rl_id, junction_start)
                     if dist_from_rl_to_junction<self.junction_before: # TODO: junction_after?
