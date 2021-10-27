@@ -544,15 +544,16 @@ def reset_inflows_i696(args, flow_params):
         flow_params['veh']=vehicles
 
         inflow = InFlows()
-        inflow.add(
-            veh_type="rl",
-            edge="59440544#0", # flow id se2w1 from xml file
-            begin=10,#0,
-            end=90000,
-            vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-            departSpeed=10,
-            departLane="free",
-            )
+        if main_rl_inflow_rate>0:
+            inflow.add(
+                veh_type="rl",
+                edge="59440544#0", # flow id se2w1 from xml file
+                begin=10,#0,
+                end=90000,
+                vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                departSpeed=10,
+                departLane="free",
+                )
 
         inflow.add(
             veh_type="human",
