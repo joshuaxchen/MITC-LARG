@@ -24,7 +24,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 mkdir ${EXP_FOLDER}
 
-WORKING_DIR=$EXP_FOLDER/long_merge
+WORKING_DIR=$EXP_FOLDER/i696
 mkdir ${WORKING_DIR}
 
 J=0
