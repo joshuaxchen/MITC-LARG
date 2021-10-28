@@ -464,6 +464,11 @@ class IDMController(BaseController):
         self.delta = delta
         self.s0 = s0
         self.dt = dt
+        #self.prev_loc=0
+        #self.prev_edge=None
+        #self.loc_time_to_skip=200
+        #self.edge_time_to_skip=200
+        #self.track=False
 
     def get_accel(self, env):
         """See parent class."""
@@ -496,8 +501,30 @@ class IDMController(BaseController):
             s_star = self.s0 + max(
                 0, v * self.T + v * (v - lead_vel) /
                 (2 * np.sqrt(self.a * self.b)))
+        output_accel=self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
+        current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
+        current_edge=env.k.vehicle.get_edge(self.veh_id)
 
-        return self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
+        # 124433730#2-AddedOnRampEdge
+        #if self.track:
+        #    print("Track: veh_id", self.veh_id, "at", current_edge, "with intended accel", output_accel, "current speed", env.k.vehicle.get_speed(self.veh_id), "current loc", env.k.vehicle.get_x_by_id(self.veh_id))
+        #if current_edge =="124433730#2-AddedOnRampEdge":
+        #    print("veh_id", self.veh_id, "stucks at", current_edge, "with intended accel", output_accel, "current speed", env.k.vehicle.get_speed(self.veh_id), "current loc", env.k.vehicle.get_x_by_id(self.veh_id))
+        #    if env.k.vehicle.get_speed(self.veh_id)==0:
+        #        self.track=True
+
+        #if self.prev_loc==current_loc and self.loc_time_to_skip==0:
+        #    print("veh_id", self.veh_id, "stops", "with intended accel", output_accel)
+        #    self.loc_time_to_skip=200
+        #if self.prev_edge==current_edge and self.edge_time_to_skip==0:
+        #    print("veh_id", self.veh_id, "stucks at", current_edge, "with intended accel", output_accel)
+        #    self.edge_time_to_skip=200
+
+        #self.prev_loc=current_loc
+        #self.prev_edge=current_edge
+        #self.loc_time_to_skip=0
+        #self.edge_time_to_skip=0
+        return output_accel 
 
 
 class SimCarFollowingController(BaseController):

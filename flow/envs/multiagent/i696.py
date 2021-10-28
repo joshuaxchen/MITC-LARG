@@ -31,6 +31,8 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
         super().__init__(env_params, sim_params, network, simulator)
         self.junction_before, self.junction_after=env_params.additional_params['window_size']
         self.rl_to_ignore=list()
+        self.debug_coord=dict()
+        self.debug=False
 
     @property
     def observation_space(self):
@@ -44,19 +46,36 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             return None
         #print("next_junction", next_junction)
         next_edge=self.k.network.next_edge(next_junction[0][0], 0)
+        if len(next_edge)==0:
+            return None
         #print("next_edge", next_edge)
         return next_edge[0][0]
 
+    def find_closest_edge_to_veh(self, veh_id, potential_edges):
+        veh_edge=self.k.vehicle.get_edge(veh_id)
+        next_edge=veh_edge
+        dist=0
+        while next_edge is not None and next_edge not in potential_edges:
+            if veh_edge==next_edge:
+                dist+=self.k.network.edge_length(veh_edge)-self.k.vehicle.get_position(veh_id)
+            else:
+                dist+=self.k.network.edge_length(next_edge)
+            next_edge=self.collect_next_edge(next_edge)
+            #print(next_edge)
+        if next_edge is None:
+            return (None, -1)
+        else:
+            return (next_edge, dist)
     def from_veh_to_edge(self, veh_id, target_edge_id):
         vehs_ahead=list()
         veh_edge_id=self.k.vehicle.get_edge(veh_id)
         edge_length=self.k.network.edge_length(veh_edge_id)
         next_edge_id=veh_edge_id
         v_ids_on_edge=self.k.vehicle.get_ids_by_edge(veh_edge_id)
-        veh_x=self.k.vehicle.get_x_by_id(veh_id)
+        veh_pos=self.k.vehicle.get_position(veh_id)
         for v_id in v_ids_on_edge:
-            v_x=self.k.vehicle.get_x_by_id(v_id)
-            if v_x<veh_x: # ahead of veh_id
+            v_pos=self.k.vehicle.get_position(v_id)
+            if v_pos>veh_pos: # ahead of veh_id
                 vehs_ahead.append(v_id)
         next_edge_id=self.collect_next_edge(veh_edge_id)
         # next_edge_id [(':4308145956_0', 0)]
@@ -91,11 +110,13 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             edge_len=self.k.network.edge_length(edge_with_first_veh)
         len_of_veh_to_junction=edge_len-largest_pos
         from_edge=self.collect_next_edge(edge_with_first_veh)
+        while from_edge != to_edge:
+            len_of_veh_to_junction+=self.k.network.edge_length(from_edge)
+            from_edge=self.collect_next_edge(from_edge)
         veh_vel=0
         if first_veh:
             veh_vel=self.k.vehicle.get_speed(first_veh)
-        while from_edge != to_edge:
-            len_of_veh_to_junction+=self.k.network.edge_length(from_edge)
+
         return first_veh, len_of_veh_to_junction, veh_vel
 
     def get_state(self):
@@ -108,21 +129,53 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
         merge_vehs = self.k.vehicle.get_ids_by_edge(["bottom","inflow_merge"])
         #merge_dists = [self.k.vehicle.get_x(veh) for veh in merge_vehs]
         self.rl_to_ignore=list()       
+
+        #print("-last edge: 59440544#0 start at", self.k.network.get_x("59440544#0", 0), "length", self.k.network.edge_length("59440544#0"))
+        #print("-next edge: 59440544#1 start at", self.k.network.get_x("59440544#1", 0), "length", self.k.network.edge_length("59440544#1"))
+        #print("-next edge: 59440544#1-AddedOffRampEdge start at", self.k.network.get_x("59440544#1-AddedOffRampEdge", 0), "length", self.k.network.edge_length("59440544#1-AddedOffRampEdge"))
+        #print("-next edge: 22723058#0 start at", self.k.network.get_x("22723058#0", 0), "length", self.k.network.edge_length("22723058#0"))
+        #print("-next edge: 22723058#1 start at", self.k.network.get_x("22723058#1", 0), "length", self.k.network.edge_length("22723058#1"))
+        #print("-next edge: 491515539 start at", self.k.network.get_x("491515539", 0), "length", self.k.network.edge_length("491515539"))
+        #print("-next edge: 341040160#0 start at", self.k.network.get_x("341040160#0", 0), "length", self.k.network.edge_length("341040160#0"))
+        #print("-next edge: 341040160#1 start at", self.k.network.get_x("341040160#1", 0), "length", self.k.network.edge_length("341040160#1"))
+        #print("-next edge: 491266613 start at", self.k.network.get_x("491266613", 0), "length", self.k.network.edge_length("491266613"))
+        #print("-next edge: 491266613.232 start at", self.k.network.get_x("491266613.232", 0), "length", self.k.network.edge_length("491266613.232"))
+        #print("-next edge: 422314897#0 start at", self.k.network.get_x("422314897#0", 0), "length", self.k.network.edge_length("422314897#0"))
+        #print("-next edge: 422314897#1 start at", self.k.network.get_x("422314897#1", 0), "length", self.k.network.edge_length("422314897#1"))
+        #print("...")
+        #print("-next edge: 40788302 start at", self.k.network.get_x("40788302", 0), "length", self.k.network.edge_length("40788302"))
+        #exit(0)
+
+        #print("junction: 242854963 start at", self.k.network.get_x(":242854963", 0))
+        #print("junction: 4308145956 start at", self.k.network.get_x(":4308145956", 0))
+        #print("junction: gneJ18 start at", self.k.network.get_x(":gneJ18", 0))
         for rl_id in states:
             #print("original len", len(states[rl_id]))
             # compute the closest junction to the rl vehicle
+            if self.debug and rl_id =="flow_00.0":
+                print(rl_id, ":", self.k.vehicle.get_x_by_id(rl_id))
+                rl_edge=self.k.vehicle.get_edge(rl_id)
+                if rl_edge in main_roads_after_junction_from_right_to_left:
+                    if rl_edge not in self.debug_coord.keys():
+                        self.debug_coord[rl_edge]=self.k.vehicle.get_x_by_id(rl_id)
+                        print("*****", rl_edge, "****coord:", self.debug_coord[rl_edge])
+                        for edge in main_roads_after_junction_from_right_to_left: #["422314897#0", "40788302", "124433730#2-AddedOnRampEdge"]
+                            print("edge", edge, "coord", self.k.network.get_x(edge, 0))
+
             within_junctions=list()
             rl_x=self.k.vehicle.get_x_by_id(rl_id)
-            smallest_dist=-1
-            closest_edge=None
-            for junction_start in main_roads_after_junction_from_right_to_left:
-                edge_start=self.k.network.total_edgestarts_dict[junction_start]
-                print("edge: ", junction_start, "start at", edge_start)
-                if edge_start>rl_x:
-                    continue
-                if rl_x-edge_start<smallest_dist or smallest_dist<0:
-                    smallest_dist=rl_x-edge_start
-                    closest_edge=junction_start
+            #smallest_dist=-1
+            #closest_edge=None
+            #for junction_start in main_roads_after_junction_from_right_to_left:
+            #    #edge_start=self.k.network.total_edgestarts_dict[junction_start]
+            #    edge_start=self.k.network.get_x(junction_start, 0)
+            #    #print("edge: ", junction_start, "start at", edge_start)
+            #    if edge_start<rl_x: # the origin of i696 is at the right, instead of left. Skip if the edge is behind
+            #        continue
+            #    if edge_start-rl_x<smallest_dist or smallest_dist<0:
+            #        smallest_dist=edge_start-rl_x
+            #        closest_edge=junction_start
+            closest_edge, smallest_dist=self.find_closest_edge_to_veh(rl_id, main_roads_after_junction_from_right_to_left)
             if closest_edge is not None and smallest_dist<=self.junction_before:
                 vehs_ahead=self.from_veh_to_edge(rl_id, closest_edge)
                 within_junctions.append((closest_edge, smallest_dist, vehs_ahead))
@@ -137,6 +190,7 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             #print("within_junction", within_junctions)
             # compute the average velocity of the vehicles ahead
             closest_junction, dist_from_rl_to_junction, vehs_ahead=within_junctions[0]
+            #print("veh", rl_id, "to", rl_x, "closest junction", closest_junction, "dist", dist_from_rl_to_junction, "num vehs ahead", len(vehs_ahead),)
             rl_dist=-1*dist_from_rl_to_junction/self.junction_before
             veh_vel=list()
             for veh_id in vehs_ahead:
