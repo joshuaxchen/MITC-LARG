@@ -1,6 +1,6 @@
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/new_window_size
+EXP_FOLDER=$FLOW_DIR/exp_results/i696
 
 # merge 200
 TRAIN_DIR=${HOME}/ray_results/multiagent_highway_i696_1merge_Collaborate_lrschedule/PPO_MultiAgentHighwayPOEnvCollaborate-v0_11d4a_00000_0_2021-10-20_22-00-38
@@ -24,7 +24,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 mkdir ${EXP_FOLDER}
 
-WORKING_DIR=$EXP_FOLDER/i696
+WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 J=0
@@ -36,7 +36,7 @@ WINDOW_RIGHT=0
 
 for WINDOW_LEFT in 622 #400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 do
-	AVP=0 
+	AVP=10 
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
@@ -48,9 +48,9 @@ do
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--horizon 4000 \
 		--i696 \
-		--render_mode sumo_gui 
+		--render_mode no_render \
 		#--render_mode sumo_gui 
-		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt 
 	 	#--print_metric_per_time_step_in_file ${PWD}/longmerge_human \
 		#--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
 		#--to_probability \
