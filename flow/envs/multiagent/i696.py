@@ -154,13 +154,12 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             merge_edge=merge_roads_from_right_to_left[junction_index]
             first_merge_veh, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh=self.first_veh_at_edge_and_its_prev(merge_edge, closest_junction)
             vel_of_first_merge_veh/=max_speed 
-            merge_distance = 1
-            max_distance=1 # TODO: set up the maximum distance to be the length of the window
-            max_distance=self.junction_before
+            #max_distance=1 # TODO: set up the maximum distance to be the length of the window
+            #max_distance=self.junction_before
             len_merge=200
-            max_merging_time=100
+            #max_merging_time=100
             if dist_of_first_merge_veh_to_junction < len_merge:
-                dist_of_first_merge_veh_to_junction=(len_merge-2*(len_merge-dist_of_first_merge_veh_to_junction))/(vel_of_first_merge_veh*max_speed*max_merging_time)
+                dist_of_first_merge_veh_to_junction=(len_merge-2*(len_merge-dist_of_first_merge_veh_to_junction))/len_merge
             else:
                 dist_of_first_merge_veh_to_junction=1
             #if len(states[rl_id])==9:
