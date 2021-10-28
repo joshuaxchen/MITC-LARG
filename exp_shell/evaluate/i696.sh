@@ -12,8 +12,12 @@ CHCKPOINT=1
 
 TRAIN_DIR_2=${HOME}/ray_results/multiagent_normalized_distance_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance-v0_92974_00000_0_2021-10-24_15-25-47
 
+TRAIN_DIR_3=${HOME}/ray_results/multiagent_normalized_distance_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance-v0_15abf_00000_0_2021-10-28_12-54-23
+
 
 TRAIN_DIR_i696=${HOME}/ray_results/multiagent_yulin_i696_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_296ca_00000_0_2021-10-25_21-33-53
+
+TRAIN_DIR_i696=${HOME}/ray_results/multiagent_yulin_i696_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_9a684_00000_0_2021-10-28_13-33-53
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
@@ -30,21 +34,21 @@ MAIN_INFLOW=2000
 
 WINDOW_RIGHT=0
 
-for WINDOW_LEFT in 200 #400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+for WINDOW_LEFT in 622 #400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 do
-	AVP=10 
+	AVP=0 
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 	python3 $VISUALIZER \
 		$TRAIN_DIR_i696 \
 		$CHCKPOINT \
-		--agent_action_policy_dir $TRAIN_DIR_2 \
+		--agent_action_policy_dir $TRAIN_DIR_3 \
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--horizon 4000 \
 		--i696 \
-		--render_mode no_render 
+		--render_mode sumo_gui 
 		#--render_mode sumo_gui 
 		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
 	 	#--print_metric_per_time_step_in_file ${PWD}/longmerge_human \

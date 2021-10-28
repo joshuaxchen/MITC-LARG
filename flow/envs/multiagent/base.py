@@ -266,7 +266,7 @@ class MultiEnv(MultiAgentEnv, Env):
             for i in range(len(total_inflows)):
                 total_inflows[i]['vehsPerHour'] = inflows_set[i]
         print(self.network.net_params.inflows.get())
-        print(self.original_inflow)
+        #print(self.original_inflow)
         self._main_inflow = 0.0
         self._merge_inflow = 0.0
         total_inflows = self.network.net_params.inflows.get()

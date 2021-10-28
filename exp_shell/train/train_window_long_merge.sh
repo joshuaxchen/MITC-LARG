@@ -18,7 +18,7 @@ let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 
 WINDOW_RIGHT=0
-for WINDOW_LEFT in 600 #500 600 700 
+for WINDOW_LEFT in 622 #500 600 700 
 do 
 	#python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/window_size_long_merge_4_multiagent_i696_1merge_Window_Full_ZeroShot_Transfer.py \
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/i696_multiagent.py \
