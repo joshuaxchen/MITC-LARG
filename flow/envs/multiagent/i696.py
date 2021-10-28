@@ -104,7 +104,7 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
 
         # normalizing constants
         max_speed = 30.0 #self.k.network.max_speed()
-        max_length = 1000.0#self.k.network.length()
+        #max_length = 1000.0 #self.k.network.length()
         merge_vehs = self.k.vehicle.get_ids_by_edge(["bottom","inflow_merge"])
         #merge_dists = [self.k.vehicle.get_x(veh) for veh in merge_vehs]
         self.rl_to_ignore=list()       
@@ -117,6 +117,7 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             closest_edge=None
             for junction_start in main_roads_after_junction_from_right_to_left:
                 edge_start=self.k.network.total_edgestarts_dict[junction_start]
+                print("edge: ", junction_start, "start at", edge_start)
                 if edge_start>rl_x:
                     continue
                 if rl_x-edge_start<smallest_dist or smallest_dist<0:
@@ -136,7 +137,7 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             #print("within_junction", within_junctions)
             # compute the average velocity of the vehicles ahead
             closest_junction, dist_from_rl_to_junction, vehs_ahead=within_junctions[0]
-            rl_dist=dist_from_rl_to_junction/self.junction_before
+            rl_dist=-1*dist_from_rl_to_junction/self.junction_before
             veh_vel=list()
             for veh_id in vehs_ahead:
                 veh_vel.append(self.k.vehicle.get_speed(veh_id))
@@ -145,6 +146,7 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             else:
                 rl_edge_id= self.k.vehicle.get_edge(rl_id)
                 veh_vel = self.k.network.speed_limit(rl_edge_id)
+            veh_vel/=max_speed
             
             #print("veh_vel", veh_vel)
             # compute the merge information 
@@ -156,8 +158,9 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             max_distance=1 # TODO: set up the maximum distance to be the length of the window
             max_distance=self.junction_before
             len_merge=200
+            max_merging_time=100
             if dist_of_first_merge_veh_to_junction < len_merge:
-                dist_of_first_merge_veh_to_junction=(len_merge-2*dist_of_first_merge_veh_to_junction)/len_merge
+                dist_of_first_merge_veh_to_junction=(len_merge-2*(len_merge-dist_of_first_merge_veh_to_junction))/(vel_of_first_merge_veh*max_speed*max_merging_time)
             else:
                 dist_of_first_merge_veh_to_junction=1
             #if len(states[rl_id])==9:
