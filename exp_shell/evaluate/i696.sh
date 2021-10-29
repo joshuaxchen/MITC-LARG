@@ -46,11 +46,12 @@ do
 		--agent_action_policy_dir $TRAIN_DIR_3 \
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+	 	--print_metric_per_time_step_in_file ${PWD}/i696 \
 		--horizon 4000 \
 		--i696 \
-		--render_mode no_render \
-		#--render_mode sumo_gui 
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt 
+		--render_mode no_render 
+		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt 
+		#--render_mode no_render \
 	 	#--print_metric_per_time_step_in_file ${PWD}/longmerge_human \
 		#--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
 		#--to_probability \

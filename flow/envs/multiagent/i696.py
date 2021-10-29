@@ -54,18 +54,17 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
     def find_closest_edge_to_veh(self, veh_id, potential_edges):
         veh_edge=self.k.vehicle.get_edge(veh_id)
         next_edge=veh_edge
-        dist=0
+        dist=self.k.network.edge_length(veh_edge)-self.k.vehicle.get_position(veh_id)
+        next_edge=self.collect_next_edge(next_edge)
         while next_edge is not None and next_edge not in potential_edges:
-            if veh_edge==next_edge:
-                dist+=self.k.network.edge_length(veh_edge)-self.k.vehicle.get_position(veh_id)
-            else:
-                dist+=self.k.network.edge_length(next_edge)
+            dist+=self.k.network.edge_length(next_edge)
             next_edge=self.collect_next_edge(next_edge)
             #print(next_edge)
         if next_edge is None:
             return (None, -1)
         else:
             return (next_edge, dist)
+
     def from_veh_to_edge(self, veh_id, target_edge_id):
         vehs_ahead=list()
         veh_edge_id=self.k.vehicle.get_edge(veh_id)
@@ -207,6 +206,8 @@ class MultiAgentI696POEnvParameterizedWindowSize(MultiAgentHighwayPOEnv):
             junction_index=main_roads_after_junction_from_right_to_left.index(closest_junction)
             merge_edge=merge_roads_from_right_to_left[junction_index]
             first_merge_veh, dist_of_first_merge_veh_to_junction, vel_of_first_merge_veh=self.first_veh_at_edge_and_its_prev(merge_edge, closest_junction)
+
+            #print("rl ", rl_id, "junction", closest_junction, "merging vehicle", first_merge_veh, "dist", dist_of_first_merge_veh_to_junction)
             vel_of_first_merge_veh/=max_speed 
             #max_distance=1 # TODO: set up the maximum distance to be the length of the window
             #max_distance=self.junction_before
