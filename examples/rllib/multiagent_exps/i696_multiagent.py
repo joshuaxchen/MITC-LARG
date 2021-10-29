@@ -118,25 +118,48 @@ vehicles.add(
 # from the highway portion as well
 inflow = InFlows()
 
-inflow.add(
-    veh_type="rl",
-    edge="59440544#0", # flow id sw2w1 from xml file
-    begin=10,#0,
-    end=90000,
-    vehs_per_hour = RL_PENETRATION * FLOW_RATE,
-    departSpeed=7.5,
-    depart_lane="free",
-    )
-#"404969345#0", "124433709.427", "8666737", "178253095"
-inflow.add(
-    veh_type="human",
-    edge="59440544#0", # flow id se2w1 from xml file
-    begin=10,#0,
-    end=90000,
-    vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
-    departSpeed=10,
-    departLane="free",
-    )
+if args.to_probability:
+    inflow.add(
+        veh_type="rl",
+        edge="59440544#0", # flow id sw2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        #vehs_per_hour = RL_PENETRATION * FLOW_RATE,
+        probability=(RL_PENETRATION * FLOW_RATE)/3600.0,
+        departSpeed=7.5,
+        depart_lane="free",
+        )
+    #"404969345#0", "124433709.427", "8666737", "178253095"
+    inflow.add(
+        veh_type="human",
+        edge="59440544#0", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        #vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
+        probability= (1 - RL_PENETRATION)*FLOW_RATE/3600.0,
+        departSpeed=10,
+        departLane="free",
+        )
+else:
+    inflow.add(
+        veh_type="rl",
+        edge="59440544#0", # flow id sw2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = RL_PENETRATION * FLOW_RATE,
+        departSpeed=7.5,
+        depart_lane="free",
+        )
+    #"404969345#0", "124433709.427", "8666737", "178253095"
+    inflow.add(
+        veh_type="human",
+        edge="59440544#0", # flow id se2w1 from xml file
+        begin=10,#0,
+        end=90000,
+        vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
+        departSpeed=10,
+        departLane="free",
+        )
 inflow.add(
     veh_type="human",
     edge="8666737", # flow id se2w1 from xml file
@@ -227,8 +250,7 @@ flow_params = dict(
 )
 
 
-# SET UP EXPERIMENT
-
+# SET UP EXPERIMENT 
 def setup_exps(flow_params):
     """Create the relevant components of a multiagent RLlib experiment.
 
