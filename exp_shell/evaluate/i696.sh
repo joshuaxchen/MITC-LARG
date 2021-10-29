@@ -34,31 +34,32 @@ MAIN_INFLOW=2000
 
 WINDOW_RIGHT=0
 
-for WINDOW_LEFT in 622 #400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+for MAIN_INFLOW in 1800 1600 
 do
-	AVP=0 
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-	python3 $VISUALIZER \
-		$TRAIN_DIR_i696 \
-		$CHCKPOINT \
-		--agent_action_policy_dir $TRAIN_DIR_3 \
-		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-	 	--print_metric_per_time_step_in_file ${PWD}/i696_${AVP} \
-		--horizon 4000 \
-		--i696 \
-		--to_probability \
-		--render_mode no_render \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt 
-		#--render_mode no_render \
-	 	#--print_metric_per_time_step_in_file ${PWD}/longmerge_human \
-		#--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
-		#--to_probability \
-
-	done
-
+    for WINDOW_LEFT in 622 #400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+    do
+        AVP=10 
+        let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+        let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+        echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+        python3 $VISUALIZER \
+            $TRAIN_DIR_i696 \
+            $CHCKPOINT \
+            --agent_action_policy_dir $TRAIN_DIR_3 \
+            --seed_dir $FLOW_DIR \
+            --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+            --print_metric_per_time_step_in_file ${PWD}/i696_${AVP} \
+            --horizon 4000 \
+            --i696 \
+            --to_probability \
+            --render_mode no_render \
+            >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+            #--render_mode no_render \
+            #--print_metric_per_time_step_in_file ${PWD}/longmerge_human \
+            #--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
+            #--to_probability \
+        done
+done
 
 wait 
 source ~/notification_zyl.sh
