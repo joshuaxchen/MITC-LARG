@@ -40,10 +40,11 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
             lane_change_params=SumoLaneChangeParams(
                 model="SL2015", #"SL2015", #LC2013
                 lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-                lc_speed_gain=1000000,
-                lc_keep_right=0,
-                lc_pushy_gap=aggressive, #0.5, #1,
-                lc_assertive=assertive, #5 #20,
+                lc_speed_gain=1.0, #was 1000000,
+                lc_keep_right=0, #was 0
+                lc_pushy=aggressive, #0.5, #1,
+                lc_assertive=assertive, #[0,1] >1 also good,
+                lc_pushy_gap=0.6, #default
                 lc_impatience=1e-8, #1e-8,
                 lc_time_to_impatience=1e12,
                 ), 
