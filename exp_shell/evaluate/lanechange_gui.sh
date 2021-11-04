@@ -16,6 +16,8 @@ RL_LEFT_MODEL=${HOME}/ray_results/multiagent_yulin_rl_left_lanechange_merge4_Ful
 
 RL_RIGHT_MODEL=${HOME}/ray_results/multiagent_yulin_rl_right_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_5e6dd_00000_0_2021-08-27_23-28-18
 
+RL_MODEL=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_740c0_00000_0_2021-07-04_14-31-39
+
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/lane_change_4
@@ -48,16 +50,16 @@ do
 			let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 			let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 
-			for RL_RIGHT_LEFT in 1 
+			for RL_RIGHT_LEFT in 0  
 			do
 				if ((RL_RIGHT_LEFT == 0)); then # rl on the right
 					RL_INFLOW_LEFT=0
 					let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP}/100
-					RL_MODEL=${RL_RIGHT_MODEL}
+					#RL_MODEL=${RL_RIGHT_MODEL}
 				else # otherwise, rl vehicles on the left
 					let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP}/100
 					RL_INFLOW_RIGHT=0
-					RL_MODEL=${RL_LEFT_MODEL}
+					#RL_MODEL=${RL_LEFT_MODEL}
 				fi
 				let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 				let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -66,15 +68,16 @@ do
 
 				for RIGHT_HUMAN_LANE_CHANGE in 1
 				do 
-					for AGGRESSIVE in 1 #0.2 0.4 0.6 0.8 1
+					for AGGRESSIVE in 0 #0.2 0.4 0.6 0.8 1
 					do
 						for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
 						do
-							for LC_PROB in 1
+							for LC_PROB in -1
 							do
 								python3 $VISUALIZER \
-									$RL_MODEL \
+									$RL_LEFT_MODEL \
 									$CHCKPOINT \
+                                    --agent_action_policy_dir $RL_MODEL \
 									--seed_dir $FLOW_DIR \
 									--lateral_resolution 3.2 \
 									--render_mode sumo_gui \
