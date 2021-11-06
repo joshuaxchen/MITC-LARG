@@ -68,7 +68,7 @@ do
                             python3 $VISUALIZER \
                                 $RL_RIGHT_MODEL \
                                 $CHCKPOINT \
-                                --agent_action_policy_dir $RL_MODEL \
+                                --agent_action_policy_dir $RL_RIGHT_MODEL \
                                 --seed_dir $FLOW_DIR \
                                 --lateral_resolution 3.2 \
                                 --render_mode no_render \
@@ -80,7 +80,7 @@ do
                                 --aggressive ${AGGRESSIVE} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} \
-			    >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LEFT_MAIN_INFLOW}_${ASSERTIVE}.txt &
+			    #>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LEFT_MAIN_INFLOW}_${ASSERTIVE}.txt &
                             let J=J+1
                             if ((J == 30)); then
                                 wait
