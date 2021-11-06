@@ -80,7 +80,7 @@ do
                                 --aggressive ${AGGRESSIVE} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} \
-			    #>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${LEFT_MAIN_INFLOW}_${ASSERTIVE}.txt &
+			    >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${LEFT_MAIN_INFLOW}_${ASSERTIVE}.txt &
                             let J=J+1
                             if ((J == 30)); then
                                 wait
