@@ -24,7 +24,6 @@ FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/lane_change/
 
-
 CHCKPOINT=500
 
 
@@ -39,7 +38,7 @@ J=0
 mkdir ${EXP_FOLDER}
 RIGHT_MAIN_INFLOW=2000
 
-WORKING_DIR=$EXP_FOLDER/av_right
+WORKING_DIR=$EXP_FOLDER/aamas_right
 mkdir ${WORKING_DIR}
 
 
@@ -66,7 +65,7 @@ do
                         for LC_PROB in -1
                         do
                             python3 $VISUALIZER \
-                                $RL_RIGHT_MODEL \
+                                $RL_MODEL \
                                 $CHCKPOINT \
                                 --agent_action_policy_dir $RL_MODEL \
                                 --seed_dir $FLOW_DIR \
