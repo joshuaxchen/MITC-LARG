@@ -52,7 +52,7 @@ do
             let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
             let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-            for AVP_RIGHT in 0 10 20 30 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+            for AVP_RIGHT in 0 10 20 30 40 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
             do
                 let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
                 let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -80,7 +80,7 @@ do
                                 --aggressive ${AGGRESSIVE} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} \
-			    >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${LEFT_MAIN_INFLOW}_${ASSERTIVE}.txt &
+			    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${ASSERTIVE}.txt &
                             let J=J+1
                             if ((J == 30)); then
                                 wait
