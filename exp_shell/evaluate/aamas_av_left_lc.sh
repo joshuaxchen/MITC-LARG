@@ -81,7 +81,7 @@ do
 					--lc_probability ${LC_PROB} \
 				    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${ASSERTIVE}.txt &
 				    let J=J+1
-				    if ((J == 16)); then
+				    if ((J == 23)); then
 					wait
 					let J=0
 					echo "another batch"
