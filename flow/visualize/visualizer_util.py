@@ -30,6 +30,8 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
 
     # CREATE VEHICLE TYPES AND INFLOWS
+    # FIXME temporary fix; will change later 
+    speed_gain = aggressive
     vehicles.add(
             veh_id=veh_type,
             acceleration_controller=(controller, {}),
@@ -40,9 +42,9 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
             lane_change_params=SumoLaneChangeParams(
                 model="SL2015", #"SL2015", #LC2013
                 lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-                lc_speed_gain=1.0, #was 1000000,
+                lc_speed_gain=speed_gain, #was 1000000,
                 lc_keep_right=0, #was 0
-                lc_pushy=aggressive, #0.5, #1,
+                lc_pushy=0, #0.5, #1,
                 lc_assertive=assertive, #[0,1] >1 also good,
                 lc_pushy_gap=0.6, #default
                 lc_impatience=1e-8, #1e-8,
@@ -50,6 +52,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
                 ), 
             num_vehicles=num_vehicles
             )
+    print(vehicles)
     #print(net_params.inflows)
 def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive, lc_probability):
     add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive, lc_probability)

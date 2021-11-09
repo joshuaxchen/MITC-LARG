@@ -25,13 +25,13 @@ MAIN_INFLOW=2000
 MERGE_INFLOW=200
 AVP=10
 J=0
-MAX_CPU=30
+MAX_CPU=20
 mkdir ${EXP_FOLDER}
-WORKING_DIR=$EXP_FOLDER/human
+WORKING_DIR=$EXP_FOLDER/human_speedgain_x_assertive
 mkdir ${WORKING_DIR}
 RIGHT_MAIN_INFLOW=2000
 
-for RIGHT_MAIN_INFLOW in 2000  1800 1600 1400 1200 1000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 2000 1800 1600  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
     for LEFT_MAIN_INFLOW in 2000 1800 1600 1400 1200 1000 #1700 1800 1900 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
     do
@@ -74,7 +74,7 @@ do
                                 --aggressive ${AGGRESSIVE} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} \
-                                >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_AGGRESSIVE${AGGRESSIVE}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
+                                >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_SPEEDGAIN${AGGRESSIVE}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
 
                         let J=J+1
                         if ((J == ${MAX_CPU})); then
@@ -84,11 +84,11 @@ do
                         fi
 
                     else 
-                        for AGGRESSIVE in 0 0.2 0.4 0.6 0.8 1.0 
+                        for AGGRESSIVE in 0 0.5 1.0 5.0 10.0 100.0 1000.0 10000.0 
                         do
-                            for ASSERTIVE in 0 0.2 0.4 0.6 0.8 1.0 5.0 #0.5 #5 #0.4 0.6 0.8 1
+                            for ASSERTIVE in 0 0.5 1.0 5.0 10.0 
                             do
-                                for LC_PROB in 0 #0.2 0.4 0.6 0.8 1
+                                for LC_PROB in 0 
                                 do
                                     python3 $VISUALIZER \
                                         $HUMAN_MODEL \
@@ -104,7 +104,7 @@ do
                                         --aggressive ${AGGRESSIVE} \
                                         --assertive ${ASSERTIVE} \
                                         --lc_probability ${LC_PROB} \
-                                        >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_AGGRESSIVE${AGGRESSIVE}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
+                                        >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_SPEEDGAIN${AGGRESSIVE}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
                                         
                                     let J=J+1
                                     if ((J == ${MAX_CPU})); then
