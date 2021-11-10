@@ -4,7 +4,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              SumoCarFollowingParams, SumoLaneChangeParams
 from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 
-from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger
+from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger, StaticLaneChanger
 import sys
 
 import argparse 
@@ -129,9 +129,10 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         controller=RLController
     elif "human" in veh_type:
-        controller=SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
+        controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
     my_lane_change_controller=(SimLaneChangeController, {})
+    #my_lane_change_controller=(StaticLaneChanger, {})
     #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
     #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
     #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
@@ -152,13 +153,12 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
                 lc_keep_right=0, #was 0
                 lc_pushy=0, #0.5, #1,
                 lc_assertive=assertive, #[0,1] >1 also good,
-                lc_pushy_gap=0.6, #default
+                lc_pushy_gap=aggressive, #default
                 lc_impatience=1e-8, #1e-8,
                 lc_time_to_impatience=1e12,
                 ), 
             num_vehicles=num_vehicles
             )
-    print(vehicles)
     #print(net_params.inflows)
 def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive, lc_probability):
     add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive, lc_probability)

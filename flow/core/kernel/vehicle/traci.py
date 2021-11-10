@@ -1246,6 +1246,8 @@ class TraCIVehicle(KernelVehicle):
         """
         r, g, b, t = self.kernel_api.vehicle.getColor(veh_id)
         return r, g, b, t
+    def get_lane_change_human_ids(self):
+        return self.__change_lane_human_ids
 
     def set_color_t(self, veh_id, color):
         """See parent class.

@@ -17,16 +17,27 @@ class SimLaneChangeController(BaseLaneChangeController):
     
     def get_lane_change_action(self, env):
         """See parent class."""
-        lane_change_probability=0.5
-        sampled_prob=random.random()
-        if sampled_prob<=lane_change_probability:
-            lane_change_switch=True
-        else:
-            lane_change_switch=False
-        if lane_change_switch:
-            return None
-        else:
-            return 0
+        #lane_change_probability=0.5
+        #sampled_prob=random.random()
+        #if sampled_prob<=lane_change_probability:
+        #    lane_change_switch=True
+        #else:
+        #    lane_change_switch=False
+        #if lane_change_switch:
+        #    return None
+        #else:
+        #    return 0
+        return None
+
+class StochasticLaneChangeController(BaseLaneChangeController):
+    """A lane-changing model used to keep a vehicle in the same lane.
+
+    Usage: See base class for usage example.
+    """
+     
+    def get_lane_change_action(self, env):
+        """See parent class."""
+        return None 
 
 
 class StaticLaneChanger(BaseLaneChangeController):
