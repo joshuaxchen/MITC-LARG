@@ -73,6 +73,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         self.original_inflow = deepcopy(network.net_params.inflows.get())
         self._main_inflow = None
         self._merge_inflow = None
+        self.prev_lane_change_human_ids=dict()
+        self.freeze_lane_change_time=8
 
     @property
     def observation_space(self):
@@ -237,6 +239,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         # the vehicles on lane 0 (right lane) is set to 9
         # the vehicles on lane 1 (left lane) is set to 7 
         rl_ids=self.k.vehicle.get_rl_ids()
+        current_lane_change_human_ids=self.k.vehicle.get_lane_change_human_ids() 
+
         for veh_id in self.k.vehicle.get_ids():
             lane_index= self.k.vehicle.get_lane(veh_id)
 
@@ -248,23 +252,39 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                 self.k.vehicle.set_speed_mode(veh_id, 7)
 
             # human drivers
-            if veh_id not in rl_ids and "human_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                human_speed_modes=ADDITIONAL_ENV_PARAMS["human_speed_modes"]
-                speed_mode=human_speed_modes[lane_index]
-                self.k.vehicle.set_speed_mode(veh_id, speed_mode)
-            elif veh_id in rl_ids and "rl_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                rl_speed_modes=ADDITIONAL_ENV_PARAMS["rl_speed_modes"]
-                speed_mode=rl_speed_modes[lane_index] 
-                self.k.vehicle.set_speed_mode(veh_id, speed_mode)
+            #if veh_id not in rl_ids and "human_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
+            #    human_speed_modes=ADDITIONAL_ENV_PARAMS["human_speed_modes"]
+            #    speed_mode=human_speed_modes[lane_index]
+            #    self.k.vehicle.set_speed_mode(veh_id, speed_mode)
+            #elif veh_id in rl_ids and "rl_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
+            #    rl_speed_modes=ADDITIONAL_ENV_PARAMS["rl_speed_modes"]
+            #    speed_mode=rl_speed_modes[lane_index] 
+            #    self.k.vehicle.set_speed_mode(veh_id, speed_mode)
 
-            if veh_id not in rl_ids and "human_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                human_lane_change_modes=ADDITIONAL_ENV_PARAMS["human_lane_change_modes"]
-                lc_mode=human_lane_change_modes[lane_index]
-                self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
-            elif veh_id in rl_ids and "rl_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                rl_lane_change_modes=ADDITIONAL_ENV_PARAMS["rl_lane_change_modes"]
-                lc_mode=rl_lane_change_modes[lane_index]
-                self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+            #if veh_id not in rl_ids and "human_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
+            #    human_lane_change_modes=ADDITIONAL_ENV_PARAMS["human_lane_change_modes"]
+            #    lc_mode=human_lane_change_modes[lane_index]
+            #    self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+            #elif veh_id in rl_ids and "rl_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
+            #    rl_lane_change_modes=ADDITIONAL_ENV_PARAMS["rl_lane_change_modes"]
+            #    lc_mode=rl_lane_change_modes[lane_index]
+            #    self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+        for veh_id in current_lane_change_human_ids:
+            if veh_id not in self.prev_lane_change_human_ids.keys():
+                self.prev_lane_change_human_ids[veh_id]=self.freeze_lane_change_time
+        ids_to_remove_freeze=set()
+        for veh_id in self.prev_lane_change_human_ids.keys():
+            self.prev_lane_change_human_ids[veh_id]-=1
+            if self.prev_lane_change_human_ids[veh_id]>0 and veh_id in self.k.vehicle.get_ids():
+                #self.k.vehicle.set_lane_change_mode(veh_id, 0)
+                pass
+            else:
+                ids_to_remove_freeze.add(veh_id)
+        for veh_id in ids_to_remove_freeze:
+            del self.prev_lane_change_human_ids[veh_id]
+            if veh_id in self.k.vehicle.get_ids():
+                self.k.vehicle.set_lane_change_mode(veh_id, 1)
+
 
     def additional_command(self):
         """See parent class.
