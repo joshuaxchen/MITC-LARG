@@ -1081,14 +1081,24 @@ class TraCIVehicle(KernelVehicle):
             direction = [direction]
 
         # if any of the directions are not -1, 0, or 1, raise a ValueError
-        if any(d not in [-1, 0, 1] for d in direction):
+        if any(d not in [-1, 0, 1, None] for d in direction):
             raise ValueError(
                 "Direction values for lane changes may only be: -1, 0, or 1.")
 
         for i, veh_id in enumerate(veh_ids):
             # check for no lane change
-            if direction[i] == 0:
+            if direction[i] is None:
+                # TODO: set the lane change mode to 0
+                self.set_lane_change_mode(veh_id, 1621) # allow this vehicle to change lane
+                #direction[i]=0 # change to current lane
                 continue
+
+
+            if direction[i] == 0:
+                # TODO: set the lane change mode to 0
+                self.set_lane_change_mode(veh_id, 0)
+                #continue
+                pass
 
             # compute the target lane, and clip it so vehicle don't try to lane
             # change out of range
@@ -1238,6 +1248,7 @@ class TraCIVehicle(KernelVehicle):
 
     def set_lane_change_mode(self, veh_id, lc_mode):
         self.kernel_api.vehicle.setLaneChangeMode(veh_id, lc_mode)
+        print("set", veh_id, "lc mode to", lc_mode)
 
     def get_color_t(self, veh_id):
         """See parent class.

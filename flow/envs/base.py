@@ -444,6 +444,7 @@ class Env(gym.Env):
                     target_lane = self.k.vehicle.get_lane_changing_controller(
                         veh_id).get_action(self)
                     direction.append(target_lane)
+
                 self.k.vehicle.apply_lane_change(
                     self.k.vehicle.get_controlled_lc_ids(),
                     direction=direction)

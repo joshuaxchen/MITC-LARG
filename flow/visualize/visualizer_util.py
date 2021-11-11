@@ -4,7 +4,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              SumoCarFollowingParams, SumoLaneChangeParams
 from flow.envs.multiagent.highway_MOR import MultiAgentHighwayPOEnvMerge4CollaborateMOR
 
-from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger, StaticLaneChanger
+from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger, StaticLaneChanger, StochasticLaneChangeController
 import sys
 
 import argparse 
@@ -129,8 +129,9 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
-    my_lane_change_controller=(SimLaneChangeController, {})
+    #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
+    my_lane_change_controller=(StochasticLaneChangeController, {})
     #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
     #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
     #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})

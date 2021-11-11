@@ -35,7 +35,8 @@ class BaseLaneChangeController:
 
         self.veh_id = veh_id
         self.lane_change_params = lane_change_params
-
+        self.freeze_lane_change=False
+    
     def get_lane_change_action(self, env):
         """Specify the lane change action to be performed.
 

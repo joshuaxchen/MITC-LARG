@@ -74,7 +74,8 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         self._main_inflow = None
         self._merge_inflow = None
         self.prev_lane_change_human_ids=dict()
-        self.freeze_lane_change_time=8
+        self.freeze_lane_change_time=3
+        self.time_left_to_change_lane=4
 
     @property
     def observation_space(self):
@@ -269,21 +270,34 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             #    rl_lane_change_modes=ADDITIONAL_ENV_PARAMS["rl_lane_change_modes"]
             #    lc_mode=rl_lane_change_modes[lane_index]
             #    self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
+
         for veh_id in current_lane_change_human_ids:
             if veh_id not in self.prev_lane_change_human_ids.keys():
-                self.prev_lane_change_human_ids[veh_id]=self.freeze_lane_change_time
+                self.prev_lane_change_human_ids[veh_id]=(self.freeze_lane_change_time, self.time_left_to_change_lane)
+                lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
+         
         ids_to_remove_freeze=set()
         for veh_id in self.prev_lane_change_human_ids.keys():
-            self.prev_lane_change_human_ids[veh_id]-=1
-            if self.prev_lane_change_human_ids[veh_id]>0 and veh_id in self.k.vehicle.get_ids():
+            freeze_lc_time, time_left_for_lc=self.prev_lane_change_human_ids[veh_id]
+            if time_left_for_lc>0:
+                time_left_for_lc-=1
+            else:
+                lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
+                if lc_controller is not None:
+                    lc_controller.freeze_lane_change=True
+                freeze_lc_time-=1
+            if freeze_lc_time>0 and veh_id in self.k.vehicle.get_ids():
                 #self.k.vehicle.set_lane_change_mode(veh_id, 0)
-                pass
+                # The vehicle should not change lane
+                self.prev_lane_change_human_ids[veh_id]=(freeze_lc_time, time_left_for_lc)
             else:
                 ids_to_remove_freeze.add(veh_id)
         for veh_id in ids_to_remove_freeze:
             del self.prev_lane_change_human_ids[veh_id]
             if veh_id in self.k.vehicle.get_ids():
                 self.k.vehicle.set_lane_change_mode(veh_id, 1)
+                lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
+                lc_controller.freeze_lane_change=False
 
 
     def additional_command(self):
