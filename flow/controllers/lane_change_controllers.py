@@ -37,7 +37,20 @@ class StochasticLaneChangeController(BaseLaneChangeController):
      
     def get_lane_change_action(self, env):
         """See parent class."""
-        return None 
+        #print("lane changing in stochastic")
+        if self.freeze_lane_change:
+            return 0
+        lane_change_probability=0.3
+        sampled_prob=random.random()
+        if sampled_prob<=lane_change_probability:
+            lane_change_switch=True
+        else:
+            lane_change_switch=False
+        if lane_change_switch:
+            return None
+        else:
+            print(self.veh_id, "lc 0")
+            return 0
 
 
 class StaticLaneChanger(BaseLaneChangeController):
