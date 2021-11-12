@@ -49,7 +49,7 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         if lane_change_switch:
             return None
         else:
-            print(self.veh_id, "lc 0")
+            #print(self.veh_id, "lc 0")
             return 0
 
 

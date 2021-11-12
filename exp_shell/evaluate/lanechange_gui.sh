@@ -57,7 +57,7 @@ do
                 echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
                 echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-                for AGGRESSIVE in 0 #0.2 0.4 0.6 0.8 1
+                for SPEED_GAIN in 1 #0.2 0.4 0.6 0.8 1
                 do
                     for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
                     do
@@ -69,13 +69,13 @@ do
                                 --agent_action_policy_dir $RL_MODEL \
                                 --seed_dir $FLOW_DIR \
                                 --lateral_resolution 3.2 \
-                                --render_mode no_render \
+                                --render_mode sumo_gui \
                                 --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
                                 --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                                 --human_lane_change 1 1 \
                                 --rl_lane_change 0 0 \
                                 --merge_inflow ${MERGE_INFLOW} \
-                                --aggressive ${AGGRESSIVE} \
+                                --speed_gain ${SPEED_GAIN} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} 
 

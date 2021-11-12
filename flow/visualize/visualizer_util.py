@@ -84,6 +84,7 @@ def set_argument(evaluate=False):
         nargs="+",
         help="This is often used for evaluating human baseline")
 
+
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
     parser.add_argument("-s","--use_seeds",dest = "use_seeds",help="name of pickle file containing seeds", default=None)
@@ -107,7 +108,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
     parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
     parser.add_argument('--merge_inflow', type=int, help='merge inflow.') 
-    parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
+    parser.add_argument('--speed_gain', type=float, help='speed gain (see SUMO doc)') 
     parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
     parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
     parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
@@ -122,7 +123,7 @@ def set_argument(evaluate=False):
 
 
 
-def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, aggressive, assertive, lc_probability):                
+def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
         controller=RLController
@@ -135,37 +136,38 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
     #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
     #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})
-    print("set parameters:", aggressive, assertive, lc_probability)
+    print("set parameters:", speed_gain, assertive, lc_probability)
     # CREATE VEHICLE TYPES AND INFLOWS
+    # FIXME temporary fix; will change later 
     vehicles.add(
-        veh_id=veh_type,
-        acceleration_controller=(controller, {}),
-        lane_change_controller=my_lane_change_controller, #(SimLaneChangeController, {}),
-        car_following_params=SumoCarFollowingParams(
-            speed_mode=speed_mode,  # for safer behavior at the merges
-        ),
-        lane_change_params=SumoLaneChangeParams(
-            model="SL2015", #"SL2015", #LC2013
-          lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
-          lc_speed_gain=1.0, #1000000,
-          lc_keep_right=0,
-          lc_pushy_gap=aggressive, #0.5, #1,
-          lc_assertive=assertive, #5 #20,
-          lc_impatience=1e-8, #1e-8,
-          lc_time_to_impatience=1e12,
-         ), 
-        num_vehicles=num_vehicles
-        )
-
+            veh_id=veh_type,
+            acceleration_controller=(controller, {}),
+            lane_change_controller=my_lane_change_controller,
+            car_following_params=SumoCarFollowingParams(
+                speed_mode=speed_mode,  # for safer behavior at the merges
+            ),
+            lane_change_params=SumoLaneChangeParams(
+                model="SL2015", #"SL2015", #LC2013
+                lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+                lc_speed_gain=speed_gain, #was 1000000,
+                lc_keep_right=0, #was 0
+                lc_pushy=0, #0.5, #1,
+                lc_assertive=assertive, #[0,1] >1 also good,
+                lc_pushy_gap=0.6, #default
+                lc_impatience=1e-8, #1e-8,
+                lc_time_to_impatience=1e12,
+                ), 
+            num_vehicles=num_vehicles
+            )
     #print(net_params.inflows)
-def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive, lc_probability):
-    add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive, lc_probability)
+def add_vehicles_no_lane_change(vehicles, veh_type, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):
+    add_vehicles(vehicles, veh_type, NO_LANE_CHANGE_MODE, speed_mode, num_vehicles, speed_gain, assertive, lc_probability)
 
-def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles, aggressive, assertive, lc_probability):
-    add_vehicles(vehicles, veh_type, LANE_CHANGE_MODE, speed_mode, num_vehicles, aggressive, assertive, lc_probability)
+def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):
+    add_vehicles(vehicles, veh_type, LANE_CHANGE_MODE, speed_mode, num_vehicles, speed_gain, assertive, lc_probability)
 
 
-def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change, aggressive, assertive, lc_probability):
+def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change, speed_gain, assertive, lc_probability):
     # rl_inflows: [0, 0] for right and left lanes
     # rl_lane_change: [0, 0] for right and left lanes
     # human_inflows: [2000, 2000] for right and left lanes
@@ -189,8 +191,8 @@ def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_la
             human_veh_lane_change+= 2**i
     #print("human_veh_left_or_right", human_veh_left_or_right)
 
-    human_names=add_specified_vehicles(vehicle_params, edge+"_human", human_veh_left_or_right, human_veh_lane_change, aggressive, assertive, lc_probability)
-    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl", rl_veh_left_or_right, rl_veh_lane_change, aggressive, assertive, lc_probability)
+    human_names=add_specified_vehicles(vehicle_params, edge+"_human", human_veh_left_or_right, human_veh_lane_change, speed_gain, assertive, lc_probability)
+    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl", rl_veh_left_or_right, rl_veh_lane_change, speed_gain, assertive, lc_probability)
 
     if rl_veh_left_or_right>0: 
         for i in range(0, len(rl_inflows)):
@@ -230,7 +232,7 @@ def add_specified_inflow(inflows, veh_type, edge, lane_index, inflow_rate):
         depart_speed=7.5
     inflows.add(veh_type=veh_type, edge=edge, vehs_per_hour=inflow_rate, depart_lane=lane_index, depart_speed=depart_speed)
 
-def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, veh_lane_change, aggressive, assertive, lc_probability):
+def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, veh_lane_change, speed_gain, assertive, lc_probability):
     # This is for two-lane case, should be able to be generalized
     # veh_right_left_or_both: 
     #   1 (01) - veh right (the first lane)
@@ -282,7 +284,7 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         elif "rl" in veh_name:
             speed_mode=15
             veh_num=0
-        operator(vehicle_params, veh_name, speed_mode, veh_num, aggressive, assertive, lc_probability)
+        operator(vehicle_params, veh_name, speed_mode, veh_num, speed_gain, assertive, lc_probability)
     return veh_names
     
 def add_preset_inflows(inflow_type, flow_params):
@@ -751,7 +753,7 @@ def reset_inflows(args, flow_params):
     if args.preset_inflow is not None:
         add_preset_inflows(args.preset_inflow, flow_params)
 
-    if args.human_inflows is not None and args.rl_inflows is not None and args.rl_lane_change is not None and args.human_lane_change is not None and args.merge_inflow is not None and args.aggressive is not None and args.assertive is not None and args.lc_probability is not None :
+    if args.human_inflows is not None and args.rl_inflows is not None and args.rl_lane_change is not None and args.human_lane_change is not None and args.merge_inflow is not None and args.speed_gain is not None and args.assertive is not None and args.lc_probability is not None :
         # check whether human inflows only contains 0 or 1
         for e in args.human_lane_change+args.rl_lane_change:
             if e not in [0,1]:
@@ -761,9 +763,9 @@ def reset_inflows(args, flow_params):
         inflows = InFlows()
 
         veh_params=VehicleParams()
-        print("aggressive", args.aggressive)
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.aggressive, args.assertive, args.lc_probability)
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", [], [], [args.merge_inflow], [0], args.aggressive, args.assertive, args.lc_probability)
+        print("speed_gain", args.speed_gain)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.speed_gain, args.assertive, args.lc_probability)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", [], [], [args.merge_inflow], [0], args.speed_gain, args.assertive, args.lc_probability)
 
         # set the lane change mode for both lanes in the highway edge 
         env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 

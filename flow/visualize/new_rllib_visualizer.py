@@ -301,6 +301,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         reset_inflows(args, flow_params)
     #print(flow_params['net'].inflows.get())
     
+
+    # AV Penetration
+    if args.handset_avp:
+        env_params.additional_params['handset_avp']=(args.handset_avp/100.0)
     if args.policy_dir is not None:
         accel_result_dir=args.policy_dir    
         #flow_params['env'].additional_params['trained_dir']=result_dir
@@ -789,10 +793,12 @@ if __name__ == '__main__':
         seed_filename = glob.glob("eval_seeds/*/seeds.pkl")
     print(seed_filename)
     print("Using ", len(seed_filename), " random seeds")
-
+    import random
     for i in range(len(seed_filename)):
-        seed = seed_filename[i]
-        print("Using seed: ", seed)
+        k=random.choice(np.arange(len(seed_filename)))
+        k=i
+        seed = seed_filename[k]
+        print("Using seed ",k,": ", seed)
         do_print_metric_per_time_step=False
         if i==0 and args.print_metric_per_time_step_in_file is not None:
             do_print_metric_per_time_step=True
