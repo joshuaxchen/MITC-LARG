@@ -59,7 +59,7 @@ do
                 echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
                 echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-                for AGGRESSIVE in 0 #0.2 0.4 0.6 0.8 1
+                for SPEED_GAIN in 1.0 #0.2 0.4 0.6 0.8 1
                 do
                     for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
                     do
@@ -78,7 +78,7 @@ do
                                 --rl_lane_change 0 0 \
                                 --merge_inflow ${MERGE_INFLOW} \
 				--to_probability \
-                                --aggressive ${AGGRESSIVE} \
+                                --speed_gain ${SPEED_GAIN} \
                                 --assertive ${ASSERTIVE} \
                                 --lc_probability ${LC_PROB} \
 			    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${ASSERTIVE}.txt &

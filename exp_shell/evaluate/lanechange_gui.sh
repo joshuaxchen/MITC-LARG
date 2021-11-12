@@ -45,50 +45,50 @@ for RIGHT_MAIN_INFLOW in 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100
 do
 	for LEFT_MAIN_INFLOW in 1600  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for AVP_LEFT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
-            let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
-            let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
+		    let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
+		    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-            for AVP_RIGHT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
-            do
-                let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
-                let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
-                echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
-                echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
+		    for AVP_RIGHT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		    do
+			let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
+			let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
+			echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
+			echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-                for SPEED_GAIN in 1 #0.2 0.4 0.6 0.8 1
-                do
-                    for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
-                    do
-                        for LC_PROB in -1
-                        do
-                            python3 $VISUALIZER \
-                                $RL_LEFT_MODEL \
-                                $CHCKPOINT \
-                                --agent_action_policy_dir $RL_MODEL \
-                                --seed_dir $FLOW_DIR \
-                                --lateral_resolution 3.2 \
-                                --render_mode sumo_gui \
-                                --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
-                                --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
-                                --human_lane_change 1 1 \
-                                --rl_lane_change 0 0 \
-				--to_probability \
-                                --merge_inflow ${MERGE_INFLOW} \
-                                --speed_gain ${SPEED_GAIN} \
-                                --assertive ${ASSERTIVE} \
-                                --lc_probability ${LC_PROB} 
+			for SPEED_GAIN in 1 #0.2 0.4 0.6 0.8 1
+			do
+			    for ASSERTIVE in 1 #0.5 #5 #0.4 0.6 0.8 1
+			    do
+				for LC_PROB in -1
+				do
+				    python3 $VISUALIZER \
+					$RL_LEFT_MODEL \
+					$CHCKPOINT \
+					--agent_action_policy_dir $RL_MODEL \
+					--seed_dir $FLOW_DIR \
+					--lateral_resolution 3.2 \
+					--render_mode sumo_gui \
+					--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
+					--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
+					--human_lane_change 1 1 \
+					--rl_lane_change 0 0 \
+					--to_probability \
+					--merge_inflow ${MERGE_INFLOW} \
+					--speed_gain ${SPEED_GAIN} \
+					--assertive ${ASSERTIVE} \
+					--lc_probability ${LC_PROB} 
 
-                            let J=J+1
-                            if ((J == 12)); then
-                                wait
-                                let J=0
-                                echo "another batch"
-                            fi
-                        done
-                    done
-                done
+				    let J=J+1
+				    if ((J == 12)); then
+					wait
+					let J=0
+					echo "another batch"
+				    fi
+				done
+			    done
+			done
 			done
 		done
 	done
