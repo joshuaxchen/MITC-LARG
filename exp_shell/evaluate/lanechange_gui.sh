@@ -50,7 +50,7 @@ do
             let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
             let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-            for AVP_RIGHT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+            for AVP_RIGHT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
             do
                 let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
                 let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -74,6 +74,7 @@ do
                                 --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                                 --human_lane_change 1 1 \
                                 --rl_lane_change 0 0 \
+				--to_probability \
                                 --merge_inflow ${MERGE_INFLOW} \
                                 --speed_gain ${SPEED_GAIN} \
                                 --assertive ${ASSERTIVE} \

@@ -40,15 +40,17 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         #print("lane changing in stochastic")
         if self.freeze_lane_change:
             return 0
-        lane_change_probability=0.3
+        lane_change_probability=0.2
         sampled_prob=random.random()
         if sampled_prob<=lane_change_probability:
             lane_change_switch=True
         else:
             lane_change_switch=False
         if lane_change_switch:
+            #print("lc", self.veh_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             return None
         else:
+            #print("no lc", self.veh_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             #print(self.veh_id, "lc 0")
             return 0
 

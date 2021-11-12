@@ -1250,6 +1250,12 @@ class TraCIVehicle(KernelVehicle):
         self.kernel_api.vehicle.setLaneChangeMode(veh_id, lc_mode)
         #print("set", veh_id, "lc mode to", lc_mode)
 
+    def get_lateral_speed(self, veh_id):
+        return self.kernel_api.vehicle.getLateralSpeed(veh_id)
+
+    def get_lateral_lane_pos(self, veh_id):
+        return self.kernel_api.vehicle.getLateralLanePosition(veh_id)
+
     def get_color_t(self, veh_id):
         """See parent class.
 
