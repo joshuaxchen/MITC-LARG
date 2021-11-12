@@ -73,6 +73,7 @@ do
                                 --merge_inflow ${MERGE_INFLOW} \
                                 --speed_gain ${SPEED_GAIN} \
                                 --assertive ${ASSERTIVE} \
+				--to_probability \
                                 --lc_probability ${LC_PROB} \
                                 >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_SPEEDGAIN${SPEED_GAIN}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
 
@@ -103,6 +104,7 @@ do
                                         --merge_inflow ${MERGE_INFLOW} \
                                         --speed_gain ${SPEED_GAIN} \
                                         --assertive ${ASSERTIVE} \
+					--to_probability \
                                         --lc_probability ${LC_PROB} \
                                         >> ${WORKING_DIR}/EVAL_LEFT${LEFT_MAIN_INFLOW}_RIGHT${RIGHT_MAIN_INFLOW}_MERGE${MERGE_INFLOW}_AVP${AVP}_RLPOS${RL_RIGHT_LEFT}_RIGHTHUMANLC${RIGHT_HUMAN_LANE_CHANGE}_SPEEDGAIN${SPEED_GAIN}_ASSERTIVE${ASSERTIVE}_${LC_PROB}.txt &
                                         
