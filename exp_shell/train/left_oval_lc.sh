@@ -25,10 +25,10 @@ SPEED_GAIN=1.0 #0.2 0.4 0.6 0.8 1
 ASSERTIVE=1 #0.5 #5 #0.4 0.6 0.8 1
 LC_PROB=-1
 
-python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py \
-	--exp_folder_mark new_rl_right \
+python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_oval.py \
+	--exp_folder_mark yulin \
 	--lateral_resolution 3.2 \
-	--cpu 30 \
+	--cpu 12 \
 	--to_probability \
 	--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 	--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \

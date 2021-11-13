@@ -33,6 +33,8 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvMerge4ModifyDistCollaborate
 from flow.envs.multiagent.highway_normalization import MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance, MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToTime 
 
+from flow.envs.multiagent.lanechange import LeftLaneOvalHighwayPOEnvMerge4Collaborate,LeftLaneOvalAboutToMergeHighwayPOEnvMerge4Collaborate
+
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.multiagent.i696 import MultiAgentI696POEnvParameterizedWindowSizeCollaborate
@@ -84,5 +86,6 @@ __all__ = ['MultiEnv', 'MultiAgentAccelEnv', 'MultiWaveAttenuationPOEnv',
            'MultiAgentHighwayPOEnvWindowCollaborate',
 
            'MultiAgentHighwayPOEnvWindowFull',
-           'MultiAgentHighwayPOEnvWindowFullCollaborate'
+           'MultiAgentHighwayPOEnvWindowFullCollaborate',
+           'LeftLaneOvalHighwayPOEnvMerge4Collaborate'
            ]
