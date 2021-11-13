@@ -112,7 +112,7 @@ class LeftLaneOvalAboutToMergeHighwayPOEnvMerge4(LeftLaneOvalHighwayPOEnvMerge4)
         # basic 5 states
         # leader and follower at the other lane 
         # number of vehicles on the right lane that are about to move
-        return Box(-float('inf'), float('inf'), shape=(8,), dtype=np.float32)
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
 
     def get_state(self):
         states = super().get_state()
@@ -123,7 +123,7 @@ class LeftLaneOvalAboutToMergeHighwayPOEnvMerge4(LeftLaneOvalHighwayPOEnvMerge4)
 
         max_length = 1000.0
         for rl_id in states:
-            edge_id=self.k.vehicle.get_edge()
+            edge_id=self.k.vehicle.get_edge(rl_id)
             lane_id= self.k.vehicle.get_lane(rl_id)
             rl_x=self.k.vehicle.get_x_by_id(rl_id)
             # find the closest vehicle that is about to merge to this lane
