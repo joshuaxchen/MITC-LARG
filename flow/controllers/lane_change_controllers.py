@@ -8,7 +8,6 @@ import random
 PURPLE= (128,0,128)
 YELLOW= (255,255,0) 
 GREEN= (0,255,0) 
-
 class SimLaneChangeController(BaseLaneChangeController):
     """A controller used to enforce sumo lane-change dynamics on a vehicle.
 
@@ -35,6 +34,10 @@ class StochasticLaneChangeController(BaseLaneChangeController):
     Usage: See base class for usage example.
     """
      
+    def __init__(self, veh_id, lane_change_params=None, seed=None):
+        super().__init__(veh_id, lane_change_params)
+        #if seed is not None:
+
     def get_lane_change_action(self, env):
         """See parent class."""
         #print("lane changing in stochastic")
