@@ -272,7 +272,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             #    self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
 
         for veh_id in current_lane_change_human_ids:
-            if veh_id not in self.prev_lane_change_human_ids.keys():
+            if veh_id in self.k.vehicle.get_ids() and veh_id not in self.prev_lane_change_human_ids.keys():
                 #self.prev_lane_change_human_ids[veh_id]=(self.freeze_lane_change_time, self.time_left_to_change_lane)
                 lateral_pos=self.k.vehicle.get_lateral_lane_pos(veh_id)
                 self.prev_lane_change_human_ids[veh_id]=(self.time_left_to_change_lane, lateral_pos)
