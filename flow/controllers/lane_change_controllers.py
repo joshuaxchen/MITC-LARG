@@ -50,6 +50,9 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         else:
             lane_change_switch=False
         lane_id=env.k.vehicle.get_lane(self.veh_id)
+        lateral_pos=env.k.vehicle.get_lateral_lane_pos(self.veh_id)
+        if abs(lateral_pos)>1:
+            return None
         if lane_change_switch:
             #print("lc", self.veh_id, "lane", lane_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             return None
