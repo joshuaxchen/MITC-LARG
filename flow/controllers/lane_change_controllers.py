@@ -8,7 +8,6 @@ import random
 PURPLE= (128,0,128)
 YELLOW= (255,255,0) 
 GREEN= (0,255,0) 
-
 class SimLaneChangeController(BaseLaneChangeController):
     """A controller used to enforce sumo lane-change dynamics on a vehicle.
 
@@ -35,6 +34,10 @@ class StochasticLaneChangeController(BaseLaneChangeController):
     Usage: See base class for usage example.
     """
      
+    def __init__(self, veh_id, lane_change_params=None, seed=None):
+        super().__init__(veh_id, lane_change_params)
+        #if seed is not None:
+
     def get_lane_change_action(self, env):
         """See parent class."""
         #print("lane changing in stochastic")
@@ -46,11 +49,15 @@ class StochasticLaneChangeController(BaseLaneChangeController):
             lane_change_switch=True
         else:
             lane_change_switch=False
+        lane_id=env.k.vehicle.get_lane(self.veh_id)
+        lateral_pos=env.k.vehicle.get_lateral_lane_pos(self.veh_id)
+        #if abs(lateral_pos)>1:
+        #    return None
         if lane_change_switch:
-            #print("lc", self.veh_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
+            #print("lc", self.veh_id, "lane", lane_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             return None
         else:
-            #print("no lc", self.veh_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
+            #print("no lc", self.veh_id, "lane", lane_id,  "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             #print(self.veh_id, "lc 0")
             return 0
 

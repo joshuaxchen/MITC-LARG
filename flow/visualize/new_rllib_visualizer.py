@@ -52,6 +52,9 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
 
 from tools.tikz_plot import PlotWriter
+import tensorflow as tf
+from IPython.core.debugger import set_trace
+
 
 EXAMPLE_USAGE = """
 example usage:
@@ -211,6 +214,12 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         with open(args.use_seeds, 'rb') as f:
             seed_tmp = pickle.load(f)
         config['seed'] = int(seed_tmp['rllib_seed'])
+
+    # seed flow using the same random seed
+    #if 'seed' in config.keys():
+    #    #random.seed(config['seed'])
+    #    tf.random.set_seed(config['seed'])
+
     # hack for old pkl files
     # TODO(ev) remove eventually
     sim_params = flow_params['sim']
@@ -479,7 +488,8 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             outflow_per_time_step=[]
             avg_speed_per_time_step=[]
             reward_per_time_step=[]
-   
+
+        env.action_space.seed(0) 
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
@@ -489,7 +499,8 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                 vel.append(avg_speed_at_k)
             #print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
-
+            #if len(state.keys()):
+            #    set_trace()
             if multiagent:
                 action = {}
                 for agent_id in state.keys():
@@ -497,14 +508,13 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                         action[agent_id], state_init[agent_id], logits = \
                             agent.compute_action(
                             state[agent_id], state=state_init[agent_id],
-                            policy_id=policy_map_fn(agent_id))
+                            policy_id=policy_map_fn(agent_id), explore=False)
                     else:
                         action[agent_id] = agent.compute_action(
-                            state[agent_id], policy_id=policy_map_fn(agent_id))
+                            state[agent_id], policy_id=policy_map_fn(agent_id), explore=False)
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
-
             # update the number of vehicles in the network
             if args.print_vehicles_per_time_step_in_file is not None and i==0:
                 total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))

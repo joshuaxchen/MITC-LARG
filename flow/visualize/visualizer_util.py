@@ -83,7 +83,8 @@ def set_argument(evaluate=False):
         type=int,
         nargs="+",
         help="This is often used for evaluating human baseline")
-
+    parser.add_argument('--no_lanchange_human_inflows_on_right', type=int, help="This is an additional human inflow that does not do lane change")
+    parser.add_argument('--no_lanchange_human_inflows_on_left', type=int, help="This is an additional human inflow that does not do lane change")
 
     parser.add_argument('-o','--output',type=str,help='output file')
     parser.add_argument('--use_delay',type=int,default=-1,help='weather use time delay or not')
@@ -167,7 +168,7 @@ def add_vehicles_with_lane_change(vehicles, veh_type, speed_mode, num_vehicles, 
     add_vehicles(vehicles, veh_type, LANE_CHANGE_MODE, speed_mode, num_vehicles, speed_gain, assertive, lc_probability)
 
 
-def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_lane_change, human_inflows, human_lane_change, speed_gain, assertive, lc_probability):
+def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, veh_suffix, rl_inflows, rl_lane_change, human_inflows, human_lane_change, speed_gain, assertive, lc_probability):
     # rl_inflows: [0, 0] for right and left lanes
     # rl_lane_change: [0, 0] for right and left lanes
     # human_inflows: [2000, 2000] for right and left lanes
@@ -191,8 +192,8 @@ def add_veh_and_inflows_to_edge(inflows, vehicle_params, edge, rl_inflows, rl_la
             human_veh_lane_change+= 2**i
     #print("human_veh_left_or_right", human_veh_left_or_right)
 
-    human_names=add_specified_vehicles(vehicle_params, edge+"_human", human_veh_left_or_right, human_veh_lane_change, speed_gain, assertive, lc_probability)
-    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl", rl_veh_left_or_right, rl_veh_lane_change, speed_gain, assertive, lc_probability)
+    human_names=add_specified_vehicles(vehicle_params, edge+"_human"+veh_suffix, human_veh_left_or_right, human_veh_lane_change, speed_gain, assertive, lc_probability)
+    rl_names=add_specified_vehicles(vehicle_params, edge+"_rl"+veh_suffix, rl_veh_left_or_right, rl_veh_lane_change, speed_gain, assertive, lc_probability)
 
     if rl_veh_left_or_right>0: 
         for i in range(0, len(rl_inflows)):
@@ -749,7 +750,7 @@ def reset_inflows(args, flow_params):
                     depart_lane="free",
                     depart_speed=7.5)
         net_params.inflows=inflow
-
+    
     if args.preset_inflow is not None:
         add_preset_inflows(args.preset_inflow, flow_params)
 
@@ -764,8 +765,8 @@ def reset_inflows(args, flow_params):
 
         veh_params=VehicleParams()
         print("speed_gain", args.speed_gain)
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.speed_gain, args.assertive, args.lc_probability)
-        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", [], [], [args.merge_inflow], [0], args.speed_gain, args.assertive, args.lc_probability)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.speed_gain, args.assertive, args.lc_probability)
+        add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", "", [], [], [args.merge_inflow], [0], args.speed_gain, args.assertive, args.lc_probability)
 
         # set the lane change mode for both lanes in the highway edge 
         env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
@@ -784,6 +785,12 @@ def reset_inflows(args, flow_params):
             print("error in setting lane chagne mode for edges")
             sys.exit(-1)
         env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
+
+        # add human inflows that do not change lane
+        if args.no_lanchange_human_inflows_on_right is not None and args.no_lanchange_human_inflows_on_right>0:
+            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_right", [], [], [args.no_lanchange_human_inflows_on_right, 0], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
+        if args.no_lanchange_human_inflows_on_left is not None and args.no_lanchange_human_inflows_on_left>0:
+            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_left", [], [], [0, args.no_lanchange_human_inflows_on_left], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
 
         #print("rl_inflows", args.rl_inflows)
         #print("rl_lane_change", args.rl_lane_change)
