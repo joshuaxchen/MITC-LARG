@@ -63,7 +63,7 @@
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
-	xlabel={\Large Window size},
+	xlabel={\Large RightAVP},
 	legend columns=15,
 	transpose legend,
 	/tikz/column /.style={
@@ -72,38 +72,18 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
-\addplot table [x=a, y=b, y error=c] {
+\addplot table [x=a, y=b] {
 a	 b	 c
-200	1453.64	57.49
-400	1603.87	43.4
-600	1635.91	41.44
-800	1601.28	42.6
-1000	1592.75	40.2
-1200	1581.95	35.87
-1400	1585.66	35.21
-1600	1577.7	39.65
-2000	1581.98	34.98
+0	2960.86	61.22
+10	3008.59	114.77
+20	3128.58	106.54
+30	3148.24	71.02
+40	3127.97	60.34
 };
-\label{long-merge-1}
+\label{aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
 
-\addplot table [x=a, y=b, y error=c ] {
-a	 b	 c
-200	1575.76	28.64
-400	1575.76	28.64
-600	1575.76	28.64
-800	1575.76	28.64
-1000	1575.76	28.64
-1200	1575.76	28.64
-1400	1575.76	28.64
-1600	1575.76	28.64
-2000	1575.76	28.64
-};
-\label{human}
-
-\addlegendimage{/pgfplots/refstyle=long-merge-1}
-\addlegendentry{long-merge-1}
-\addlegendimage{/pgfplots/refstyle=human}
-\addlegendentry{human}
+\addlegendimage{/pgfplots/refstyle=aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
 
 
 \end{axis}

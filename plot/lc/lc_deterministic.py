@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","deterministic_action_random_lane_change") 
+working_dir=os.path.join("..","..","exp_results","new_deterministic_action_random_lane_change") 
 
 
 def retrive_evaluations(working_dir):
@@ -115,7 +115,7 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
     # find human base line
     for model_key, evaluate in summary.items():
         for eval_label, value in evaluate.items():
-            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left, assertive=eval_label.split("_")
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
 
             if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
                 continue
@@ -237,14 +237,14 @@ def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, 
         left_main_inflow_to_plot="*"
 
 
-    right_plot.write_plot("avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, left_main_inflow_to_plot), 1)
+    right_plot.write_plot("avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot), 1)
 
 
 def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     data_with_left_avp=dict()
     for model_key, evaluate in summary.items():
         for eval_label, value in evaluate.items():
-            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left, assertive=eval_label.split("_")
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
         
             if right_avp_to_plot is not None and avp_right!=right_avp_to_plot: 
                 continue
@@ -266,7 +266,7 @@ def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, 
     ylabel=attr_name
     left_plot=PlotWriter(left_xlabel, ylabel) 
     for legend, value in data_with_left_avp.items():
-        if len(data_with_left_avp)<2:
+        if len(data_with_left_avp[legend])<2:
             continue
         data_with_left_avp[legend].sort()
         left_plot.add_plot(legend, data_with_left_avp[legend])
@@ -287,8 +287,8 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    for setting in ["aamas_right", "aamas_left",
-    "av_right", "av_left_on_right", "av_left"]:
+    for setting in ["aamas_right_on_right", "aamas_left_on_left",
+    "av_right_on_right", "av_left_on_right", "av_left_on_left"]:
         setting_dir=os.path.join(working_dir, setting)
         data_i=retrive_evaluations(setting_dir)
         data[setting]=data_i
@@ -326,6 +326,7 @@ if __name__ == "__main__":
 
     left_avp_to_plot="10" 
     right_avp_to_plot="0" 
+    right_main_inflow_to_plot="2000" 
     plot_against_left_inflow(data, left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot)
     plot_against_left_avp(data, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
 
