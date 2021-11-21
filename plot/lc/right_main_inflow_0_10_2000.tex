@@ -63,7 +63,7 @@
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
-	xlabel={\Large Window size},
+	xlabel={\Large RightMainInflow},
 	legend columns=15,
 	transpose legend,
 	/tikz/column /.style={
@@ -72,38 +72,45 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
-\addplot table [x=a, y=b, y error=c] {
+\addplot table [x=a, y=b] {
 a	 b	 c
-200	1453.64	57.49
-400	1603.87	43.4
-600	1635.91	41.44
-800	1601.28	42.6
-1000	1592.75	40.2
-1200	1581.95	35.87
-1400	1585.66	35.21
-1600	1577.7	39.65
-2000	1581.98	34.98
+1600	3051.76	115.93
+1800	3018.92	120.32
+2000	3000.82	96.41
 };
-\label{long-merge-1}
+\label{aamas-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
 
-\addplot table [x=a, y=b, y error=c ] {
+\addplot table [x=a, y=b] {
 a	 b	 c
-200	1575.76	28.64
-400	1575.76	28.64
-600	1575.76	28.64
-800	1575.76	28.64
-1000	1575.76	28.64
-1200	1575.76	28.64
-1400	1575.76	28.64
-1600	1575.76	28.64
-2000	1575.76	28.64
+1600	3279.28	53.53
+1800	3305.92	44.38
+2000	3307.79	44.19
 };
-\label{human}
+\label{av-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
 
-\addlegendimage{/pgfplots/refstyle=long-merge-1}
-\addlegendentry{long-merge-1}
-\addlegendimage{/pgfplots/refstyle=human}
-\addlegendentry{human}
+\addplot table [x=a, y=b] {
+a	 b	 c
+1800	3305.02	42.26
+2000	3302.64	43.51
+};
+\label{av-left-on-right-rightAVP10-leftAVP0-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1600	3262.61	53.49
+1800	3284.86	51.22
+2000	3287.41	47.52
+};
+\label{human-2000}
+
+\addlegendimage{/pgfplots/refstyle=aamas-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendentry{aamas-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendentry{av-right-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendentry{av-left-on-right-rightAVP10-leftAVP0-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=human-2000}
+\addlegendentry{human-2000}
 
 
 \end{axis}
