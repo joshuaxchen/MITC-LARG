@@ -135,7 +135,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     #my_lane_change_controller=(StaticLaneChanger, {})
     if lane_change_mode==NO_LANE_CHANGE_MODE:
         my_lane_change_controller=(StaticLaneChanger, {})
-    else if lane_change_mode==LANE_CHANGE_MODE:
+    elif lane_change_mode==LANE_CHANGE_MODE:
         my_lane_change_controller=(StochasticLaneChangeController, {})
     else:
         print("The lane change mode is not supported")
