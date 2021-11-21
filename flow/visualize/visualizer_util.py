@@ -133,7 +133,13 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
 
     #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
-    my_lane_change_controller=(StochasticLaneChangeController, {})
+    if lane_change_mode==NO_LANE_CHANGE_MODE:
+        my_lane_change_controller=(StaticLaneChanger, {})
+    elif lane_change_mode==LANE_CHANGE_MODE:
+        my_lane_change_controller=(StochasticLaneChangeController, {})
+    else:
+        print("The lane change mode is not supported")
+        exit(-1)
     #if lc_probability >=0 and lc_probability <=1: # -1 probability indicating SUMO lane change controller, otherwise it indicates a simple merge lane changer
     #    simple_merge_lane_change={'lane_change_region_start_loc': 100, 'lane_change_region_end_loc': 600, 'lane_change_probability':lc_probability}
     #    my_lane_change_controller=(SimpleMergeLaneChanger, {'lane_change_params':simple_merge_lane_change})

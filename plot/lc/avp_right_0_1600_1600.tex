@@ -63,7 +63,7 @@
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
-	xlabel={\Large Window size},
+	xlabel={\Large RightAVP},
 	legend columns=15,
 	transpose legend,
 	/tikz/column /.style={
@@ -72,38 +72,42 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
-\addplot table [x=a, y=b, y error=c] {
+\addplot table [x=a, y=b] {
 a	 b	 c
-200	1453.64	57.49
-400	1603.87	43.4
-600	1635.91	41.44
-800	1601.28	42.6
-1000	1592.75	40.2
-1200	1581.95	35.87
-1400	1585.66	35.21
-1600	1577.7	39.65
-2000	1581.98	34.98
+0	3107.38	58.53
+10	3056.08	120.71
+20	3255.7	101.35
+30	3351.13	86.75
+40	3362.83	73.15
 };
-\label{long-merge-1}
+\label{aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
 
-\addplot table [x=a, y=b, y error=c ] {
+\addplot table [x=a, y=b] {
 a	 b	 c
-200	1575.76	28.64
-400	1575.76	28.64
-600	1575.76	28.64
-800	1575.76	28.64
-1000	1575.76	28.64
-1200	1575.76	28.64
-1400	1575.76	28.64
-1600	1575.76	28.64
-2000	1575.76	28.64
+0	3094.13	60.97
+10	3117.96	61.46
+20	3141.9	54.83
+30	3177.76	59.08
+40	3197.81	54.95
 };
-\label{human}
+\label{av-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
 
-\addlegendimage{/pgfplots/refstyle=long-merge-1}
-\addlegendentry{long-merge-1}
-\addlegendimage{/pgfplots/refstyle=human}
-\addlegendentry{human}
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3094.13	60.97
+10	3126.92	51.03
+20	3143.84	58.01
+30	3165.3	47.9
+40	3201.52	54.63
+};
+\label{av-left-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+
+\addlegendimage{/pgfplots/refstyle=aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{aamas-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{av-right-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-right-leftAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-right-leftAVP0-rightInflow2000-leftInflow1600}
 
 
 \end{axis}
