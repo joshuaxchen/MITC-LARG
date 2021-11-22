@@ -21,12 +21,12 @@ let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
 echo ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} 
 echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
-SPEED_GAIN=1.0 #0.2 0.4 0.6 0.8 1
-ASSERTIVE=1 #0.5 #5 #0.4 0.6 0.8 1
+SPEED_GAIN=1.0 
+ASSERTIVE=5.0 
 LC_PROB=-1
 
 python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_oval.py \
-	--exp_folder_mark yulin \
+	--exp_folder_mark oval_right \
 	--lateral_resolution 3.2 \
 	--cpu 12 \
 	--to_probability \
