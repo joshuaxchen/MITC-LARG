@@ -26,7 +26,7 @@ RL_RIGHT_MODEL_AAMAS=${HOME}/ray_results/multiagent_new_rl_right_lanechange_merg
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/nov_19_lanechange/
+EXP_FOLDER=$FLOW_DIR/exp_results/nov_23_lanechange_more_decisive/
 
 CHCKPOINT=500
 
