@@ -174,7 +174,7 @@
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
-	xlabel={\Large LeftMainInflow},
+	xlabel={\Large RightMainInflow},
 	%legend columns=15,
 	legend columns=2,
 	%transpose legend,
@@ -186,84 +186,94 @@
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2521.55	89.44
-1800	2517.88	92.05
-2000	2522.41	93.1
+1600	2867.29	65.23
+1800	2867.65	67.29
+2000	2854.15	49.58
 };
-\label{aamas-left-rightAVP0-leftAVP10-rightInflow2000}
+\label{av-right-on-right-rightAVP0-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2489.76	133.44
-1800	2487.06	132.42
-2000	2495.56	130.61
+1600	2905.7	66.05
+1800	2903.29	56.69
+2000	2898.5	51.31
 };
-\label{aamas-left-rightAVP0-leftAVP20-rightInflow2000}
+\label{av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2514.71	172.33
-1800	2516.76	175.53
-2000	2523.24	158.91
+1600	2921.04	67.82
+1800	2931.52	55.38
+2000	2930.0	46.35
 };
-\label{aamas-left-rightAVP0-leftAVP30-rightInflow2000}
+\label{av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2501.06	168.07
-1800	2472.41	145.56
-2000	2487.85	186.21
+1600	2961.07	63.34
+1800	2971.3	44.73
+2000	2964.67	52.24
 };
-\label{aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\label{av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2875.28	55.97
-1800	2884.28	51.82
-2000	2902.68	48.62
+1600	2998.19	66.49
+1800	3010.07	55.97
+2000	3013.63	44.68
 };
-\label{human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
+\label{av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2874.71	45.8
-1800	2888.14	49.65
-2000	2892.6	49.47
+1800	2895.16	59.07
+1900	2894.0	54.22
+2000	2886.66	56.02
 };
-\label{human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
+\label{human-av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2882.56	49.3
-1800	2884.1	53.12
-2000	2898.0	58.95
+1800	2892.42	55.08
+1900	2894.44	50.59
+2000	2902.75	50.18
 };
-\label{human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
+\label{human-av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2864.16	52.22
-1800	2884.0	48.64
-2000	2897.14	49.27
+1800	2886.66	55.29
+1900	2885.98	52.92
+2000	2902.14	50.93
 };
-\label{human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\label{human-av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
 
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\addplot table [x=a, y=b] {
+a	 b	 c
+1800	2895.55	55.09
+1900	2898.47	52.1
+2000	2899.22	46.78
+};
+\label{human-av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
+
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP0-leftAVP0-leftInflow1600}
+\addlegendentry{av-right-on-right-rightAVP0-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
+\addlegendentry{av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
+\addlegendentry{av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
+\addlegendentry{av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
+\addlegendentry{av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
+\addlegendentry{human-av-right-on-right-rightAVP10-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
+\addlegendentry{human-av-right-on-right-rightAVP20-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
+\addlegendentry{human-av-right-on-right-rightAVP30-leftAVP0-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
+\addlegendentry{human-av-right-on-right-rightAVP40-leftAVP0-leftInflow1600}
 
 
 \end{axis}
