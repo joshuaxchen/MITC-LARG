@@ -1,3 +1,4 @@
+#!/bin/bash
 HUMAN_DIR=/home/users/flow_user/ray_results/human_multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_0573c_00000_0_2021-07-26_11-10-40 
 TRAIN_DIR=/home/users/flow_user/ray_results/multiagent_yulin_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_6e090_00000_0_2021-08-05_18-04-04/
 
@@ -33,7 +34,8 @@ RL_RIGHT_OVAL=${HOME}/ray_results/multiagent_oval_right_lanechange_left_oval_eta
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/oval_left/
+DIRECTION=left
+EXP_FOLDER=$FLOW_DIR/exp_results/oval_${DIRECTION}/
 
 CHCKPOINT=500
 
@@ -49,7 +51,7 @@ MAX_CPU=15
 mkdir ${EXP_FOLDER}
 RIGHT_MAIN_INFLOW=2000
 
-WORKING_DIR=$EXP_FOLDER/av_left_oval_1
+WORKING_DIR=$EXP_FOLDER/oval_${DIRECTION}
 mkdir ${WORKING_DIR}
 
 
@@ -91,7 +93,7 @@ do
 					--to_probability \
 					--assertive ${ASSERTIVE} \
 					--lc_probability ${LC_PROB} \
-				    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+				    >> ${WORKING_DIR}/EVAL_oval_${DIRECTION}_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
 				    let J=J+1
 				    if ((J == ${MAX_CPU})); then
 					wait
