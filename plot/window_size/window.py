@@ -28,7 +28,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","window_size") 
+working_dir=os.path.join("..","..","exp_results","new_window_size") 
 
 
 def retrive_evaluations(working_dir):
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    for preset_i in ["long_merge"]:
+    for preset_i in ["long_merge_1"]:
         preset_dir=os.path.join(working_dir, preset_i)
         data_i=retrive_evaluations(preset_dir)
         data[preset_i]=data_i

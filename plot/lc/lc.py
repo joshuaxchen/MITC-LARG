@@ -1,5 +1,7 @@
 import os
 from tikz_plot import PlotWriter
+from IPython.core.debugger import set_trace
+
 attr_name="Outflow"
 def obtain_file_names(folder_path):
     for x in os.walk(folder_path):
@@ -28,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","lane_change") 
+working_dir=os.path.join("..","..","exp_results","deterministic_action_random_lane_change") 
 
 
 def retrive_evaluations(working_dir):
@@ -87,125 +89,196 @@ def obtain_setting_index(settings, rl_right_left, right_human_lane_change):
             return i
     return None
     
-def plot_against_inflow(summary):
-    data_with_right_main=dict()
+def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot):
     data_with_left_main=dict()
     for model_key, evaluate in summary.items():
         for eval_label, value in evaluate.items():
-            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left, assertive=eval_label.split("_")
-            mean, var=extract_mean_var(value, attr_name)
-            right_key=model_key+"_"+avp_right+"_"+avp_left+"_"+left_main_inflow
-            if right_key not in data_with_right_main.keys():
-                data_with_right_main[right_key]=list()
-            data_with_right_main[right_key].append((right_main_inflow, mean, var))
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
+            if left_avp_to_plot is not None and avp_left!=left_avp_to_plot:
+                continue
 
-            left_key=model_key+"_"+avp_right+"_"+avp_left+"_"+right_main_inflow
+            if right_avp_to_plot is not None and avp_right!=right_avp_to_plot:
+                continue
+
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
+            print(value)
+            if value is None or len(value.keys())==0:
+                set_trace()
+            mean, var=extract_mean_var(value, attr_name)
+            
+            left_key=model_key+"_rightAVP"+avp_right+"_leftAVP"+avp_left+"_rightInflow"+right_main_inflow
             if left_key not in data_with_left_main.keys():
                 data_with_left_main[left_key]=list()
             data_with_left_main[left_key].append((left_main_inflow, mean, var))
     
-    right_xlabel="RightMainInflow" 
+    # find human base line
+    for model_key, evaluate in summary.items():
+        for eval_label, value in evaluate.items():
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left, assertive=eval_label.split("_")
+
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
+            if avp_right =="0" and avp_left=="0": # human baseline
+                mean, var=extract_mean_var(value, attr_name)
+
+                key="human_"+right_main_inflow
+                if key not in data_with_left_main.keys():
+                    data_with_left_main[key]=list()
+                data_with_left_main[key].append((left_main_inflow, mean, var))
+        break 
+
     left_xlabel="LeftMainInflow" 
     ylabel=attr_name
-    right_plot=PlotWriter(right_xlabel, ylabel) 
     left_plot=PlotWriter(left_xlabel, ylabel) 
-    for legend, value in data_with_right_main.items():
-        data_with_right_main[legend].sort()
-        right_plot.add_plot(legend, data_with_right_main[legend])
     for legend, value in data_with_left_main.items():
         data_with_left_main[legend].sort()
         left_plot.add_plot(legend, data_with_left_main[legend])
       
-   
-    right_plot.write_plot("inflow_right.tex", 1)
-    left_plot.write_plot("inflow_left.tex", 1)
+    if left_avp_to_plot is None:
+        left_avp_to_plot="*"
+    if right_avp_to_plot is None:
+        right_avp_to_plot="*"
+    if right_main_inflow_to_plot is None:   
+        right_main_inflow_to_plot="*"
 
-def plot_against_avp(summary):
+    left_plot.write_plot("left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), 1)
+ 
+def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
+    data_with_right_main=dict()
+    for model_key, evaluate in summary.items():
+        for eval_label, value in evaluate.items():
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
+            if left_avp_to_plot is not None and avp_left!=left_avp_to_plot:
+                continue
+
+            if right_avp_to_plot is not None and avp_right!=right_avp_to_plot:
+                continue
+
+            if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
+                continue
+
+            mean, var=extract_mean_var(value, attr_name)
+            right_key=model_key+"_rightAVP"+avp_right+"_leftAVP"+avp_left+"_leftInflow"+left_main_inflow
+            if right_key not in data_with_right_main.keys():
+                data_with_right_main[right_key]=list()
+            data_with_right_main[right_key].append((right_main_inflow, mean, var))
+
+    # find human base line
+    for model_key, evaluate in summary.items():
+        for eval_label, value in evaluate.items():
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
+
+            if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
+                continue
+            if avp_right =="0" and avp_left=="0": # human baseline
+                mean, var=extract_mean_var(value, attr_name)
+
+                key="human_"+left_main_inflow
+                if key not in data_with_right_main.keys():
+                    data_with_right_main[key]=list()
+                data_with_right_main[key].append((right_main_inflow, mean, var))
+
+        break 
+
+    right_xlabel="RightMainInflow" 
+    ylabel=attr_name
+    right_plot=PlotWriter(right_xlabel, ylabel) 
+    for legend, value in data_with_right_main.items():
+        data_with_right_main[legend].sort()
+        right_plot.add_plot(legend, data_with_right_main[legend])
+          
+    if left_avp_to_plot is None:
+        left_avp_to_plot="*"
+    if right_avp_to_plot is None:
+        right_avp_to_plot="*"
+    if left_main_inflow_to_plot is None:   
+        left_main_inflow_to_plot="*"
+
+    right_plot.write_plot("right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), 1)
+  
+def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     data_with_right_avp=dict()
+    for model_key, evaluate in summary.items():
+        for eval_label, value in evaluate.items():
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
+        
+            if left_avp_to_plot is not None and avp_left!=left_avp_to_plot: 
+                continue           
+
+            if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
+                continue
+
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
+
+            mean, var=extract_mean_var(value, attr_name)
+
+            right_key=model_key+"_leftAVP"+avp_left+"_rightInflow"+right_main_inflow+"_leftInflow"+left_main_inflow
+            if right_key not in data_with_right_avp.keys():
+                data_with_right_avp[right_key]=list()
+            data_with_right_avp[right_key].append((avp_right, mean, var))
+
+    
+    right_xlabel="RightAVP" 
+    ylabel=attr_name
+    right_plot=PlotWriter(right_xlabel, ylabel) 
+    for legend, value in data_with_right_avp.items():
+        if len(data_with_right_avp[legend])<2:
+            continue
+        data_with_right_avp[legend].sort()
+        right_plot.add_plot(legend, data_with_right_avp[legend])
+      
+    if left_avp_to_plot is None:
+        left_avp_to_plot="*"
+    if right_main_inflow_to_plot is None:
+        right_main_inflow_to_plot="*"
+    if left_main_inflow_to_plot is None:   
+        left_main_inflow_to_plot="*"
+
+
+    right_plot.write_plot("avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, left_main_inflow_to_plot), 1)
+
+
+def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     data_with_left_avp=dict()
     for model_key, evaluate in summary.items():
         for eval_label, value in evaluate.items():
             right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left, assertive=eval_label.split("_")
-            mean, var=extract_mean_var(value, attr_name)
-            right_key=model_key+"_"+avp_right+"_"+avp_left+"_"+left_main_inflow
-            if right_key not in data_with_right_avp.keys():
-                data_with_right_avp[right_key]=list()
-            data_with_right_avp[right_key].append((right_main_inflow, mean, var))
+        
+            if right_avp_to_plot is not None and avp_right!=right_avp_to_plot: 
+                continue
+        
+            if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
+                continue
 
-            left_key=model_key+"_"+avp_right+"_"+avp_left+"_"+right_main_inflow
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
+
+            left_key=model_key+"_rightAVP"+avp_right+"_rightInflow"+right_main_inflow+"_leftInflow"+left_main_inflow
+            mean, var=extract_mean_var(value, attr_name)
             if left_key not in data_with_left_avp.keys():
                 data_with_left_avp[left_key]=list()
-            data_with_left_avp[left_key].append((left_main_inflow, mean, var))
+            data_with_left_avp[left_key].append((avp_left, mean, var))
+
     
-    right_xlabel="RightAVP" 
     left_xlabel="LeftAVP" 
     ylabel=attr_name
-    right_plot=PlotWriter(right_xlabel, ylabel) 
     left_plot=PlotWriter(left_xlabel, ylabel) 
-    for legend, value in data_with_right_avp.items():
-        data_with_right_avp[legend].sort()
-        right_plot.add_plot(legend, data_with_right_avp[legend])
     for legend, value in data_with_left_avp.items():
+        if len(data_with_left_avp)<2:
+            continue
         data_with_left_avp[legend].sort()
         left_plot.add_plot(legend, data_with_left_avp[legend])
       
-   
-    right_plot.write_plot("avp_right.tex", 1)
-    left_plot.write_plot("avp_left.tex", 1)
+    if right_avp_to_plot is None:
+        right_avp_to_plot="*"
+    if left_main_inflow_to_plot is None:   
+        left_main_inflow_to_plot="*"
+    if right_main_inflow_to_plot is None:   
+        right_main_inflow_to_plot="*"
 
-   
-def plot_against_aggressive(summary):
-    trained_models=summary.keys
-    
-    setting_0="0_0" # rl on the right, with human no lane change
-    setting_1="0_1" # rl on the right, with human lane change on the right
-    setting_2="1_1" # rl on the left, with human change on the right
-    setting_3="1_0" # rl on the left, with no human change on the right
-    settings=[(0,0), (0,1), (1,1)]
-    inflow_desc="2000_200_10"
-
-    human=dict()
-    preset_1=dict()
-    preset_2=dict()
-    for model_key, evaluate in summary.items():
-        model_index=model_key[-1]
-        data=None
-        if "human" in model_key:
-            data=human
-        elif "1" in model_key:
-            data=preset_1
-        elif "2" in model_key:
-            data=preset_2
-
-        for eval_label, value in evaluate.items():
-            left_main_inflow, avp, rl_right_left, right_human_lane_change, rl_right_left, assertive, lc_prob=read_from_formatted_string(eval_label)
-            if "human" in model_key and avp!=0:
-                continue
-            if "human" not in model_key and avp!=10:
-                continue
-                
-            eval_setting_index=obtain_setting_index(settings, rl_right_left, right_human_lane_change)
-
-            mean, var=extract_mean_var(value, attr_name)
-            key="L%d_%d_%d" % (left_main_inflow, rl_right_left, right_human_lane_change)
-            if key not in data.keys():
-                data[key]=list()
-            data[key].append((lc_prob, mean, var))
-    i=1
-    for data in [preset_1, preset_2]:
-        xlabel="LC-prob" 
-        ylabel=attr_name
-        plot=PlotWriter(xlabel, ylabel) 
-        plot.add_human=False
-        for legend, value in data.items():
-            data[legend].sort()
-            plot.add_plot(legend, data[legend])
-        for legend, value in human.items():
-            human[legend].sort()
-            plot.add_plot("human_"+legend, human[legend])
-        
-        plot.write_plot("setting_aggressiveness_%s.tex" % i, 6)
-        i+=1
+    left_plot.write_plot("avp_left_%s_%s_%s.tex"% (right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot), 1)
 
         
 if __name__ == "__main__":
@@ -214,7 +287,8 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    for setting in ["aamas_right", "aamas_left", "av_right", "av_left"]:
+    for setting in ["aamas_right", "aamas_left",
+    "av_right", "av_left_on_right", "av_left"]:
         setting_dir=os.path.join(working_dir, setting)
         data_i=retrive_evaluations(setting_dir)
         data[setting]=data_i
@@ -222,19 +296,39 @@ if __name__ == "__main__":
     human_baselines=dict()
     for setting, eval_data in data.items():
         for eval_label, eval_value in eval_data.items():
-            labels=eval_label.split("_") 
-            right_avp=int(labels[2])
-            left_avp=int(labels[3])
-            main_inflow=int(labels[0])
-            if right_avp==0 and left_avp==0:
-                if setting not in human_baselines:
-                    human_baselines[setting]=list()
+            right_main_inflow, left_main_inflow, merge_inflow, avp_right, avp_left=eval_label.split("_")[0:5]
+            key=left_main_inflow+setting+"-LeftMainInflow"+left_main_inflow
+            if avp_right=="0" and avp_left=="0":
+                if key not in human_baselines:
+                    human_baselines[key]=list()
 
                 mean, var=extract_mean_var(eval_value, attr_name)
-                human_baselines[setting].append((main_inflow, mean, var)) 
+                human_baselines[key].append((right_main_inflow, mean, var)) 
+    keys=list(human_baselines.keys())
+    keys.sort()
+    xlabel="Right Main Inflow" 
+    ylabel=attr_name
+    plot=PlotWriter(xlabel, ylabel) 
+    for key in keys:
+        value=human_baselines[key]
+        value.sort()
+        key=key[4:]
+        plot.add_plot(key, value)
+    plot.write_plot("human_baselines.tex", 1)
 
-    plot_against_inflow(data)
-    plot_against_avp(data)
+    left_avp_to_plot="0" 
+    right_avp_to_plot="10" 
+    left_main_inflow_to_plot="1600" 
+    right_main_inflow_to_plot="2000" 
+    plot_against_right_inflow(data, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot)
+    plot_against_right_avp(data, left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
 
+
+    left_avp_to_plot="10" 
+    right_avp_to_plot="0" 
+    plot_against_left_inflow(data, left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot)
+    plot_against_left_avp(data, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
+
+#plot_against_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
     #plot_against_assertive(data)
 

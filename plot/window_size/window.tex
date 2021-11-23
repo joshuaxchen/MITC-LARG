@@ -72,38 +72,36 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
-\addplot table [x=a, y=b] {
+\addplot table [x=a, y=b, y error=c] {
 a	 b	 c
-100	1528.27	31.71
-200	1529.75	31.53
-300	1529.32	32.64
-400	1529.68	31.85
-500	1529.53	31.86
-600	1530.0	31.23
-700	1528.02	31.29
-800	1528.13	30.95
-900	1529.68	31.9
-1000	1530.54	32.49
+200	1453.64	57.49
+400	1603.87	43.4
+600	1635.91	41.44
+800	1601.28	42.6
+1000	1592.75	40.2
+1200	1581.95	35.87
+1400	1585.66	35.21
+1600	1577.7	39.65
+2000	1581.98	34.98
 };
-\label{long-merge}
+\label{long-merge-1}
 
-\addplot table [x=a, y=b] {
+\addplot table [x=a, y=b, y error=c ] {
 a	 b	 c
-100	1538.5	33.77
-200	1538.5	33.77
-300	1538.5	33.77
-400	1538.5	33.77
-500	1538.5	33.77
-600	1538.5	33.77
-700	1538.5	33.77
-800	1538.5	33.77
-900	1538.5	33.77
-1000	1538.5	33.77
+200	1575.76	28.64
+400	1575.76	28.64
+600	1575.76	28.64
+800	1575.76	28.64
+1000	1575.76	28.64
+1200	1575.76	28.64
+1400	1575.76	28.64
+1600	1575.76	28.64
+2000	1575.76	28.64
 };
 \label{human}
 
-\addlegendimage{/pgfplots/refstyle=long-merge}
-\addlegendentry{long-merge}
+\addlegendimage{/pgfplots/refstyle=long-merge-1}
+\addlegendentry{long-merge-1}
 \addlegendimage{/pgfplots/refstyle=human}
 \addlegendentry{human}
 
