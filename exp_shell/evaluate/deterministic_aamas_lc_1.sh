@@ -68,24 +68,24 @@ do
 			    do
 				for LC_PROB in -1
 				do
-                    # run AV policy
-				    #python3 $VISUALIZER \
-				    #    $RL_LEFT_MODEL_AAMAS \
-				    #    $CHCKPOINT \
-				    #    --agent_action_policy_dir $RL_MODEL \
-				    #    --seed_dir $FLOW_DIR \
-				    #    --lateral_resolution 3.2 \
-				    #    --render_mode no_render \
-				    #    --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
-				    #    --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
-				    #    --human_lane_change 1 1 \
-				    #    --rl_lane_change 0 0 \
-				    #    --merge_inflow ${MERGE_INFLOW} \
-				    #    --speed_gain ${SPEED_GAIN} \
-				    #    --to_probability \
-				    #    --assertive ${ASSERTIVE} \
-				    #    --lc_probability ${LC_PROB} \
-				    #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+				    # run AV policy
+				    python3 $VISUALIZER \
+				        $RL_LEFT_MODEL_AAMAS \
+				        $CHCKPOINT \
+				        --agent_action_policy_dir $RL_MODEL \
+				        --seed_dir $FLOW_DIR \
+				        --lateral_resolution 3.2 \
+				        --render_mode no_render \
+				        --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
+				        --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
+				        --human_lane_change 1 1 \
+				        --rl_lane_change 0 0 \
+				        --merge_inflow ${MERGE_INFLOW} \
+				        --speed_gain ${SPEED_GAIN} \
+				        --to_probability \
+				        --assertive ${ASSERTIVE} \
+				        --lc_probability ${LC_PROB} \
+				    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
 
                     # run human baseline
                     # add no lane changing vehicles at the right lane	
@@ -130,7 +130,7 @@ do
 				    >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
 
 				    let J=J+1
-				    if ((J == 30)); then
+				    if ((J == 15)); then
 					wait
 					let J=0
 					echo "another batch"
