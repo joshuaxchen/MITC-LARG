@@ -174,7 +174,7 @@
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
-	xlabel={\Large LeftMainInflow},
+	xlabel={\Large LeftAVP},
 	%legend columns=15,
 	legend columns=2,
 	%transpose legend,
@@ -186,84 +186,463 @@
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2521.55	89.44
-1800	2517.88	92.05
-2000	2522.41	93.1
+0	2867.29	65.23
 };
-\label{aamas-left-rightAVP0-leftAVP10-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1600-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2489.76	133.44
-1800	2487.06	132.42
-2000	2495.56	130.61
+0	2876.76	67.39
 };
-\label{aamas-left-rightAVP0-leftAVP20-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1600-leftInflow1800}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2514.71	172.33
-1800	2516.76	175.53
-2000	2523.24	158.91
+0	2892.2	69.65
 };
-\label{aamas-left-rightAVP0-leftAVP30-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1600-leftInflow2000}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2501.06	168.07
-1800	2472.41	145.56
-2000	2487.85	186.21
+0	2867.65	67.29
 };
-\label{aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2875.28	55.97
-1800	2884.28	51.82
-2000	2902.68	48.62
+0	2884.36	59.18
 };
-\label{human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2874.71	45.8
-1800	2888.14	49.65
-2000	2892.6	49.47
+0	2882.02	60.21
 };
-\label{human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2882.56	49.3
-1800	2884.1	53.12
-2000	2898.0	58.95
+0	2854.15	49.58
 };
-\label{human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-1600	2864.16	52.22
-1800	2884.0	48.64
-2000	2897.14	49.27
+0	2879.03	48.95
 };
-\label{human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\label{av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
 
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendentry{aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP10-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP20-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP30-rightInflow2000}
-\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
-\addlegendentry{human-aamas-left-rightAVP0-leftAVP40-rightInflow2000}
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2879.35	50.09
+};
+\label{av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2910.17	80.79
+};
+\label{av-left-on-left-rightAVP10-rightInflow1600-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2924.28	72.81
+};
+\label{av-left-on-left-rightAVP10-rightInflow1600-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2935.76	60.9
+};
+\label{av-left-on-left-rightAVP10-rightInflow1600-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2897.71	55.89
+};
+\label{av-left-on-left-rightAVP10-rightInflow1800-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2913.8	47.05
+};
+\label{av-left-on-left-rightAVP10-rightInflow1800-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2914.42	50.92
+};
+\label{av-left-on-left-rightAVP10-rightInflow1800-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2892.35	40.34
+};
+\label{av-left-on-left-rightAVP10-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2901.24	42.96
+};
+\label{av-left-on-left-rightAVP10-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2920.1	44.21
+};
+\label{av-left-on-left-rightAVP10-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2922.52	60.35
+};
+\label{av-left-on-left-rightAVP20-rightInflow1600-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2944.08	55.08
+};
+\label{av-left-on-left-rightAVP20-rightInflow1600-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2965.36	54.46
+};
+\label{av-left-on-left-rightAVP20-rightInflow1600-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2934.76	56.13
+};
+\label{av-left-on-left-rightAVP20-rightInflow1800-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2946.82	55.13
+};
+\label{av-left-on-left-rightAVP20-rightInflow1800-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2960.39	51.02
+};
+\label{av-left-on-left-rightAVP20-rightInflow1800-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2926.69	52.21
+};
+\label{av-left-on-left-rightAVP20-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2948.08	51.74
+};
+\label{av-left-on-left-rightAVP20-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2951.46	50.1
+};
+\label{av-left-on-left-rightAVP20-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2962.87	67.36
+};
+\label{av-left-on-left-rightAVP30-rightInflow1600-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2989.48	68.52
+};
+\label{av-left-on-left-rightAVP30-rightInflow1600-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3002.9	67.27
+};
+\label{av-left-on-left-rightAVP30-rightInflow1600-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2962.44	50.06
+};
+\label{av-left-on-left-rightAVP30-rightInflow1800-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2984.69	48.45
+};
+\label{av-left-on-left-rightAVP30-rightInflow1800-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2990.12	43.09
+};
+\label{av-left-on-left-rightAVP30-rightInflow1800-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2966.51	52.36
+};
+\label{av-left-on-left-rightAVP30-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2988.94	45.56
+};
+\label{av-left-on-left-rightAVP30-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2987.57	45.41
+};
+\label{av-left-on-left-rightAVP30-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	2993.65	69.62
+};
+\label{av-left-on-left-rightAVP40-rightInflow1600-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3027.89	64.47
+};
+\label{av-left-on-left-rightAVP40-rightInflow1600-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3039.91	67.0
+};
+\label{av-left-on-left-rightAVP40-rightInflow1600-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3013.24	58.58
+};
+\label{av-left-on-left-rightAVP40-rightInflow1800-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3026.12	48.75
+};
+\label{av-left-on-left-rightAVP40-rightInflow1800-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3033.29	47.17
+};
+\label{av-left-on-left-rightAVP40-rightInflow1800-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3018.24	46.58
+};
+\label{av-left-on-left-rightAVP40-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3026.95	50.79
+};
+\label{av-left-on-left-rightAVP40-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0	3032.6	42.37
+};
+\label{av-left-on-left-rightAVP40-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2880.18	59.77
+20	2878.6	56.85
+30	2869.49	66.77
+40	2878.99	54.95
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2879.93	58.92
+20	2890.44	60.44
+30	2892.71	57.06
+40	2891.99	65.15
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2894.36	47.12
+20	2904.91	46.42
+30	2907.43	61.01
+40	2915.5	68.53
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2877.52	53.69
+20	2867.54	57.33
+30	2880.11	61.89
+40	2878.63	57.29
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2889.9	61.48
+20	2893.32	65.43
+30	2886.08	54.44
+40	2896.67	55.35
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2898.61	57.24
+20	2882.59	51.98
+30	2910.2	59.32
+40	2896.56	56.79
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2878.49	48.51
+20	2873.16	44.62
+30	2874.1	54.6
+40	2884.61	46.99
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2880.54	46.65
+20	2889.58	47.54
+30	2895.26	49.66
+40	2885.15	52.11
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2897.42	44.78
+20	2888.46	48.28
+30	2902.39	50.59
+40	2902.14	55.92
+};
+\label{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
+
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1600-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1600-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1600-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1600-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1600-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1600-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1600-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1600-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1600-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1600-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1600-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1600-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1800-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1800-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow1800-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow2000-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP10-rightInflow2000-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP10-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1600-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1600-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1600-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1600-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1600-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1600-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1800-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1800-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow1800-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow2000-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP20-rightInflow2000-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP20-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1600-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1600-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1600-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1600-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1600-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1600-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1800-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1800-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow1800-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow2000-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP30-rightInflow2000-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP30-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1600-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1600-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1600-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1600-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1600-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1600-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1800-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1800-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow1800-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow2000-leftInflow1600}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow2000-leftInflow1800}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=av-left-on-left-rightAVP40-rightInflow2000-leftInflow2000}
+\addlegendentry{av-left-on-left-rightAVP40-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1800-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1600}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1800}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow2000}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow1900-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendentry{human-av-left-on-left-rightAVP0-rightInflow2000-leftInflow2000}
 
 
 \end{axis}
