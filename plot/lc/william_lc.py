@@ -30,8 +30,8 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","av_trained_right_policy") 
-#working_dir=os.path.join("..","..","exp_results","av_trained_left_policy") 
+#working_dir=os.path.join("..","..","exp_results","av_trained_right_policy") 
+working_dir=os.path.join("..","..","exp_results","av_trained_left_policy") 
 
 
 def retrive_evaluations(working_dir):
@@ -140,7 +140,7 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
         if right_main_inflow_to_plot is None:   
             right_main_inflow_to_plot="*"
 
-        left_plot.write_plot("./fig_william/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), 4)
+        left_plot.write_plot("./fig_william/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), 5)
  
 def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -185,7 +185,7 @@ def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left
         if left_main_inflow_to_plot is None:   
             left_main_inflow_to_plot="*"
 
-        right_plot.write_plot("./fig_william/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), 4)
+        right_plot.write_plot("./fig_william/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), 5)
       
 def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -291,8 +291,8 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    #for setting in ["av_left_on_left"]:
-    for setting in ["av_right_on_right"]:
+    for setting in ["av_left_on_left"]:
+    #for setting in ["av_right_on_right"]:
         setting_dir=os.path.join(working_dir, setting)
         data_i=retrive_evaluations(setting_dir)
         data[setting]=data_i
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     right_avp_to_plot="0" 
     right_main_inflow_to_plot="2000" 
     plot_against_left_inflow(data, left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot)
-    #plot_against_left_avp(data, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
+    plot_against_left_avp(data, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
 
 #plot_against_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
     #plot_against_assertive(data)
