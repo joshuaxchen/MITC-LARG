@@ -185,12 +185,75 @@
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
+200	1742.98	44.14
+400	1755.97	46.72
+600	1758.6	46.65
+800	1763.57	44.84
+};
+\label{1650-200-10-1800-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1738.69	45.31
+400	1754.24	48.02
+600	1754.03	47.88
+800	1759.25	46.61
+};
+\label{1650-200-10-1800-200-20}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1743.08	44.23
+400	1756.37	46.63
+600	1757.45	46.88
+800	1761.66	46.26
+};
+\label{1650-200-30-1800-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1738.15	44.86
+400	1753.13	48.95
+600	1753.38	47.74
+800	1758.78	46.61
+};
+\label{1650-200-30-1800-200-20}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1741.25	45.16
+400	1753.67	47.44
+600	1756.08	46.62
+800	1757.3	44.89
+};
+\label{1650-200-50-1800-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1734.3	46.05
+400	1744.31	48.95
+600	1748.66	48.31
+800	1754.68	47.67
+};
+\label{1650-200-50-1800-200-20}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
 200	1742.65	45.67
 400	1754.6	46.9
 600	1757.12	46.8
 800	1762.74	45.85
 };
 \label{1850-200-10-1800-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1741.07	45.87
+400	1754.06	48.02
+600	1751.94	46.76
+800	1758.85	45.62
+};
+\label{1850-200-10-1800-200-20}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -203,12 +266,30 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+200	1721.05	46.66
+400	1736.68	44.8
+600	1746.86	47.06
+800	1755.83	46.0
+};
+\label{1850-200-30-1800-200-20}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
 200	1742.29	44.37
 400	1752.73	46.85
 600	1756.12	46.48
 800	1760.36	45.26
 };
 \label{1850-200-50-1800-200-10}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1738.19	47.23
+400	1750.03	51.27
+600	1750.14	46.88
+800	1756.01	46.01
+};
+\label{1850-200-50-1800-200-20}
 
 \addplot table [x=a, y=b] {
 a	 b	 c
@@ -221,6 +302,15 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+200	1740.02	45.31
+400	1750.86	49.67
+600	1754.82	47.0
+800	1758.2	46.62
+};
+\label{2000-200-10-1800-200-20}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
 200	1741.9	45.12
 400	1755.07	46.93
 600	1757.3	46.68
@@ -230,7 +320,10 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
-600	1741.9	45.12
+200	1739.41	46.21
+400	1749.89	47.63
+600	1757.3	46.68
+800	1756.08	45.49
 };
 \label{2000-200-30-1800-200-20}
 
@@ -243,20 +336,51 @@ a	 b	 c
 };
 \label{2000-200-50-1800-200-10}
 
+\addplot table [x=a, y=b] {
+a	 b	 c
+200	1735.85	44.73
+400	1749.06	47.65
+600	1748.99	46.85
+800	1754.39	47.84
+};
+\label{2000-200-50-1800-200-20}
+
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1800-200-10}
+\addlegendentry{1650-200-10-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1650-200-10-1800-200-20}
+\addlegendentry{1650-200-10-1800-200-20}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1800-200-10}
+\addlegendentry{1650-200-30-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1650-200-30-1800-200-20}
+\addlegendentry{1650-200-30-1800-200-20}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1800-200-10}
+\addlegendentry{1650-200-50-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1650-200-50-1800-200-20}
+\addlegendentry{1650-200-50-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=1850-200-10-1800-200-10}
 \addlegendentry{1850-200-10-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1850-200-10-1800-200-20}
+\addlegendentry{1850-200-10-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=1850-200-30-1800-200-10}
 \addlegendentry{1850-200-30-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1850-200-30-1800-200-20}
+\addlegendentry{1850-200-30-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=1850-200-50-1800-200-10}
 \addlegendentry{1850-200-50-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=1850-200-50-1800-200-20}
+\addlegendentry{1850-200-50-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=2000-200-10-1800-200-10}
 \addlegendentry{2000-200-10-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=2000-200-10-1800-200-20}
+\addlegendentry{2000-200-10-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=2000-200-30-1800-200-10}
 \addlegendentry{2000-200-30-1800-200-10}
 \addlegendimage{/pgfplots/refstyle=2000-200-30-1800-200-20}
 \addlegendentry{2000-200-30-1800-200-20}
 \addlegendimage{/pgfplots/refstyle=2000-200-50-1800-200-10}
 \addlegendentry{2000-200-50-1800-200-10}
+\addlegendimage{/pgfplots/refstyle=2000-200-50-1800-200-20}
+\addlegendentry{2000-200-50-1800-200-20}
 
 
 \end{axis}

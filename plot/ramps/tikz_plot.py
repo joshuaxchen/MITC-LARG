@@ -144,6 +144,7 @@ class PlotWriter:
             self.legend+=self.template_legend %("human-2600","human-2600" )
 
         else:
+            pass
             human_data=[
                 (1600, 1714.93, 78.63),
                 (1610, 1740.24, 67.16),
