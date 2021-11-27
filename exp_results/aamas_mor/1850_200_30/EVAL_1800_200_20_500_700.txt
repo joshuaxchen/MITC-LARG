@@ -2799,3 +2799,1704 @@ defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_
 load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
 <function setup_exps.<locals>.policy_mapping_fn at 0x7f49282beb90>
 [{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [0.33935277568449296]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[0.33935277568449296]]
+Average, std return: 0.33935277568449296, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.017204116504931]
+Average, std: 15.02, 0.00
+
+Speed, std (m/s):
+[3.437758456340162]
+Average, std: 3.44, 0.00
+
+Outflows (veh/hr):
+[1720.8]
+Average, std: 1720.80, 0.00
+Inflows (veh/hr):
+[1908.0]
+Average, std: 1908.00, 0.00
+Throughput efficiency (veh/hr):
+[0.9018867924528302]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  63 : 15.017204116504931 [1908.0] [1720.8] 0.33935277568449296
+Moving Stats at Round  63 :
+Reward: -17.51, 113.06
+Speed: 14.75, 0.80
+Inflow: 1894.46, 51.06
+Outflow: 1720.17, 47.43
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.340849/seeds.pkl
+3130
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.340849/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f48c8125950>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-70.09299970682359]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-70.09299970682359]]
+Average, std return: -70.09299970682359, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.999329123546223]
+Average, std: 14.00, 0.00
+
+Speed, std (m/s):
+[3.234777323200556]
+Average, std: 3.23, 0.00
+
+Outflows (veh/hr):
+[1724.4]
+Average, std: 1724.40, 0.00
+Inflows (veh/hr):
+[1875.6]
+Average, std: 1875.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9193857965451057]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  64 : 13.999329123546223 [1875.6] [1724.4] -70.09299970682359
+Moving Stats at Round  64 :
+Reward: -18.33, 112.36
+Speed: 14.74, 0.80
+Inflow: 1894.16, 50.71
+Outflow: 1720.24, 47.06
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.623093/seeds.pkl
+2153
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.623093/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47903f1320>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-59.9022469701334]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-59.9022469701334]]
+Average, std return: -59.9022469701334, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.983268169487678]
+Average, std: 14.98, 0.00
+
+Speed, std (m/s):
+[4.0415212212117595]
+Average, std: 4.04, 0.00
+
+Outflows (veh/hr):
+[1684.8]
+Average, std: 1684.80, 0.00
+Inflows (veh/hr):
+[1868.4]
+Average, std: 1868.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9017341040462427]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  65 : 14.983268169487678 [1868.4] [1684.8] -59.9022469701334
+Moving Stats at Round  65 :
+Reward: -18.97, 111.61
+Speed: 14.74, 0.79
+Inflow: 1893.77, 50.42
+Outflow: 1719.69, 46.90
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_03_56.969236/seeds.pkl
+1274
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_03_56.969236/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47903975f0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [26.014421376797856]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[26.014421376797856]]
+Average, std return: 26.014421376797856, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.46914859245162]
+Average, std: 15.47, 0.00
+
+Speed, std (m/s):
+[3.3908405587787436]
+Average, std: 3.39, 0.00
+
+Outflows (veh/hr):
+[1764.0]
+Average, std: 1764.00, 0.00
+Inflows (veh/hr):
+[1922.4]
+Average, std: 1922.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9176029962546816]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  66 : 15.46914859245162 [1922.4] [1764.0] 26.014421376797856
+Moving Stats at Round  66 :
+Reward: -18.29, 110.90
+Speed: 14.75, 0.79
+Inflow: 1894.20, 50.16
+Outflow: 1720.36, 46.86
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.446752/seeds.pkl
+391
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.446752/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f4910756200>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-0.7323183164199839]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-0.7323183164199839]]
+Average, std return: -0.7323183164199839, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.09503453531928]
+Average, std: 15.10, 0.00
+
+Speed, std (m/s):
+[2.999713598771234]
+Average, std: 3.00, 0.00
+
+Outflows (veh/hr):
+[1735.2]
+Average, std: 1735.20, 0.00
+Inflows (veh/hr):
+[1918.8]
+Average, std: 1918.80, 0.00
+Throughput efficiency (veh/hr):
+[0.9043151969981239]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  67 : 15.09503453531928 [1918.8] [1735.2] -0.7323183164199839
+Moving Stats at Round  67 :
+Reward: -18.03, 110.09
+Speed: 14.76, 0.79
+Inflow: 1894.57, 49.87
+Outflow: 1720.59, 46.54
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.889112/seeds.pkl
+3770
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.889112/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f4908676f80>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-75.68569833696904]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-75.68569833696904]]
+Average, std return: -75.68569833696904, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.081469200298795]
+Average, std: 14.08, 0.00
+
+Speed, std (m/s):
+[3.2347998139631864]
+Average, std: 3.23, 0.00
+
+Outflows (veh/hr):
+[1706.4]
+Average, std: 1706.40, 0.00
+Inflows (veh/hr):
+[1918.8]
+Average, std: 1918.80, 0.00
+Throughput efficiency (veh/hr):
+[0.8893058161350845]
+Average, std: 0.89, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  68 : 14.081469200298795 [1918.8] [1706.4] -75.68569833696904
+Moving Stats at Round  68 :
+Reward: -18.87, 109.50
+Speed: 14.75, 0.79
+Inflow: 1894.92, 49.59
+Outflow: 1720.38, 46.23
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.240252/seeds.pkl
+3498
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.240252/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f491071e5f0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [5.239293673181196]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[5.239293673181196]]
+Average, std return: 5.239293673181196, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.037326215249653]
+Average, std: 15.04, 0.00
+
+Speed, std (m/s):
+[2.808816922798988]
+Average, std: 2.81, 0.00
+
+Outflows (veh/hr):
+[1760.4]
+Average, std: 1760.40, 0.00
+Inflows (veh/hr):
+[1893.6]
+Average, std: 1893.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9296577946768062]
+Average, std: 0.93, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  69 : 15.037326215249653 [1893.6] [1760.4] 5.239293673181196
+Moving Stats at Round  69 :
+Reward: -18.52, 108.74
+Speed: 14.75, 0.78
+Inflow: 1894.90, 49.23
+Outflow: 1720.96, 46.14
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.522809/seeds.pkl
+3761
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.522809/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f48307348c0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-75.31302847358822]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-75.31302847358822]]
+Average, std return: -75.31302847358822, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.987134910217437]
+Average, std: 13.99, 0.00
+
+Speed, std (m/s):
+[2.9354924527606734]
+Average, std: 2.94, 0.00
+
+Outflows (veh/hr):
+[1710.0]
+Average, std: 1710.00, 0.00
+Inflows (veh/hr):
+[1886.4]
+Average, std: 1886.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9064885496183206]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  70 : 13.987134910217437 [1886.4] [1710.0] -75.31302847358822
+Moving Stats at Round  70 :
+Reward: -19.34, 108.17
+Speed: 14.74, 0.78
+Inflow: 1894.78, 48.89
+Outflow: 1720.80, 45.83
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.309319/seeds.pkl
+1019
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.309319/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f492814db00>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [22.597303402116864]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[22.597303402116864]]
+Average, std return: 22.597303402116864, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.499656447798236]
+Average, std: 14.50, 0.00
+
+Speed, std (m/s):
+[2.837373765680385]
+Average, std: 2.84, 0.00
+
+Outflows (veh/hr):
+[1731.6]
+Average, std: 1731.60, 0.00
+Inflows (veh/hr):
+[1926.0]
+Average, std: 1926.00, 0.00
+Throughput efficiency (veh/hr):
+[0.8990654205607476]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  71 : 14.499656447798236 [1926.0] [1731.6] 22.597303402116864
+Moving Stats at Round  71 :
+Reward: -18.75, 107.52
+Speed: 14.74, 0.78
+Inflow: 1895.22, 48.68
+Outflow: 1720.95, 45.52
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.372620/seeds.pkl
+1507
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.372620/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47f0312950>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [17.7677341605576]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[17.7677341605576]]
+Average, std return: 17.7677341605576, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.88979171445563]
+Average, std: 15.89, 0.00
+
+Speed, std (m/s):
+[3.5742096607850433]
+Average, std: 3.57, 0.00
+
+Outflows (veh/hr):
+[1764.0]
+Average, std: 1764.00, 0.00
+Inflows (veh/hr):
+[1908.0]
+Average, std: 1908.00, 0.00
+Throughput efficiency (veh/hr):
+[0.9245283018867925]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  72 : 15.88979171445563 [1908.0] [1764.0] 17.7677341605576
+Moving Stats at Round  72 :
+Reward: -18.24, 106.85
+Speed: 14.75, 0.78
+Inflow: 1895.40, 48.37
+Outflow: 1721.55, 45.49
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.600383/seeds.pkl
+3311
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.600383/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f4910125050>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-73.69120591926222]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-73.69120591926222]]
+Average, std return: -73.69120591926222, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.14741795468303]
+Average, std: 14.15, 0.00
+
+Speed, std (m/s):
+[2.612773804045995]
+Average, std: 2.61, 0.00
+
+Outflows (veh/hr):
+[1699.2]
+Average, std: 1699.20, 0.00
+Inflows (veh/hr):
+[1854.0]
+Average, std: 1854.00, 0.00
+Throughput efficiency (veh/hr):
+[0.916504854368932]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  73 : 14.14741795468303 [1854.0] [1699.2] -73.69120591926222
+Moving Stats at Round  73 :
+Reward: -19.00, 106.32
+Speed: 14.74, 0.78
+Inflow: 1894.83, 48.27
+Outflow: 1721.24, 45.25
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.547440/seeds.pkl
+2113
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.547440/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f49e98b28c0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [24.753323982785062]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[24.753323982785062]]
+Average, std return: 24.753323982785062, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.969627039592577]
+Average, std: 14.97, 0.00
+
+Speed, std (m/s):
+[2.829809711062178]
+Average, std: 2.83, 0.00
+
+Outflows (veh/hr):
+[1756.8]
+Average, std: 1756.80, 0.00
+Inflows (veh/hr):
+[1922.4]
+Average, std: 1922.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9138576779026216]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  74 : 14.969627039592577 [1922.4] [1756.8] 24.753323982785062
+Moving Stats at Round  74 :
+Reward: -18.41, 105.72
+Speed: 14.75, 0.78
+Inflow: 1895.21, 48.05
+Outflow: 1721.72, 45.13
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.152504/seeds.pkl
+1444
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.152504/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47d0302680>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [24.66955332830284]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[24.66955332830284]]
+Average, std return: 24.66955332830284, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.837533446677714]
+Average, std: 14.84, 0.00
+
+Speed, std (m/s):
+[3.2283237123196367]
+Average, std: 3.23, 0.00
+
+Outflows (veh/hr):
+[1702.8]
+Average, std: 1702.80, 0.00
+Inflows (veh/hr):
+[1908.0]
+Average, std: 1908.00, 0.00
+Throughput efficiency (veh/hr):
+[0.8924528301886793]
+Average, std: 0.89, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  75 : 14.837533446677714 [1908.0] [1702.8] 24.66955332830284
+Moving Stats at Round  75 :
+Reward: -17.83, 105.12
+Speed: 14.75, 0.77
+Inflow: 1895.38, 47.75
+Outflow: 1721.47, 44.88
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.690934/seeds.pkl
+995
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.690934/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47700a00e0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-52.26498793600656]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-52.26498793600656]]
+Average, std return: -52.26498793600656, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.440900465723503]
+Average, std: 14.44, 0.00
+
+Speed, std (m/s):
+[2.716748381138125]
+Average, std: 2.72, 0.00
+
+Outflows (veh/hr):
+[1738.8]
+Average, std: 1738.80, 0.00
+Inflows (veh/hr):
+[1922.4]
+Average, std: 1922.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9044943820224719]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  76 : 14.440900465723503 [1922.4] [1738.8] -52.26498793600656
+Moving Stats at Round  76 :
+Reward: -18.29, 104.50
+Speed: 14.74, 0.77
+Inflow: 1895.73, 47.54
+Outflow: 1721.70, 44.63
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.646524/seeds.pkl
+1469
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_49.646524/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f48c80d00e0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [5.813214862355854]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[5.813214862355854]]
+Average, std return: 5.813214862355854, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.512328513770726]
+Average, std: 14.51, 0.00
+
+Speed, std (m/s):
+[2.9151017787184563]
+Average, std: 2.92, 0.00
+
+Outflows (veh/hr):
+[1720.8]
+Average, std: 1720.80, 0.00
+Inflows (veh/hr):
+[1872.0]
+Average, std: 1872.00, 0.00
+Throughput efficiency (veh/hr):
+[0.9192307692307692]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  77 : 14.512328513770726 [1872.0] [1720.8] 5.813214862355854
+Moving Stats at Round  77 :
+Reward: -17.97, 103.86
+Speed: 14.74, 0.76
+Inflow: 1895.42, 47.30
+Outflow: 1721.69, 44.34
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.814513/seeds.pkl
+2206
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.814513/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47504c69e0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-34.62075407547158]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-34.62075407547158]]
+Average, std return: -34.62075407547158, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.395937737746134]
+Average, std: 14.40, 0.00
+
+Speed, std (m/s):
+[2.845269849045419]
+Average, std: 2.85, 0.00
+
+Outflows (veh/hr):
+[1767.6]
+Average, std: 1767.60, 0.00
+Inflows (veh/hr):
+[1944.0]
+Average, std: 1944.00, 0.00
+Throughput efficiency (veh/hr):
+[0.9092592592592592]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  78 : 14.395937737746134 [1944.0] [1767.6] -34.62075407547158
+Moving Stats at Round  78 :
+Reward: -18.19, 103.21
+Speed: 14.74, 0.76
+Inflow: 1896.05, 47.32
+Outflow: 1722.28, 44.35
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.380308/seeds.pkl
+4066
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_51.380308/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f48545925f0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [96.93854851114351]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[96.93854851114351]]
+Average, std return: 96.93854851114351, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.290678057769036]
+Average, std: 16.29, 0.00
+
+Speed, std (m/s):
+[2.8711598637066804]
+Average, std: 2.87, 0.00
+
+Outflows (veh/hr):
+[1767.6]
+Average, std: 1767.60, 0.00
+Inflows (veh/hr):
+[1954.8]
+Average, std: 1954.80, 0.00
+Throughput efficiency (veh/hr):
+[0.9042357274401474]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  79 : 16.290678057769036 [1954.8] [1767.6] 96.93854851114351
+Moving Stats at Round  79 :
+Reward: -16.73, 103.36
+Speed: 14.76, 0.77
+Inflow: 1896.79, 47.47
+Outflow: 1722.85, 44.36
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_45.205141/seeds.pkl
+1331
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_21_45.205141/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f477057e560>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-73.12539521648239]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-73.12539521648239]]
+Average, std return: -73.12539521648239, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.831508402523843]
+Average, std: 13.83, 0.00
+
+Speed, std (m/s):
+[4.00452495615836]
+Average, std: 4.00, 0.00
+
+Outflows (veh/hr):
+[1663.2]
+Average, std: 1663.20, 0.00
+Inflows (veh/hr):
+[1832.4]
+Average, std: 1832.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9076620825147348]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  80 : 13.831508402523843 [1832.4] [1663.2] -73.12539521648239
+Moving Stats at Round  80 :
+Reward: -17.43, 102.90
+Speed: 14.74, 0.78
+Inflow: 1895.98, 47.72
+Outflow: 1722.11, 44.58
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.572288/seeds.pkl
+1547
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.572288/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47700b6f80>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-88.93081387386566]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-88.93081387386566]]
+Average, std return: -88.93081387386566, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.399938339076005]
+Average, std: 15.40, 0.00
+
+Speed, std (m/s):
+[3.2855377314851375]
+Average, std: 3.29, 0.00
+
+Outflows (veh/hr):
+[1688.4]
+Average, std: 1688.40, 0.00
+Inflows (veh/hr):
+[1890.0]
+Average, std: 1890.00, 0.00
+Throughput efficiency (veh/hr):
+[0.8933333333333334]
+Average, std: 0.89, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  81 : 15.399938339076005 [1890.0] [1688.4] -88.93081387386566
+Moving Stats at Round  81 :
+Reward: -18.32, 102.57
+Speed: 14.75, 0.77
+Inflow: 1895.91, 47.42
+Outflow: 1721.69, 44.46
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.314980/seeds.pkl
+1102
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.314980/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f49e98b2440>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [125.30107612545724]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[125.30107612545724]]
+Average, std return: 125.30107612545724, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.253731761938244]
+Average, std: 16.25, 0.00
+
+Speed, std (m/s):
+[3.3027333508101666]
+Average, std: 3.30, 0.00
+
+Outflows (veh/hr):
+[1767.6]
+Average, std: 1767.60, 0.00
+Inflows (veh/hr):
+[1947.6]
+Average, std: 1947.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9075785582255083]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  82 : 16.253731761938244 [1947.6] [1767.6] 125.30107612545724
+Moving Stats at Round  82 :
+Reward: -16.56, 103.15
+Speed: 14.77, 0.79
+Inflow: 1896.54, 47.47
+Outflow: 1722.25, 44.47
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.773298/seeds.pkl
+2829
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.773298/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47b0241440>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-67.78629319832399]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-67.78629319832399]]
+Average, std return: -67.78629319832399, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.856931000554003]
+Average, std: 13.86, 0.00
+
+Speed, std (m/s):
+[3.108957534316537]
+Average, std: 3.11, 0.00
+
+Outflows (veh/hr):
+[1670.4]
+Average, std: 1670.40, 0.00
+Inflows (veh/hr):
+[1882.8]
+Average, std: 1882.80, 0.00
+Throughput efficiency (veh/hr):
+[0.8871892925430211]
+Average, std: 0.89, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  83 : 13.856931000554003 [1882.8] [1670.4] -67.78629319832399
+Moving Stats at Round  83 :
+Reward: -17.18, 102.68
+Speed: 14.76, 0.79
+Inflow: 1896.38, 47.21
+Outflow: 1721.62, 44.56
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.802126/seeds.pkl
+629
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.802126/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f475003f170>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [86.46918200573532]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[86.46918200573532]]
+Average, std return: 86.46918200573532, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.1795898959269]
+Average, std: 16.18, 0.00
+
+Speed, std (m/s):
+[2.9455262190258655]
+Average, std: 2.95, 0.00
+
+Outflows (veh/hr):
+[1695.6]
+Average, std: 1695.60, 0.00
+Inflows (veh/hr):
+[1857.6]
+Average, std: 1857.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9127906976744186]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  84 : 16.1795898959269 [1857.6] [1695.6] 86.46918200573532
+Moving Stats at Round  84 :
+Reward: -15.95, 102.68
+Speed: 14.78, 0.80
+Inflow: 1895.91, 47.12
+Outflow: 1721.31, 44.39
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.580209/seeds.pkl
+1539
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.580209/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f48307869e0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-68.03265211256428]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-68.03265211256428]]
+Average, std return: -68.03265211256428, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.752136927822278]
+Average, std: 14.75, 0.00
+
+Speed, std (m/s):
+[3.31233180754313]
+Average, std: 3.31, 0.00
+
+Outflows (veh/hr):
+[1753.2]
+Average, std: 1753.20, 0.00
+Inflows (veh/hr):
+[1915.2]
+Average, std: 1915.20, 0.00
+Throughput efficiency (veh/hr):
+[0.9154135338345865]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  85 : 14.752136927822278 [1915.2] [1753.2] -68.03265211256428
+Moving Stats at Round  85 :
+Reward: -16.56, 102.23
+Speed: 14.78, 0.79
+Inflow: 1896.14, 46.89
+Outflow: 1721.69, 44.26
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.362507/seeds.pkl
+4
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_01_03_24_31.362507/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47f01d6c20>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-244.35702543112382]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-244.35702543112382]]
+Average, std return: -244.35702543112382, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.964807097060547]
+Average, std: 13.96, 0.00
+
+Speed, std (m/s):
+[3.721706529541721]
+Average, std: 3.72, 0.00
+
+Outflows (veh/hr):
+[1623.6]
+Average, std: 1623.60, 0.00
+Inflows (veh/hr):
+[1774.8]
+Average, std: 1774.80, 0.00
+Throughput efficiency (veh/hr):
+[0.9148073022312373]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  86 : 13.964807097060547 [1774.8] [1623.6] -244.35702543112382
+Moving Stats at Round  86 :
+Reward: -19.21, 104.53
+Speed: 14.77, 0.79
+Inflow: 1894.73, 48.39
+Outflow: 1720.55, 45.24
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.851668/seeds.pkl
+678
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.851668/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f485427ff80>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-25.90588322086692]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-25.90588322086692]]
+Average, std return: -25.90588322086692, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.33417156631647]
+Average, std: 14.33, 0.00
+
+Speed, std (m/s):
+[2.815162167886221]
+Average, std: 2.82, 0.00
+
+Outflows (veh/hr):
+[1717.2]
+Average, std: 1717.20, 0.00
+Inflows (veh/hr):
+[1861.2]
+Average, std: 1861.20, 0.00
+Throughput efficiency (veh/hr):
+[0.9226305609284333]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  87 : 14.33417156631647 [1861.2] [1717.2] -25.90588322086692
+Moving Stats at Round  87 :
+Reward: -19.29, 103.93
+Speed: 14.76, 0.79
+Inflow: 1894.34, 48.25
+Outflow: 1720.51, 44.98
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.571148/seeds.pkl
+2464
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.571148/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47d016b560>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [256.8361213791977]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[256.8361213791977]]
+Average, std return: 256.8361213791977, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.506049337058247]
+Average, std: 16.51, 0.00
+
+Speed, std (m/s):
+[3.0302291085592703]
+Average, std: 3.03, 0.00
+
+Outflows (veh/hr):
+[1825.2]
+Average, std: 1825.20, 0.00
+Inflows (veh/hr):
+[2030.4]
+Average, std: 2030.40, 0.00
+Throughput efficiency (veh/hr):
+[0.898936170212766]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  88 : 16.506049337058247 [2030.4] [1825.2] 256.8361213791977
+Moving Stats at Round  88 :
+Reward: -16.15, 107.40
+Speed: 14.78, 0.81
+Inflow: 1895.89, 50.09
+Outflow: 1721.70, 46.08
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.642194/seeds.pkl
+2658
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.642194/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f477057ea70>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [72.87403620444475]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[72.87403620444475]]
+Average, std return: 72.87403620444475, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.687098716108567]
+Average, std: 15.69, 0.00
+
+Speed, std (m/s):
+[2.4014508034319517]
+Average, std: 2.40, 0.00
+
+Outflows (veh/hr):
+[1774.8]
+Average, std: 1774.80, 0.00
+Inflows (veh/hr):
+[1983.6]
+Average, std: 1983.60, 0.00
+Throughput efficiency (veh/hr):
+[0.8947368421052632]
+Average, std: 0.89, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  89 : 15.687098716108567 [1983.6] [1774.8] 72.87403620444475
+Moving Stats at Round  89 :
+Reward: -15.15, 107.21
+Speed: 14.79, 0.81
+Inflow: 1896.88, 50.66
+Outflow: 1722.30, 46.16
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_42.605619/seeds.pkl
+3668
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_03_22_00_42.605619/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47f0312dd0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [114.74823404417566]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[114.74823404417566]]
+Average, std return: 114.74823404417566, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.02498095161056]
+Average, std: 16.02, 0.00
+
+Speed, std (m/s):
+[3.380644348829905]
+Average, std: 3.38, 0.00
+
+Outflows (veh/hr):
+[1742.4]
+Average, std: 1742.40, 0.00
+Inflows (veh/hr):
+[1879.2]
+Average, std: 1879.20, 0.00
+Throughput efficiency (veh/hr):
+[0.9272030651340997]
+Average, std: 0.93, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  90 : 16.02498095161056 [1879.2] [1742.4] 114.74823404417566
+Moving Stats at Round  90 :
+Reward: -13.70, 107.48
+Speed: 14.81, 0.81
+Inflow: 1896.68, 50.41
+Outflow: 1722.52, 45.95
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.279230/seeds.pkl
+1658
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.279230/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f475003f170>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-70.32983648175454]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-70.32983648175454]]
+Average, std return: -70.32983648175454, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.305133341845357]
+Average, std: 14.31, 0.00
+
+Speed, std (m/s):
+[3.700686746971995]
+Average, std: 3.70, 0.00
+
+Outflows (veh/hr):
+[1674.0]
+Average, std: 1674.00, 0.00
+Inflows (veh/hr):
+[1857.6]
+Average, std: 1857.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9011627906976745]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  91 : 14.305133341845357 [1857.6] [1674.0] -70.32983648175454
+Moving Stats at Round  91 :
+Reward: -14.33, 107.05
+Speed: 14.80, 0.81
+Inflow: 1896.25, 50.30
+Outflow: 1721.99, 45.98
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.659378/seeds.pkl
+156
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.659378/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f492814d680>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-93.37637961897903]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-93.37637961897903]]
+Average, std return: -93.37637961897903, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.734301595762675]
+Average, std: 13.73, 0.00
+
+Speed, std (m/s):
+[2.6454919725209307]
+Average, std: 2.65, 0.00
+
+Outflows (veh/hr):
+[1692.0]
+Average, std: 1692.00, 0.00
+Inflows (veh/hr):
+[1886.4]
+Average, std: 1886.40, 0.00
+Throughput efficiency (veh/hr):
+[0.8969465648854962]
+Average, std: 0.90, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  92 : 13.734301595762675 [1886.4] [1692.0] -93.37637961897903
+Moving Stats at Round  92 :
+Reward: -15.19, 106.78
+Speed: 14.79, 0.81
+Inflow: 1896.14, 50.04
+Outflow: 1721.66, 45.83
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.873479/seeds.pkl
+2306
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.873479/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f4810729a70>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [148.47637547809722]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[148.47637547809722]]
+Average, std return: 148.47637547809722, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.208548249186236]
+Average, std: 16.21, 0.00
+
+Speed, std (m/s):
+[2.7452521191344696]
+Average, std: 2.75, 0.00
+
+Outflows (veh/hr):
+[1789.2]
+Average, std: 1789.20, 0.00
+Inflows (veh/hr):
+[1918.8]
+Average, std: 1918.80, 0.00
+Throughput efficiency (veh/hr):
+[0.9324577861163228]
+Average, std: 0.93, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  93 : 16.208548249186236 [1918.8] [1789.2] 148.47637547809722
+Moving Stats at Round  93 :
+Reward: -13.43, 107.54
+Speed: 14.80, 0.82
+Inflow: 1896.39, 49.82
+Outflow: 1722.39, 46.12
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.883442/seeds.pkl
+397
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.883442/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47140ca710>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-0.43534856910988884]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-0.43534856910988884]]
+Average, std return: -0.43534856910988884, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.463836897669573]
+Average, std: 14.46, 0.00
+
+Speed, std (m/s):
+[2.6993942208119353]
+Average, std: 2.70, 0.00
+
+Outflows (veh/hr):
+[1663.2]
+Average, std: 1663.20, 0.00
+Inflows (veh/hr):
+[1828.8]
+Average, std: 1828.80, 0.00
+Throughput efficiency (veh/hr):
+[0.9094488188976378]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  94 : 14.463836897669573 [1828.8] [1663.2] -0.43534856910988884
+Moving Stats at Round  94 :
+Reward: -13.29, 106.97
+Speed: 14.80, 0.82
+Inflow: 1895.67, 50.04
+Outflow: 1721.76, 46.27
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.818950/seeds.pkl
+1604
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_07_07_32_36.818950/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f46b408ae60>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [89.6906125550004]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[89.6906125550004]]
+Average, std return: 89.6906125550004, 0.0 for agent av
+
+Speed, mean (m/s):
+[15.825787903976515]
+Average, std: 15.83, 0.00
+
+Speed, std (m/s):
+[2.2220728854421825]
+Average, std: 2.22, 0.00
+
+Outflows (veh/hr):
+[1803.6]
+Average, std: 1803.60, 0.00
+Inflows (veh/hr):
+[1958.4]
+Average, std: 1958.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9209558823529411]
+Average, std: 0.92, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  95 : 15.825787903976515 [1958.4] [1803.6] 89.6906125550004
+Moving Stats at Round  95 :
+Reward: -12.20, 106.93
+Speed: 14.81, 0.82
+Inflow: 1896.33, 50.18
+Outflow: 1722.62, 46.78
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.565434/seeds.pkl
+97
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_12_22_20.565434/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f485427fd40>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-72.09110463973502]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-72.09110463973502]]
+Average, std return: -72.09110463973502, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.168135372470811]
+Average, std: 14.17, 0.00
+
+Speed, std (m/s):
+[3.071677987875979]
+Average, std: 3.07, 0.00
+
+Outflows (veh/hr):
+[1695.6]
+Average, std: 1695.60, 0.00
+Inflows (veh/hr):
+[1832.4]
+Average, std: 1832.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9253438113948919]
+Average, std: 0.93, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  96 : 14.168135372470811 [1832.4] [1695.6] -72.09110463973502
+Moving Stats at Round  96 :
+Reward: -12.83, 106.54
+Speed: 14.80, 0.82
+Inflow: 1895.66, 50.34
+Outflow: 1722.34, 46.61
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.775896/seeds.pkl
+1466
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_05_08_12_00.775896/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f46d45e25f0>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-186.07785876633847]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-186.07785876633847]]
+Average, std return: -186.07785876633847, 0.0 for agent av
+
+Speed, mean (m/s):
+[13.186987635326158]
+Average, std: 13.19, 0.00
+
+Speed, std (m/s):
+[3.3904197632569906]
+Average, std: 3.39, 0.00
+
+Outflows (veh/hr):
+[1638.0]
+Average, std: 1638.00, 0.00
+Inflows (veh/hr):
+[1861.2]
+Average, std: 1861.20, 0.00
+Throughput efficiency (veh/hr):
+[0.8800773694390716]
+Average, std: 0.88, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  97 : 13.186987635326158 [1861.2] [1638.0] -186.07785876633847
+Moving Stats at Round  97 :
+Reward: -14.61, 107.42
+Speed: 14.79, 0.83
+Inflow: 1895.31, 50.20
+Outflow: 1721.47, 47.15
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.516707/seeds.pkl
+3403
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.516707/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f46b4420950>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [103.77704068614428]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[103.77704068614428]]
+Average, std return: 103.77704068614428, 0.0 for agent av
+
+Speed, mean (m/s):
+[16.549373970124844]
+Average, std: 16.55, 0.00
+
+Speed, std (m/s):
+[3.916684579750311]
+Average, std: 3.92, 0.00
+
+Outflows (veh/hr):
+[1713.6]
+Average, std: 1713.60, 0.00
+Inflows (veh/hr):
+[1886.4]
+Average, std: 1886.40, 0.00
+Throughput efficiency (veh/hr):
+[0.9083969465648855]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  98 : 16.549373970124844 [1886.4] [1713.6] 103.77704068614428
+Moving Stats at Round  98 :
+Reward: -13.41, 107.54
+Speed: 14.81, 0.85
+Inflow: 1895.22, 49.95
+Outflow: 1721.39, 46.91
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.723902/seeds.pkl
+3686
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_02_12_44_12.723902/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47d0483170>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-94.46539927521991]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-94.46539927521991]]
+Average, std return: -94.46539927521991, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.6458469351433]
+Average, std: 14.65, 0.00
+
+Speed, std (m/s):
+[3.3340663185054558]
+Average, std: 3.33, 0.00
+
+Outflows (veh/hr):
+[1677.6]
+Average, std: 1677.60, 0.00
+Inflows (veh/hr):
+[1843.2]
+Average, std: 1843.20, 0.00
+Throughput efficiency (veh/hr):
+[0.9101562499999999]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  99 : 14.6458469351433 [1843.2] [1677.6] -94.46539927521991
+Moving Stats at Round  99 :
+Reward: -14.23, 107.30
+Speed: 14.80, 0.84
+Inflow: 1894.69, 49.97
+Outflow: 1720.95, 46.88
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
+Using seed:  /home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.081978/seeds.pkl
+410
+to add 1440 360 200
+begin to initialize agent from checkpoint /home/users/yulin/ray_results/multiagent_highway_merge4_MOR_Collaborate_lrschedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4CollaborateMOR-v0_96d1f_00000_0_2021-07-31_23-18-57/checkpoint_500/checkpoint-500
+SEEDS_FILE/home/users/yulin/MITC-road-struture/exp_shell/evaluate/../../eval_seeds/flow_2020_10_06_11_04_04.081978/seeds.pkl
+defaultdict(<class 'list'>, {'highway_0': [(['highway_0', 'highway_1', 'highway_2'], 1)], 'highway_1': [(['highway_1', 'highway_2'], 1)], 'highway_2': [(['highway_2'], 1)], 'on_ramp_0': [(['on_ramp_0', 'highway_1', 'highway_2'], 1)], 'on_ramp_1': [(['on_ramp_1', 'highway_2'], 1)]})
+load trained dir: /home/users/yulin/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main1850_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_0a35b_00000_0_2021-07-04_07-54-59
+<function setup_exps.<locals>.policy_mapping_fn at 0x7f47504ea050>
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+[{'name': 'flow_0', 'vtype': 'human', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.4}, {'name': 'flow_1', 'vtype': 'rl', 'edge': 'highway_0', 'departLane': 'free', 'departSpeed': 10, 'begin': 1, 'end': 86400, 'probability': 0.1}, {'name': 'flow_2', 'vtype': 'human', 'edge': 'on_ramp_0', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}, {'name': 'flow_3', 'vtype': 'human', 'edge': 'on_ramp_1', 'departLane': 'free', 'departSpeed': 7.5, 'begin': 1, 'end': 86400, 'probability': 0.05555555555555555}]
+Round 0, Return: {'av': [-32.88050710601293]} for agent av
+==== Summary of results ====
+Return:
+For agent av
+[[-32.88050710601293]]
+Average, std return: -32.88050710601293, 0.0 for agent av
+
+Speed, mean (m/s):
+[14.567076345848097]
+Average, std: 14.57, 0.00
+
+Speed, std (m/s):
+[3.439990299916673]
+Average, std: 3.44, 0.00
+
+Outflows (veh/hr):
+[1731.6]
+Average, std: 1731.60, 0.00
+Inflows (veh/hr):
+[1911.6]
+Average, std: 1911.60, 0.00
+Throughput efficiency (veh/hr):
+[0.9058380414312618]
+Average, std: 0.91, 0.00
+Time Delay
+[2000]
+Time for certain number of vehicles to exit 2000.00,0.00
+Round  100 : 14.567076345848097 [1911.6] [1731.6] -32.88050710601293
+Moving Stats at Round  100 :
+Reward: -14.41, 106.78
+Speed: 14.80, 0.84
+Inflow: 1894.86, 49.75
+Outflow: 1721.05, 46.66
+MainInflow Setting: 0.0
+MergeInflow Setting: 2200.0
