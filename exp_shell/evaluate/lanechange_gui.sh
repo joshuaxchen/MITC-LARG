@@ -27,7 +27,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lane_change_4
+EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual
 
 
 CHCKPOINT=500
@@ -44,20 +44,20 @@ J=0
 mkdir ${EXP_FOLDER}
 RIGHT_MAIN_INFLOW=2000
 
-WORKING_DIR=$EXP_FOLDER/preset_1
+WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 
-for RIGHT_MAIN_INFLOW in 2000  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
 	for LEFT_MAIN_INFLOW in 1600  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for AVP_LEFT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 		    let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
 		    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-		    for AVP_RIGHT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		    for AVP_RIGHT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		    do
 			let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
 			let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -76,7 +76,7 @@ do
 					--agent_action_policy_dir $RL_MODEL \
 					--seed_dir $FLOW_DIR \
 					--lateral_resolution 3.2 \
-					--render_mode no_render \
+					--render_mode sumo_gui \
 					--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 					--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
 					--human_lane_change 1 1 \
@@ -86,6 +86,7 @@ do
 					--speed_gain ${SPEED_GAIN} \
 					--assertive ${ASSERTIVE} \
 					--lc_probability ${LC_PROB} 
+                    #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
 
 				    let J=J+1
 				    if ((J == 12)); then

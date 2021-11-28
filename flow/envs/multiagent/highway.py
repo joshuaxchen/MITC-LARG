@@ -308,7 +308,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             time_left_to_lc, prev_lateral_pos=self.prev_lane_change_human_ids[veh_id]
             lateral_pos=self.k.vehicle.get_lateral_lane_pos(veh_id)
 
-            if lateral_pos==0 and prev_lateral_pos==0:
+            if lateral_pos==0 and prev_lateral_pos==0: # currently and previously, the vehicle is at the center line (is stable at the center line)
                 lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
                 if lc_controller is not None:
                     lc_controller.freeze_lane_change=True
@@ -322,7 +322,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         for veh_id in ids_to_remove_freeze:
             del self.prev_lane_change_human_ids[veh_id]
             if veh_id in self.k.vehicle.get_ids():
-                self.k.vehicle.set_lane_change_mode(veh_id, 1)
+                self.k.vehicle.set_lane_change_mode(veh_id, 1621)
                 lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
                 lc_controller.freeze_lane_change=False
 
