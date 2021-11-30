@@ -1242,7 +1242,7 @@ class TraCIVehicle(KernelVehicle):
         signal_status = self.kernel_api.vehicle.getSignals(veh_id)
         return signal_status & 2
 
-    def get_left_turn_signal(self, veh_id, error=-1001):
+    def get_right_turn_signal(self, veh_id, error=-1001):
         if isinstance(veh_id, (list, np.ndarray)):
             return [self.get_left_turn_signal(vehID, error) for vehID in veh_id]
         signal_status = self.kernel_api.vehicle.getSignals(veh_id)
