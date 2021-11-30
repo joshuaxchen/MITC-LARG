@@ -703,6 +703,7 @@ class IDMRLController(BaseController):
         #self.track=False
     def check_congestion_at_right(self, env):
         self_veh_x=env.k.vehicle.get_x_by_id(self.veh_id)
+        self_veh_vel=env.k.vehicle.get_speed(self.veh_id)
         vel_list=list()
         if self_veh_x>588:
             return 10000
@@ -717,7 +718,8 @@ class IDMRLController(BaseController):
         if len(vel_list)==0:
             return False 
         mean_vel=mean(vel_list)
-        if mean_vel<5:
+        #if mean_vel<17 and mean_vel>7:
+        if self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6:
             return True
         else:
             return False
@@ -754,9 +756,9 @@ class IDMRLController(BaseController):
         #    self.T= (1-(veh_x-100)/322)*10
         #else:
         #    self.T=1
-        if self.freeze<=0 and is_congested and veh_x>50 and veh_x<=522 and lead_id not in env.k.vehicle.get_rl_ids():
+        if self.freeze<=0 and is_congested and veh_x>50 and veh_x<=300 and lead_id not in env.k.vehicle.get_rl_ids():
             #print("veh_id", self.veh_id, "T", self.T)
-            self.T=5.5 #(1-(veh_x-100)/322)*10
+            self.T=12#5.5 #(1-(veh_x-100)/322)*10
         else:
             self.T=1
 
