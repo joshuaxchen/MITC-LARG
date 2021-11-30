@@ -696,6 +696,7 @@ class IDMRLController(BaseController):
         self.prev_headway=0
         self.prev_T_decide=0
         self.freeze=0
+        self.headway_to_create=12
         #self.prev_loc=0
         #self.prev_edge=None
         #self.loc_time_to_skip=200
@@ -706,20 +707,26 @@ class IDMRLController(BaseController):
         self_veh_vel=env.k.vehicle.get_speed(self.veh_id)
         vel_list=list()
         if self_veh_x>588:
-            return 10000
+            return False
+        buffer_zone=self_veh_vel*0.1
+        look_ahead=self_veh_vel*self.headway_to_create
         for other_veh_id in env.k.vehicle.get_ids():
             lane_id=env.k.vehicle.get_lane(other_veh_id)
             other_veh_x=env.k.vehicle.get_x_by_id(other_veh_id)
             #headways=self.k.vehicle.get_lane_headways(veh_id)
             #h=headways[lane_id] 
-            if lane_id==0 and self_veh_x< other_veh_x:
+            if lane_id==0 and self_veh_x< other_veh_x and other_veh_x<588 and other_veh_x <self_veh_x+120:
+            #if lane_id==0 and self_veh_x< other_veh_x+buffer_zone and other_veh_x<588 and other_veh_x <self_veh_x+look_ahead+buffer_zone:
                 other_veh_vel=env.k.vehicle.get_speed(other_veh_id)
                 vel_list.append(other_veh_vel) 
         if len(vel_list)==0:
             return False 
         mean_vel=mean(vel_list)
         #if mean_vel<17 and mean_vel>7:
-        if self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6:
+        #if self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6: # There is enough speed gain for the vehicle on the right
+        #if (self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6) or (self_veh_vel/mean_vel>1 and self_veh_vel/mean_vel<1.3): # There is enough speed gain for the vehicle on the right
+        #if self_veh_vel/mean_vel>1 and self_veh_vel-mean_vel<2*math.floor(mean_vel/10)+6: # There is enough speed gain for the vehicle on the right
+        if self_veh_vel/mean_vel>1 and self_veh_vel-mean_vel<6: # There is enough speed gain for the vehicle on the right
             return True
         else:
             return False
@@ -758,7 +765,8 @@ class IDMRLController(BaseController):
         #    self.T=1
         if self.freeze<=0 and is_congested and veh_x>50 and veh_x<=300 and lead_id not in env.k.vehicle.get_rl_ids():
             #print("veh_id", self.veh_id, "T", self.T)
-            self.T=12#5.5 #(1-(veh_x-100)/322)*10
+            #self.T=12#5.5 #(1-(veh_x-100)/322)*10
+            self.T=self.headway_to_create#5.5 #(1-(veh_x-100)/322)*10
         else:
             self.T=1
 
