@@ -37,11 +37,27 @@ class StochasticLaneChangeController(BaseLaneChangeController):
     def __init__(self, veh_id, lane_change_params=None, seed=None):
         super().__init__(veh_id, lane_change_params)
         #if seed is not None:
+        self.prev_lane=None
+        self.prev_decision=None
+        self.prev_dist=None
+    def do_interrupt(self, env, lane_id, current_dist_center_line):
+        #if self.prev_lane!=lane_id: # finished lane changing
+        #    return True # please do 
+        #if current_dist_center_line>=self.prev_dist: # moving further away from current lane
+        #    return False # I am in the middle of lane changing, please do not
+        #return True # I moved back the the current lane, please interrupt
+        if current_dist_center_line>1:
+            return False 
+        
+        #if self.prev_decision and self.prev_lane==lane_id and current_dist_center_line>=self.prev_dist: # if previously do lane change and this lane change has not yet finished, then do again by ignoring lane_change_switch
+        #    return False
+        return True
 
     def get_lane_change_action(self, env):
         """See parent class."""
         #print("lane changing in stochastic")
-        if self.freeze_lane_change:
+        if self.freeze_lane_change: # if freezed, then do not change lane
+            self.prev_decision=False
             return 0
         lane_change_probability=0.2
         sampled_prob=random.random()
@@ -49,10 +65,17 @@ class StochasticLaneChangeController(BaseLaneChangeController):
             lane_change_switch=True
         else:
             lane_change_switch=False
+
         lane_id=env.k.vehicle.get_lane(self.veh_id)
         lateral_pos=env.k.vehicle.get_lateral_lane_pos(self.veh_id)
-        #if abs(lateral_pos)>1:
-        #    return None
+        current_dist_center_line=abs(lateral_pos) 
+        do_interrupt=self.do_interrupt(env, lane_id, current_dist_center_line)
+        self.prev_lane=lane_id
+        self.prev_dist=current_dist_center_line
+        if not do_interrupt:
+            return None # do not interrupt and handle to SUMO
+
+        self.prev_decision=lane_change_switch
         if lane_change_switch:
             #print("lc", self.veh_id, "lane", lane_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             return None

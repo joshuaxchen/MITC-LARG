@@ -804,6 +804,7 @@ if __name__ == '__main__':
     print(seed_filename)
     print("Using ", len(seed_filename), " random seeds")
     import random
+    seed_filename.sort()
     for i in range(len(seed_filename)):
         k=random.choice(np.arange(len(seed_filename)))
         k=i

@@ -1,4 +1,4 @@
-from flow.controllers import IDMController, RLController, SimCarFollowingController
+from flow.controllers import IDMController, RLController, IDMRLController, SimCarFollowingController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
