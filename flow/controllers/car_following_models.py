@@ -698,11 +698,12 @@ class IDMRLController(BaseController):
         self.freeze=0
         self.headway_to_create=12
         #self.prev_loc=0
-        #self.prev_edge=None
-        #self.loc_time_to_skip=200
-        #self.edge_time_to_skip=200
-        #self.track=False
-    def check_congestion_at_right(self, env):
+        #self.prev_edge=None 
+        #self.loc_time_to_skip=200 
+        #self.edge_time_to_skip=200 
+        #self.track=False 
+
+    def check_congestion_at_right(self, env): 
         self_veh_x=env.k.vehicle.get_x_by_id(self.veh_id)
         self_veh_vel=env.k.vehicle.get_speed(self.veh_id)
         vel_list=list()
@@ -726,7 +727,7 @@ class IDMRLController(BaseController):
         #if self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6: # There is enough speed gain for the vehicle on the right
         #if (self_veh_vel-mean_vel>0 and self_veh_vel-mean_vel<6) or (self_veh_vel/mean_vel>1 and self_veh_vel/mean_vel<1.3): # There is enough speed gain for the vehicle on the right
         #if self_veh_vel/mean_vel>1 and self_veh_vel-mean_vel<2*math.floor(mean_vel/10)+6: # There is enough speed gain for the vehicle on the right
-        if self_veh_vel/mean_vel>1 and self_veh_vel-mean_vel<6: # There is enough speed gain for the vehicle on the right
+        if self_veh_vel/mean_vel>1 and self_veh_vel-mean_vel<8: # There is enough speed gain for the vehicle on the right
             return True
         else:
             return False
