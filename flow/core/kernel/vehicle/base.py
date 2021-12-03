@@ -659,5 +659,35 @@ class KernelVehicle(object):
         """
         raise NotImplementedError
 
+    def get_left_turn_signal(self, veh_id, error):
+        """Returns the left turn signal of the specified vehicle
+
+        Parameters
+        ---------
+        veh_id : str or list of str
+            vehicle id, or list of vehicle ids
+        error: any, optional
+            value that is returned if the vehicle is not found
+        Returns
+        -------
+        boolean
+        """
+        raise NotImplementedError
+
+    def get_right_turn_signal(self, veh_id, error):
+        """Returns the right turn signal of the specified vehicle
+
+        Parameters
+        ---------
+        veh_id : str or list of str
+            vehicle id, or list of vehicle ids
+        error: any, optional
+            value that is returned if the vehicle is not found
+        Returns
+        -------
+        boolean
+        """
+        raise NotImplementedError
+
     def get_time_delay(self, veh_id, error):
         raise NotImplementedError
