@@ -1236,6 +1236,17 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         self.kernel_api.vehicle.setMaxSpeed(veh_id, max_speed)
 
+    def get_left_turn_signal(self, veh_id, error=-1001):
+        if isinstance(veh_id, (list, np.ndarray)):
+            return [self.get_left_turn_signal(vehID, error) for vehID in veh_id]
+        signal_status = self.kernel_api.vehicle.getSignals(veh_id)
+        return (signal_status & 2 > 0)
+
+    def get_right_turn_signal(self, veh_id, error=-1001):
+        if isinstance(veh_id, (list, np.ndarray)):
+            return [self.get_right_turn_signal(vehID, error) for vehID in veh_id]
+        signal_status = self.kernel_api.vehicle.getSignals(veh_id)
+        return ((signal_status & 1) > 0)
 
     def get_time_delay(self, veh_id, error=-1001):
         if isinstance(veh_id, (list, np.ndarray, tuple)):
