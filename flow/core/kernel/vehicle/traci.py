@@ -8,6 +8,7 @@ import numpy as np
 import collections
 import warnings
 from flow.controllers.car_following_models import SimCarFollowingController
+from flow.controllers.left_car_following_models import LeftIDMController
 from flow.controllers.rlcontroller import RLController
 from flow.controllers.lane_change_controllers import SimLaneChangeController
 from bisect import bisect_left
@@ -1172,7 +1173,13 @@ class TraCIVehicle(KernelVehicle):
             except (FatalTraCIError, TraCIException) as e:
                 #self.__change_lane_human_ids.remove(veh_id)
                 print('Error when updating human vehicle colors:', e)
-
+        
+        # color the vehicles that are controled by IDMRLController
+        for veh_id in self.get_ids():
+            controller=self.get_acc_controller(veh_id)
+            if isinstance(controller, LeftIDMController):
+                self.set_color(veh_id=veh_id, color=RED) 
+        
         # remove the human drivers that are not in the network anymore 
         for veh_id in to_remove_from_change_lane_human_drivers:
             if veh_id in self.__change_lane_human_ids:

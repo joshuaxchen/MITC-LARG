@@ -25,9 +25,9 @@ MAIN_INFLOW=2000
 MERGE_INFLOW=200
 AVP=10
 J=0
-MAX_CPU=20
+MAX_CPU=10
 mkdir ${EXP_FOLDER}
-WORKING_DIR=$EXP_FOLDER/human_speedgain_x_assertive
+WORKING_DIR=$EXP_FOLDER/human_lcprob_0.2_sensitivity
 mkdir ${WORKING_DIR}
 RIGHT_MAIN_INFLOW=2000
 
@@ -85,9 +85,9 @@ do
                         fi
 
                     else 
-                        for SPEED_GAIN in 0 0.5 1.0 5.0 10.0 100.0 1000.0 10000.0 
+                        for SPEED_GAIN in 0.5 1.0 2.0 5.0 10.0 100.0 1000.0
                         do
-                            for ASSERTIVE in 0 0.5 1.0 5.0 10.0 
+                            for ASSERTIVE in 0.1 0.5 1.0 2.0 3.0 4.0 5.0 10.0 100.0 
                             do
                                 for LC_PROB in 0 
                                 do

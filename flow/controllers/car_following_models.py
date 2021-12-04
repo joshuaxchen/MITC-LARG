@@ -501,6 +501,8 @@ class IDMController(BaseController):
             s_star = self.s0 + max(
                 0, v * self.T + v * (v - lead_vel) /
                 (2 * np.sqrt(self.a * self.b)))
+        if self.T >1:
+            print(s_star,self.T)
         output_accel=self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
         current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
         current_edge=env.k.vehicle.get_edge(self.veh_id)

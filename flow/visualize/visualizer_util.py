@@ -1,4 +1,4 @@
-from flow.controllers import IDMController, RLController, SimCarFollowingController
+from flow.controllers import IDMController, LeftIDMController, RLController, SimCarFollowingController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -126,8 +126,10 @@ def set_argument(evaluate=False):
 
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
+    carfollowing_params = {}
     if "rl" in veh_type:
-        controller=RLController
+        controller=IDMController #RLController
+        carfollowing_params={}
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
@@ -148,7 +150,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     # FIXME temporary fix; will change later 
     vehicles.add(
             veh_id=veh_type,
-            acceleration_controller=(controller, {}),
+            acceleration_controller=(controller, carfollowing_params),
             lane_change_controller=my_lane_change_controller,
             car_following_params=SumoCarFollowingParams(
                 speed_mode=speed_mode,  # for safer behavior at the merges
@@ -163,6 +165,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
                 lc_pushy_gap=0.6, #default
                 lc_impatience=1e-8, #1e-8,
                 lc_time_to_impatience=1e12,
+                #lc_accel_lat=2.6,
                 ), 
             num_vehicles=num_vehicles
             )

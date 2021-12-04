@@ -15,6 +15,7 @@ from flow.controllers.base_controller import BaseController
 from flow.controllers.car_following_models import CFMController, \
     BCMController, OVMController, LinearOVM, IDMController, \
     SimCarFollowingController, LACController, GippsController
+from flow.controllers.left_car_following_models import LeftIDMController
 from flow.controllers.velocity_controllers import FollowerStopper, \
     PISaturation
 
