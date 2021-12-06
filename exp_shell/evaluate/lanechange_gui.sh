@@ -27,7 +27,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual
+EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_1
 
 
 
@@ -51,7 +51,7 @@ human_or_av=1
 
 for RIGHT_MAIN_INFLOW in 1200 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1200  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1000 1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -72,6 +72,7 @@ do
 				for LC_PROB in -1
 				do
 				    # run AV policy
+			human_or_av=1
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
@@ -80,7 +81,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
-                            --render_mode sumo_gui \
+                            --render_mode no_render \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 1 \
@@ -89,10 +90,11 @@ do
                             --speed_gain ${SPEED_GAIN} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
-                            --lc_probability ${LC_PROB} 
-                        #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            --lc_probability ${LC_PROB} \
+                        >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                     fi
 
+			human_or_av=0
                     if [[(human_or_av -eq 0)]]; then
                         echo "run human"
                         # run human baseline
@@ -123,7 +125,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
-                            --render_mode sumo_gui \
+                            --render_mode no_render \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 1 \
@@ -134,8 +136,15 @@ do
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
-                            --lc_probability ${LC_PROB} 
+                            --lc_probability ${LC_PROB} \
+                        >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                         fi
+			let J=J+1
+		    if ((J == 8)); then
+			wait
+			let J=0
+			echo "another batch"
+		    fi
 				done
 			    done
 			done
@@ -145,6 +154,6 @@ do
 done
 
 
-#wait 
-#source ~/notification_zyl.sh
+wait 
+source ~/notification_zyl.sh
 
