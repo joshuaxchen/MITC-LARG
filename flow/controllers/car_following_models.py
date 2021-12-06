@@ -696,7 +696,7 @@ class IDMRLController(BaseController):
         self.prev_headway=0
         self.prev_T_decide=0
         self.freeze=0
-        self.headway_to_create=1 #12
+        self.headway_to_create=12
         #self.prev_loc=0
         #self.prev_edge=None 
         #self.loc_time_to_skip=200 
