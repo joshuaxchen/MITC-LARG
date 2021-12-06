@@ -47,9 +47,9 @@ WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
-human_or_av=0
+human_or_av=1
 
-for RIGHT_MAIN_INFLOW in 1800 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1200 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
 	for LEFT_MAIN_INFLOW in 1200  # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
@@ -130,7 +130,7 @@ do
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
-                                --no_lanchange_human_inflows_on_right ${NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT} \
+                            --no_lanchange_human_inflows_on_right ${NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT} \
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
