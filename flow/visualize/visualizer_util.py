@@ -128,9 +128,9 @@ def set_argument(evaluate=False):
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
-        #controller=IDMRLController
+        controller=IDMRLController
         #controller=IDMController
-        controller=RLController
+        #controller=RLController
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
@@ -302,8 +302,10 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         veh_num=0
         if "human" in veh_name and i==0: # the right most lane and human
             speed_mode=15
+            veh_num=1
         elif "rl" in veh_name:
             speed_mode=7
+            veh_num=0
 
         operator(vehicle_params, veh_name, speed_mode, veh_num, speed_gain, assertive, lc_probability)
     return veh_names

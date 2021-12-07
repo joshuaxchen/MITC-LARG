@@ -696,7 +696,7 @@ class IDMRLController(BaseController):
         self.prev_headway=0
         self.prev_T_decide=0
         self.freeze=0
-        self.headway_to_create=12
+        self.headway_to_create=20
         #self.prev_loc=0
         #self.prev_edge=None 
         #self.loc_time_to_skip=200 
@@ -716,7 +716,7 @@ class IDMRLController(BaseController):
             other_veh_x=env.k.vehicle.get_x_by_id(other_veh_id)
             #headways=self.k.vehicle.get_lane_headways(veh_id)
             #h=headways[lane_id] 
-            if lane_id==0 and self_veh_x< other_veh_x and other_veh_x<588 and other_veh_x <self_veh_x+160: #120
+            if lane_id==0 and self_veh_x< other_veh_x and other_veh_x<588 and other_veh_x <self_veh_x+120: #120
             #if lane_id==0 and self_veh_x< other_veh_x+buffer_zone and other_veh_x<588 and other_veh_x <self_veh_x+look_ahead+buffer_zone:
                 other_veh_vel=env.k.vehicle.get_speed(other_veh_id)
                 vel_list.append(other_veh_vel) 
