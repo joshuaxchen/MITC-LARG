@@ -47,13 +47,13 @@ WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
-human_or_av=0
-render='sumo_gui'
+human_or_av=1
+render='no_render'
 horizon=3000
 
-for RIGHT_MAIN_INFLOW in 1600 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1600 1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1000 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -93,7 +93,9 @@ do
                             --to_probability \
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
+                            --run_random_seed 0 \
                             --print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             --lc_probability ${LC_PROB} 
                         #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                     fi
@@ -140,9 +142,11 @@ do
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
+                            --run_random_seed 0 \
                             --lc_probability ${LC_PROB} \
                             --horizon ${horizon} \
-                            --print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} 
+                            --print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         #>> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         fi
