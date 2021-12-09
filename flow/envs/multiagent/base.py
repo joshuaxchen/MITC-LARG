@@ -117,7 +117,10 @@ class MultiEnv(MultiAgentEnv, Env):
             done['__all__'] = False
 
         infos = {key: {} for key in states.keys()}
-        #infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
+
+        from flow.envs import enable_total_num_of_vehicles
+        if enable_total_num_of_vehicles:
+            infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
 
         # compute the reward
         if self.env_params.clip_actions:

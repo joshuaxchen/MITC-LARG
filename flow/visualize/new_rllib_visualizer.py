@@ -54,7 +54,7 @@ from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_ch
 from tools.tikz_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
-
+import flow
 
 EXAMPLE_USAGE = """
 example usage:
@@ -72,7 +72,7 @@ REALTIME_PLOTS = False
 # The averge metrics (including inflow, outflow, speed) is measured as an
 # average of the recent 1000 time steps, if MEASUREMENT_RATE=1000
 MEASUREMENT_RATE=1000
-#MEASUREMENT_RATE=500
+#MEASUREMENT_RATE=2000
 
 def generateHtmlplots(actions, rewards, states):
     import plotly.graph_objs as go
@@ -454,6 +454,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
       initialized_plot = False
     # check inflows
     print(flow_params['net'].inflows.get())
+    # initialize variable to enable recording of total vehicles in the network
+    if args.print_vehicles_per_time_step_in_file:
+        flow.envs.enable_total_num_of_vehicles=True
 
     # record for visualization purposes
     actions = []
@@ -587,6 +590,8 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         if args.print_vehicles_per_time_step_in_file is not None and i==0:
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
+            veh_plot.set_title("Number of vehicles in the network") 
+            veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
             veh_plot.add_human=False
             veh_plot.add_plot("model", total_num_cars_per_step)
             veh_plot.write_plot(args.print_vehicles_per_time_step_in_file+"_veh.tex", 1)
