@@ -26,7 +26,7 @@ RL_RIGHT_MODEL_AAMAS=${HOME}/ray_results/multiagent_new_rl_right_lanechange_merg
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/nov_23_lanechange_more_decisive/
+EXP_FOLDER=$FLOW_DIR/exp_results/dec_08_lanechange/
 
 CHCKPOINT=500
 
@@ -42,12 +42,13 @@ J=0
 mkdir ${EXP_FOLDER}
 RIGHT_MAIN_INFLOW=2000
 
+
 WORKING_DIR=$EXP_FOLDER/aamas_both
 mkdir ${WORKING_DIR}
 
 for RIGHT_MAIN_INFLOW in 1800 1900 2000 #2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1600 1800 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1000 1200 1400  #1600 1800 2000 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -67,47 +68,47 @@ do
 			    do
 				for LC_PROB in -1
 				do
-				    # run AV policy
+                    # run AV policy
 				    python3 $VISUALIZER \
-				        $RL_LEFT_MODEL_AAMAS \
-				        $CHCKPOINT \
-				        --agent_action_policy_dir $RL_MODEL \
-				        --seed_dir $FLOW_DIR \
-				        --lateral_resolution 3.2 \
-				        --render_mode no_render \
-				        --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
-				        --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
-				        --human_lane_change 1 1 \
-				        --rl_lane_change 0 0 \
-				        --merge_inflow ${MERGE_INFLOW} \
-				        --speed_gain ${SPEED_GAIN} \
-				        --to_probability \
-				        --assertive ${ASSERTIVE} \
-				        --lc_probability ${LC_PROB} \
+					$RL_LEFT_MODEL_AAMAS \
+					$CHCKPOINT \
+					--agent_action_policy_dir $RL_MODEL \
+					--seed_dir $FLOW_DIR \
+					--lateral_resolution 3.2 \
+					--render_mode no_render \
+					--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
+					--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
+					--human_lane_change 1 1 \
+					--rl_lane_change 0 0 \
+					--merge_inflow ${MERGE_INFLOW} \
+					--speed_gain ${SPEED_GAIN} \
+					--to_probability \
+					--assertive ${ASSERTIVE} \
+					--lc_probability ${LC_PROB} \
 				    >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt & 
 
-				    # run human baseline
-				    # add no lane changing vehicles at the right lane	
-				    let RL_INFLOW_RIGHT=0
-				    let RL_INFLOW_LEFT=0
-				    let NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT=0
-				    let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW
-				    if [[(${AVP_RIGHT} != 0)]]; then # set the amount of vehicles to be non-lane-changing human drivers
-					let NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100		
-					let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT
-					echo "avp right is not 0"
-				    fi
+                    # run human baseline
+                    # add no lane changing vehicles at the right lane	
+                    let RL_INFLOW_RIGHT=0
+                    let RL_INFLOW_LEFT=0
+                    let NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT=0
+                    let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW
+                    if [[(${AVP_RIGHT} != 0)]]; then # set the amount of vehicles to be non-lane-changing human drivers
+                        let NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100		
+                        let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT
+                        echo "avp right is not 0"
+                    fi
 
-				    # add no lane changing vehicles at the left lane	
-				    let NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT=0
-				    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW
-				    if [[(${AVP_LEFT} != 0)]]; then
-					let NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100		
-					let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT
-					echo "avp left is not 0"
-				    fi
+                    # add no lane changing vehicles at the left lane	
+                    let NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT=0
+                    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW
+                    if [[(${AVP_LEFT} != 0)]]; then
+                        let NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100		
+                        let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT
+                        echo "avp left is not 0"
+                    fi
 
-				    # run human baseline 
+                    # run human baseline 
 				    python3 $VISUALIZER \
 					$RL_LEFT_MODEL_AAMAS \
 					$CHCKPOINT \
