@@ -241,12 +241,12 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         # the vehicles on lane 1 (left lane) is set to 7 
         rl_ids=self.k.vehicle.get_rl_ids()
         current_lane_change_human_ids=self.k.vehicle.get_lane_change_human_ids() 
-
         for veh_id in self.k.vehicle.get_ids():
             lane_index= self.k.vehicle.get_lane(veh_id)
 
             if veh_id in rl_ids:
-                self.k.vehicle.set_speed_mode(veh_id, 15)
+                #self.k.vehicle.set_speed_mode(veh_id, 15)
+                self.k.vehicle.set_speed_mode(veh_id, 7)
             elif lane_index==0:
                 self.k.vehicle.set_speed_mode(veh_id, 15)
             else:
@@ -308,7 +308,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             time_left_to_lc, prev_lateral_pos=self.prev_lane_change_human_ids[veh_id]
             lateral_pos=self.k.vehicle.get_lateral_lane_pos(veh_id)
 
-            if lateral_pos==0 and prev_lateral_pos==0:
+            if lateral_pos==0 and prev_lateral_pos==0: # currently and previously, the vehicle is at the center line (is stable at the center line)
                 lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
                 if lc_controller is not None:
                     lc_controller.freeze_lane_change=True
@@ -322,7 +322,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         for veh_id in ids_to_remove_freeze:
             del self.prev_lane_change_human_ids[veh_id]
             if veh_id in self.k.vehicle.get_ids():
-                self.k.vehicle.set_lane_change_mode(veh_id, 1)
+                self.k.vehicle.set_lane_change_mode(veh_id, 1621)
                 lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
                 lc_controller.freeze_lane_change=False
 
@@ -429,7 +429,11 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
             done['__all__'] = False
 
         infos = {key: {} for key in states.keys()}
-        #infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
+
+        from flow.envs import enable_total_num_of_vehicles
+        if enable_total_num_of_vehicles:
+            infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
+
 
         # compute the reward
         if self.env_params.clip_actions:

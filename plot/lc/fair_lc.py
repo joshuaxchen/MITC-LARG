@@ -111,8 +111,8 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
             #if right_avp_to_plot is not None and avp_right!=right_avp_to_plot:
             #    continue
 
-            #if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
-            #    continue
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
             print(value)
             if value is None or len(value.keys())==0:
                 set_trace()
@@ -250,8 +250,8 @@ def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, 
             #if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
             #    continue
 
-            #if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
-            #    continue
+            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+                continue
 
             
             left_key=prefix+model_key+"_rightAVP"+avp_right+"_rightInflow"+right_main_inflow+"_leftInflow"+left_main_inflow

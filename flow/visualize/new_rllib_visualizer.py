@@ -54,7 +54,7 @@ from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_ch
 from tools.tikz_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
-
+import flow
 
 EXAMPLE_USAGE = """
 example usage:
@@ -72,7 +72,7 @@ REALTIME_PLOTS = False
 # The averge metrics (including inflow, outflow, speed) is measured as an
 # average of the recent 1000 time steps, if MEASUREMENT_RATE=1000
 MEASUREMENT_RATE=1000
-#MEASUREMENT_RATE=500
+#MEASUREMENT_RATE=2000
 
 def generateHtmlplots(actions, rewards, states):
     import plotly.graph_objs as go
@@ -454,6 +454,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
       initialized_plot = False
     # check inflows
     print(flow_params['net'].inflows.get())
+    # initialize variable to enable recording of total vehicles in the network
+    if args.print_vehicles_per_time_step_in_file:
+        flow.envs.enable_total_num_of_vehicles=True
 
     # record for visualization purposes
     actions = []
@@ -587,6 +590,8 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         if args.print_vehicles_per_time_step_in_file is not None and i==0:
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
+            veh_plot.set_title("Number of vehicles in the network") 
+            veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
             veh_plot.add_human=False
             veh_plot.add_plot("model", total_num_cars_per_step)
             veh_plot.write_plot(args.print_vehicles_per_time_step_in_file+"_veh.tex", 1)
@@ -596,20 +601,37 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         speed_plot=None
         reward_plot=None
 
-        if do_print_metric_per_time_step and i==0:
+        
+        outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) # original: 5000
+        final_outflows.append(outflow)
+        inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE)# original: 5000
+        final_inflows.append(inflow)
+        times.append(time_to_exit)
+        if np.all(np.array(final_inflows) > 1e-5):
+            throughput_efficiency = [x / y for x, y in
+                                     zip(final_outflows, final_inflows)]
+        else:
+            throughput_efficiency = [0] * len(final_inflows)
+        mean_speed.append(np.mean(vel))
+        std_speed.append(np.std(vel))
 
+        if do_print_metric_per_time_step and i==0:
+            title_spec=args.print_metric_per_time_step_in_file
+            separator_index=title_spec.rfind("/")
+            title_spec=title_spec[separator_index+1:]
+            title_spec=title_spec.replace("_", "-")
             inflow_plot=PlotWriter("Time steps", "Inflow") 
-            inflow_plot.set_title("inflow") 
-            inflow_plot.set_plot_range(0, 5000, 0, 2000) 
+            inflow_plot.set_title(title_spec+" inflow: %f" % np.mean(final_inflows)) 
+            inflow_plot.set_plot_range(0, args.horizon, 0, 4000) 
             outflow_plot=PlotWriter("Time steps", "Outflow") 
-            outflow_plot.set_title("outflow") 
-            outflow_plot.set_plot_range(0, 5000, 0, 2000) 
+            outflow_plot.set_title(title_spec+" outflow: %f" % np.mean(final_outflows)) 
+            outflow_plot.set_plot_range(0, args.horizon, 0, 4000) 
             speed_plot=PlotWriter("Time steps", "Speed") 
-            speed_plot.set_title("speed") 
-            speed_plot.set_plot_range(0, 5000, 0, 2000) 
+            speed_plot.set_title(title_spec+" speed: %f" % np.mean(vel)) 
+            speed_plot.set_plot_range(0, args.horizon, 0, 40) 
             reward_plot=PlotWriter("Time steps", "Reward") 
-            reward_plot.set_title("reward") 
-            reward_plot.set_plot_range(0, 5000, 0, 2000) 
+            reward_plot.set_title(title_spec+" reward") 
+            reward_plot.set_plot_range(0, args.horizon, 0, 2000) 
 
             # This is a default design of plot, which added human baseline automataicaly. We may want to change this. Here I do not want to break the existing code for plot.
             inflow_plot.add_human=False
@@ -627,18 +649,6 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             speed_plot.write_plot(args.print_metric_per_time_step_in_file+"_speed.tex", 1)
             reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
 
-        outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) # original: 5000
-        final_outflows.append(outflow)
-        inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE)# original: 5000
-        final_inflows.append(inflow)
-        times.append(time_to_exit)
-        if np.all(np.array(final_inflows) > 1e-5):
-            throughput_efficiency = [x / y for x, y in
-                                     zip(final_outflows, final_inflows)]
-        else:
-            throughput_efficiency = [0] * len(final_inflows)
-        mean_speed.append(np.mean(vel))
-        std_speed.append(np.std(vel))
         if multiagent:
             for agent_id, rew in rets.items():
                 print('Round {}, Return: {} for agent {}'.format(
@@ -804,7 +814,12 @@ if __name__ == '__main__':
     print(seed_filename)
     print("Using ", len(seed_filename), " random seeds")
     import random
+    seed_filename.sort()
     for i in range(len(seed_filename)):
+        #if args.render_mode =="sumo_gui":
+        #    i=3
+        if args.run_random_seed>=0:
+            i=args.run_random_seed
         k=random.choice(np.arange(len(seed_filename)))
         k=i
         seed = seed_filename[k]
@@ -838,3 +853,5 @@ if __name__ == '__main__':
                 json.dump(data,f)
         if args.render_mode =="sumo_gui":
             break    
+        if args.run_random_seed>=0:
+            break
