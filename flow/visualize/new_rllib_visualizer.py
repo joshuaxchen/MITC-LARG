@@ -601,10 +601,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         if args.print_vehicles_per_time_step_in_file is not None and i==0:
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
-            veh_plot.set_title("Number of vehicles in the network") 
+            veh_plot.set_title(title_spec) 
             veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
             veh_plot.add_human=False
-            veh_plot.add_plot(title_spec, total_num_cars_per_step)
+            veh_plot.add_plot("model", total_num_cars_per_step)
             veh_plot.write_plot(args.print_vehicles_per_time_step_in_file+"_veh.tex", 1)
 
         inflow_plot=None
