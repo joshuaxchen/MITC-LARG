@@ -486,6 +486,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         outflow_per_time_step=None
         avg_speed_per_time_step=None
         reward_per_time_step=None
+
+        # record the inflow and outflow only 
+        recorded_inflow=list()
+        recorded_outflow=list()
         if do_print_metric_per_time_step and i==args.num_rollouts-1: # last rollouts
             inflow_per_time_step=[]
             outflow_per_time_step=[]
@@ -522,12 +526,12 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             if args.print_vehicles_per_time_step_in_file is not None and i==0:
                 total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))
 
+            inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE) 
             if inflow_per_time_step is not None:
-                inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE) 
                 inflow_per_time_step.append((i_k, inflow, 0)) 
 
+            outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) 
             if outflow_per_time_step is not None:
-                outflow = vehicles.get_outflow_rate(MEASUREMENT_RATE) 
                 outflow_per_time_step.append((i_k, outflow, 0)) 
 
             if avg_speed_per_time_step is not None:
@@ -536,6 +540,8 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             if reward_per_time_step is not None:
                 reward_per_time_step.append((i_k, reward, 0)) 
 
+            recorded_inflow.append(inflow)
+            recorded_outflow.append(outflow)
             
             if SUMMARY_PLOTS:
               # record for visualization purposes
@@ -587,10 +593,15 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         # plot the inflows, outflow, avg_speed, reward at each time step
         # handles to print the metrics along the history
+        if args.print_vehicles_per_time_step_in_file is not None:
+            title_spec=args.print_metric_per_time_step_in_file
+            separator_index=title_spec.rfind("/")
+            title_spec=title_spec[separator_index+1:]
+            title_spec=title_spec.replace("_", "-")
 
         if args.print_vehicles_per_time_step_in_file is not None and i==0:
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
-            veh_plot.set_title("Number of vehicles in the network") 
+            veh_plot.set_title(title_spec) 
             veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
             veh_plot.add_human=False
             veh_plot.add_plot("model", total_num_cars_per_step)
@@ -616,10 +627,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         std_speed.append(np.std(vel))
 
         if do_print_metric_per_time_step and i==0:
-            title_spec=args.print_metric_per_time_step_in_file
-            separator_index=title_spec.rfind("/")
-            title_spec=title_spec[separator_index+1:]
-            title_spec=title_spec.replace("_", "-")
+            
             inflow_plot=PlotWriter("Time steps", "Inflow") 
             inflow_plot.set_title(title_spec+" inflow: %f" % np.mean(final_inflows)) 
             inflow_plot.set_plot_range(0, args.horizon, 0, 4000) 
@@ -632,6 +640,20 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             reward_plot=PlotWriter("Time steps", "Reward") 
             reward_plot.set_title(title_spec+" reward") 
             reward_plot.set_plot_range(0, args.horizon, 0, 2000) 
+            
+            inflow_outflow_plot=PlotWriter("Time steps", "Inflow Outflow") 
+            inflow_outflow_plot.set_plot_range(0, args.horizon, 2800, 3400) 
+
+            inflow_mean=np.mean(recorded_inflow[-1000:])
+            inflow_std=np.std(recorded_inflow[-1000:])
+            outflow_mean=np.mean(recorded_outflow[-1000:])
+            outflow_std=np.std(recorded_outflow[-1000:])
+            print("****mean and variance",inflow_mean, inflow_std, outflow_mean, outflow_std, len(inflow_per_time_step), len(outflow_per_time_step))
+
+            inflow_outflow_plot.set_title(title_spec+" inflow: %.2f, %.2f" % (inflow_mean, inflow_std)+" outflow: %.2f, %.2f" % (outflow_mean, outflow_std)) 
+            inflow_outflow_plot.add_plot("Inflow", inflow_per_time_step)
+            inflow_outflow_plot.add_plot("Outflow", outflow_per_time_step)
+
 
             # This is a default design of plot, which added human baseline automataicaly. We may want to change this. Here I do not want to break the existing code for plot.
             inflow_plot.add_human=False
@@ -648,6 +670,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_outflow.tex", 1)
             speed_plot.write_plot(args.print_metric_per_time_step_in_file+"_speed.tex", 1)
             reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
+            inflow_outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow.tex", 1)
 
         if multiagent:
             for agent_id, rew in rets.items():
