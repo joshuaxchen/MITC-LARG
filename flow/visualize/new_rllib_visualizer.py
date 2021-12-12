@@ -630,10 +630,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             
             inflow_plot=PlotWriter("Time steps", "Inflow") 
             inflow_plot.set_title(title_spec+" inflow: %f" % np.mean(final_inflows)) 
-            inflow_plot.set_plot_range(0, args.horizon, 0, 4000) 
+            inflow_plot.set_plot_range(0, args.horizon, 2600, 3200) 
             outflow_plot=PlotWriter("Time steps", "Outflow") 
             outflow_plot.set_title(title_spec+" outflow: %f" % np.mean(final_outflows)) 
-            outflow_plot.set_plot_range(0, args.horizon, 0, 4000) 
+            outflow_plot.set_plot_range(0, args.horizon, 2600, 3200) 
             speed_plot=PlotWriter("Time steps", "Speed") 
             speed_plot.set_title(title_spec+" speed: %f" % np.mean(vel)) 
             speed_plot.set_plot_range(0, args.horizon, 0, 40) 
@@ -642,13 +642,17 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             reward_plot.set_plot_range(0, args.horizon, 0, 2000) 
             
             inflow_outflow_plot=PlotWriter("Time steps", "Inflow Outflow") 
-            inflow_outflow_plot.set_plot_range(0, args.horizon, 2800, 3400) 
+            inflow_outflow_plot.set_plot_range(0, args.horizon, 2600, 3200) 
 
             inflow_mean=np.mean(recorded_inflow[-1000:])
             inflow_std=np.std(recorded_inflow[-1000:])
             outflow_mean=np.mean(recorded_outflow[-1000:])
             outflow_std=np.std(recorded_outflow[-1000:])
-            print("****mean and variance",inflow_mean, inflow_std, outflow_mean, outflow_std, len(inflow_per_time_step), len(outflow_per_time_step))
+            if args.print_inflow_outflow_var_in_file is not None:
+                inflow_outflow_mean_var_log= open(args.print_inflow_outflow_var_in_file+".txt", "a")
+                inflow_outflow_mean_var_log.write(title_spec+" inflow: %.2f, %.2f" % (inflow_mean, inflow_std)+" outflow: %.2f, %.2f\n" % (outflow_mean, outflow_std))
+                print("****mean and variance",inflow_mean, inflow_std, outflow_mean, outflow_std, len(inflow_per_time_step), len(outflow_per_time_step))
+                inflow_outflow_mean_var_log.close()
 
             inflow_outflow_plot.set_title(title_spec+" inflow: %.2f, %.2f" % (inflow_mean, inflow_std)+" outflow: %.2f, %.2f" % (outflow_mean, outflow_std)) 
             inflow_outflow_plot.add_plot("Inflow", inflow_per_time_step)
