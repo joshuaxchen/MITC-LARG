@@ -1,0 +1,109 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usetikzlibrary{colorbrewer}
+\usepgfplotslibrary{colorbrewer}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+\pgfplotsset{cycle list/Dark2-3}
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	 index of colormap=1 of Dark2-3,  every mark/.append style={fill=Dark2-A}, mark=star, error bars/.cd, y dir=both, y explicit\\ 
+	index of colormap=2 of Dark2-3, densely dashed every mark/.append style={fill=Dark2-A}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Dark2-3, dashed every mark/.append style={fill=Dark2-A}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Dark2-3,  every mark/.append style={fill=Dark2-A}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Dark2-3, densely dashed every mark/.append style={fill=Dark2-A}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Dark2-3, dashed every mark/.append style={fill=fill=Dark2-A}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+} %end of colors
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large outflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large time},
+	%legend columns=15,
+	legend columns=2,
+	%transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+	cycle list name=mycolorlist,
+	%cycle list name=Dark2,
+	 xmax=5,
+	 xmin=0,
+	 ymax=10,
+	 ymin=0,
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	2	0
+2	3	0
+};
+\label{test-100}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	3	0
+2	4	0
+};
+\label{test-101}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	4	0
+2	5	0
+};
+\label{test-102}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	5	0
+2	6	0
+};
+\label{test-200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	6	0
+2	7	0
+};
+\label{test-201}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+1	7	0
+2	8	0
+};
+\label{test-202}
+
+\addlegendimage{/pgfplots/refstyle=test-100}
+\addlegendentry{test-100}
+\addlegendimage{/pgfplots/refstyle=test-101}
+\addlegendentry{test-101}
+\addlegendimage{/pgfplots/refstyle=test-102}
+\addlegendentry{test-102}
+\addlegendimage{/pgfplots/refstyle=test-200}
+\addlegendentry{test-200}
+\addlegendimage{/pgfplots/refstyle=test-201}
+\addlegendentry{test-201}
+\addlegendimage{/pgfplots/refstyle=test-202}
+\addlegendentry{test-202}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

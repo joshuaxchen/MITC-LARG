@@ -1,5 +1,5 @@
 import os
-from tikz_plot import PlotWriter
+from tikz_plot1 import PlotWriter
 from IPython.core.debugger import set_trace
 
 attr_name="Outflow"
@@ -30,7 +30,7 @@ def LastNlines(fname, num_of_lines, ignore_last_m_lines):
             return last_lines[:-ignore_last_m_lines]
     return None
 
-working_dir=os.path.join("..","..","exp_results","nov_18_lanechange") 
+working_dir=os.path.join("..","..","exp_results","dec_08_assemble") 
 
 
 def retrive_evaluations(working_dir):
@@ -111,11 +111,12 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
             #if right_avp_to_plot is not None and avp_right!=right_avp_to_plot:
             #    continue
 
-            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
-                continue
+            #if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+            #    continue
             print(value)
             if value is None or len(value.keys())==0:
-                set_trace()
+                #set_trace()
+                pass
             mean, var=extract_mean_var(value, attr_name)
             
             left_key=prefix+model_key+"_rightAVP"+avp_right+"_leftAVP"+avp_left+"_rightInflow"+right_main_inflow
@@ -139,7 +140,7 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
         if right_main_inflow_to_plot is None:   
             right_main_inflow_to_plot="*"
 
-        left_plot.write_plot("./fig/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), 4)
+        left_plot.write_plot("./fig/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), every_n_per_color=4, line_shape_group_size=4)
  
 def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -177,6 +178,7 @@ def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left
             data_with_right_main[legend].sort()
             right_plot.add_plot(legend, data_with_right_main[legend])
               
+        #set_trace()
         if left_avp_to_plot is None:
             left_avp_to_plot="*"
         if right_avp_to_plot is None:
@@ -184,7 +186,7 @@ def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left
         if left_main_inflow_to_plot is None:   
             left_main_inflow_to_plot="*"
 
-        right_plot.write_plot("./fig/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), 4)
+        right_plot.write_plot("./fig/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), every_n_per_color=4, line_shape_group_size=4)
       
 def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -231,7 +233,7 @@ def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, 
             left_main_inflow_to_plot="*"
 
 
-        right_plot.write_plot("./fig/"+model_key+"_avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot), 3)
+        right_plot.write_plot("./fig/"+model_key+"_avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4, line_shape_group_size=4)
 
 
 def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
@@ -247,11 +249,11 @@ def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, 
             #if right_avp_to_plot is not None and avp_right!=right_avp_to_plot: 
             #    continue
         
-            #if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
-            #    continue
-
-            if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+            if left_main_inflow_to_plot is not None and left_main_inflow!=left_main_inflow_to_plot:
                 continue
+
+            #if right_main_inflow_to_plot is not None and right_main_inflow!=right_main_inflow_to_plot:
+            #    continue
 
             
             left_key=prefix+model_key+"_rightAVP"+avp_right+"_rightInflow"+right_main_inflow+"_leftInflow"+left_main_inflow
@@ -279,7 +281,7 @@ def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, 
         if right_main_inflow_to_plot is None:   
             right_main_inflow_to_plot="*"
 
-        left_plot.write_plot("./fig/"+model_key+"_avp_left_%s_%s_%s.tex"% (right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot), 4)
+        left_plot.write_plot("./fig/"+model_key+"_avp_left_%s_%s_%s.tex"% (right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4, line_shape_group_size=4)
 
         
 if __name__ == "__main__":
@@ -288,7 +290,9 @@ if __name__ == "__main__":
     # retrieve special models
     data=dict()
     #for preset_i in ["human", "preset_1_dr_light"]:
-    for setting in ["aamas_right", "aamas_left", "aamas_both"]:
+    #for setting in ["aamas_right_1", "aamas_left_1", "aamas_both"]:
+    for setting in ["aamas_right", "aamas_left"]:
+    #for setting in ["aamas_right"]:
         setting_dir=os.path.join(working_dir, setting)
         data_i=retrive_evaluations(setting_dir)
         data[setting]=data_i
@@ -303,7 +307,8 @@ if __name__ == "__main__":
 
     left_avp_to_plot="10" 
     right_avp_to_plot="0" 
-    right_main_inflow_to_plot="2000" 
+    left_main_inflow_to_plot="1000" 
+    right_main_inflow_to_plot="1600" 
     plot_against_left_inflow(data, left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot)
     plot_against_left_avp(data, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot)
 
