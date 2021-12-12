@@ -1,45 +1,49 @@
-<img src="docs/img/square_logo.png" align="right" width="25%"/>
-
-[![Build Status](https://travis-ci.com/flow-project/flow.svg?branch=master)](https://travis-ci.com/flow-project/flow)
-[![Docs](https://readthedocs.org/projects/flow/badge)](http://flow.readthedocs.org/en/latest/)
-[![Coverage Status](https://coveralls.io/repos/github/flow-project/flow/badge.svg?branch=master)](https://coveralls.io/github/flow-project/flow?branch=master)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/flow-project/flow/binder)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/flow-project/flow/blob/master/LICENSE.md)
-
 # Flow
 
 [Flow](https://flow-project.github.io/) is a computational framework for deep RL and control experiments for traffic microsimulation.
 
-See [our website](https://flow-project.github.io/) for more information on the application of Flow to several mixed-autonomy traffic scenarios. Other [results and videos](https://sites.google.com/view/ieee-tro-flow/home) are available as well.
+# Important parameters for training and visualization
 
-# More information
+--handset_inflow MAIN_HUMAN_INFLOW MAIN_RL_INFLOW MERGE_INFLOW: handset_inflow takes three paramters as input to specify the main human inflow, main rl inflow, and merge inflow in a simple merge scenario. (used for both training and evalution)
 
-- [Documentation](https://flow.readthedocs.org/en/latest/)
-- [Installation instructions](http://flow.readthedocs.io/en/latest/flow_setup.html)
-- [Tutorials](https://github.com/flow-project/flow/tree/master/tutorials)
-- [Binder Build (beta)](https://mybinder.org/v2/gh/flow-project/flow/binder)
+--exp_folder_make "prefix of the folder name with the trained model": exp_folder_name is used to specify the prefix of the foldername of the trained model under ray_results.  (used for both training and evalution)
 
-# Technical questions
+--cpu NUMBER_OF_CPU_TO_USE: Specify the number of cpus to be used. 
 
-If you have a bug, please report it. Otherwise, join the [Flow Users group](https://forms.gle/CuVBu6QtX3dfNaxz6) on Slack! You'll recieve an email shortly after filling out the form. 
+--agent_action_policy_dir "path_to_your_trained_model": This is used to specify the policy for the AVs.  (used for evalution)
 
-# Getting involved
+--seed_dir "path_to_the_folder_of_the_random_seed": This is used to specify the path to the random seed. (used for evaluation)
 
-We welcome your contributions.
+--lateral_resolution 3.2: This is a default parameter used for multi-lane scenario to specify the lateral_resolution. (used for evaluation)
 
-- Please report bugs and improvements by submitting [GitHub issue](https://github.com/flow-project/flow/issues).
-- Submit your contributions using [pull requests](https://github.com/flow-project/flow/pulls). Please use [this template](https://github.com/flow-project/flow/blob/master/.github/PULL_REQUEST_TEMPLATE.md) for your pull requests.
+--render_mode [sumo_gui|no_render]: This is to specify whether you want to visualize the results in sumo or not. (used for evaluation) 
 
-# Citing Flow
+--rl_inflows RL_INFLOW_RIGHT RL_INFLOW_LEFT: It takes two parameters as input to specify the right rl inflow, and left rl inflow. (used for evaluation in a 2-lane scenario)
 
-If you use Flow for academic research, you are highly encouraged to cite our paper:
+--human_lane_change [0/1] [0/1]: It takes two integers as input to specify whether there is lane change (1) or not (0) for human driven vehicles in the right and left lane respectively.
 
-C. Wu, A. Kreidieh, K. Parvate, E. Vinitsky, A. Bayen, "Flow: Architecture and Benchmarking for Reinforcement Learning in Traffic Control," CoRR, vol. abs/1710.05465, 2017. [Online]. Available: https://arxiv.org/abs/1710.05465
+--rl_lane_change [0/1] [0/1]: It takes two integers as input to specify whether there is lane change (1) or not (0) for AVs in the right and left lane respectively.
 
-If you use the benchmarks, you are highly encouraged to cite our paper:
+--merge_inflow MERGE_INFLOW: It specifies the inflow of the merge lane, assuming that they are all human driven vehicles.
 
-Vinitsky, E., Kreidieh, A., Le Flem, L., Kheterpal, N., Jang, K., Wu, F., ... & Bayen, A. M,  Benchmarks for reinforcement learning in mixed-autonomy traffic. In Conference on Robot Learning (pp. 399-409). Available: http://proceedings.mlr.press/v87/vinitsky18a.html
+--speed_gain [0, 1]: This is a parameter used by sumo lane change model to specify the speed gain for each vehicle, the willingness of the vehicle to change lanes to gain speed.
 
-# Contributors
+--to_probability: This is a flag, and it is used to set the inflows in the main highway to be randomly placed. It does not change the merge inflow placement.
 
-Flow is supported by the [Mobile Sensing Lab](http://bayen.eecs.berkeley.edu/) at UC Berkeley and Amazon AWS Machine Learning research grants. The contributors are listed in [Flow Team Page](https://flow-project.github.io/team.html).
+--horizon HORIOZN: This is used to specify the horizon of the experiments, in terms of time steps.
+
+--assertive ASSERTIVE: This is a parameter used by sumo lane change model to specify the assertiveness (willingness to accept lower front and rear gaps on the target lane). 
+--run_random_seed seed_index: This is used to run the experiment of a specific random seed (out of 100). 
+
+--print_vehicles_per_time_step_in_file "path_to_log_file": This is used to record the number of vehicles remainning in the network for the first/specified experiment/random seed.
+
+--print_metric_per_time_step_in_file "path_to_log_file": This is used to record the inflow, outflow measured at every time step in the first/specified experiment/random seed. 
+
+--print_inflow_outflow_var_in_file "path_to_log_file": This is used to record the mean, variance of the inflow/outflow at the last 1000 time steps. 
+
+--lc_probability LC_PROB: This is deprecated. It was used to manually push the human driven vehicles to change lane with some probability.
+
+--i696: This flag is set to indicate that the inflows is added to the i696 network, where the edges have different names than simple merge and there are three merging ramps sharing the same merge inflow. 
+
+
+
