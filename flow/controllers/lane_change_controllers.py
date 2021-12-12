@@ -68,6 +68,8 @@ class StochasticLaneChangeController(BaseLaneChangeController):
 
         lane_id=env.k.vehicle.get_lane(self.veh_id)
         lateral_pos=env.k.vehicle.get_lateral_lane_pos(self.veh_id)
+        #if abs(lateral_pos)>1:
+        #    return None
         current_dist_center_line=abs(lateral_pos) 
         do_interrupt=self.do_interrupt(env, lane_id, current_dist_center_line)
         self.prev_lane=lane_id

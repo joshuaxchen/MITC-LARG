@@ -241,12 +241,12 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         # the vehicles on lane 1 (left lane) is set to 7 
         rl_ids=self.k.vehicle.get_rl_ids()
         current_lane_change_human_ids=self.k.vehicle.get_lane_change_human_ids() 
-
         for veh_id in self.k.vehicle.get_ids():
             lane_index= self.k.vehicle.get_lane(veh_id)
 
             if veh_id in rl_ids:
-                self.k.vehicle.set_speed_mode(veh_id, 15)
+                #self.k.vehicle.set_speed_mode(veh_id, 15)
+                self.k.vehicle.set_speed_mode(veh_id, 7)
             elif lane_index==0:
                 self.k.vehicle.set_speed_mode(veh_id, 15)
             else:
@@ -429,7 +429,11 @@ class MultiAgentHighwayPOEnvWindow(MultiAgentHighwayPOEnv):
             done['__all__'] = False
 
         infos = {key: {} for key in states.keys()}
-        #infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
+
+        from flow.envs import enable_total_num_of_vehicles
+        if enable_total_num_of_vehicles:
+            infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
+
 
         # compute the reward
         if self.env_params.clip_actions:
