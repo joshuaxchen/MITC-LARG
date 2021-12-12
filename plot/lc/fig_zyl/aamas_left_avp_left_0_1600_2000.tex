@@ -170,7 +170,7 @@
 
 \begin{axis}[
     legend style={font=\small},
-	ylabel={\Large Speed},
+	ylabel={\Large Outflow},
 	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
 	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
 	%xticklabel style = {font=\small,xshift=0.5ex},
@@ -184,6 +184,72 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2521.55	89.44
+20	2489.76	133.44
+30	2514.71	172.33
+40	2501.06	168.07
+};
+\label{aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2517.88	92.05
+20	2487.06	132.42
+30	2516.76	175.53
+40	2472.41	145.56
+};
+\label{aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2522.41	93.1
+20	2495.56	130.61
+30	2523.24	158.91
+40	2487.85	186.21
+};
+\label{aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2875.28	55.97
+20	2874.71	45.8
+30	2882.56	49.3
+40	2864.16	52.22
+};
+\label{human-aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2884.28	51.82
+20	2888.14	49.65
+30	2884.1	53.12
+40	2884.0	48.64
+};
+\label{human-aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+10	2902.68	48.62
+20	2892.6	49.47
+30	2898.0	58.95
+40	2897.14	49.27
+};
+\label{human-aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
+
+\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendentry{aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendentry{aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendentry{human-aamas-left-rightAVP0-rightInflow2000-leftInflow1600}
+\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendentry{human-aamas-left-rightAVP0-rightInflow2000-leftInflow1800}
+\addlegendimage{/pgfplots/refstyle=human-aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
+\addlegendentry{human-aamas-left-rightAVP0-rightInflow2000-leftInflow2000}
 
 
 \end{axis}
