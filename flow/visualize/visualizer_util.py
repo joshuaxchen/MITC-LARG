@@ -8,6 +8,7 @@ from flow.controllers import SimLaneChangeController,SimpleMergeLaneChanger, Sta
 import sys
 
 import argparse 
+from IPython.core.debugger import set_trace
 
 LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP=1621
 LANE_CHANGE_REPECT_COLLISION_AVOID=1365
@@ -127,7 +128,9 @@ def set_argument(evaluate=False):
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
-        controller=RLController
+        controller=IDMRLController
+        #controller=IDMController
+        #controller=RLController
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
@@ -156,6 +159,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
             lane_change_params=SumoLaneChangeParams(
                 model="SL2015", #"SL2015", #LC2013
                 lane_change_mode=lane_change_mode,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+                lat_alignment=0,
                 lc_speed_gain=speed_gain, #was 1000000,
                 lc_keep_right=0, #was 0
                 lc_pushy=0, #0.5, #1,
@@ -260,6 +264,12 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
     elif veh_right_left_or_both==3:
         # rl on both lanes
         veh_names=[veh_prefix+'_r', veh_prefix+'_l']
+    elif veh_right_left_or_both==0:
+        veh_names=[None, None]
+    else:
+        print("veh right or left not clear")
+        exit(-1)
+
 
     # find the corrsponding operators to add rl vehicles
     add_veh_operators=[]
@@ -278,6 +288,9 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         add_veh_operators=[add_vehicles_with_lane_change, add_vehicles_no_lane_change]
     elif veh_lane_change==2:
         add_veh_operators=[add_vehicles_no_lane_change, add_vehicles_with_lane_change]
+    else:
+        print("veh lane change not clear")
+        exit(-1)
 
     for i in range(0, len(veh_names)):
         veh_name=veh_names[i]
@@ -285,12 +298,15 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
             continue
         operator=add_veh_operators[i]
         speed_mode=7
-        veh_num=5
+        #veh_num=5
+        veh_num=0
         if "human" in veh_name and i==0: # the right most lane and human
             speed_mode=15
+            veh_num=1
         elif "rl" in veh_name:
-            speed_mode=15
+            speed_mode=7
             veh_num=0
+
         operator(vehicle_params, veh_name, speed_mode, veh_num, speed_gain, assertive, lc_probability)
     return veh_names
     
@@ -631,8 +647,8 @@ def reset_inflows(args, flow_params):
     veh_params=flow_params['veh'] 
     env_name=flow_params['env_name']
 
-    if veh_params is None:
-        veh_params=VehicleParams()
+    #if veh_params is None:
+    veh_params=VehicleParams()
 
     # Inflows        
     # This is implemented in flow.envs.base or flow.envs.multiagent.base
@@ -771,6 +787,16 @@ def reset_inflows(args, flow_params):
 
         veh_params=VehicleParams()
         print("speed_gain", args.speed_gain)
+        #set_trace()
+
+        # add human inflows that do not change lane
+        if args.no_lanchange_human_inflows_on_right is not None and args.no_lanchange_human_inflows_on_right>0:
+            #set_trace()
+            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_right", [], [], [args.no_lanchange_human_inflows_on_right, 0], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
+        if args.no_lanchange_human_inflows_on_left is not None and args.no_lanchange_human_inflows_on_left>0:
+            #set_trace()
+            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_left", [], [], [0, args.no_lanchange_human_inflows_on_left], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
+
         add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "", args.rl_inflows, args.rl_lane_change, args.human_inflows, args.human_lane_change, args.speed_gain, args.assertive, args.lc_probability)
         add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", "", [], [], [args.merge_inflow], [0], args.speed_gain, args.assertive, args.lc_probability)
 
@@ -792,11 +818,7 @@ def reset_inflows(args, flow_params):
             sys.exit(-1)
         env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
-        # add human inflows that do not change lane
-        if args.no_lanchange_human_inflows_on_right is not None and args.no_lanchange_human_inflows_on_right>0:
-            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_right", [], [], [args.no_lanchange_human_inflows_on_right, 0], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
-        if args.no_lanchange_human_inflows_on_left is not None and args.no_lanchange_human_inflows_on_left>0:
-            add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_highway", "_no_lc_left", [], [], [0, args.no_lanchange_human_inflows_on_left], [0, 0], args.speed_gain, args.assertive, args.lc_probability)
+        
 
         #print("rl_inflows", args.rl_inflows)
         #print("rl_lane_change", args.rl_lane_change)

@@ -806,6 +806,8 @@ if __name__ == '__main__':
     import random
     seed_filename.sort()
     for i in range(len(seed_filename)):
+        #if args.render_mode =="sumo_gui":
+        #    i=3
         k=random.choice(np.arange(len(seed_filename)))
         k=i
         seed = seed_filename[k]
