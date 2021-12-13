@@ -1,0 +1,371 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+\usepgfplotslibrary{colorbrewer}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+\pgfplotsset{cycle list/Greys-4}%set the colormap
+\pgfplotsset{cycle list/Greys-5}
+\pgfplotsset{cycle list/Set1-4}
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	 index of colormap=1 of Greys-4,  every mark/.append style={fill=Greys-B}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, densely dashed every mark/.append style={fill=Greys-B}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, dashed every mark/.append style={fill=Greys-B}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, densely dotted every mark/.append style={fill=Greys-B}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, loosely dotted every mark/.append style={fill=Greys-B}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, loosely dashed every mark/.append style={fill=Greys-B}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, densely dashdotted every mark/.append style={fill=Greys-B}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Greys-4, loosely dashdottted every mark/.append style={fill=Greys-B}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4,  every mark/.append style={fill=Greys-C}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, densely dashed every mark/.append style={fill=Greys-C}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, dashed every mark/.append style={fill=Greys-C}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, densely dotted every mark/.append style={fill=Greys-C}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, loosely dotted every mark/.append style={fill=Greys-C}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, loosely dashed every mark/.append style={fill=Greys-C}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, densely dashdotted every mark/.append style={fill=Greys-C}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=2 of Greys-4, loosely dashdottted every mark/.append style={fill=Greys-C}, mark=-, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4,  every mark/.append style={fill=Greys-D}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, densely dashed every mark/.append style={fill=Greys-D}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, dashed every mark/.append style={fill=Greys-D}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, densely dotted every mark/.append style={fill=Greys-D}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, loosely dotted every mark/.append style={fill=Greys-D}, mark=square*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, loosely dashed every mark/.append style={fill=Greys-D}, mark=x, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, densely dashdotted every mark/.append style={fill=Greys-D}, mark=+, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=3 of Greys-4, loosely dashdottted every mark/.append style={fill=Greys-D}, mark=-, error bars/.cd, y dir=both, y explicit\\
+}%end of colors
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large Mean inflow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large Horizon},
+	%legend columns=15,
+	legend columns=2,
+	%transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+	cycle list name=mycolorlist
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	2931.90	0
+3000	2948.43	0
+4000	2889.19	0
+};
+\label{human-1600-1000-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2837.18	0
+6000	2806.04	0
+7000	2770.93	0
+8000	2787.30	0
+9000	2828.82	0
+10000	2804.53	0
+12000	2868.82	0
+14000	2768.13	0
+};
+\label{human-1600-1000-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3183.29	0
+3000	3145.63	0
+4000	3070.07	0
+};
+\label{human-1600-1200-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2997.58	0
+6000	3012.45	0
+7000	2996.86	0
+8000	2995.24	0
+9000	3026.30	0
+10000	2997.15	0
+12000	3068.16	0
+14000	2963.44	0
+};
+\label{human-1600-1200-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3300.54	0
+3000	3179.23	0
+4000	3036.37	0
+};
+\label{human-1600-1400-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2993.03	0
+6000	3013.43	0
+7000	3004.29	0
+8000	3004.91	0
+9000	3024.63	0
+10000	3022.14	0
+12000	3044.16	0
+14000	3057.15	0
+};
+\label{human-1600-1400-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3393.82	0
+3000	3197.45	0
+4000	3060.92	0
+};
+\label{human-1600-1600-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2990.70	0
+6000	3023.45	0
+7000	2968.65	0
+8000	2964.33	0
+9000	3042.83	0
+10000	3069.06	0
+12000	2967.42	0
+14000	3152.88	0
+};
+\label{human-1600-1600-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3070.18	0
+3000	3113.65	0
+4000	3089.59	0
+};
+\label{human-1800-1000-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	3039.21	0
+6000	2994.90	0
+7000	2960.41	0
+8000	2985.46	0
+9000	3028.61	0
+10000	3016.49	0
+12000	3027.47	0
+14000	2966.50	0
+};
+\label{human-1800-1000-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3253.59	0
+3000	3157.46	0
+4000	3042.30	0
+};
+\label{human-1800-1200-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2978.04	0
+6000	2962.48	0
+7000	2978.76	0
+8000	3028.72	0
+9000	3053.62	0
+10000	3007.89	0
+12000	2922.24	0
+14000	2950.61	0
+};
+\label{human-1800-1200-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3426.54	0
+3000	3209.82	0
+4000	3055.92	0
+};
+\label{human-1800-1400-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	3025.03	0
+6000	3022.88	0
+7000	3039.25	0
+8000	3043.36	0
+9000	3056.50	0
+10000	3049.75	0
+12000	3032.72	0
+14000	3082.45	0
+};
+\label{human-1800-1400-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3357.93	0
+3000	3166.63	0
+4000	3113.81	0
+};
+\label{human-1800-1600-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2966.30	0
+6000	2999.55	0
+7000	3051.51	0
+8000	3020.44	0
+9000	2994.70	0
+10000	3005.56	0
+12000	3050.92	0
+14000	3083.08	0
+};
+\label{human-1800-1600-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3208.57	0
+3000	3155.87	0
+4000	3017.40	0
+};
+\label{human-2000-1000-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2968.94	0
+6000	2944.84	0
+7000	2925.74	0
+8000	2914.69	0
+9000	2936.66	0
+10000	2948.62	0
+12000	3017.38	0
+14000	2977.77	0
+};
+\label{human-2000-1000-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3232.26	0
+3000	3098.80	0
+4000	3035.65	0
+};
+\label{human-2000-1200-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	2987.70	0
+6000	2989.48	0
+7000	2998.02	0
+8000	3018.64	0
+9000	3056.46	0
+10000	3055.04	0
+12000	3077.01	0
+14000	2938.77	0
+};
+\label{human-2000-1200-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3366.99	0
+3000	3133.56	0
+4000	3011.39	0
+};
+\label{human-2000-1400-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	3080.06	0
+6000	3023.65	0
+7000	2988.14	0
+8000	2953.92	0
+9000	2968.39	0
+10000	2978.68	0
+12000	3023.63	0
+14000	3001.56	0
+};
+\label{human-2000-1400-200-10-0-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+2000	3302.41	0
+3000	3111.81	0
+4000	3040.20	0
+};
+\label{human-2000-1600-200-0-10-1-5}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+5000	3104.92	0
+6000	3057.30	0
+7000	3012.32	0
+8000	2985.53	0
+9000	2987.73	0
+10000	3017.46	0
+12000	3054.30	0
+14000	3104.33	0
+};
+\label{human-2000-1600-200-10-0-1-5}
+
+\addlegendimage{/pgfplots/refstyle=human-1600-1000-200-0-10-1-5}
+\addlegendentry{human-1600-1000-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1000-200-10-0-1-5}
+\addlegendentry{human-1600-1000-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1200-200-0-10-1-5}
+\addlegendentry{human-1600-1200-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1200-200-10-0-1-5}
+\addlegendentry{human-1600-1200-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1400-200-0-10-1-5}
+\addlegendentry{human-1600-1400-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1400-200-10-0-1-5}
+\addlegendentry{human-1600-1400-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1600-200-0-10-1-5}
+\addlegendentry{human-1600-1600-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1600-1600-200-10-0-1-5}
+\addlegendentry{human-1600-1600-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1000-200-0-10-1-5}
+\addlegendentry{human-1800-1000-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1000-200-10-0-1-5}
+\addlegendentry{human-1800-1000-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1200-200-0-10-1-5}
+\addlegendentry{human-1800-1200-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1200-200-10-0-1-5}
+\addlegendentry{human-1800-1200-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1400-200-0-10-1-5}
+\addlegendentry{human-1800-1400-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1400-200-10-0-1-5}
+\addlegendentry{human-1800-1400-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1600-200-0-10-1-5}
+\addlegendentry{human-1800-1600-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-1800-1600-200-10-0-1-5}
+\addlegendentry{human-1800-1600-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1000-200-0-10-1-5}
+\addlegendentry{human-2000-1000-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1000-200-10-0-1-5}
+\addlegendentry{human-2000-1000-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1200-200-0-10-1-5}
+\addlegendentry{human-2000-1200-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1200-200-10-0-1-5}
+\addlegendentry{human-2000-1200-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1400-200-0-10-1-5}
+\addlegendentry{human-2000-1400-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1400-200-10-0-1-5}
+\addlegendentry{human-2000-1400-200-10-0-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1600-200-0-10-1-5}
+\addlegendentry{human-2000-1600-200-0-10-1-5}
+\addlegendimage{/pgfplots/refstyle=human-2000-1600-200-10-0-1-5}
+\addlegendentry{human-2000-1600-200-10-0-1-5}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
