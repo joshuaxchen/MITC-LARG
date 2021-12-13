@@ -5,6 +5,7 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{siunitx}
+\usepgfplotslibrary{colorbrewer}
 
 \begin{document}
 
@@ -16,100 +17,12 @@
 	legend style={at={(1.05,0.95)},anchor=north west}
   }
 
+\pgfplotsset{cycle list/Greys-5}
+\pgfplotsset{cycle list/Set1-4}
+
 \pgfplotscreateplotcyclelist{mycolorlist}{%
 %begin of colors
-	blue,every mark/.append style={fill=blue!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	blue,every mark/.append style={fill=blue!60}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	blue,every mark/.append style={fill=blue!40}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	blue,every mark/.append style={fill=blue!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	blue,every mark/.append style={fill=blue!10}, mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	red,densely dashed,every mark/.append style={solid,fill=red!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	red,densely dashed,every mark/.append style={solid,fill=red!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	red,densely dashed,every mark/.append style={solid,fill=red!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	red,densely dashed,every mark/.append style={solid,fill=red!20}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	red,densely dashed,every mark/.append style={solid,fill=red!10}, mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	green!40!black, dashed,every mark/.append style={solid,fill=green!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	green!40!black, dashed,every mark/.append style={solid,fill=green!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	green!40!black, dashed,every mark/.append style={solid,fill=green!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	green!40!black, dashed,every mark/.append style={solid,fill=green!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	green!40!black, dashed,every mark/.append style={solid,fill=green!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	cyan!40!black, dashed,every mark/.append style={solid,fill=cyan!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	cyan!40!black, dashed,every mark/.append style={solid,fill=cyan!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	cyan!40!black, dashed,every mark/.append style={solid,fill=cyan!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	cyan!40!black, dashed,every mark/.append style={solid,fill=cyan!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	cyan!40!black, dashed,every mark/.append style={solid,fill=cyan!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	magenta!40!black, dashed,every mark/.append style={solid,fill=magenta!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	magenta!40!black, dashed,every mark/.append style={solid,fill=magenta!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	magenta!40!black, dashed,every mark/.append style={solid,fill=magenta!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	magenta!40!black, dashed,every mark/.append style={solid,fill=magenta!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	magenta!40!black, dashed,every mark/.append style={solid,fill=magenta!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	yellow!40!black, dashed,every mark/.append style={solid,fill=yellow!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	yellow!40!black, dashed,every mark/.append style={solid,fill=yellow!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	yellow!40!black, dashed,every mark/.append style={solid,fill=yellow!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	yellow!40!black, dashed,every mark/.append style={solid,fill=yellow!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	yellow!40!black, dashed,every mark/.append style={solid,fill=yellow!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	gray!40!black, dashed,every mark/.append style={solid,fill=gray!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	gray!40!black, dashed,every mark/.append style={solid,fill=gray!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	gray!40!black, dashed,every mark/.append style={solid,fill=gray!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	gray!40!black, dashed,every mark/.append style={solid,fill=gray!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	gray!40!black, dashed,every mark/.append style={solid,fill=gray!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	purple!40!black, dashed,every mark/.append style={solid,fill=purple!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	purple!40!black, dashed,every mark/.append style={solid,fill=purple!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	purple!40!black, dashed,every mark/.append style={solid,fill=purple!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	purple!40!black, dashed,every mark/.append style={solid,fill=purple!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	purple!40!black, dashed,every mark/.append style={solid,fill=purple!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	olive!40!black, dashed,every mark/.append style={solid,fill=olive!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	olive!40!black, dashed,every mark/.append style={solid,fill=olive!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	olive!40!black, dashed,every mark/.append style={solid,fill=olive!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	olive!40!black, dashed,every mark/.append style={solid,fill=olive!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	olive!40!black, dashed,every mark/.append style={solid,fill=olive!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	teal!40!black, dashed,every mark/.append style={solid,fill=teal!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	teal!40!black, dashed,every mark/.append style={solid,fill=teal!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	teal!40!black, dashed,every mark/.append style={solid,fill=teal!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	teal!40!black, dashed,every mark/.append style={solid,fill=teal!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	teal!40!black, dashed,every mark/.append style={solid,fill=teal!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	violet!40!black, dashed,every mark/.append style={solid,fill=violet!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	violet!40!black, dashed,every mark/.append style={solid,fill=violet!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	violet!40!black, dashed,every mark/.append style={solid,fill=violet!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	violet!40!black, dashed,every mark/.append style={solid,fill=violet!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	violet!40!black, dashed,every mark/.append style={solid,fill=violet!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	lime!40!black, dashed,every mark/.append style={solid,fill=lime!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	lime!40!black, dashed,every mark/.append style={solid,fill=lime!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	lime!40!black, dashed,every mark/.append style={solid,fill=lime!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	lime!40!black, dashed,every mark/.append style={solid,fill=lime!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	lime!40!black, dashed,every mark/.append style={solid,fill=lime!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	pink!40!black, dashed,every mark/.append style={solid,fill=pink!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	pink!40!black, dashed,every mark/.append style={solid,fill=pink!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	pink!40!black, dashed,every mark/.append style={solid,fill=pink!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	pink!40!black, dashed,every mark/.append style={solid,fill=pink!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	pink!40!black, dashed,every mark/.append style={solid,fill=pink!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	darkgray!40!black, dashed,every mark/.append style={solid,fill=darkgray!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	darkgray!40!black, dashed,every mark/.append style={solid,fill=darkgray!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	darkgray!40!black, dashed,every mark/.append style={solid,fill=darkgray!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	darkgray!40!black, dashed,every mark/.append style={solid,fill=darkgray!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	darkgray!40!black, dashed,every mark/.append style={solid,fill=darkgray!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	lightgray!40!black, dashed,every mark/.append style={solid,fill=lightgray!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	lightgray!40!black, dashed,every mark/.append style={solid,fill=lightgray!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	lightgray!40!black, dashed,every mark/.append style={solid,fill=lightgray!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	lightgray!40!black, dashed,every mark/.append style={solid,fill=lightgray!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	lightgray!40!black, dashed,every mark/.append style={solid,fill=lightgray!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	brown!40!black, dashed,every mark/.append style={solid,fill=brown!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	brown!40!black, dashed,every mark/.append style={solid,fill=brown!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	brown!40!black, dashed,every mark/.append style={solid,fill=brown!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	brown!40!black, dashed,every mark/.append style={solid,fill=brown!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	brown!40!black, dashed,every mark/.append style={solid,fill=brown!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	orange!40!black, dashed,every mark/.append style={solid,fill=orange!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	orange!40!black, dashed,every mark/.append style={solid,fill=orange!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	orange!40!black, dashed,every mark/.append style={solid,fill=orange!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	orange!40!black, dashed,every mark/.append style={solid,fill=orange!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	orange!40!black, dashed,every mark/.append style={solid,fill=orange!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-	black, dashed,every mark/.append style={solid,fill=black!80}, mark=star, error bars/.cd, y dir=both, y explicit\\%
-	black, dashed,every mark/.append style={solid,fill=black!60},mark=triangle*, error bars/.cd, y dir=both, y explicit\\%
-	black, dashed,every mark/.append style={solid,fill=black!40},mark=diamond*, error bars/.cd, y dir=both, y explicit\\%
-	black, dashed,every mark/.append style={solid,fill=black!20},mark=otimes*, error bars/.cd, y dir=both, y explicit\\%
-	black, dashed,every mark/.append style={solid,fill=black!10},mark=square*, error bars/.cd, y dir=both, y explicit\\%
-} %end of colors
-
+}%end of colors
 
 \begin{axis}[
     legend style={font=\small},
