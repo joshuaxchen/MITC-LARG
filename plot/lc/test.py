@@ -1,4 +1,4 @@
-from tikz_plot1 import PlotWriter
+from tikz_plot import PlotWriter
 
 a=PlotWriter("time", "outflow") 
 a.set_plot_range(0, 5, 0, 10)

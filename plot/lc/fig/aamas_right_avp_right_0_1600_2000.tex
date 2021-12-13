@@ -21,14 +21,6 @@
 \pgfplotsset{cycle list/Set1-4}
 
 \pgfplotscreateplotcyclelist{mycolorlist}{%
-	 index of colormap=0 of Set1-1,  every mark/.append style={fill=Set1-A}, mark=star, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=0 of Set1-1, densely dashed every mark/.append style={fill=Set1-A}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=0 of Set1-1, dashed every mark/.append style={fill=Set1-A}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=0 of Set1-1, densely dotted every mark/.append style={fill=Set1-A}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=1 of Greys-2,  every mark/.append style={fill=Greys-B}, mark=star, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=1 of Greys-2, densely dashed every mark/.append style={fill=Greys-B}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=1 of Greys-2, dashed every mark/.append style={fill=Greys-B}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=1 of Greys-2, densely dotted every mark/.append style={fill=Greys-B}, mark=otimes*, error bars/.cd, y dir=both, y explicit\\
 }%end of colors
 
 \begin{axis}[
@@ -47,94 +39,6 @@
 	cycle list name=mycolorlist
 ]
 %end of axis
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2992.57	129.28
-20	3109.57	101.32
-30	3122.78	75.19
-40	3124.08	66.5
-};
-\label{aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	3002.54	112.25
-20	3105.65	103.71
-30	3137.29	79.6
-40	3133.22	69.81
-};
-\label{aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	3007.3	118.17
-20	3102.98	105.03
-30	3136.68	77.01
-40	3133.37	73.0
-};
-\label{aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2999.95	110.65
-20	3115.69	105.31
-30	3142.26	78.85
-40	3133.73	71.82
-};
-\label{aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2998.3	77.95
-20	2977.6	70.8
-30	2977.38	69.03
-40	2983.93	70.64
-};
-\label{human-aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2992.54	66.03
-20	2985.62	59.01
-30	2986.96	51.33
-40	2989.48	66.15
-};
-\label{human-aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2986.42	56.17
-20	3002.11	54.87
-30	2986.88	57.48
-40	2988.0	46.86
-};
-\label{human-aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-
-\addplot table [x=a, y=b] {
-a	 b	 c
-10	2991.2	50.36
-20	2981.52	43.49
-30	2986.27	58.19
-40	2996.35	55.34
-};
-\label{human-aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
-
-\addlegendimage{/pgfplots/refstyle=aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-\addlegendentry{aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-\addlegendentry{aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-\addlegendentry{aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
-\addlegendentry{aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=human-aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-\addlegendentry{human-aamas-right-leftAVP0-rightInflow1600-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=human-aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-\addlegendentry{human-aamas-right-leftAVP0-rightInflow1800-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=human-aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-\addlegendentry{human-aamas-right-leftAVP0-rightInflow1900-leftInflow1600}
-\addlegendimage{/pgfplots/refstyle=human-aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
-\addlegendentry{human-aamas-right-leftAVP0-rightInflow2000-leftInflow1600}
 
 
 \end{axis}

@@ -1,5 +1,5 @@
 import os
-from tikz_plot1 import PlotWriter
+from tikz_plot import PlotWriter
 from IPython.core.debugger import set_trace
 
 attr_name="Outflow"
