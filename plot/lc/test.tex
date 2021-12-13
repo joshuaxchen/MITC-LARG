@@ -17,16 +17,19 @@
 	legend style={at={(1.05,0.95)},anchor=north west}
   }
 
-\pgfplotsset{cycle list/Greys-9}
+\pgfplotsset{cycle list/Greys-1}
 \pgfplotsset{cycle list/Set1-3}
+%color_map_definition
+%\pgfplotsset{cycle list/Greys-5}
+%\pgfplotsset{cycle list/Set1-4}
 
 \pgfplotscreateplotcyclelist{mycolorlist}{%
 	 index of colormap=0 of Set1-3,  every mark/.append style={fill=Set1-A}, mark=star, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=0 of Set1-3, densely dashed every mark/.append style={fill=Set1-A}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
+	 index of colormap=1 of Set1-3,  every mark/.append style={fill=Set1-B}, mark=star, error bars/.cd, y dir=both, y explicit\\
 	 index of colormap=1 of Set1-3, densely dashed every mark/.append style={fill=Set1-B}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=1 of Set1-3, dashed every mark/.append style={fill=Set1-B}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
 	 index of colormap=2 of Set1-3,  every mark/.append style={fill=Set1-C}, mark=star, error bars/.cd, y dir=both, y explicit\\
 	 index of colormap=2 of Set1-3, densely dashed every mark/.append style={fill=Set1-C}, mark=triangle*, error bars/.cd, y dir=both, y explicit\\
-	 index of colormap=3 of Set1-3, dashed every mark/.append style={fill=Set1-D}, mark=diamond*, error bars/.cd, y dir=both, y explicit\\
 }%end of colors
 
 \begin{axis}[

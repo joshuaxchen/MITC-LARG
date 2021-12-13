@@ -23,6 +23,10 @@ class PlotWriter:
         self.template_legend="\\addlegendimage{/pgfplots/refstyle=%s}\n\\addlegendentry{%s}\n"
         self.template_color="\t %s, %s every mark/.append style={fill=%s}, mark=%s, error bars/.cd, y dir=both, y explicit\\\\"
         self.label_list=list()
+
+        self.human_color_map="Greys"
+        self.av_color_map="Set1"
+
     def set_plot_range(self, xmin, xmax, ymin, ymax):
         self.fname_suffix="_min%d_max%d" % (xmin, xmax)
         self.xmin=xmin
@@ -43,8 +47,7 @@ class PlotWriter:
         self.plot_content+=self.template_plot % (content_str, label1)  
         self.legend+=self.template_legend % (label1, label2)
         self.label_list.append(label)
-
-    def generate_color_lines(self, every_n_per_color, line_shape_group_size):
+    def get_human_and_av_label_size(self, every_n_per_color):
         total_av_color=0
         total_human_color=0
         for label in self.label_list:
@@ -52,18 +55,24 @@ class PlotWriter:
                 total_human_color+=1
             else:
                 total_av_color+=1
-        total_av_color=-1*(-1*total_av_color // every_n_per_color)
+        total_av_color=-1*(-1*total_av_color // every_n_per_color) # compute ceil of division
         total_human_color=-1*(-1*total_human_color // every_n_per_color)
+        return total_human_color, total_av_color
 
-        human_color_prefix="Greys-"+str(total_human_color+1)
-        human_fill_prefix="Greys-"
+    def generate_color_lines(self, every_n_per_color):
+        total_human_color, total_av_color=self.get_human_and_av_label_size(every_n_per_color)
+
+        human_color_prefix=self.human_color_map+"-"+str(total_human_color+1)
+        human_fill_prefix=self.human_color_map+"-"
         human_color_index=0
-        av_color_prefix="Set1-" +str(total_av_color)
-        av_fill_prefix="Set1-"
+        av_color_prefix=self.av_color_map+"-" +str(total_av_color)
+        av_fill_prefix=self.av_color_map+"-"
+
         av_color_index=0
         shape_index=0
         line_pattern_index=0
         line_shape_index=1
+
         results=""
         start='A'
         for label in self.label_list:
@@ -89,7 +98,7 @@ class PlotWriter:
             if line_pattern_index>=len(PlotWriter.line_patterns):
                 line_pattern_index=0
             line_shape_index+=1
-            if line_shape_index>line_shape_group_size:
+            if line_shape_index>every_n_per_color:
                 line_shape_index=1
                 shape_index=0
                 line_pattern_index=0
@@ -97,7 +106,7 @@ class PlotWriter:
     def set_title(self, title):
         if title and title !="":
             self.title=title
-    def write_plot(self, filename, every_n_per_color=4, line_shape_group_size=4):
+    def write_plot(self, filename, every_n_per_color=4):
         file1 = open('./template1.tex', 'r')
         lines = file1.readlines()
         file1.close()
@@ -113,8 +122,15 @@ class PlotWriter:
         while True:
             line=lines[i]
             i+=1
+            if "%color_map_definition" in line:
+                total_human_color, total_av_color=self.get_human_and_av_label_size(every_n_per_color)
+                human_color_prefix=self.human_color_map+"-"+str(total_human_color+1)
+                av_color_prefix=self.av_color_map+"-" +str(total_av_color)
+                header+="\pgfplotsset{cycle list/%s}\n" % human_color_prefix 
+                header+="\pgfplotsset{cycle list/%s}\n" % av_color_prefix 
+
             if "%begin of colors" in line:
-                header+=self.generate_color_lines(every_n_per_color, line_shape_group_size)
+                header+=self.generate_color_lines(every_n_per_color)
                 skip=True
             elif "%end of colors" in line:
                 header+=line

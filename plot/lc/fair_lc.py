@@ -140,7 +140,7 @@ def plot_against_left_inflow(summary, left_avp_to_plot, right_avp_to_plot, right
         if right_main_inflow_to_plot is None:   
             right_main_inflow_to_plot="*"
 
-        left_plot.write_plot("./fig/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), every_n_per_color=4, line_shape_group_size=4)
+        left_plot.write_plot("./fig/"+model_key+"_left_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, right_main_inflow_to_plot), every_n_per_color=4)
  
 def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -186,7 +186,7 @@ def plot_against_right_inflow(summary, left_avp_to_plot, right_avp_to_plot, left
         if left_main_inflow_to_plot is None:   
             left_main_inflow_to_plot="*"
 
-        right_plot.write_plot("./fig/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), every_n_per_color=4, line_shape_group_size=4)
+        right_plot.write_plot("./fig/"+model_key+"_right_main_inflow_%s_%s_%s.tex" % (left_avp_to_plot, right_avp_to_plot, left_main_inflow_to_plot), every_n_per_color=4)
       
 def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
     for model_key, evaluate in summary.items():
@@ -233,7 +233,7 @@ def plot_against_right_avp(summary, left_avp_to_plot, left_main_inflow_to_plot, 
             left_main_inflow_to_plot="*"
 
 
-        right_plot.write_plot("./fig/"+model_key+"_avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4, line_shape_group_size=4)
+        right_plot.write_plot("./fig/"+model_key+"_avp_right_%s_%s_%s.tex" % (left_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4)
 
 
 def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot):
@@ -281,7 +281,7 @@ def plot_against_left_avp(summary, right_avp_to_plot, left_main_inflow_to_plot, 
         if right_main_inflow_to_plot is None:   
             right_main_inflow_to_plot="*"
 
-        left_plot.write_plot("./fig/"+model_key+"_avp_left_%s_%s_%s.tex"% (right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4, line_shape_group_size=4)
+        left_plot.write_plot("./fig/"+model_key+"_avp_left_%s_%s_%s.tex"% (right_avp_to_plot, left_main_inflow_to_plot, right_main_inflow_to_plot),  every_n_per_color=4)
 
         
 if __name__ == "__main__":
