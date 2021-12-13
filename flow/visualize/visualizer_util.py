@@ -1,4 +1,5 @@
 from flow.controllers import IDMController, RLController, IDMRLController, SimCarFollowingController
+from flow.controllers.car_following_models import IDMInflowController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -132,7 +133,8 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         #controller=IDMRLController
         #controller=IDMController
-        controller=RLController
+        #controller=RLController
+        controller=IDMInflowController
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 

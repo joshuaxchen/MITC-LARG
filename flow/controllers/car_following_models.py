@@ -527,6 +527,152 @@ class IDMController(BaseController):
         return output_accel 
 
 
+class IDMInflowController(BaseController):
+    """Intelligent Driver Model (IDM) controller.
+
+    For more information on this controller, see:
+    Treiber, Martin, Ansgar Hennecke, and Dirk Helbing. "Congested traffic
+    states in empirical observations and microscopic simulations." Physical
+    review E 62.2 (2000): 1805.
+
+    Usage
+    -----
+    See BaseController for usage example.
+
+    Attributes
+    ----------
+    veh_id : str
+        Vehicle ID for SUMO identification
+    car_following_params : flow.core.param.SumoCarFollowingParams
+        see parent class
+    v0 : float
+        desirable velocity, in m/s (default: 30)
+    T : float
+        safe time headway, in s (default: 1)
+    a : float
+        max acceleration, in m/s2 (default: 1)
+    b : float
+        comfortable deceleration, in m/s2 (default: 1.5)
+    delta : float
+        acceleration exponent (default: 4)
+    s0 : float
+        linear jam distance, in m (default: 2)
+    dt : float
+        timestep, in s (default: 0.1)
+    noise : float
+        std dev of normal perturbation to the acceleration (default: 0)
+    fail_safe : str
+        type of flow-imposed failsafe the vehicle should posses, defaults
+        to no failsafe (None)
+    """
+
+    def __init__(self,
+                 veh_id,
+                 v0=30,
+                 T=1,
+                 heavy_inflow_T=10,
+                 a=1,
+                 b=1.5,
+                 delta=4,
+                 s0=2,
+                 time_delay=0.0,
+                 dt=0.1,
+                 noise=0,
+                 inflow_threshold=2400,
+                 fail_safe=None,
+                 car_following_params=None):
+        """Instantiate an IDM controller."""
+        BaseController.__init__(
+            self,
+            veh_id,
+            car_following_params,
+            delay=time_delay,
+            fail_safe=fail_safe,
+            noise=noise)
+        self.v0 = v0
+        self.T = T
+        self.light_inflow_T = T
+        self.heavy_inflow_T = heavy_inflow_T
+        self.a = a
+        self.b = b
+        self.delta = delta
+        self.s0 = s0
+        self.dt = dt
+        self.inflow_threshold=inflow_threshold
+        #self.prev_loc=0
+        #self.prev_edge=None
+        #self.loc_time_to_skip=200
+        #self.edge_time_to_skip=200
+        #self.track=False
+
+    def get_accel(self, env):
+        """See parent class."""
+        # solve leader issues near junctions using get_lane_leaders()
+        # add from Daniel
+        
+
+        inflow = env.k.vehicle.get_inflow_rate(200)
+        if inflow > self.inflow_threshold:
+            self.T = self.heavy_inflow_T
+        else:
+            self.T = self.light_inflow_T
+
+        env.k.vehicle.update_leader_if_near_junction(self.veh_id, junc_dist_threshold=1000)#150)
+
+
+        v = env.k.vehicle.get_speed(self.veh_id)
+
+
+        lane_id=env.k.vehicle.get_lane(self.veh_id)
+
+        #lead_id = env.k.vehicle.get_leader(self.veh_id)
+        # Fix the leader to be the leader on the same lane
+        lead_ids = env.k.vehicle.get_lane_leaders(self.veh_id)
+        lead_id=lead_ids[lane_id]
+
+        #h = env.k.vehicle.get_headway(self.veh_id)
+        # Fix the heaway to be the headway on the same lane accordingly
+        headways=env.k.vehicle.get_lane_headways(self.veh_id)
+        h=headways[lane_id] 
+
+        # in order to deal with ZeroDivisionError
+        if abs(h) < 1e-3:
+            h = 1e-3
+
+        if lead_id is None or lead_id == '':  # no car ahead
+            s_star = 0
+        else:
+            lead_vel = env.k.vehicle.get_speed(lead_id)
+            s_star = self.s0 + max(
+                0, v * self.T + v * (v - lead_vel) /
+                (2 * np.sqrt(self.a * self.b)))
+        output_accel=self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
+        current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
+        current_edge=env.k.vehicle.get_edge(self.veh_id)
+
+        # 124433730#2-AddedOnRampEdge
+        #if self.track:
+        #    print("Track: veh_id", self.veh_id, "at", current_edge, "with intended accel", output_accel, "current speed", env.k.vehicle.get_speed(self.veh_id), "current loc", env.k.vehicle.get_x_by_id(self.veh_id))
+        #if current_edge =="124433730#2-AddedOnRampEdge":
+        #    print("veh_id", self.veh_id, "stucks at", current_edge, "with intended accel", output_accel, "current speed", env.k.vehicle.get_speed(self.veh_id), "current loc", env.k.vehicle.get_x_by_id(self.veh_id))
+        #    if env.k.vehicle.get_speed(self.veh_id)==0:
+        #        self.track=True
+
+        #if self.prev_loc==current_loc and self.loc_time_to_skip==0:
+        #    print("veh_id", self.veh_id, "stops", "with intended accel", output_accel)
+        #    self.loc_time_to_skip=200
+        #if self.prev_edge==current_edge and self.edge_time_to_skip==0:
+        #    print("veh_id", self.veh_id, "stucks at", current_edge, "with intended accel", output_accel)
+        #    self.edge_time_to_skip=200
+
+        #self.prev_loc=current_loc
+        #self.prev_edge=current_edge
+        #self.loc_time_to_skip=0
+        #self.edge_time_to_skip=0
+        return output_accel 
+
+
+
 class SimCarFollowingController(BaseController):
     """Controller whose actions are purely defined by the simulator.
 
