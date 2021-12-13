@@ -27,7 +27,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_1
+EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_3
 
 
 
@@ -47,11 +47,15 @@ WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
-human_or_av=0
+human_or_av=1
+render='no_render'
+horizon=4000
 
-for RIGHT_MAIN_INFLOW in 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for horizon in 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
-	for LEFT_MAIN_INFLOW in 1000 #1000 1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1600 1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+do
+	for LEFT_MAIN_INFLOW in 1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -72,6 +76,7 @@ do
 				for LC_PROB in -1
 				do
 				    # run AV policy
+                    #human_or_av=1
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
@@ -80,7 +85,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
-                            --render_mode sumo_gui \
+                            --render_mode ${render} \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 1 \
@@ -88,7 +93,12 @@ do
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
                             --to_probability \
+                            --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
+                            --run_random_seed 0 \
+                            --print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
                             --lc_probability ${LC_PROB} 
                         #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                     fi
@@ -124,7 +134,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
-                            --render_mode sumo_gui \
+                            --render_mode ${render} \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 1 \
@@ -135,12 +145,17 @@ do
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
-                            --lc_probability ${LC_PROB} 
+                            --run_random_seed 0 \
+                            --lc_probability ${LC_PROB} \
+                            --horizon ${horizon} \
+                            --print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            --print_inflow_outflow_var_in_file ${PWD}/log/${horizon} 
                         #>> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         fi
 			let J=J+1
-		    if ((J == 8)); then
+		    if ((J == 20)); then
 			wait
 			let J=0
 			echo "another batch"
@@ -151,6 +166,7 @@ do
 			done
 		done
 	done
+done
 done
 
 

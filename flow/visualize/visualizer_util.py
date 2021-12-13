@@ -104,6 +104,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--print_metric_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
     parser.add_argument('--print_vehicles_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
+    parser.add_argument('--print_inflow_outflow_var_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
     parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
     parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
     parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
@@ -119,6 +120,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--i696', action='store_true', help='input an avp and we will convert it to probability automatically')
     parser.add_argument('--cpu', type=int, help='the number of cpus used for training')
     parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
+    parser.add_argument('--run_random_seed', type=int, default=-1, help="-1 run all random seeds, otherwise, run just the specificed random seed")
     parser.add_argument('--restore', type=str, help="the path to the model that is used for training")
     args = parser.parse_args()
     return args
@@ -128,9 +130,9 @@ def set_argument(evaluate=False):
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
-        controller=IDMRLController
+        #controller=IDMRLController
         #controller=IDMController
-        #controller=RLController
+        controller=RLController
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 

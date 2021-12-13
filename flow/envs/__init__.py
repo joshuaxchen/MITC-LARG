@@ -40,6 +40,7 @@ from flow.envs.bottleneck_env import DesiredVelocityEnv
 from flow.envs.green_wave_env import PO_TrafficLightGridEnv
 from flow.envs.green_wave_env import GreenWaveTestEnv
 
+enable_total_num_of_vehicles=False
 
 __all__ = [
     'Env',
