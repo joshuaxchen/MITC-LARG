@@ -51,7 +51,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
 
-from tools.tikz_plot import PlotWriter
+from tools.matplotlib_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow
@@ -486,7 +486,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         outflow_per_time_step=None
         avg_speed_per_time_step=None
         reward_per_time_step=None
-
+        
         # record the inflow and outflow only 
         recorded_inflow=list()
         recorded_outflow=list()
@@ -539,7 +539,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
             if reward_per_time_step is not None:
                 reward_per_time_step.append((i_k, reward, 0)) 
-
+            
             recorded_inflow.append(inflow)
             recorded_outflow.append(outflow)
             
@@ -644,6 +644,16 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             inflow_outflow_plot=PlotWriter("Time steps", "Inflow Outflow") 
             inflow_outflow_plot.set_plot_range(0, args.horizon, 2600, 3200) 
 
+            averaged_inflow_outflow_plot=PlotWriter("Time steps", "Averaged Inflow Outflow") 
+            averaged_inflow_outflow_plot.set_title(title_spec+" avg inflow outflow") 
+            averaged_inflow_outflow_plot.set_plot_range(0, args.horizon, 2600, 3200) 
+            
+            inflow_outflow_mean_plot=PlotWriter("Time steps", "Inflow Outflow") 
+            inflow_outflow_mean_plot.set_plot_range(0, args.horizon, 2600, 3200) 
+
+            inflow_outflow_var_plot=PlotWriter("Time steps", "Inflow Outflow Var") 
+            inflow_outflow_var_plot.set_plot_range(0, args.horizon, 0, 100) 
+
             inflow_mean=np.mean(recorded_inflow[-1000:])
             inflow_std=np.std(recorded_inflow[-1000:])
             outflow_mean=np.mean(recorded_outflow[-1000:])
@@ -657,24 +667,47 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             inflow_outflow_plot.set_title(title_spec+" inflow: %.2f, %.2f" % (inflow_mean, inflow_std)+" outflow: %.2f, %.2f" % (outflow_mean, outflow_std)) 
             inflow_outflow_plot.add_plot("Inflow", inflow_per_time_step)
             inflow_outflow_plot.add_plot("Outflow", outflow_per_time_step)
+            
+            avg_inflow_per_time=list()
+            avg_outflow_per_time=list()
+            inflow_var_per_time=list()
+            outflow_var_per_time=list()
+            #set_trace()
+            for i_k in range(env_params.horizon):
+                left_start=-1000+i_k+1
+                if left_start<0:
+                    left_start=0
+                avg_inflow_per_time.append((i_k, np.mean(recorded_inflow[left_start:i_k+1]), np.std(recorded_inflow[left_start:i_k+1])))
+                avg_outflow_per_time.append((i_k, np.mean(recorded_outflow[left_start:i_k+1]), np.std(recorded_outflow[left_start:i_k+1])))
+                inflow_var_per_time.append((i_k, np.std(recorded_inflow[left_start:i_k+1]), 0))
+                outflow_var_per_time.append((i_k, np.std(recorded_outflow[left_start:i_k+1]), 0))
+                 
+            inflow_outflow_mean_plot.add_plot("Avg Inflow", avg_inflow_per_time)
+            inflow_outflow_mean_plot.add_plot("Avg Outflow", avg_outflow_per_time)
 
+            inflow_outflow_var_plot.add_plot("Inflow Var", inflow_var_per_time)
+            inflow_outflow_var_plot.add_plot("Outflow Var", outflow_var_per_time)
 
             # This is a default design of plot, which added human baseline automataicaly. We may want to change this. Here I do not want to break the existing code for plot.
             inflow_plot.add_human=False
             outflow_plot.add_human=False
             speed_plot.add_human=False
             reward_plot.add_human=False
+            inflow_outflow_mean_plot.add_human=False
+            inflow_outflow_var_plot.add_human=False
         
             inflow_plot.add_plot("Inflow", inflow_per_time_step)
             outflow_plot.add_plot("Outflow", outflow_per_time_step)
             speed_plot.add_plot("Speed", avg_speed_per_time_step)
-            reward_plot.add_plot("Reward", reward_per_time_step)
+            #reward_plot.add_plot("Reward", reward_per_time_step)
 
             inflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_inflow.tex", 1)
             outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_outflow.tex", 1)
             speed_plot.write_plot(args.print_metric_per_time_step_in_file+"_speed.tex", 1)
             reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
             inflow_outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow.tex", 1)
+            inflow_outflow_mean_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow_mean.tex", 1)
+            inflow_outflow_var_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow_var.tex", 1)
 
         if multiagent:
             for agent_id, rew in rets.items():
