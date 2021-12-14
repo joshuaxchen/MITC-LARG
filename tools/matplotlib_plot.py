@@ -35,7 +35,7 @@ class PlotWriter:
             for (x, y, z) in value:
                 x_list.append(x)
                 y_list.append(y)
-            plt.plot(x_list, y_list, label=legend)
+            plt.plot(x_list, y_list, label=key)
 
         plt.legend()
         plt.savefig(filename+".png")
