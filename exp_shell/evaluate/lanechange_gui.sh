@@ -26,7 +26,8 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 
 
 FLOW_DIR=${PWD}/../..
-VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+#VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_3
 
 
@@ -134,6 +135,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
+                            --cpu 20 \
                             --render_mode ${render} \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
@@ -145,12 +147,12 @@ do
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \
                             --assertive ${ASSERTIVE} \
-                            --run_random_seed 0 \
                             --lc_probability ${LC_PROB} \
-                            --horizon ${horizon} \
-                            --print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
-                            --print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
-                            --print_inflow_outflow_var_in_file ${PWD}/log/${horizon} 
+                            --horizon ${horizon} 
+                            #--run_random_seed 0 \
+                            #--print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} 
                         #>> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         fi
