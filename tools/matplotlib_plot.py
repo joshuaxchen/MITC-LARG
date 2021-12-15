@@ -1,6 +1,9 @@
 import inspect
 import os
 from matplotlib import pyplot as plt
+import matplotlib
+
+matplotlib.use('Agg')
 
 class PlotWriter:
     colors=["blue","red","green", "brown", "cyan", "darkgray", "gray", "lightgray", "lime", "magenta", "olive", "orange", "pink", "purple", "teal", "violet", "yellow", "Bittersweet", "BlueViolet", "BrickRed", "BurntOrange", "CadetBlue", "CarnationPink", "Cerulean", "Dandelion", "DarkOrchid", "Emerald", "Fuchsia", "GreenYellow", "Magenta", "Maroon", "MidnightBlue", "Orange", "OrangeRed", "Orchid", "Periwinkle", "RawSienna"]
@@ -15,7 +18,7 @@ class PlotWriter:
         self.xlabel=xlabel
         self.ylabel=ylabel
         self.title=None
-        plt.figure(0)
+        #plt.figure(0)
         self.data=dict()
 
     def set_plot_range(self, xmin, xmax, ymin, ymax):
