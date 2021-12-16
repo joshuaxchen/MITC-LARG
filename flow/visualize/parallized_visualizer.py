@@ -781,10 +781,11 @@ if __name__ == '__main__':
     cpus=1
     if args.cpu is not None:
         cpus=args.cpu
-    ray.init(
-    num_cpus=cpus,
-    num_gpus=0,
-    object_store_memory=1024*1024*1024)
+    ray.init(num_cpus=cpus, num_gpus=0, object_store_memory=1024*1024*1024)
+
+    # connect to the existing ray cluster which should be initilized in the shell.
+    #ray.init(address="127.0.0.1:6379", _redis_password="mitc_flow")
+    #ray.init(address='auto', _redis_password='mitc_flow')
 
     if args.seed_dir:
         seed_filename = glob.glob(args.seed_dir+"/eval_seeds/*/seeds.pkl")
@@ -845,3 +846,4 @@ if __name__ == '__main__':
             break    
         if args.run_random_seed>=0:
             break
+    ray.shutdown()

@@ -28,8 +28,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 FLOW_DIR=${PWD}/../..
 #VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_3
-
+EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_4
 
 
 
@@ -148,12 +147,12 @@ do
                             --to_probability \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} \
-                            --horizon ${horizon} 
+                            --horizon ${horizon} \
+                            >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--run_random_seed 0 \
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} 
-                        #>> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         fi
 			let J=J+1
