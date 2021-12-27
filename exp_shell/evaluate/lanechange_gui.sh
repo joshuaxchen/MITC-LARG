@@ -28,7 +28,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 FLOW_DIR=${PWD}/../..
 #VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_manual_4
+EXP_FOLDER=$FLOW_DIR/exp_results/lc_14000_8000
 
 
 
@@ -49,13 +49,13 @@ mkdir ${WORKING_DIR}
 CHCKPOINT=500
 human_or_av=0
 render='no_render'
-horizon=4000
+horizon=14000
 
-for horizon in 2000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
+for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
-for RIGHT_MAIN_INFLOW in 1600 #1600 1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1600 1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1200 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1000 1200 1400 1600 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -89,6 +89,7 @@ do
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 1 \
+                            --cpu 10 \
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
@@ -96,11 +97,11 @@ do
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
                             --run_random_seed 0 \
-                            --print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
-                            --print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
-                            --print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
-                            --lc_probability ${LC_PROB} 
-                        #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            --lc_probability ${LC_PROB} \
+                        >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            #--print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
+                            #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
                     fi
 
                     #human_or_av=0
@@ -134,7 +135,7 @@ do
                             --agent_action_policy_dir $RL_MODEL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
-                            --cpu 20 \
+                            --cpu 10 \
                             --render_mode ${render} \
                             --human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT} \
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
@@ -156,7 +157,7 @@ do
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                         fi
 			let J=J+1
-		    if ((J == 20)); then
+		    if ((J == 4)); then
 			wait
 			let J=0
 			echo "another batch"
