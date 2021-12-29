@@ -47,7 +47,7 @@ WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
-human_or_av=0
+human_or_av=1
 render='no_render'
 horizon=14000
 
@@ -57,12 +57,12 @@ for RIGHT_MAIN_INFLOW in 1600 1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1
 do
 	for LEFT_MAIN_INFLOW in 1000 1200 1400 1600 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for AVP_LEFT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 		    let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
 		    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-		    for AVP_RIGHT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		    for AVP_RIGHT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		    do
 			let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
 			let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -93,10 +93,10 @@ do
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
+                            --measurement_rate 8000 \
                             --to_probability \
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
-                            --run_random_seed 0 \
                             --lc_probability ${LC_PROB} \
                         >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
@@ -143,6 +143,7 @@ do
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
+                            --measurement_rate 8000 \
                             --no_lanchange_human_inflows_on_right ${NO_LANCHANGE_HUMAN_INFLOWS_ON_RIGHT} \
                             --no_lanchange_human_inflows_on_left ${NO_LANCHANGE_HUMAN_INFLOWS_ON_LEFT} \
                             --to_probability \

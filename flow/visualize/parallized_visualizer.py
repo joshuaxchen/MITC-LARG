@@ -71,7 +71,7 @@ SUMMARY_PLOTS = False
 REALTIME_PLOTS = False
 # The averge metrics (including inflow, outflow, speed) is measured as an
 # average of the recent 1000 time steps, if MEASUREMENT_RATE=1000
-MEASUREMENT_RATE=1000
+MEASUREMENT_RATE=4000
 #MEASUREMENT_RATE=2000
 
 def generateHtmlplots(actions, rewards, states):
@@ -758,6 +758,7 @@ def create_parser():
     return args
     """
     return set_argument(evaluate=True) 
+
 from subprocess import check_output
 import signal
 import json
@@ -771,6 +772,9 @@ if __name__ == '__main__':
         if len(args.window_size)!=2:
             print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
             exit(-1)
+    if args.measurement_rate is not None:
+        MEASUREMENT_RATE=args.measurement_rate*0.5 # TODO: here we assume that thte simulation step is 0.5
+        print("measurement_rate", MEASUREMENT_RATE) 
 
     Speed = []
     Inflow = []

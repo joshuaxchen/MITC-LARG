@@ -122,6 +122,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
     parser.add_argument('--run_random_seed', type=int, default=-1, help="-1 run all random seeds, otherwise, run just the specificed random seed")
     parser.add_argument('--restore', type=str, help="the path to the model that is used for training")
+    parser.add_argument('--measurement_rate', type=int, help="the window size (in terms of time steps) to measure the inflow and outflow")
     args = parser.parse_args()
     return args
 
