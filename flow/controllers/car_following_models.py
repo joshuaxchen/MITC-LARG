@@ -894,6 +894,7 @@ class IDMRLController2(BaseController):
         self_veh_x=env.k.vehicle.get_x_by_id(self.veh_id)
         self_veh_vel=env.k.vehicle.get_speed(self.veh_id)
         vel_list=list()
+        veh_list = list()
         if self_veh_x>588:
             return False
         buffer_zone=self_veh_vel*0.1
@@ -907,6 +908,7 @@ class IDMRLController2(BaseController):
             #if lane_id==0 and self_veh_x< other_veh_x+buffer_zone and other_veh_x<588 and other_veh_x <self_veh_x+look_ahead+buffer_zone:
                 other_veh_vel=env.k.vehicle.get_speed(other_veh_id)
                 vel_list.append(other_veh_vel) 
+                veh_list.append(other_veh_id)
         if len(vel_list)==0:
             return False 
         signals = env.k.vehicle.get_left_turn_signal(veh_list)
