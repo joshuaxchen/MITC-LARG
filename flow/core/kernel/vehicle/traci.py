@@ -68,6 +68,7 @@ class TraCIVehicle(KernelVehicle):
 
         # number of vehicles to exit the network for every time-step
         self._num_arrived = []
+        self._num_arrived_by_lane = []
         self._arrived_ids = []
         self._arrived_rl_ids = []
 
@@ -243,6 +244,7 @@ class TraCIVehicle(KernelVehicle):
                 self.prev_last_lc[veh_id] = -float("inf")
             self._num_departed.clear()
             self._num_arrived.clear()
+            self._num_arrived_by_lane.clear()
             self._departed_ids.clear()
             self._arrived_ids.clear()
             self._arrived_rl_ids.clear()
@@ -282,6 +284,15 @@ class TraCIVehicle(KernelVehicle):
             self._num_arrived.append(len(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]))
             self._departed_ids.append(sim_obs[tc.VAR_DEPARTED_VEHICLES_IDS])
             self._arrived_ids.append(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS])
+            '''
+            __num_arrived_by_lane = {}
+            for veh in self._arrived_ids[-1]:
+                __lane = self.get_lane(veh)
+                if __lane not in __num_arrived_by_lane.keys():
+                    __num_arrived_by_lane[__lane]=0
+                __num_arrived_by_lane[__lane]+=1
+            self._num_arrived_by_lane.append(__num_arrived_by_lane)
+            '''
             # TODO: is the last list in self._departed_ids the custom inflow?
             for veh in self._departed_ids[-1]:
                 if self.__customInflows is not None:
@@ -616,6 +627,22 @@ class TraCIVehicle(KernelVehicle):
             return 0
         num_outflow = self._num_arrived[-int(time_span / self.sim_step):]
         return 3600 * sum(num_outflow) / (len(num_outflow) * self.sim_step)
+    
+    def get_outflow_rate_by_lane(self, time_span):
+        """See parent class."""
+        if len(self._num_arrived) == 0:
+            return 0
+        num_outflow = self._num_arrived[-int(time_span / self.sim_step):]
+        num_arrived_by_lane = {}
+        for o in num_outflow:
+            for key, value in o.items():
+                if key not in num_arrived_by_lane.keys():
+                    num_arrived_by_lane[key]=[]
+                num_arrived_by_lane[key].append(value)
+        outflows_by_lane = {}
+        for key, value in num_arrived_by_lane.items():
+            outflows_by_lane[key]=3600 * sum(value) / (len(num_outflow) * self.sim_step)
+        return outflows_by_lane
 
     def get_num_arrived(self):
         """See parent class."""
@@ -624,6 +651,13 @@ class TraCIVehicle(KernelVehicle):
         else:
             return 0
     
+    def get_num_arrived_by_lane(self):
+        """See parent class."""
+        if len(self._num_arrived_by_lane) > 0:
+            return sum(self._num_arrived_by_lane)
+        else:
+            return 0
+
     def get_num_departed(self):
         if len(self._num_departed) > 0:
             return sum(self._num_departed)

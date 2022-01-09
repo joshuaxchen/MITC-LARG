@@ -63,10 +63,10 @@ class LeftIDMController(BaseController):
                  time_delay=0.0,
                  dt=0.1,
                  noise=0,
-                 congest_spd_threshold=17,
-                 self_spd_threshold=10,
-                 dist_to_junction_threshold=600,
-                 slow_down_headway=200,
+                 congest_spd_threshold=16,
+                 self_spd_threshold=15,
+                 dist_to_junction_threshold=500,
+                 slow_down_headway=100,
                  fail_safe=None,
                  car_following_params=None):
         """Instantiate an IDM controller."""
@@ -138,7 +138,8 @@ class LeftIDMController(BaseController):
         if congest_spd<self.congest_spd_threshold \
             and self_spd>=self.self_spd_threshold \
             and dist_to_junction<=self.dist_to_junction_threshold \
-            and dist_to_junction>=250:
+            and dist_to_junction>=250 \
+            and lead_id not in env.k.vehicle.get_lane_change_human_ids():
             # detect congestion
             # modify s_star
             print(congest_spd)

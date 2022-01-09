@@ -515,6 +515,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
+
+            #outflows_by_lane = vehicles.get_outflow_rate_by_lane(MEASUREMENT_RATE)
+            #print(outflow_by_lane)
             # update the number of vehicles in the network
             if args.print_vehicles_per_time_step_in_file is not None and i==0:
                 total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))

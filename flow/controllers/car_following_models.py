@@ -464,6 +464,7 @@ class IDMController(BaseController):
         self.delta = delta
         self.s0 = s0
         self.dt = dt
+        self.freeze = 0
         #self.prev_loc=0
         #self.prev_edge=None
         #self.loc_time_to_skip=200
@@ -493,16 +494,24 @@ class IDMController(BaseController):
         # in order to deal with ZeroDivisionError
         if abs(h) < 1e-3:
             h = 1e-3
-
+        
+        #if self.veh_id in env.k.vehicle.get_lane_change_human_ids():
+        #    T = 0.1
+        #    self.freeze = 6
+        #self.freeze -= 1
+        #self.freeze = max(self.freeze,0)
+        #if self.freeze == 0: 
+        #    T = self.T
+        T = self.T
         if lead_id is None or lead_id == '':  # no car ahead
             s_star = 0
         else:
             lead_vel = env.k.vehicle.get_speed(lead_id)
             s_star = self.s0 + max(
-                0, v * self.T + v * (v - lead_vel) /
+                0, v * T + v * (v - lead_vel) /
                 (2 * np.sqrt(self.a * self.b)))
-        if self.T >1:
-            print(s_star,self.T)
+        #if self.freeze >0 and self.freeze <2:
+        #    print(self.freeze,T)
         output_accel=self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
         current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
         current_edge=env.k.vehicle.get_edge(self.veh_id)
