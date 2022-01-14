@@ -82,6 +82,7 @@ class TraCIVehicle(KernelVehicle):
 
         # keep track of the human drivers that change lanes, which is used for visualization
         self.__change_lane_human_ids=[]
+        self._num_change_lane=[]
 
     def initialize(self, vehicles):
         """Initialize vehicle state information.
@@ -205,6 +206,13 @@ class TraCIVehicle(KernelVehicle):
 
         arrived_rl_ids = []
         # remove exiting vehicles from the vehicles class
+        __num_arrived_by_lane = {}
+        for veh in sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]:#self._arrived_ids[-1]:
+            __lane = self.get_lane(veh)
+            if __lane not in __num_arrived_by_lane.keys():
+                __num_arrived_by_lane[__lane]=0
+            __num_arrived_by_lane[__lane]+=1
+
         for veh_id in sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]:
             if veh_id in self.get_rl_ids():
                 arrived_rl_ids.append(veh_id)
@@ -249,6 +257,7 @@ class TraCIVehicle(KernelVehicle):
             self._arrived_ids.clear()
             self._arrived_rl_ids.clear()
             self.__change_lane_human_ids.clear()
+            self._num_change_lane.clear()
             #self._delays.clear()
 
             # add vehicles from a network template, if applicable
@@ -267,11 +276,13 @@ class TraCIVehicle(KernelVehicle):
         else:
             self.time_counter += 1
             # TODO(zyl): add code to find lane changing vehicles
+            __change_lane_this_ts = []
             for veh_id in self.get_human_ids():
                 prev_lane = self.get_lane(veh_id)
                 if vehicle_obs[veh_id][tc.VAR_LANE_INDEX] != prev_lane:
                     self.__change_lane_human_ids.append(veh_id)
-
+                    __change_lane_this_ts.append(veh_id)
+            self._num_change_lane.append(len(__change_lane_this_ts))
             # update the "last_lc" variable
             for veh_id in self.__rl_ids:
                 prev_lane = self.get_lane(veh_id)
@@ -284,15 +295,10 @@ class TraCIVehicle(KernelVehicle):
             self._num_arrived.append(len(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS]))
             self._departed_ids.append(sim_obs[tc.VAR_DEPARTED_VEHICLES_IDS])
             self._arrived_ids.append(sim_obs[tc.VAR_ARRIVED_VEHICLES_IDS])
-            '''
-            __num_arrived_by_lane = {}
-            for veh in self._arrived_ids[-1]:
-                __lane = self.get_lane(veh)
-                if __lane not in __num_arrived_by_lane.keys():
-                    __num_arrived_by_lane[__lane]=0
-                __num_arrived_by_lane[__lane]+=1
+            
+
             self._num_arrived_by_lane.append(__num_arrived_by_lane)
-            '''
+            
             # TODO: is the last list in self._departed_ids the custom inflow?
             for veh in self._departed_ids[-1]:
                 if self.__customInflows is not None:
@@ -632,7 +638,7 @@ class TraCIVehicle(KernelVehicle):
         """See parent class."""
         if len(self._num_arrived) == 0:
             return 0
-        num_outflow = self._num_arrived[-int(time_span / self.sim_step):]
+        num_outflow = self._num_arrived_by_lane[-int(time_span / self.sim_step):]
         num_arrived_by_lane = {}
         for o in num_outflow:
             for key, value in o.items():
@@ -643,6 +649,37 @@ class TraCIVehicle(KernelVehicle):
         for key, value in num_arrived_by_lane.items():
             outflows_by_lane[key]=3600 * sum(value) / (len(num_outflow) * self.sim_step)
         return outflows_by_lane
+    
+    def get_speed_by_lane(self,edge_list=[]):
+        speed_by_lane = {}
+        for veh_id in self.__ids:
+            lane = self.get_lane(veh_id)
+            edge = self.get_edge(veh_id)
+            if lane not in speed_by_lane.keys():
+                speed_by_lane[lane]=[]
+            if edge in edge_list:
+                speed_by_lane[lane].append(self.get_speed(veh_id))
+        speeds_by_lane = {}
+        for key, value in speed_by_lane.items():
+            speeds_by_lane[key] = np.mean(value)
+        return speeds_by_lane
+    
+    def get_num_vehicle_by_lane(self,edge_list=[]):
+        number_by_lane = {}
+        for veh_id in self.__ids:
+            lane = self.get_lane(veh_id)
+            edge = self.get_edge(veh_id)
+            if lane not in number_by_lane.keys():
+                number_by_lane[lane]=0
+            if edge in edge_list:
+                number_by_lane[lane]+=1
+        return number_by_lane
+    
+    def get_num_lane_change(self):
+        if len(self._num_change_lane)>0:
+            return sum(self._num_change_lane)
+        else:
+            return 0
 
     def get_num_arrived(self):
         """See parent class."""

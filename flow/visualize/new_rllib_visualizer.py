@@ -516,8 +516,16 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
 
-            #outflows_by_lane = vehicles.get_outflow_rate_by_lane(MEASUREMENT_RATE)
-            #print(outflow_by_lane)
+            print(i_k)
+            edge_list = ["left"]#["inflow_highway","left"]#,"center","right"]
+            outflows_by_lane = vehicles.get_outflow_rate_by_lane(MEASUREMENT_RATE)
+            print("Outflow:", outflows_by_lane)
+            speeds_by_lane = vehicles.get_speed_by_lane(edge_list=edge_list)
+            print("Speed:", speeds_by_lane)
+            number_by_lane = vehicles.get_num_vehicle_by_lane(edge_list=edge_list)
+            print("Number:", number_by_lane)
+            number_change_lane = vehicles.get_num_lane_change()
+            print("Num Change Lane", number_change_lane)
             # update the number of vehicles in the network
             if args.print_vehicles_per_time_step_in_file is not None and i==0:
                 total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))
@@ -839,5 +847,6 @@ if __name__ == '__main__':
             data['outflow']=Outflow
             with open(args.output,'w') as f: 
                 json.dump(data,f)
-        if args.render_mode =="sumo_gui":
-            break    
+        break
+        #if args.render_mode =="sumo_gui":
+        #    break    
