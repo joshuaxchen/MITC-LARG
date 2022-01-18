@@ -221,13 +221,16 @@
             },
 	cycle list name=mycolorlist,
 	 xmax=2000,
-	 xmin=1600,
-	 ymin=1500,
+	 xmin=1200,
+	 ymin=1200,
 	 ymax=1850
 ]
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	607.9	1.25
+800	996.41	1.49
+1200	1383.48	2.0
 1600	1711.4	81.66
 1650	1720.66	107.58
 1700	1672.24	121.71
@@ -242,6 +245,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	608.4	0.0
+800	995.9	1.73
+1200	1381.9	1.25
 1600	1758.13	17.6
 1650	1786.54	34.7
 1700	1789.88	51.07
@@ -256,6 +262,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	607.0	1.76
+800	995.11	1.78
+1200	1382.04	1.08
 1600	1761.44	7.89
 1650	1789.2	29.93
 1700	1791.18	41.72
@@ -270,6 +279,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	608.22	0.78
+800	996.23	1.83
+1200	1382.22	0.78
 1600	1758.38	14.94
 1650	1784.27	40.79
 1700	1755.22	58.89
@@ -284,6 +296,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.92	1.77
+800	994.39	1.73
+1200	1381.75	1.38
 1600	1754.35	21.27
 1650	1769.26	46.26
 1700	1748.99	56.17
@@ -298,6 +313,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	607.9	1.25
+800	996.41	1.49
+1200	1382.76	1.94
 1600	1764.25	4.39
 1650	1805.94	11.17
 1700	1816.85	30.73
@@ -312,6 +330,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	608.4	0.0
+800	995.9	1.73
+1200	1381.9	1.25
 1600	1758.1	12.26
 1650	1793.45	22.35
 1700	1810.01	38.7
@@ -326,6 +347,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	607.0	1.76
+800	995.15	1.78
+1200	1381.97	1.17
 1600	1761.52	5.16
 1650	1802.23	12.55
 1700	1811.77	38.08
@@ -340,6 +364,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	608.33	0.5
+800	996.23	1.83
+1200	1382.26	0.71
 1600	1758.74	9.25
 1650	1786.25	28.61
 1700	1800.47	42.02
@@ -354,6 +381,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.92	1.77
+800	994.28	1.66
+1200	1381.82	1.32
 1600	1759.75	11.33
 1650	1792.98	26.1
 1700	1798.38	27.05
@@ -368,6 +398,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.92	1.77
+800	993.74	1.13
+1200	1381.68	1.44
 1600	1732.43	64.95
 1650	1708.13	104.57
 1700	1684.91	112.53
@@ -405,6 +438,6 @@ a	 b	 c
 
 
 \end{axis}
-\node[above,font=\Large, align=left] at (current bounding box.north) {Training: even or random vehicle placement, main inflow 1850, train and evaluate at the same AVP,\\ Evaluation: \textbf{even} vehicle placement, main inflow= [1600, 2000]};
+\node[above,font=\Large, align=left] at (current bounding box.north) {Training: even or random vehicle placement, main inflow 2000, train and evaluate at the same AVP,\\ Evaluation: \textbf{even} vehicle placement, main inflow= [1200, 2000]};
 \end{tikzpicture}
 \end{document}

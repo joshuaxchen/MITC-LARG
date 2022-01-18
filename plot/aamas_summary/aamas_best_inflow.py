@@ -1,8 +1,9 @@
 import os
 from tikz_plot import PlotWriter
 import collections
+from IPython.core.debugger import set_trace
 
-attr_name="Speed"
+attr_name="Outflow"
 random_human_only=True
 
 def obtain_file_names(folder_path):
@@ -38,7 +39,14 @@ special_evaluation_name="special_models"
 special_random_models_dir=os.path.join("..","..","exp_results", special_random_evaluation_name) 
 special_even_models_dir=os.path.join("..","..","exp_results", special_even_evaluation_name) 
 
-
+small_inflow_data_dict={
+"special_even_models_even_eval": os.path.join("..","..","exp_results", "special_even_models_even_eval_ijcai"),
+"special_even_models_random_eval": os.path.join("..","..","exp_results", "special_even_models_random_eval_ijcai"),
+"special_random_models_even_eval": os.path.join("..","..","exp_results", "special_random_models_even_eval_ijcai"),
+"special_random_models_random_eval": os.path.join("..","..","exp_results", "special_random_models_random_eval_ijcai"),
+"human_even": os.path.join("..","..","exp_results","special_human_even_eval_ijcai"),
+"human_random": os.path.join("..","..","exp_results","special_human_random_eval_ijcai")
+}
 human_dir=os.path.join("..","..","exp_results", "human_baselines")
 
 evaluation_name="random_evaluation"
@@ -54,7 +62,7 @@ results_dict={
 "inflow_random": random_aamas_inflows_dir,
 }
 
-eval_flows=[1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
+eval_flows=[400, 800, 1200, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
 
 def retrieve_special_exp_data(working_dir):
     # print(working_dir)
@@ -483,29 +491,32 @@ def find_best_training_inflow_vs_inflow(summary, human):
 
         #print(data_map.keys())
 
-    key_list=list(human.keys())
+    key_list=list()
+    for key in human.keys():
+        key_list.append(int(key)) 
     key_list.sort()
     sorted_e_data=list()
     for e_key in key_list:
-        mean_var_list=human[e_key][attr_name].split(",")
+        mean_var_list=human[str(e_key)][attr_name].split(",")
         mean=float(mean_var_list[0].strip())
         var=float(mean_var_list[1].strip())
         sorted_e_data.append((int(e_key), mean, var)) 
 
     print(sorted_e_data)
 
+    #set_trace()
     #for avp in [1, 5, 10, 16, 20, 25, 30, 40]:
     for avp in [1, 20, 40]:
         xlabel="Evaluated Main InFlow" 
         ylabel=attr_name #"Outflow" 
         plot=PlotWriter(xlabel, ylabel) 
         if attr_name=="Speed":
-            plot.set_plot_range(1600, 2000, 5, 21)
+            plot.set_plot_range(1200, 2000, 5, 21)
         elif attr_name=="Outflow":
-            plot.set_plot_range(1600, 2000, 1500, 1850)
+            plot.set_plot_range(1200, 2000, 1200, 1850)
 
 
-        plot.set_title('Training: random vehicle placement, main inflow [1600,2000], AVP=30\\%%,\\\\ Evaluation: random vehicle placement, main inflow [1600,2000], \\textbf{AVP=%s}\\%%' % (avp)) 
+        plot.set_title('Training: random vehicle placement, main inflow [1600,2000], AVP=30\\%%,\\\\ Evaluation: random vehicle placement, main inflow [1200,2000], \\textbf{AVP=%s}\\%%' % (avp))   
         for model_key, model_data in summary.items():
             legend_label=model_key+":"+star_text+"-"+str(avp)
             data_map[legend_label].sort()
@@ -578,28 +589,30 @@ if __name__ == "__main__":
     # retrive random models and random evaluation
     #random_model_exp_summary=retrieve_special_exp_data(random_aamas_avp_dir) 
     # retrieve special models
-    attr_name='Speed'
+    #attr_name='Speed'
     special_random_summary=retrieve_special_exp_data(special_random_models_dir)
     #model_key="2000_200_30"
     #plot_special_model_flow(model_key, special_random_summary[model_key])
     human=retrieve_exp_data(human_dir)
     random_human=human['random_human_baseline']
 
+    small_inflows_special_random_models_random_eval=retrieve_special_exp_data(small_inflow_data_dict["special_random_models_random_eval"])
+    #special_random_summary.update(small_inflows_special_random_models_random_eval)
+    for key, value in small_inflows_special_random_models_random_eval.items():
+        if key in special_random_summary.keys():
+            special_random_summary[key].update(value)
+
+    small_inflows_human_random_eval=retrieve_special_exp_data(small_inflow_data_dict["human_random"])
+    for flow_avp, eval_value in small_inflows_human_random_eval['1650_200_10'].items():
+        flow_avp_list=flow_avp.split("_")
+        flow=flow_avp_list[0]
+        random_human[flow]=eval_value
+    #set_trace()
     special_random_summary= collections.OrderedDict(sorted(special_random_summary.items()))
     find_best_training_inflow_vs_inflow(special_random_summary, random_human)
     find_best_training_inflow_vs_avp(special_random_summary, random_human)
 
-    attr_name='Outflow'
-    special_random_summary=retrieve_special_exp_data(special_random_models_dir)
-    #model_key="2000_200_30"
-    #plot_special_model_flow(model_key, special_random_summary[model_key])
-    human=retrieve_exp_data(human_dir)
-    random_human=human['random_human_baseline']
-
-    special_random_summary= collections.OrderedDict(sorted(special_random_summary.items()))
-    find_best_training_inflow_vs_inflow(special_random_summary, random_human)
-    find_best_training_inflow_vs_avp(special_random_summary, random_human)
-
+    
     #special_even_summary=retrieve_special_exp_data(special_even_models_dir)
 
     #plot_special_model_av(special_random_summary)

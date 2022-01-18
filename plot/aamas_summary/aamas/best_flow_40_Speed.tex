@@ -184,13 +184,16 @@
             },
 	cycle list name=mycolorlist,
 	 xmax=2000,
-	 xmin=1600,
+	 xmin=1200,
 	 ymin=5,
 	 ymax=21
 ]
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.78	0.21
+800	21.9	0.17
+1200	21.09	0.29
 1600	17.74	0.71
 1650	17.45	0.63
 1700	17.3	0.44
@@ -214,6 +217,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.77	0.21
+800	21.9	0.17
+1200	21.1	0.31
 1600	18.04	0.75
 1650	17.76	0.59
 1700	17.59	0.52
@@ -237,6 +243,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.9	0.22
+800	22.12	0.18
+1200	21.36	0.28
 1600	18.71	0.63
 1650	18.47	0.51
 1700	18.27	0.41
@@ -260,6 +269,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.89	0.2
+800	22.18	0.16
+1200	21.35	0.68
 1600	11.26	2.64
 1650	10.43	2.51
 1700	9.66	2.32
@@ -283,6 +295,6 @@ a	 b	 c
 
 
 \end{axis}
-\node[above,font=\Large, align=left] at (current bounding box.north) {Training: random vehicle placement, main inflow [1600,2000], AVP=30\%,\\ Evaluation: random vehicle placement, main inflow [1600,2000], \textbf{AVP=40}\%};
+\node[above,font=\Large, align=left] at (current bounding box.north) {Training: random vehicle placement, main inflow [1600,2000], AVP=30\%,\\ Evaluation: random vehicle placement, main inflow [1200,2000], \textbf{AVP=40}\%};
 \end{tikzpicture}
 \end{document}

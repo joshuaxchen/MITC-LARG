@@ -1,5 +1,6 @@
 import os
 from tikz_plot import PlotWriter
+from IPython.core.debugger import set_trace
 attr_name="Speed"
 random_human_only=True
 
@@ -49,6 +50,15 @@ results_dict={
 "inflow": aamas_inflows_dir,
 "avp_random": random_aamas_avp_dir,
 "inflow_random": random_aamas_inflows_dir,
+}
+
+small_inflow_data_dict={
+"special_even_models_even_eval": os.path.join("..","..","exp_results", "special_even_models_even_eval_ijcai"),
+"special_even_models_random_eval": os.path.join("..","..","exp_results", "special_even_models_random_eval_ijcai"),
+"special_random_models_even_eval": os.path.join("..","..","exp_results", "special_random_models_even_eval_ijcai"),
+"special_random_models_random_eval": os.path.join("..","..","exp_results", "special_random_models_random_eval_ijcai"),
+"human_even": os.path.join("..","..","exp_results","special_human_even_eval_ijcai"),
+"human_random": os.path.join("..","..","exp_results","special_human_random_eval_ijcai")
 }
 
 eval_flows=[1600, 1700, 1800, 1900, 2000, 2100, 2200, 2250, 2300, 2400, 2500, 2600]
@@ -465,29 +475,50 @@ def find_best_training_avp_against_flow(summary, human):
     star_text="*"
     data_map=dict()
     for model_key, model_data in summary.items():
+        #if "2000" in model_key:
+        #    set_trace()
         trained_labels=model_key.split("_")
         trained_avp=trained_labels[2]
-        for flow in [1600, 1700, 1800, 1900, 2000]: #evaluation inflow
-            for eval_label, eval_value in model_data.items():
-                labels=eval_label.split("_")
-                flow_str=labels[0]
-                avp_str=labels[1]
-                if flow_str!=str(flow):
-                    continue
-                if avp_str!=evaluated_avp: #evaluated avp
-                    continue
-                legend_label=model_key+":"+star_text+"-"+avp_str
-                if legend_label not in data_map.keys():
-                    data_map[legend_label]=list()
-                mean_var_list=eval_value[attr_name].split(",")
-                mean=float(mean_var_list[0].strip())
-                var=float(mean_var_list[1].strip())
-                avp=labels[-1]
-                data_map[legend_label].append((flow, mean, var))
-    
+        #for flow in [800, 1200, 1600, 1700, 1800, 1900, 2000]: #evaluation inflow
+        for eval_label, eval_value in model_data.items():
+            labels=eval_label.split("_")
+            flow_str=labels[0]
+            avp_str=labels[1]
+            flow=int(flow_str) 
+            if flow not in [800, 1200, 1600, 1700, 1800, 1900, 2000]:
+                continue
+            if avp_str!=evaluated_avp: #evaluated avp
+                continue
+            legend_label=model_key+":"+star_text+"-"+avp_str
+            if legend_label not in data_map.keys():
+                data_map[legend_label]=list()
+            mean_var_list=eval_value[attr_name].split(",")
+            mean=float(mean_var_list[0].strip())
+            var=float(mean_var_list[1].strip())
+            avp=labels[-1]
+            data_map[legend_label].append((flow, mean, var))
+
+        #for flow in [800, 1200, 1600, 1700, 1800, 1900, 2000]: #evaluation inflow
+        #    for eval_label, eval_value in model_data.items():
+        #        labels=eval_label.split("_")
+        #        flow_str=labels[0]
+        #        avp_str=labels[1]
+        #        if flow_str!=str(flow):
+        #            continue
+        #        if avp_str!=evaluated_avp: #evaluated avp
+        #            continue
+        #        legend_label=model_key+":"+star_text+"-"+avp_str
+        #        if legend_label not in data_map.keys():
+        #            data_map[legend_label]=list()
+        #        mean_var_list=eval_value[attr_name].split(",")
+        #        mean=float(mean_var_list[0].strip())
+        #        var=float(mean_var_list[1].strip())
+        #        avp=labels[-1]
+        #        data_map[legend_label].append((flow, mean, var))
     #print(data_map.keys())
     keys=list(data_map.keys())
     keys.sort()
+    print(keys)
     to_remove=list()
     for key in keys:
         if "100" in key:
@@ -508,24 +539,27 @@ def find_best_training_avp_against_flow(summary, human):
     #keys.insert(index3+1, "2000_200_100")
     legend_prefix="random_"
 
-    key_list=list(human.keys())
+    key_list=list()
+    for key, value in human.items():
+        key_list.append(int(key))
     key_list.sort()
     sorted_e_data=list()
     for e_key in key_list:
-        mean_var_list=human[e_key][attr_name].split(",")
+        mean_var_list=human[str(e_key)][attr_name].split(",")
         mean=float(mean_var_list[0].strip())
         var=float(mean_var_list[1].strip())
         sorted_e_data.append((int(e_key), mean, var)) 
 
+    set_trace() 
     for main_inflow in ["1650", "1850", "2000"]:
         xlabel="Evaluated main inflow" 
         ylabel=attr_name #"Outflow" 
         plot=PlotWriter(xlabel, ylabel) 
     
         if attr_name=="Speed":
-            plot.set_plot_range(1600, 2000, 5, 21)
+            plot.set_plot_range(1200, 2000, 5, 21)
         elif attr_name=="Outflow":
-            plot.set_plot_range(1600, 2000, 1500, 1850)
+            plot.set_plot_range(1200, 2000, 1200, 1850)
 
 
         plot.set_title('Training: random vehicle placement, main inflow \\textbf{%s}, AVP=[0,100\\%%],\\\\ Evaluation: random vehicle placement, \\textit{main inflow [1600,2000]}, AVP=%s\\%%' % (main_inflow, evaluated_avp)) 
@@ -622,15 +656,30 @@ if __name__ == "__main__":
     #plot_special_model_flow(model_key, special_random_summary[model_key])
     human=retrieve_exp_data(human_dir)
     random_human=human['random_human_baseline']
+
+    small_inflows_special_random_models_random_eval=retrieve_special_exp_data(small_inflow_data_dict["special_random_models_random_eval"])
+    #special_random_summary.update(small_inflows_special_random_models_random_eval)
+    for key, value in small_inflows_special_random_models_random_eval.items():
+        special_random_summary[key].update(value)
+
+    small_inflows_human_random_eval=retrieve_special_exp_data(small_inflow_data_dict["human_random"])
+    for flow_avp, eval_value in small_inflows_human_random_eval['1650_200_10'].items():
+        flow_avp_list=flow_avp.split("_")
+        flow=flow_avp_list[0]
+        random_human[flow]=eval_value
+
+    #set_trace() 
     find_best_training_avp_against_flow(special_random_summary, random_human)
     find_best_training_avp_against_avp(special_random_summary, random_human)
 
     attr_name='Outflow'
-    special_random_summary=retrieve_special_exp_data(special_random_models_dir)
+    #special_random_summary=retrieve_special_exp_data(special_random_models_dir)
     #model_key="2000_200_30"
     #plot_special_model_flow(model_key, special_random_summary[model_key])
-    human=retrieve_exp_data(human_dir)
-    random_human=human['random_human_baseline']
+    #human=retrieve_exp_data(human_dir)
+    #random_human=human['random_human_baseline']
+
+    
     find_best_training_avp_against_flow(special_random_summary, random_human)
     find_best_training_avp_against_avp(special_random_summary, random_human)
 

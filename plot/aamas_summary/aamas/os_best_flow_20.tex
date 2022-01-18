@@ -183,13 +183,16 @@ legend style={at={(1.1,-0.45)},anchor=south, font=\large},
             },
 	cycle list name=mycolorlist,
 	 xmax=2000,
-	 xmin=1600,
-	 ymin=1500,
+	 xmin=1200,
+	 ymin=1200,
 	 ymax=1850
 ]
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.74	34.29
+800	995.8	46.68
+1200	1384.67	58.83
 1600	1673.57	46.73
 1650	1675.76	47.64
 1700	1677.02	47.14
@@ -213,6 +216,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.74	34.29
+800	995.76	46.65
+1200	1384.42	58.91
 1600	1678.43	43.59
 1650	1676.05	49.61
 1700	1682.53	41.84
@@ -236,6 +242,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	606.85	34.32
+800	995.87	46.73
+1200	1384.63	58.38
 1600	1671.88	51.58
 1650	1681.56	50.0
 1700	1685.41	51.66
@@ -259,6 +268,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	605.77	30.67
+800	996.23	47.29
+1200	1384.42	57.38
 1600	1577.34	29.66
 1650	1579.36	35.09
 1700	1578.02	34.83
@@ -297,13 +309,16 @@ at={($(ax1.south east)+(60,0)$)},
             },
 	cycle list name=mycolorlist,
 	 xmax=2000,
-	 xmin=1600,
+	 xmin=1200,
 	 ymin=5,
 	 ymax=21
 ]
 %end of axis
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.83	0.22
+800	22.04	0.18
+1200	21.21	0.37
 1600	17.27	1.15
 1650	16.94	0.99
 1700	16.69	0.74
@@ -327,6 +342,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.82	0.22
+800	22.02	0.18
+1200	21.21	0.35
 1600	17.32	0.98
 1650	16.92	0.85
 1700	16.74	0.64
@@ -350,6 +368,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.89	0.22
+800	22.13	0.18
+1200	21.37	0.36
 1600	17.65	1.07
 1650	17.35	0.91
 1700	17.18	0.77
@@ -373,6 +394,9 @@ a	 b	 c
 
 \addplot table [x=a, y=b] {
 a	 b	 c
+400	21.89	0.2
+800	22.18	0.16
+1200	21.35	0.68
 1600	11.26	2.64
 1650	10.43	2.51
 1700	9.66	2.32
@@ -388,6 +412,6 @@ a	 b	 c
 
 
 \end{axis}
-\node[above,font=\Large, align=left] at (current bounding box.north) {Training: random vehicle placement, main inflow [1600,2000], AVP=30\%,\\ Evaluation: random vehicle placement, main inflow [1600,2000], \textbf{AVP=20}\%};
+\node[above,font=\Large, align=left] at (current bounding box.north) {Training: random vehicle placement, main inflow [1600,2000], AVP=30\%,\\ Evaluation: random vehicle placement, main inflow [1200,2000], \textbf{AVP=20}\%};
 \end{tikzpicture}
 \end{document}

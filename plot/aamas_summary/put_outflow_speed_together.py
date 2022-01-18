@@ -2,6 +2,10 @@ import os
 
 dict_to_merge={
 "vehicle_placement": [
+("even_evaluation_placement_inflow_2000_Outflow.tex",
+"even_evaluation_placement_inflow_2000_Speed.tex"),
+("random_evaluation_placement_inflow_2000_Outflow.tex",
+"random_evaluation_placement_inflow_2000_Speed.tex"),
 ("even_evaluation_placement_inflow_1850_Outflow.tex",
 "even_evaluation_placement_inflow_1850_Speed.tex"),
 ("random_evaluation_placement_inflow_1850_Outflow.tex",
