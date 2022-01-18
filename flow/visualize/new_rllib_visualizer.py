@@ -55,6 +55,7 @@ from tools.matplotlib_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow
+from flow.visualize.profile_util import profile_speed_density, draw_fundamental_diagrams
 
 EXAMPLE_USAGE = """
 example usage:
@@ -497,6 +498,11 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             reward_per_time_step=[]
 
         env.action_space.seed(0) 
+
+        if args.profile_cell_fd is not None:
+            if args.profile_cell_fd_file is None:
+                raise ValueError('Please specify the file path for --profile_cell_fd_file')
+            density_flow_per_cell=dict() 
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
@@ -504,6 +510,14 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             avg_speed_at_k=np.mean(vehicles.get_speed(vehicles.get_ids()))
             if avg_speed_at_k>0:
                 vel.append(avg_speed_at_k)
+            if args.profile_cell_fd is not None and i_k % args.profile_cell_fd==0:
+                # profile density and speed
+                density_flow_per_cell_k=profile_speed_density(vehicles)
+                for cell_index, density_flow in density_flow_per_cell_k.items():
+                    if cell_index not in density_flow_per_cell.keys():
+                        density_flow_per_cell[cell_index]=list()
+                    density_flow_per_cell[cell_index].append(density_flow)
+
             #print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
             #if len(state.keys()):
@@ -590,6 +604,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                 rets[key].append(ret[key])
         else:
             rets.append(ret)
+
+        # plot the fundamental diagrams 
+        if args.profile_cell_fd is not None and args.profile_cell_fd_file is not None:
+            draw_fundamental_diagrams(args.profile_cell_fd_file, density_flow_per_cell)
 
         # plot the inflows, outflow, avg_speed, reward at each time step
         # handles to print the metrics along the history

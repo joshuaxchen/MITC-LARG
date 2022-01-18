@@ -123,6 +123,8 @@ def set_argument(evaluate=False):
     parser.add_argument('--run_random_seed', type=int, default=-1, help="-1 run all random seeds, otherwise, run just the specificed random seed")
     parser.add_argument('--restore', type=str, help="the path to the model that is used for training")
     parser.add_argument('--measurement_rate', type=int, help="the window size (in terms of time steps) to measure the inflow and outflow")
+    parser.add_argument('--profile_cell_fd', type=int, help='an period to trigger a producedure to profile the density and speed for each cell')
+    parser.add_argument('--profile_cell_fd_file', type=str, help='a path to profile the density and speed for each cell')
     args = parser.parse_args()
     return args
 
