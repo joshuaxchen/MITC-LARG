@@ -1,0 +1,67 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large flow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large density},
+	legend columns=15,
+	transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+0.01	0.20971238399521697	0
+0.02	0.404146096400404	0
+0.03	0.480279997651744	0
+0.04	0.6462972482994497	0
+0.05	0.7254115831297169	0
+0.06	0.6008717879381993	0
+0.07	0.5370794949713309	0
+0.08	0.4284637945524817	0
+};
+\label{merge200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0.01	0.20977721218309595	0
+0.02	0.4044046811533102	0
+0.03	0.5451043956002257	0
+0.04	0.663153594210605	0
+0.05	0.7333399868580256	0
+};
+\label{merge0}
+
+
+\addlegendimage{/pgfplots/refstyle=merge200}
+\addlegendentry{merge200}
+\addlegendimage{/pgfplots/refstyle=merge0}
+\addlegendentry{merge0}
+
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

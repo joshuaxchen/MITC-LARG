@@ -1,0 +1,73 @@
+\documentclass{standalone}
+
+% graphics
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{tikzpicture}[scale=1]
+  \pgfplotsset{
+      scale only axis,
+      every x tick label/.append style={font=\Large},
+      every y tick label/.append style={font=\Large},
+	legend style={at={(1.05,0.95)},anchor=north west}
+  }
+
+\pgfplotscreateplotcyclelist{mycolorlist}{%
+	 index of colormap=0 of Set1-1,  every mark/.append style={fill=Set1-A}, mark=star, error bars/.cd, y dir=both, y explicit\\
+} %end of colors
+
+
+\begin{axis}[
+    legend style={font=\small},
+	ylabel={\Large flow},
+	x label style={at={(axis description cs:0.5,-0.03)},anchor=north},
+	y label style={at={(axis description cs:-0.030,0.5)}, anchor=south},
+	%xticklabel style = {font=\small,xshift=0.5ex},
+	xlabel={\Large density},
+	legend columns=15,
+	transpose legend,
+	/tikz/column /.style={
+                column sep=5pt,
+            },
+	cycle list name=mycolorlist
+]
+%end of axis
+\addplot table [x=a, y=b] {
+a	 b	 c
+0.01	0.2603493094924643	0
+0.02	0.5085001520364283	0
+0.03	0.699121219444701	0
+0.04	0.7977317600015991	0
+0.05	0.7203272491842581	0
+0.06	0.6384473917331568	0
+0.07	0.5780350369546536	0
+0.08	0.5223324650313228	0
+0.09	0.4515365867266064	0
+0.1	0.3697407759758612	0
+};
+\label{merge200}
+
+\addplot table [x=a, y=b] {
+a	 b	 c
+0.01	0.2632077490502935	0
+0.02	0.5104235063294366	0
+0.03	0.7124971623059841	0
+0.04	0.814261593240615	0
+};
+\label{merge0}
+
+
+\addlegendimage{/pgfplots/refstyle=merge200}
+\addlegendentry{merge200}
+
+\addlegendimage{/pgfplots/refstyle=merge0}
+\addlegendentry{merge0}
+
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
