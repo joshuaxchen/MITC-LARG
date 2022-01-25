@@ -517,7 +517,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             state, reward, done, infos = env.step(action)
 
             print(i_k)
-            edge_list = ["left"]#["inflow_highway","left"]#,"center","right"]
+            edge_list = ["inflow_highway","left","center", "right"]#["inflow_highway","left","center","right"]
             outflows_by_lane = vehicles.get_outflow_rate_by_lane(MEASUREMENT_RATE)
             print("Outflow:", outflows_by_lane)
             speeds_by_lane = vehicles.get_speed_by_lane(edge_list=edge_list)
