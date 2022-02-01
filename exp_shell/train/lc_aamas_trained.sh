@@ -26,7 +26,7 @@ ASSERTIVE=5 #0.5 #5 #0.4 0.6 0.8 1
 LC_PROB=-1
 
 python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_merge4_Collaborate_lrschedule.py \
-	--exp_folder_mark new_rl_right_decisive \
+	--exp_folder_mark new_rl_right_decisive_smallerJunction \
 	--lateral_resolution 3.2 \
 	--cpu 30 \
 	--to_probability \
