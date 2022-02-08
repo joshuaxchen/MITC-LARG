@@ -26,7 +26,7 @@ RL_RIGHT_MODEL_AAMAS=${HOME}/ray_results/multiagent_new_rl_right_lanechange_merg
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/jan_26_lanechange_smallJunction/
+EXP_FOLDER=$FLOW_DIR/exp_results/feb_3_lanechange_smallJunction_speedMode15/
 
 #RIGHT_DIR=${HOME}/ray_results/multiagent_new_rl_right_decisive_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_8fe48_00000_0_2021-12-01_10-56-00/
 RIGHT_DIR=${HOME}/ray_results/multiagent_new_rl_right_decisive_smallerJunction_lanechange_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_f3106_00000_0_2022-01-23_17-34-03/

@@ -299,14 +299,14 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         if veh_name is None:
             continue
         operator=add_veh_operators[i]
-        speed_mode=7
+        speed_mode=15
         #veh_num=5
         veh_num=0
         if "human" in veh_name and i==0: # the right most lane and human
             speed_mode=15
             veh_num=1
         elif "rl" in veh_name:
-            speed_mode=7
+            speed_mode=15
             veh_num=0
 
         operator(vehicle_params, veh_name, speed_mode, veh_num, speed_gain, assertive, lc_probability)
@@ -329,16 +329,16 @@ def add_preset_inflows(inflow_type, flow_params):
         vehicles=VehicleParams()            
         lc_probability=0
         add_vehicles_no_lane_change(vehicles, "human_r", 15, 5, aggressive, assertive, lc_probability)
-        add_vehicles_no_lane_change(vehicles, "human_l", 7, 5, aggressive, assertive, lc_probability)
-        add_vehicles_no_lane_change(vehicles, "human", 7, 5, aggressive, assertive, lc_probability)
+        add_vehicles_no_lane_change(vehicles, "human_l", 15, 5, aggressive, assertive, lc_probability)
+        add_vehicles_no_lane_change(vehicles, "human", 15, 5, aggressive, assertive, lc_probability)
         add_vehicles_no_lane_change(vehicles, "rl", 15, 0, aggressive, assertive, lc_probability)
         flow_params['veh']=vehicles 
 
         # see speed mode 
         # https://sumo.dlr.de/docs/TraCI/Change_Vehicle_State.html#speed_mode_0xb3
         # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
-        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
-        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_speed_modes"]=[15, 15] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 15] #right 15, left 7
         env_params.additional_params["human_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
         env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
@@ -406,8 +406,8 @@ def add_preset_inflows(inflow_type, flow_params):
         flow_params['veh']=vehicles 
 
         # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
-        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
-        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_speed_modes"]=[15, 15] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 15] #right 15, left 7
         env_params.additional_params["human_lane_change_modes"]=[lane_change_mode, no_lane_change_mode]
         env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
@@ -477,8 +477,8 @@ def add_preset_inflows(inflow_type, flow_params):
         flow_params['veh']=vehicles 
 
         # rewrite the speed mode and lane change mode, according to the lane index 0: right lane, 1:left lane
-        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
-        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_speed_modes"]=[15, 15] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 15] #right 15, left 7
         env_params.additional_params["human_lane_change_modes"]=[lane_change_mode, no_lane_change_mode]
         env_params.additional_params["rl_lane_change_modes"]=[no_lane_change_mode, no_lane_change_mode]
 
@@ -562,7 +562,7 @@ def reset_inflows_i696(args, flow_params):
             veh_id="rl",
             acceleration_controller=(RLController, {}),
             car_following_params=SumoCarFollowingParams(
-                speed_mode=9,
+                speed_mode=15,
             ),
             num_vehicles=0)
 
@@ -711,7 +711,7 @@ def reset_inflows(args, flow_params):
                 veh_id="human",
                 acceleration_controller=(SimCarFollowingController, {}),
                 car_following_params=SumoCarFollowingParams(
-                    speed_mode=9,  # for safer behavior at the merges
+                    speed_mode=15,  # for safer behavior at the merges
                     #tau=1.5  # larger distance between cars
                 ),
                 #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
@@ -723,7 +723,7 @@ def reset_inflows(args, flow_params):
                 veh_id="rl",
                 acceleration_controller=(RLController, {}),
                 car_following_params=SumoCarFollowingParams(
-                    speed_mode=9,
+                    speed_mode=15,
                 ),
                 num_vehicles=0)
 
@@ -803,8 +803,8 @@ def reset_inflows(args, flow_params):
         add_veh_and_inflows_to_edge(inflows, veh_params, "inflow_merge", "", [], [], [args.merge_inflow], [0], args.speed_gain, args.assertive, args.lc_probability)
 
         # set the lane change mode for both lanes in the highway edge 
-        env_params.additional_params["human_speed_modes"]=[15, 7] #right 15, left 7 
-        env_params.additional_params["rl_speed_modes"]=[15, 7] #right 15, left 7
+        env_params.additional_params["human_speed_modes"]=[15, 15] #right 15, left 7 
+        env_params.additional_params["rl_speed_modes"]=[15, 15] #right 15, left 7
         no_lane_change_mode=NO_LANE_CHANGE_MODE
         lane_change_mode=LANE_CHANGE_MODE #LANE_CHANGE_REPECT_COLLISION_AVOID #LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP
         if args.human_lane_change[0]==0 and args.human_lane_change[1]==0:
