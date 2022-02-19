@@ -33,6 +33,7 @@ class DoubleLaneSimpleMerge:
 
         # the number of vehicles at each main cell at time t
         self.right_main_n_t_table = list()
+        self.left_main_n_t_table = list()
         self.merge_n_t_table = list()
         main_n_0 = [0 for i in range(0, main_cell_num)]
         self.right_main_n_t_table.append(main_n_0)
@@ -64,12 +65,7 @@ class DoubleLaneSimpleMerge:
         return min(upstream_cell_capacity, maximum_flow,
                    shockwave_speed * (maximum_capacity - current_veh) / freeflow_speed)
 
-    def step(self, specified_main_inflow, specified_merge_inflow):
-        # compute the inflow
-        t = self.t + 1
-
-        right_main_n_previous = self.right_main_n_t_table[self.t]
-        left_main_n_previous = self.left_main_n_t_table[self.t]
+    def compute_lane_change(self, right_main_n_previous, left_main_n_previous):
         lc_from_right_to_left=list()
         # first compute the number of vehicles changing from right to left, or vice versa
         for i in range(0, self.main_cell_num):
@@ -80,83 +76,87 @@ class DoubleLaneSimpleMerge:
             # this can be negative
             num_of_veh_change_from_right_to_left = density_diff * self.lc_rate_per_density_diff * self.cell_length
             lc_from_right_to_left.append(num_of_veh_change_from_right_to_left)
+        return lc_from_right_to_left
 
+    def compute_inflow_from_upstream(self, main_or_merge_previous,
+    specified_inflow, num_of_cells, before_merge_index=None,
+    waiting_merge_veh=None):
+        # first compute the inflow for the merge cells, who has higher
+        # priorities than the main cell
+        inflows = list()
+        for i in range(0, num_of_cells):
+            merge_n_previous_cell_t = 0
+            if i == 0:
+                previous_cell_t = specified_inflow * self.duration_per_time_step
+            elif i-1==before_merge_index and waiting_merge_veh is not None:
+                previous_cell_t= waiting_merge_veh + main_or_merge_previous[i - 1]
+            else:
+                previous_cell_t = main_or_merge_previous[i - 1]
+            current_cell_t = main_or_merge_previous[i]
+            # current_cell_merge_inflow=min(merge_n_previous_cell_t, self.Q, self.get_inflow_according_to_cell_model(merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed))
+            current_cell_inflow = self.get_inflow_according_to_cell_model(previous_cell_t, current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
+            inflows.append(current_cell_inflow)
+        return inflows
+
+    def compute_outflow_from_downstream(self, main_or_merge_previous, inflows,
+    num_of_cells, waiting_merge_veh=None, before_merge_index=None):
+        outflows=list()
+        for i in reversed(range(0, num_of_cells)):
+            previous_n = main_or_merge_previous[i]
+            if i == num_of_cells - 1:  # all vehicles will go out
+                outflow = previous_n
+            elif i == before_merge_index and waiting_merge_veh is not None:
+                outflow = max(0, inflows[i + 1] - waiting_merge_veh)
+            else:
+                outflow = inflows[i + 1]  # inflow from downstream
+            outflows.append(outflow)
+        outflows = list(reversed(outflows))
+        if debug:
+            print("outflows", outflows)
+        return outflows
+
+    def step(self, specified_main_inflow, specified_merge_inflow):
+        # compute the inflow
+        t = self.t + 1
+
+        right_main_n_previous = self.right_main_n_t_table[self.t]
+        #left_main_n_previous = self.left_main_n_t_table[self.t]
+        #lc_from_right_to_left=self.compute_lane_change(right_main_n_previous, left_main_n_previous)
+        
         # first compute the inflow for the merge cells, who has higher
         # priorities than the main cell
         merge_n_previous = self.merge_n_t_table[self.t]
-        merge_inflows = list()
-        for i in range(0, self.merge_cell_num):
-            merge_n_previous_cell_t = 0
-            if i == 0:
-                merge_n_previous_cell_t = specified_merge_inflow * self.duration_per_time_step
-            else:
-                merge_n_previous_cell_t = merge_n_previous[i - 1]
-            merge_n_current_cell_t = merge_n_previous[i]
-            # current_cell_merge_inflow=min(merge_n_previous_cell_t, self.Q, self.get_inflow_according_to_cell_model(merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed))
-            current_cell_merge_inflow = self.get_inflow_according_to_cell_model(merge_n_previous_cell_t,
-                                                                                merge_n_current_cell_t, self.N, self.Q,
-                                                                                self.shockwave_speed,
-                                                                                self.freeflow_speed)
-            merge_inflows.append(current_cell_merge_inflow)
+        merge_inflows = self.compute_inflow_from_upstream(merge_n_previous,
+        specified_merge_inflow, self.merge_cell_num)
 
         # set a flag whether there are merging vehicles waiting at the junction
         waiting_merge_veh = 0
         # compute the outflow for each **merge** cell
-        merge_outflows = list()
-        # compute the outflow for each main cell
-        for i in reversed(range(0, self.merge_cell_num)):
-            previous_n = merge_n_previous[i]
-            outflow = 0
-            if i == self.merge_cell_num - 1:  # the last merge cell
-                # then this vehicle will move to the next cell
-                # take the integer part of the merging inflow and take a note on the remaining part
-                (previous_n, waiting_merge_veh) = math.modf(previous_n)
-                outflow = waiting_merge_veh
-            else:
-                outflow = merge_inflows[i + 1]  # the outflow should equal to the inflow of the downstream cell
-            merge_outflows.append(outflow)
-        merge_outflows = list(reversed(merge_outflows))
-        # print("waiting", waiting_merge_veh)
+        merge_outflows = self.compute_outflow_from_downstream(merge_n_previous, merge_inflows, self.merge_cell_num)
+        # compute the outflow at the last cell 
+        last_merge_index=self.merge_cell_num - 1
+        veh_at_last_merge_cell=merge_n_previous[last_merge_index]
+        (remaining_n, waiting_merge_veh) = math.modf(veh_at_last_merge_cell)
+        merge_outflows[last_merge_index]=waiting_merge_veh
 
         assert waiting_merge_veh >= 0, "waiting should not be negative %f" % waiting_merge_veh
         # if waiting_merge_veh>=1:
         #    set_trace()
 
         # then compute the *right* inflow for the main cells
-        right_main_inflows = list()
-        for i in range(0, self.main_cell_num):
-            right_main_n_previous_cell_t = 0
-            if i == 0:  # the first cell has inflow maximum
-                right_main_n_previous_cell_t = specified_main_inflow * self.duration_per_time_step
-            elif i == self.before_merge_index + 1:  # after merge
-                right_main_n_previous_cell_t = waiting_merge_veh + right_main_n_previous[i - 1]
-            else:
-                right_main_n_previous_cell_t = right_main_n_previous[i - 1]  # assume all vehicles will transit to the next
-            right_main_n_current_cell_t = right_main_n_previous[i]
-            current_cell_main_inflow = self.get_inflow_according_to_cell_model(right_main_n_previous_cell_t,
-                                                                               right_main_n_current_cell_t, self.N,
-                                                                               self.Q,
-                                                                               self.shockwave_speed,
-                                                                               self.freeflow_speed)
-            right_main_inflows.append(current_cell_main_inflow)
-
+        right_main_inflows = self.compute_inflow_from_upstream(right_main_n_previous,
+        specified_main_inflow, self.main_cell_num, self.before_merge_index, waiting_merge_veh)
+        
         # then compute the *left* inflow for the main cells
-        left_main_inflows = list()
-        for i in range(0, self.main_cell_num):
-            right_main_n_previous_cell_t = 0
-            if i == 0:  # the first cell has inflow maximum
-                left_main_n_previous_cell_t = specified_main_inflow * self.duration_per_time_step
-            else:
-                left_main_n_previous_cell_t = left_main_n_previous[i - 1]  # assume all vehicles will transit to the next
-            left_main_n_current_cell_t = left_main_n_previous[i]
-            current_cell_main_inflow = self.get_inflow_according_to_cell_model(left_main_n_previous_cell_t,
-                                                                               left_main_n_current_cell_t, self.N,
-                                                                               self.Q,
-                                                                               self.shockwave_speed,
-                                                                               self.freeflow_speed)
+        #left_main_inflows = list()
+        #left_main_inflows = self.compute_inflow_from_upstream(left_main_n_previous, specified_main_inflow, self.main_cell_num)
+        #i=0
+        #left_main_inflow_with_lc=list()
+        #for num_of_veh_change_from_right_to_left in lc_from_right_to_left:
+        #    left_main_inflow_with_lc.append(left_main_inflows[i]+num_of_veh_change_from_right_to_left)
+        #    i+=1  
 
-            current_cell_main_inflow+=num_of_veh_change_from_right_to_left
-            left_main_inflows.append(current_cell_main_inflow)
+        #left_main_inflows=left_main_inflow_with_lc
 
         """
         ***********************************
@@ -191,23 +191,9 @@ class DoubleLaneSimpleMerge:
             print("main inflows", right_main_inflows)
         self.main_inflow_n_t_table.append(right_main_inflows)
 
-        right_main_outflows = list()
-        # print("main_cell_num", self.main_cell_num)
-        # print("before_merge_index", self.before_merge_index)
-        for i in reversed(range(0, self.main_cell_num)):
-            previous_n = right_main_n_previous[i]
-            if i == self.main_cell_num - 1:  # all vehicles will go out
-                outflow = previous_n
-            elif i == self.before_merge_index:
-                outflow = max(0, right_main_inflows[i + 1] - waiting_merge_veh)
-            else:
-                outflow = right_main_inflows[i + 1]  # inflow from downstream
-            right_main_outflows.append(outflow)
-        right_main_outflows = list(reversed(right_main_outflows))
-        if debug:
-            print("main_outflows", right_main_outflows)
-
-            # update the number of current vehicles at the merge road
+        right_main_outflows =self.compute_outflow_from_downstream(right_main_n_previous, right_main_inflows, self.main_cell_num, waiting_merge_veh, self.before_merge_index)
+        
+        # update the number of current vehicles at the merge road
         merge_n_t = list()
         for i in range(0, self.merge_cell_num):
             previous_n = merge_n_previous[i]
@@ -324,7 +310,7 @@ if __name__ == "__main__":
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
     for main_inflow in [1800]:
         for merge_inflow in [200]:
-            single_lane_simple_merge = SingleLaneSimpleMerge()
+            single_lane_simple_merge = DoubleLaneSimpleMerge()
             (avg_main_inflow, avg_merge_inflow,
              avg_outflow) = single_lane_simple_merge.simulate(main_inflow,
                                                               merge_inflow, math.ceil(1000 / duration))
