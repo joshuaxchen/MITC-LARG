@@ -5,8 +5,8 @@ debug=True
 
 class SingleLaneSimpleMerge:
     def __init__(self, cell_length=100, total_main_len=700,
-    len_before_merge=600, freeflow_speed=21, critical_density=0.04,
-    jam_density=0.14, len_merge=200, waiting_times=1.13, threshold_density=0.0225):
+                 len_before_merge=600, freeflow_speed=21, critical_density=0.04,
+                 jam_density=0.14, len_merge=200, waiting_penality_per_merge=1.13, threshold_density=0.0225):
         main_cell_num=total_main_len//cell_length
         before_merge_index=len_before_merge//cell_length-1 
         duration_per_time_step=cell_length*1.0/freeflow_speed 
@@ -41,8 +41,10 @@ class SingleLaneSimpleMerge:
         self.merge_n_t_table.append(merge_n_0)
 
         self.t=0
+        # The remaining waiting time steps caused by the merging vehicles
         self.remaining_waiting=-1
-        self.waiting_times=waiting_times
+        # The time caused by the merging vehicles
+        self.waiting_penality_per_merge=waiting_penality_per_merge
         self.main_inflow_n_t_table=list()
         self.main_inflow_n_t_table.append(main_n_0)
 
@@ -50,7 +52,7 @@ class SingleLaneSimpleMerge:
         # each time the merging vehicle will increase a penality on the main
         # road, if the penelty exceeds some threshold, then we block the
         # outflow of its upstream cell. 
-        self.penality_to_block=0
+        #self.penality_to_block=0
 
     def get_inflow_according_to_cell_model(self, upstream_cell_capacity, current_veh, maximum_capacity, maximum_flow, shockwave_speed, freeflow_speed):
         # assume tha 
@@ -72,9 +74,9 @@ class SingleLaneSimpleMerge:
             else:
                 merge_n_previous_cell_t=merge_n_previous[i-1]
             merge_n_current_cell_t= merge_n_previous[i]
-            #current_merge_inflow=min(merge_n_previous_cell_t, self.Q, self.get_inflow_according_to_cell_model(merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed))
-            current_merge_inflow=self.get_inflow_according_to_cell_model(merge_n_previous_cell_t, merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
-            merge_inflows.append(current_merge_inflow)
+            #current_cell_merge_inflow=min(merge_n_previous_cell_t, self.Q, self.get_inflow_according_to_cell_model(merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed))
+            current_cell_merge_inflow=self.get_inflow_according_to_cell_model(merge_n_previous_cell_t, merge_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
+            merge_inflows.append(current_cell_merge_inflow)
 
         # set a flag whether there are merging vehicles waiting at the junction 
         waiting_merge_veh=0
@@ -116,8 +118,8 @@ class SingleLaneSimpleMerge:
             #    alpha=self.shockwave_speed/self.freeflow_speed 
             #else:
             #    alpha=self.shockwave_speed/self.freeflow_speed 
-            current_main_inflow=self.get_inflow_according_to_cell_model(main_n_previous_cell_t,main_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
-            main_inflows.append(current_main_inflow)
+            current_cell_main_inflow=self.get_inflow_according_to_cell_model(main_n_previous_cell_t,main_n_current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
+            main_inflows.append(current_cell_main_inflow)
 
                 
         """
@@ -193,7 +195,7 @@ class SingleLaneSimpleMerge:
         self.main_n_t_table.append(main_n_t)
 
         if waiting_merge_veh>0:
-            self.remaining_waiting=self.waiting_times
+            self.remaining_waiting=self.waiting_penality_per_merge
         else:
             if self.remaining_waiting>0:
                 self.remaining_waiting-=1
