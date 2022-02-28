@@ -235,8 +235,8 @@ class SingleLaneSimpleMerge:
         for t in range(1, total_time_steps):
             #set_trace()
             temp=merge_inflow/3600.0
-            if t>=total_time_steps/2:
-                temp=0
+            #if t>=total_time_steps/2:
+            #    temp=0
             self.step(main_inflow/3600.0, temp)
             if debug:
                 print("-------------t=%d--------------" % t)
@@ -290,12 +290,12 @@ if __name__ == "__main__":
     duration=100/21.0
     #for merge_inflow in [160, 180, 200]:
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
-    for main_inflow in [1400]:
+    for main_inflow in [1800]:
         for merge_inflow in [200]:
             single_lane_simple_merge=SingleLaneSimpleMerge()
             (avg_main_inflow, avg_merge_inflow,
             avg_outflow)=single_lane_simple_merge.simulate(main_inflow,
-            merge_inflow, math.ceil(5000/duration))
+            merge_inflow, math.ceil(1000/duration))
             results[str(main_inflow)+"-"+str(merge_inflow)]=(avg_main_inflow, avg_merge_inflow, avg_outflow)
             #print(main_inflow, merge_inflow, avg_main_inflow, avg_merge_inflow, avg_outflow)
             print(main_inflow, merge_inflow, avg_outflow)
