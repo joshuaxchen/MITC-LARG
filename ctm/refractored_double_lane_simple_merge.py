@@ -4,16 +4,16 @@ import random
 from IPython.core.debugger import set_trace
 import matplotlib.pyplot as plt
 
-debug = True
+debug = False
 
 
 class DoubleLaneSimpleMerge:
     def __init__(self, cell_length=100, total_main_len=700,
                  len_before_merge=600, freeflow_speed=21, critical_density=0.04,
                  jam_density=0.14, len_merge=200, waiting_penality_per_merge=1.13, merge_threshold_density=0.0225,
-                 random_lc_rate=0.1, lc_rate_per_density_diff=0.2, lc_threshold_density=0.013, lc_slow_down_rate=0.3):
+                 random_lc_rate = 0.1, lc_rate_per_density_diff = 0.2, lc_threshold_density = 0.013, lc_slow_down_rate = 0.45):
         main_cell_num = total_main_len // cell_length
-        before_merge_index = len_before_merge // cell_length - 1
+        before_merge_index = len_before_merge // cell_length # cell index starting as 1
         duration_per_time_step = cell_length * 1.0 / freeflow_speed
         cell_maximum_flow = critical_density * freeflow_speed
         # theoretical maximum throughput in each cell
@@ -42,13 +42,12 @@ class DoubleLaneSimpleMerge:
         self.right_main_n_t_table = list()
         self.left_main_n_t_table = list()
         self.merge_n_t_table = list()
-        main_n_0 = [0]* self.main_cell_num
-        self.right_main_n_t_table.append(main_n_0)
-        self.left_main_n_t_table.append(main_n_0)
+        self.right_main_n_t_table.append([0]* (self.main_cell_num+2))
+        self.left_main_n_t_table.append([0]* (self.main_cell_num+2))
 
         # the number of vehicles at each merge cell at time t
         self.merge_n_t_table = list()
-        merge_n_0 = [0]* self.merge_cell_num
+        merge_n_0 = [0]* (self.merge_cell_num+2)
         self.merge_n_t_table.append(merge_n_0)
 
         self.t = 0
@@ -57,9 +56,14 @@ class DoubleLaneSimpleMerge:
         # The time caused by the merging vehicles
         self.waiting_penality_per_merge = waiting_penality_per_merge
         self.right_main_inflow_n_t_table = list()
-        self.right_main_inflow_n_t_table.append([0]*(self.main_cell_num+1))
+        self.right_main_inflow_n_t_table.append([0]*(self.main_cell_num+2))
         self.left_main_inflow_n_t_table = list()
-        self.left_main_inflow_n_t_table.append([0]*(self.main_cell_num+1))
+        self.left_main_inflow_n_t_table.append([0]*(self.main_cell_num+2))
+
+        self.right_main_outflow_n_t_table=list()
+        self.left_main_outflow_n_t_table=list()
+        self.right_main_outflow_n_t_table.append([0]*(self.main_cell_num+2))
+        self.left_main_outflow_n_t_table.append([0] * (self.main_cell_num + 2))
 
         self.lc_rate_per_density_diff=lc_rate_per_density_diff
         # create a counter for the merging road
@@ -77,8 +81,11 @@ class DoubleLaneSimpleMerge:
     def compute_lane_change(self, right_main_n_previous, left_main_n_previous):
         lc_from_right_to_left=list()
         # first compute the number of vehicles changing from right to left, or vice versa
-        for i in range(0, self.main_cell_num):
+        for i in range(0, self.main_cell_num+2):
             # check the density difference
+            if i==0 or i==self.main_cell_num+1:
+                lc_from_right_to_left.append(0)
+                continue
             right_main_n_current_cell_t= right_main_n_previous[i]
             left_main_n_current_cell_t= left_main_n_previous[i]
             density_diff = (right_main_n_current_cell_t - left_main_n_current_cell_t) / self.cell_length
@@ -97,28 +104,30 @@ class DoubleLaneSimpleMerge:
         # first compute the inflow for the merge cells, who has higher
         # priorities than the main cell
         inflows = list()
-        for i in range(0, num_of_cells+1):
-            if i == 0:# inflow at the beginning
+        for i in range(0, num_of_cells+2):
+            if i == 0:
                 previous_cell_t = specified_inflow * self.duration_per_time_step
-            elif i-1==before_merge_index and waiting_merge_veh is not None: # inflow before merge
+            elif before_merge_index is not None and i==before_merge_index+1 and waiting_merge_veh is not None: # inflow before merge
                 #previous_cell_t= waiting_merge_veh + main_or_merge_previous[i - 1] - max(out_due_to_lc[i-1],0)
-                previous_cell_t= waiting_merge_veh + main_or_merge_previous[i - 1] - out_due_to_lc[i-1]
+                previous_cell_t = waiting_merge_veh + main_or_merge_previous[i - 1] - out_due_to_lc[i - 1]
             else:
-                previous_cell_t = main_or_merge_previous[i - 1] - max(out_due_to_lc[i-1],0)
-            if i<num_of_cells:
-                current_cell_t = max(main_or_merge_previous[i], main_or_merge_previous[i]-out_due_to_lc[i])
+                #previous_cell_t = main_or_merge_previous[i - 1] - max(out_due_to_lc[i-1],0)
+                previous_cell_t = main_or_merge_previous[i - 1] - out_due_to_lc[i - 1]  # vehicles coming in or leaving
+
+            if i==0 or i==num_of_cells+1:
+                current_cell_t = 0
             else:
-                current_cell_t=0
+                #current_cell_t = max(main_or_merge_previous[i], main_or_merge_previous[i] - out_due_to_lc[i])
+                current_cell_t = main_or_merge_previous[i] - out_due_to_lc[i]
             current_cell_inflow = self.get_inflow_according_to_cell_model(previous_cell_t, current_cell_t, self.N, self.Q, self.shockwave_speed, self.freeflow_speed)
             inflows.append(current_cell_inflow)
-
         if waiting_merge_veh is None: # when computing inflow for the left lane and merging lane, waiting_merge_veh is None. Otherwise, it is not.
             return inflows
         # if there are waiting vehicles waiting at the junction
         threshold = self.cell_length * self.merge_threshold_density
         if waiting_merge_veh > 0:
             # if the number of vehicles is more than critical density
-            if main_or_merge_previous[self.before_merge_index] >= threshold:
+            if main_or_merge_previous[before_merge_index] >= threshold:
                 inflows[self.before_merge_index + 1] = waiting_merge_veh
             # otherwise, use the default one from upstream
         elif self.remaining_waiting > 0:  # no waiting vehicle, but been blocked by previous time steps
@@ -136,7 +145,7 @@ class DoubleLaneSimpleMerge:
     num_of_cells, out_due_to_lc, waiting_merge_veh=None, before_merge_index=None):
         # This is to compute the flat outflow according to the downstream inflow and lc, assuming that there is no slow down from lane changing
         outflows = list()
-        for i in reversed(range(0, num_of_cells)):
+        for i in reversed(range(0, num_of_cells+2)):
             # if i<num_of_cells:
             #     previous_n = main_or_merge_previous[i]
             # else:
@@ -148,8 +157,11 @@ class DoubleLaneSimpleMerge:
             #    lc_out_i=0
             #if i == num_of_cells - 1:  # all vehicles will go out
             #    outflow = previous_n - lc_out_i
-            if i == before_merge_index and waiting_merge_veh is not None:
-                outflow = max(0, inflows[i + 1] - waiting_merge_veh)
+            if i==num_of_cells+1: # the last cell is a dummy cell, and its inflow equals outflow
+                outflow=inflows[i]
+            elif waiting_merge_veh is not None and before_merge_index is not None and i == before_merge_index:
+                #outflow = max(0, inflows[i + 1] - waiting_merge_veh)
+                outflow = inflows[i + 1] - waiting_merge_veh
             else:
                 outflow = inflows[i + 1]  # inflow from downstream
             outflows.append(outflow)
@@ -158,16 +170,13 @@ class DoubleLaneSimpleMerge:
         #    print("outflows", outflows)
         # check whether there is any blocking/slow down from the lane change vehicles:
         # if there are some cutting in at cell i, it will increase the density of cell i, and block the outflow at cell i,
-        for i in range(0, num_of_cells):
+        for i in range(1, num_of_cells+1):
             lc = out_due_to_lc[i]
-            if lc >=0: # skip if no vehicles cuttin in
+            if lc >= 0:  # skip if no vehicles cutting in
                 continue
             current_cell_capacity = main_or_merge_previous[i]
             current_cell_density = current_cell_capacity / self.cell_length
             increased_density = -lc / self.cell_length
-            if increased_density < 0:
-                print("")
-                pass
             if debug:
                 # print("increased_density", increased_density)
                 # print("current cell density", current_cell_density)
@@ -178,13 +187,12 @@ class DoubleLaneSimpleMerge:
                 # The decreased outflow is proportional to the amount of increased density
                 # decrease_rate = self.lc_slow_down_rate #- min(increased_density*500, 0.3)
                 # saturated
-                outflows[i]=outflows[i]*self.lc_slow_down_rate
+                outflows[i] = outflows[i] * self.lc_slow_down_rate
         return outflows
 
     def step(self, specified_left_main_inflow, specified_right_main_inflow, specified_merge_inflow):
         # compute the inflow
         t = self.t + 1
-
         right_main_n_previous = self.right_main_n_t_table[self.t]
         left_main_n_previous = self.left_main_n_t_table[self.t]
         # compute the amount of vehicles changing from right to left
@@ -199,30 +207,31 @@ class DoubleLaneSimpleMerge:
         # first compute the inflow for the merge cells, who has higher
         # priorities than the main cell
         merge_n_previous = self.merge_n_t_table[self.t]
-        merge_inflows = self.compute_inflow_from_upstream(merge_n_previous, specified_merge_inflow, self.merge_cell_num, [0]*self.merge_cell_num)
+        merge_inflows = self.compute_inflow_from_upstream(merge_n_previous, specified_merge_inflow, self.merge_cell_num, [0]*(self.merge_cell_num+2))
 
         # set a flag whether there are merging vehicles waiting at the junction
         waiting_merge_veh = 0
         # compute the outflow for each **merge** cell
-        merge_outflows = self.compute_outflow_from_downstream(merge_n_previous, merge_inflows, self.merge_cell_num, [0]*self.merge_cell_num)
+        merge_outflows = self.compute_outflow_from_downstream(merge_n_previous, merge_inflows, self.merge_cell_num, [0]*(self.merge_cell_num+2))
         # compute the outflow at the last cell 
-        last_merge_index=self.merge_cell_num - 1
-        veh_at_last_merge_cell=merge_n_previous[last_merge_index]
+        last_merge_index = self.merge_cell_num
+        veh_at_last_merge_cell = merge_n_previous[last_merge_index]
         (remaining_n, waiting_merge_veh) = math.modf(veh_at_last_merge_cell)
-        merge_outflows[last_merge_index]=waiting_merge_veh
+        merge_outflows[last_merge_index] = waiting_merge_veh
+
 
         assert waiting_merge_veh >= 0, "waiting should not be negative %f" % waiting_merge_veh
         # if waiting_merge_veh>=1:
         #    set_trace()
 
-        # then compute the *right* inflow for the main cells
+        # then compute the *right* inflow for the main cells: assuming all upstream vehicles including lane change ones, will transit to the current cell, considering the capacity
         right_main_inflows = self.compute_inflow_from_upstream(right_main_n_previous,
                                                                specified_right_main_inflow, self.main_cell_num,
                                                                lc_from_right_to_left,
                                                                before_merge_index=self.before_merge_index,
                                                                waiting_merge_veh=waiting_merge_veh)
 
-        # then compute the *left* inflow for the main cells
+        # then compute the *left* inflow for the main cells: assuming all upstream vehicles including lane change ones, will transit to the current cell, considering the capacity
         out_from_left_lane_due_to_lc = [-1 * lc for lc in lc_from_right_to_left]
         left_main_inflows = self.compute_inflow_from_upstream(left_main_n_previous, specified_left_main_inflow,
                                                               self.main_cell_num, out_from_left_lane_due_to_lc)
@@ -236,17 +245,52 @@ class DoubleLaneSimpleMerge:
         out_from_left_lane_due_to_lc = [-1 * lc for lc in lc_from_right_to_left]
         left_main_outflows = self.compute_outflow_from_downstream(left_main_n_previous, left_main_inflows,
                                                                   self.main_cell_num, out_from_left_lane_due_to_lc)
+
+
+        # sanity check
+        #for i in range(0, self.main_cell_num+1):
+        #    assert left_main_inflows[i]>=0, "left main inflow should not be negative"
+        #    assert left_main_outflows[i]>=0, "left main outflow should not be negative"
+        #    assert right_main_inflows[i]>=0, "right main inflow should not be negative"
+        #    assert right_main_outflows[i]>=0, "right main outflow should not be negative"
+        #    assert left_main_n_previous[i]+lc_from_right_to_left[i]>=left_main_outflows[i], f"the outflow should not exceed current capacity {t, i, left_main_n_previous[i], lc_from_right_to_left[i], left_main_outflows[i]}"
+        #    assert abs(right_main_n_previous[i]-lc_from_right_to_left[i]-right_main_outflows[i])<0.001, f"the outflow should not exceed current capacity {t, i, right_main_n_previous[i], -lc_from_right_to_left[i], right_main_outflows[i]}"
+        #    # print(self.left_main_n_t_table[self.t][i]+lc_from_right_to_left[i]-left_main_outflows[i])
+        #    # print(self.right_main_n_t_table[self.t][i]-lc_from_right_to_left[i]-right_main_outflows[i])
+
+
         # sync the outflow and inflow
-        for i in range(0, self.main_cell_num+1):
+        for i in range(0, self.main_cell_num+2):
             # sync left downstream inflow and upstream outflow
-            if i>0 and i!=self.before_merge_index+1:
-                left_main_inflows[i]=min(left_main_inflows[i], left_main_outflows[i-1])
-                left_main_outflows[i-1] = min(left_main_inflows[i], left_main_outflows[i - 1])
-                right_main_inflows[i] = min(right_main_inflows[i], right_main_outflows[i - 1])
-                right_main_outflows[i - 1] = min(right_main_inflows[i], right_main_outflows[i - 1])
-            elif i==self.before_merge_index+1:
-                left_main_inflows[i] = min(left_main_inflows[i], left_main_outflows[i - 1])
-                left_main_outflows[i - 1] = min(left_main_inflows[i], left_main_outflows[i - 1])
+            if i == 0:
+                left_main_inflows[i] = left_main_inflows[i + 1]
+                right_main_inflows[i] = right_main_inflows[i + 1]
+            elif i == self.before_merge_index + 1:
+                #left_main_outflows[i - 1] = min(left_main_inflows[i], left_main_outflows[i - 1])
+                #left_main_inflows[i] = min(left_main_inflows[i], left_main_outflows[i - 1])
+                left_main_inflows[i] = left_main_outflows[i - 1]
+                # update the inflow when the upstream is blocked
+                right_main_inflows[i] = right_main_outflows[i - 1] + waiting_merge_veh
+            elif i == self.main_cell_num + 1:
+                # left_main_inflows[i] = min(left_main_inflows[i], left_main_outflows[i-1])
+                left_main_inflows[i] =  left_main_outflows[i-1]
+                right_main_inflows[i] =  right_main_outflows[i-1]
+                # right_main_inflows[i] = min(right_main_inflows[i], right_main_outflows[i-1])
+                left_main_outflows[i] = left_main_inflows[i]
+                right_main_outflows[i] = right_main_inflows[i]
+                assert left_main_inflows[i]==left_main_outflows[i-1], "the inflow and outflow of the last cell should match"
+                assert right_main_inflows[i]==right_main_outflows[i-1], "the inflow and outflow of the last cell should match"
+                assert left_main_inflows[i]==left_main_outflows[i-1], f"the inflow and outflow of the last cell should match {t, left_main_outflows[i-1], lc_from_right_to_left[i-1], left_main_inflows[i]}"
+                assert right_main_inflows[i]==right_main_outflows[i-1], f"the inflow and outflow of the last cell should match {t, right_main_outflows[i-1], -lc_from_right_to_left[i-1], right_main_inflows[i]}"
+            elif i>0 and i!=self.before_merge_index+1:
+                #left_main_inflows[i] = min(left_main_inflows[i], left_main_outflows[i - 1])
+                left_main_inflows[i] = left_main_outflows[i - 1]
+                #right_main_inflows[i] = min(right_main_inflows[i], right_main_outflows[i - 1])
+                right_main_inflows[i] = right_main_outflows[i - 1]
+                #left_main_outflows[i-1] = min(left_main_inflows[i], left_main_outflows[i - 1])
+                # left_main_outflows[i - 1] = min(left_main_inflows[i], left_main_outflows[i - 1])
+                # right_main_outflows[i - 1] = min(right_main_inflows[i], right_main_outflows[i - 1])
+
 
             # sync right inflow and outflow
         self.left_main_inflow_n_t_table.append(left_main_inflows)
@@ -257,37 +301,56 @@ class DoubleLaneSimpleMerge:
             print("left outflows:", left_main_outflows)
             print("right outflows:", right_main_outflows)
         # update the number of current vehicles at the merge road
+        self.right_main_outflow_n_t_table.append(right_main_outflows)
+        self.left_main_outflow_n_t_table.append(left_main_outflows)
 
         merge_n_t = list()
-        for i in range(0, self.merge_cell_num):
-            previous_n = merge_n_previous[i]
-            inflow = merge_inflows[i]
-            outflow = merge_outflows[i]
-            merge_n_t.append(max(previous_n - outflow + inflow,0))
+        for i in range(0, self.merge_cell_num+2):
+            if i==0:
+                merge_n_t.append(specified_merge_inflow*self.duration_per_time_step)
+            elif i == self.merge_cell_num + 1:
+                merge_n_t.append(0)
+            else:
+                previous_n = merge_n_previous[i]
+                inflow = merge_inflows[i]
+                outflow = merge_outflows[i]
+                merge_n_t.append(max(previous_n - outflow + inflow,0))
         self.merge_n_t_table.append(merge_n_t)
 
         # update the number of current vehicles at the ***right*** main road
         right_main_n_t = list()
-        for i in range(0, self.main_cell_num):
-            previous_n = right_main_n_previous[i]
-            inflow = right_main_inflows[i]
-            outflow = right_main_outflows[i]
-            lc=-1*lc_from_right_to_left[i]
-            right_main_n_t.append(max(previous_n + inflow - outflow + lc,0))
+        for i in range(0, self.main_cell_num+2):
+            if i==0:
+                right_main_n_t.append(specified_right_main_inflow*self.duration_per_time_step)
+            elif i==self.main_cell_num+1:
+                right_main_n_t.append(0)
+            else:
+                previous_n = right_main_n_previous[i]
+                inflow = right_main_inflows[i]
+                outflow = right_main_outflows[i]
+                lc=-1*lc_from_right_to_left[i]
+                if previous_n + inflow - outflow + lc<-0.01:
+                    print("mismatch:", t, i, previous_n, inflow, lc, outflow)
+                right_main_n_t.append(max(previous_n + inflow - outflow + lc,0))
         self.right_main_n_t_table.append(right_main_n_t)
         
         # update the number of current vehicles at the ***left*** main road
         left_main_n_t = list()
-        for i in range(0, self.main_cell_num):
-            previous_n = left_main_n_previous[i]
-            inflow = left_main_inflows[i]
-            outflow = left_main_outflows[i]
-            lc=lc_from_right_to_left[i]
-            if previous_n + inflow - outflow + lc<0:
-                print("")
-                pass
-                #set_trace()
-            left_main_n_t.append(max(previous_n + inflow - outflow + lc,0)) # max to deal with numeric issues
+        for i in range(0, self.main_cell_num+2):
+            if i==0:
+                left_main_n_t.append(specified_left_main_inflow*self.duration_per_time_step)
+            elif i==self.main_cell_num+1:
+                left_main_n_t.append(0)
+            else:
+                previous_n = left_main_n_previous[i]
+                inflow = left_main_inflows[i]
+                outflow = left_main_outflows[i]
+                lc=lc_from_right_to_left[i]
+                if previous_n + inflow - outflow + lc<0:
+                    print("")
+                    pass
+                    #set_trace()
+                left_main_n_t.append(max(previous_n + inflow - outflow + lc,0)) # max to deal with numeric issues
         self.left_main_n_t_table.append(left_main_n_t)
         
         # update the waiting vehicle and remaining waiting penality
@@ -308,7 +371,7 @@ class DoubleLaneSimpleMerge:
 
         main_inflow = 0
         time = 0
-        for left_main_inflow_t in self.left_main_n_t_table:
+        for left_main_inflow_t in self.left_main_inflow_n_t_table:
             main_inflow += left_main_inflow_t[0]
             time += self.duration_per_time_step
         avg_left_main_inflow = main_inflow / time
@@ -320,18 +383,56 @@ class DoubleLaneSimpleMerge:
 
         return (avg_left_main_inflow, avg_right_main_inflow, avg_merge_inflow)
 
+    #def inflow_statistics(self):
+    #    main_inflow = 0
+    #    time = 0
+    #    for right_main_inflow_t in self.right_main_inflow_n_t_table:
+    #        main_inflow += right_main_inflow_t[0]
+    #        time += self.duration_per_time_step
+    #    avg_right_main_inflow = main_inflow / time
+
+    #    main_inflow = 0
+    #    time = 0
+    #    for left_main_inflow_t in self.left_main_n_t_table:
+    #        main_inflow += left_main_inflow_t[0]
+    #        time += self.duration_per_time_step
+    #    avg_left_main_inflow = main_inflow / time
+
+    #    merge_inflow = 0
+    #    for merge_n_t in self.merge_n_t_table:
+    #        merge_inflow += merge_n_t[0]
+    #    avg_merge_inflow = merge_inflow / time
+
+    #    return (avg_left_main_inflow, avg_right_main_inflow, avg_merge_inflow)
+
+    #def outflow_statistics(self):
+    #    outflow = 0
+    #    time = 0
+    #    for right_inflow_t in self.right_main_inflow_n_t_table:
+    #        outflow += right_inflow_t[-1]
+    #        time += self.duration_per_time_step
+    #    avg_right_outflow = outflow / time
+
+    #    outflow = 0
+    #    time = 0
+    #    for left_inflow_t in self.left_main_inflow_n_t_table:
+    #        outflow += left_inflow_t[-1]
+    #        time += self.duration_per_time_step
+    #    avg_left_outflow = outflow / time
+    #    return avg_left_outflow, avg_right_outflow
+
     def outflow_statistics(self):
         outflow = 0
         time = 0
-        for right_inflow_t in self.right_main_inflow_n_t_table:
-            outflow += right_inflow_t[-1]
+        for right_outflow_t in self.right_main_outflow_n_t_table:
+            outflow += right_outflow_t[len(right_outflow_t)-1]
             time += self.duration_per_time_step
         avg_right_outflow = outflow / time
 
         outflow=0
         time = 0
-        for left_inflow_t in self.left_main_inflow_n_t_table:
-            outflow += left_inflow_t[-1]
+        for left_outflow_t in self.left_main_outflow_n_t_table:
+            outflow += left_outflow_t[len(left_outflow_t)-1]
             time += self.duration_per_time_step
         avg_left_outflow = outflow / time
         return avg_left_outflow, avg_right_outflow
@@ -354,6 +455,12 @@ class DoubleLaneSimpleMerge:
 
     def simulate(self, left_main_inflow, right_main_inflow, merge_inflow, total_time_steps):
         # set_trace()
+        left_main_inflow/=3600.0
+        right_main_inflow/=3600.0
+        merge_inflow/=3600.0
+        self.left_main_n_t_table[0][0]=left_main_inflow*self.duration_per_time_step
+        self.right_main_n_t_table[0][0]=right_main_inflow*self.duration_per_time_step
+        self.merge_n_t_table[0][0]=merge_inflow*self.duration_per_time_step
         if debug:
             print("-------------t=%d--------------" % 0)
             print("left main road:", self.left_main_n_t_table[0])
@@ -361,10 +468,10 @@ class DoubleLaneSimpleMerge:
             print("merge road:", self.merge_n_t_table[0])
         for t in range(1, total_time_steps):
             # set_trace()
-            temp = merge_inflow / 3600.0
+            temp = merge_inflow
             #if t >= total_time_steps / 2:
             #    temp = 0
-            self.step(left_main_inflow / 3600.0, right_main_inflow / 3600.0, temp)
+            self.step(left_main_inflow , right_main_inflow , temp)
             if debug:
                 print("-------------t=%d--------------" % t)
                 print("left main road:", self.left_main_n_t_table[t])
@@ -385,7 +492,7 @@ class DoubleLaneSimpleMerge:
 
     def make_gif(self, left_inflow, right_inflow, merge_inflow, avg_left_outflow, avg_right_outflow, duration=0.3):
         # plot the main_n_t
-        x = [i for i in range(0, self.main_cell_num)]
+        x = [i for i in range(1, self.main_cell_num+1)]
         t = 0
         filenames = []
         for right_main_n_t in self.right_main_n_t_table:
@@ -399,15 +506,15 @@ class DoubleLaneSimpleMerge:
 
             # right main road
             inflows = self.right_main_inflow_n_t_table[t]
-            old_capacity = list()
+            prev_capacity = list()
             # print("len of main_n_t", len(main_n_t))
             # print("len of main_inflow_n_t", len(inflows))
-            for i in range(len(right_main_n_t)):
-                old_capacity.append(right_main_n_t[i] - inflows[i])
-            plot_for_right_road.bar(x, old_capacity)
-            plot_for_right_road.bar(x, inflows[0:self.main_cell_num], bottom=old_capacity, color='g')
+            for i in range(1, len(right_main_n_t)-1):
+                prev_capacity.append(right_main_n_t[i] - inflows[i])
+            plot_for_right_road.bar(x, prev_capacity)
+            plot_for_right_road.bar(x, inflows[1:self.main_cell_num+1], bottom=    prev_capacity, color='g')
             # merge road
-            plot_for_right_road.bar(self.main_cell_num + 1, self.merge_n_t_table[t])
+            plot_for_right_road.bar(self.main_cell_num + 2, self.merge_n_t_table[t])
 
             # print(main_n_t)
             plot_for_right_road.set_xlim(0, self.main_cell_num + 2)
@@ -417,17 +524,16 @@ class DoubleLaneSimpleMerge:
 
             # left main road
             inflows = self.left_main_inflow_n_t_table[t]
-            old_capacity = list()
+            prev_capacity = list()
             # print("len of main_n_t", len(main_n_t))
             # print("len of main_inflow_n_t", len(inflows))
-            for i in range(len(left_main_n_t)):
-                old_capacity.append(left_main_n_t[i] - inflows[i])
-            plot_for_left_road.bar(x, old_capacity)
-            plot_for_left_road.bar(x, inflows[0:self.main_cell_num], bottom=old_capacity, color='g')
+            for i in range(1,len(left_main_n_t)-1):
+                    prev_capacity.append(left_main_n_t[i] - inflows[i])
+            plot_for_left_road.bar(x,     prev_capacity)
+            plot_for_left_road.bar(x, inflows[1:self.main_cell_num+1], bottom=    prev_capacity, color='g')
             plot_for_left_road.title.set_text('Left Lane Cells')
             # merge road
 
-            # print(main_n_t)
             plot_for_left_road.set_xlim(0, self.main_cell_num + 1)
             plot_for_left_road.set_ylim(0, self.N)
 
@@ -455,10 +561,10 @@ if __name__ == "__main__":
     duration = 100 / 21.0
     # for merge_inflow in [160, 180, 200]:
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
-    # for right_main_inflow in [1400, 1600, 1800]:
-    #     for left_main_inflow in [1000, 1200, 1400, 1600]:
-    for right_main_inflow in [1400]:
-       for left_main_inflow in [1000]:
+    for right_main_inflow in [1400, 1600, 1800]:
+        for left_main_inflow in [1000, 1200, 1400, 1600]:
+    # for right_main_inflow in [1400]:
+    #    for left_main_inflow in [1000]:
             for merge_inflow in [200]:
                 single_lane_simple_merge = DoubleLaneSimpleMerge()
 
@@ -466,7 +572,7 @@ if __name__ == "__main__":
                  avg_left_outflow, avg_right_outflow) = single_lane_simple_merge.simulate(left_main_inflow,
                                                                                           right_main_inflow,
                                                                                           merge_inflow,
-                                                                                          math.ceil(50/ duration))
+                                                                                          math.ceil(9000/ duration))
                 results[str(left_main_inflow) +"-"+str(right_main_inflow) + "-" + str(merge_inflow)] =(avg_left_outflow, avg_right_outflow)
                 # print(main_inflow, merge_inflow, avg_main_inflow, avg_merge_inflow, avg_outflow)
                 print(str(left_main_inflow) +"-"+str(right_main_inflow) + "-" + str(merge_inflow), avg_left_outflow, avg_right_outflow, avg_left_outflow + avg_right_outflow)

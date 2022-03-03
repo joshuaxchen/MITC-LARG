@@ -290,7 +290,7 @@ if __name__ == "__main__":
     duration=100/21.0
     #for merge_inflow in [160, 180, 200]:
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
-    for main_inflow in [1800]:
+    for main_inflow in [1500]:
         for merge_inflow in [200]:
             single_lane_simple_merge=SingleLaneSimpleMerge()
             (avg_main_inflow, avg_merge_inflow,
