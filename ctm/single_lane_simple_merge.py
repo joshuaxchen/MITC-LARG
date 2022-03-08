@@ -253,7 +253,7 @@ class SingleLaneSimpleMerge:
         #file.close()
     def make_gif(self, duration=0.3):
         # plot the main_n_t 
-        x=[i for i in range(0,self.main_cell_num)]
+        x=[i for i in range(1, self.main_cell_num+1)]
         t=0
         filenames=[]
         for main_n_t in self.main_n_t_table:
@@ -267,12 +267,13 @@ class SingleLaneSimpleMerge:
             plt.bar(x, old_capacity)
             plt.bar(x, inflows, bottom=old_capacity, color='g')
             # merge road
-            plt.bar(self.main_cell_num+1, self.merge_n_t_table[t])
+            plt.bar(self.main_cell_num+2, self.merge_n_t_table[t])
             
             #print(main_n_t)
-            plt.xlim(0, self.main_cell_num+2)
+            plt.xlim(0, self.main_cell_num+3)
             plt.ylim(0, self.N)
-            filename=f'./figures/{t}.png'     
+            plt.xticks(range(self.main_cell_num+3),range(self.main_cell_num+3))
+            filename=f'./figures/{t}.png'
             filenames.append(filename)
             plt.savefig(filename)
             plt.close()
@@ -290,7 +291,7 @@ if __name__ == "__main__":
     duration=100/21.0
     #for merge_inflow in [160, 180, 200]:
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
-    for main_inflow in [1500]:
+    for main_inflow in [1800]:
         for merge_inflow in [200]:
             single_lane_simple_merge=SingleLaneSimpleMerge()
             (avg_main_inflow, avg_merge_inflow,

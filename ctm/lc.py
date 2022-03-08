@@ -114,9 +114,9 @@ def plot_human_data(sumo_data, ctm_data):
     print("keys", keys) 
     print("ctm keys", ctm_data.keys()) 
     sumo_fixed_right_flow_dict=dict()
+    sumo_fixed_left_flow_dict=dict()
     ctm_fixed_right_flow_dict=dict()
-    sumo_data_to_plot=list()
-    ctm_data_to_plot=list()
+    ctm_fixed_left_flow_dict=dict()
     for left_right_flow in keys:
         sumo_outflow_mean=sumo_data[left_right_flow][attr_name].split(",")[0] 
         sumo_outflow_var=sumo_data[left_right_flow][attr_name].split(",")[1] 
@@ -126,35 +126,45 @@ def plot_human_data(sumo_data, ctm_data):
             sumo_fixed_right_flow_dict[inflows[1]]=list()
         if inflows[1] not in ctm_fixed_right_flow_dict:
             ctm_fixed_right_flow_dict[inflows[1]]=list()
+        if inflows[0] not in sumo_fixed_left_flow_dict:
+            sumo_fixed_left_flow_dict[inflows[0]]=list()
+        if inflows[0] not in ctm_fixed_left_flow_dict:
+            ctm_fixed_left_flow_dict[inflows[0]]=list()
         left_main_inflow=inflows[0]
         right_main_inflow=inflows[1]
         sumo_fixed_right_flow_dict[right_main_inflow].append((left_main_inflow, sumo_outflow_mean, sumo_outflow_var))
         ctm_fixed_right_flow_dict[right_main_inflow].append((left_main_inflow, ctm_outflow.strip(), 0))
-    print("sumo_fixed_right_flow_dict", sumo_fixed_right_flow_dict.keys()) 
-    left_inflow_plot=PlotWriter("Left MainInflow", "Outflow") 
+        sumo_fixed_left_flow_dict[left_main_inflow].append((right_main_inflow, sumo_outflow_mean, sumo_outflow_var))
+        ctm_fixed_left_flow_dict[left_main_inflow].append((right_main_inflow, ctm_outflow.strip(), 0))
+    #print("sumo_fixed_right_flow_dict", sumo_fixed_right_flow_dict.keys())
+    left_inflow_plot=PlotWriter("Left MainInflow", "Outflow")
+    right_inflow_plot=PlotWriter("Right MainInflow", "Outflow")
 
     for right_inflow in sumo_fixed_right_flow_dict.keys():
-        #print(left_right_flow)
-        inflows=left_right_flow.split("-")
-        #print(inflows)
         sumo_fixed_right_flow_dict[right_inflow].sort()
         ctm_fixed_right_flow_dict[right_inflow].sort()
         left_inflow_plot.add_plot("sumo_RightInflow"+right_inflow, sumo_fixed_right_flow_dict[right_inflow])
-        #left_inflow_plot.add_plot("ctm_RightInflow"+inflows[1],
-        #ctm_fixed_right_flow_dict[inflows[1]])
 
     for right_inflow in ctm_fixed_right_flow_dict.keys():
-        #print(left_right_flow)
-        inflows=left_right_flow.split("-")
-        #print(inflows)
         sumo_fixed_right_flow_dict[right_inflow].sort()
         ctm_fixed_right_flow_dict[right_inflow].sort()
         left_inflow_plot.add_plot("ctm_RightInflow"+right_inflow, ctm_fixed_right_flow_dict[right_inflow])
-        #left_inflow_plot.add_plot("ctm_RightInflow"+inflows[1],
-        #ctm_fixed_right_flow_dict[inflows[1]])
 
+    for left_inflow in sumo_fixed_left_flow_dict.keys():
+        sumo_fixed_left_flow_dict[left_inflow].sort()
+        ctm_fixed_left_flow_dict[left_inflow].sort()
+        right_inflow_plot.add_plot("sumo_LeftInflow"+left_inflow, sumo_fixed_left_flow_dict[left_inflow])
+
+    for left_inflow in ctm_fixed_left_flow_dict.keys():
+        sumo_fixed_left_flow_dict[left_inflow].sort()
+        ctm_fixed_left_flow_dict[left_inflow].sort()
+        right_inflow_plot.add_plot("ctm_LeftInflow"+left_inflow, ctm_fixed_left_flow_dict[left_inflow])
 
     left_inflow_plot.write_plot("./plot/human_leftinflow.tex", len(ctm_fixed_right_flow_dict.keys()))
+    right_inflow_plot.write_plot("./plot/human_rightinflow.tex", len(ctm_fixed_left_flow_dict.keys()))
+
+
+
    
         
 if __name__ == "__main__":

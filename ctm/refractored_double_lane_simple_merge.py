@@ -11,7 +11,8 @@ class DoubleLaneSimpleMerge:
     def __init__(self, cell_length=100, total_main_len=700,
                  len_before_merge=600, freeflow_speed=21, critical_density=0.04,
                  jam_density=0.14, len_merge=200, waiting_penality_per_merge=1.13, merge_threshold_density=0.0225,
-                 random_lc_rate = 0.1, lc_rate_per_density_diff = 0.2, lc_threshold_density = 0.013, lc_slow_down_rate = 0.45):
+                 random_lc_rate = 0.1, lc_rate_per_density_diff = 0.2, lc_threshold_density = 0.013, lc_slow_down_rate = 0.43):
+                 # random_lc_rate = 0.1, lc_rate_per_density_diff = 0.0, lc_threshold_density = 0.013, lc_slow_down_rate = 0.43):
         main_cell_num = total_main_len // cell_length
         before_merge_index = len_before_merge // cell_length # cell index starting as 1
         duration_per_time_step = cell_length * 1.0 / freeflow_speed
@@ -499,8 +500,12 @@ class DoubleLaneSimpleMerge:
             left_main_n_t=self.left_main_n_t_table[t]
 
             figure, axis = plt.subplots(1, 2, figsize=(20,8))
+            figure.set_tight_layout(True)
             #plt.tight_layout(pad=30)
-            plt.suptitle(f'Left MainInflow {left_inflow} veh/hour, Right MainInflow {right_inflow} veh/hour, Merge Inflow {merge_inflow} veh/hour\n\n Left MainOutflow {avg_left_outflow:.2f} veh/hour, Right MainOutflow {avg_right_outflow:.2f} veh/hour')
+            plt.suptitle(
+                f'Left MainInflow {left_inflow} veh/hour, Right MainInflow {right_inflow} veh/hour, Merge Inflow {merge_inflow} veh/hour\n\n Left MainOutflow {avg_left_outflow:.2f} veh/hour, Right MainOutflow {avg_right_outflow:.2f} veh/hour',
+                fontsize=20)
+            # figure.tight_layout(rect=[0, 0.03, 1, 0.95])
             plot_for_left_road=axis[0]
             plot_for_right_road=axis[1]
 
@@ -519,7 +524,8 @@ class DoubleLaneSimpleMerge:
             # print(main_n_t)
             plot_for_right_road.set_xlim(0, self.main_cell_num + 2)
             plot_for_right_road.set_ylim(0, self.N)
-            plot_for_right_road.title.set_text('Right Lane Cells')
+            # plot_for_right_road.title.set_text('Right Lane Cells', fontsize=20)
+            plot_for_right_road.set_title('Right Lane Cells', fontsize=20)
 
 
             # left main road
@@ -531,16 +537,23 @@ class DoubleLaneSimpleMerge:
                     prev_capacity.append(left_main_n_t[i] - inflows[i])
             plot_for_left_road.bar(x,     prev_capacity)
             plot_for_left_road.bar(x, inflows[1:self.main_cell_num+1], bottom=    prev_capacity, color='g')
-            plot_for_left_road.title.set_text('Left Lane Cells')
+            # plot_for_left_road.title.set_text('Left Lane Cells', fontsize=20)
+            plot_for_left_road.set_title('Left Lane Cells', fontsize=20)
             # merge road
 
             plot_for_left_road.set_xlim(0, self.main_cell_num + 1)
             plot_for_left_road.set_ylim(0, self.N)
 
             plt.sca(axis[0])
-            plt.xticks(range(self.main_cell_num+1),range(self.main_cell_num+1))
+            plt.xticks(range(self.main_cell_num+1),range(self.main_cell_num+1), fontsize=16)
+            plt.yticks(range(int(self.N)+1), range(int(self.N)+1), fontsize=16)
             plt.sca(axis[1])
-            plt.xticks(range(self.main_cell_num+2),range(self.main_cell_num+2))
+            plt.xticks(range(self.main_cell_num+3),range(self.main_cell_num+3), fontsize=16)
+            plt.yticks(range(int(self.N)+1), range(int(self.N)+1), fontsize=16)
+            # figure.canvas.draw()
+            # figure.tight_layout(rect=[0, 0.03, 1, 3.95])
+            plt.subplots_adjust(top=2.85)
+            # plt.tight_layout(pad=40)
             filename = f'./figures/{t}.png'
             filenames.append(filename)
 
@@ -561,10 +574,10 @@ if __name__ == "__main__":
     duration = 100 / 21.0
     # for merge_inflow in [160, 180, 200]:
     #    for main_inflow in [1400, 1500, 1600, 1700, 1800, 1900, 2000]:
-    for right_main_inflow in [1400, 1600, 1800]:
-        for left_main_inflow in [1000, 1200, 1400, 1600]:
-    # for right_main_inflow in [1400]:
-    #    for left_main_inflow in [1000]:
+    # for right_main_inflow in [1400, 1600, 1800]:
+    #     for left_main_inflow in [1000, 1200, 1400, 1600]:
+    for right_main_inflow in [1500, 1600, 1700, 1800]:
+       for left_main_inflow in [0]:
             for merge_inflow in [200]:
                 single_lane_simple_merge = DoubleLaneSimpleMerge()
 
