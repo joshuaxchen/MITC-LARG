@@ -125,6 +125,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--measurement_rate', type=int, help="the window size (in terms of time steps) to measure the inflow and outflow")
     parser.add_argument('--profile_cell_fd', type=int, help='an period to trigger a producedure to profile the density and speed for each cell')
     parser.add_argument('--profile_cell_fd_file', type=str, help='a path to profile the density and speed for each cell')
+    parser.add_argument('--profile_before_merge', type=str, help='a path to profile the througput for the cell before merge')
     args = parser.parse_args()
     return args
 

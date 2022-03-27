@@ -55,7 +55,7 @@ from tools.matplotlib_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow
-from flow.visualize.profile_util import profile_speed_density, draw_fundamental_diagrams
+from flow.visualize.profile_util import profile_speed_density, draw_fundamental_diagrams,profile_in_and_out_before_merge, document_throughput_before_merge, profile_in_and_out_before_merge2
 
 EXAMPLE_USAGE = """
 example usage:
@@ -503,6 +503,16 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             if args.profile_cell_fd_file is None:
                 raise ValueError('Please specify the file path for --profile_cell_fd_file')
             density_flow_per_cell=dict() 
+        previous_vehicles_list=list()
+        previous_throughput_list=list()
+        throughput_summary_before_merge=dict()
+        vehicles_before_merge=set()
+        vehicles_from_merge=set()
+        vehicles_after_merge=set()
+        computed_vehicles=set()
+        base_i=-1
+        no_merge_base_i=-1
+        switch=0
         for i_k in range(env_params.horizon):
             time_to_exit += 1;
             vehicles = env.unwrapped.k.vehicle
@@ -517,7 +527,60 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                     if cell_index not in density_flow_per_cell.keys():
                         density_flow_per_cell[cell_index]=list()
                     density_flow_per_cell[cell_index].append(density_flow)
+            if args.profile_before_merge is not None: # and i_k % args.profile_before_merge==0:
+                current_vehicles_before_merge, current_vehicles_from_merge, current_vehicles_after_merge=profile_in_and_out_before_merge2(vehicles)
+                vehicles_before_merge.update(current_vehicles_before_merge)
+                vehicles_from_merge.update(current_vehicles_from_merge)
+                vehicles_after_merge.update(current_vehicles_after_merge)
+                # profile the amount of vehicles every 10 time steps (each time stpe has 0.5 seconds): the number of vehicles entering this cell and the number of vehicles exiting this cell 
+                #throughput, existing_vehicles_before_merge, previous_existing_vehicles, existing_vehicles_in_merge=profile_in_and_out_before_merge(vehicles, previous_vehicles_list, previous_throughput_list)
+                #throughput_summary_before_merge[i_k]=(len(throughput), len(existing_vehicles_in_merge))
+                #previous_vehicles_list=existing_vehicles_before_merge
+                #previous_throughput_list=throughput
+                #if len(current_vehicles_from_merge)>0 and base_i==-1:
+                if len(current_vehicles_from_merge)>0 and switch==0:
+                    #set_trace() 
+                    base_i=i_k
+                    no_merge_base_i=-1
+                #if len(current_vehicles_from_merge)==0 and base_i==-1 and no_merge_base_i==-1: # not tracking the influence of merging
+                #    #set_trace() 
+                #    no_merge_base_i=i_k
+                #    base_i=-1
+                    throughput=set(vehicles_after_merge).intersection(vehicles_before_merge)
+                    throughput_summary_before_merge[i_k]= (len(vehicles_before_merge), len(throughput), len(vehicles_from_merge))
+                    #computed_vehicles.update(current_vehicles_after_merge)
+                    vehicles_before_merge.clear()   
+                    vehicles_from_merge.clear()
+                    vehicles_after_merge.clear()
+                    switch=1
+                else:
+                    switch=0
 
+                    
+
+                #if no_merge_base_i>=0 and (i_k+1-no_merge_base_i)%21==0:
+                #    #set_trace() 
+                #    no_merge_base_i=-1 
+                #    throughput=set(vehicles_after_merge).intersection(vehicles_before_merge)
+                #    throughput_summary_before_merge[i_k]= (len(vehicles_before_merge), len(throughput), len(vehicles_from_merge))
+                #    #computed_vehicles.update(current_vehicles_after_merge)
+                #    vehicles_before_merge.clear()   
+                #    vehicles_from_merge.clear()   
+                #    vehicles_after_merge.clear()   
+                #if base_i>=0 and (i_k+1-base_i)%21==0:
+                #    #set_trace() 
+                ##if (i_k+1) % 11==0:
+                #    #set_trace()
+                #    base_i=-1
+                #    # compute the throughput
+                #    throughput=set(vehicles_after_merge).intersection(vehicles_before_merge)
+                #    throughput_summary_before_merge[i_k]= (len(vehicles_before_merge), len(throughput), len(vehicles_from_merge))
+                #    #computed_vehicles.update(current_vehicles_after_merge)
+                #    vehicles_before_merge.clear()   
+                #    vehicles_from_merge.clear()
+                #    vehicles_after_merge.clear()
+                    
+                    
             #print("after mean:", vel)
             #vel.append(np.mean(vehicles.get_speed(vehicles.get_ids())))
             #if len(state.keys()):
@@ -608,6 +671,9 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         # plot the fundamental diagrams 
         if args.profile_cell_fd is not None and args.profile_cell_fd_file is not None:
             draw_fundamental_diagrams(args.profile_cell_fd_file, density_flow_per_cell)
+        # documen the summary of the throughput for the cell before merge
+        if args.profile_before_merge is not None:
+            document_throughput_before_merge(args.profile_before_merge, throughput_summary_before_merge)
 
         # plot the inflows, outflow, avg_speed, reward at each time step
         # handles to print the metrics along the history
