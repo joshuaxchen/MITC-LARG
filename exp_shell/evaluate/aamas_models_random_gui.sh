@@ -72,7 +72,7 @@ CHCKPOINT=500
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-
+WORKING_DIR=$EXP_FOLDER/ctm/sumo_human_8000
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:$FLOW_DIR"
 #${PWD}/$FLOW_DIR/
@@ -83,13 +83,15 @@ echo "************************************************************"
 #echo ${TRAIN_DIR[*]}
 NUM=0
 
+mkdir $WORKING_DIR
+
 FD_PATH=${PWD}/fd/fd
 
 for I in 2 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
 do
 	for MERGE_INFLOW in 200 #400 600 800 #180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 500 600 700 800 900 1000 
 	do
-		for MAIN_INFLOW in 1600 #1700 1800 1900 2000 #1650 #2000 #1850 1650
+		for MAIN_INFLOW in 1600 1700 1800 1900 2000 #1700 1800 1900 2000 #1650 #2000 #1850 1650
 		do
 			for AVP in 0 #2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40
 			do
@@ -100,12 +102,17 @@ do
 				python3 $VISUALIZER ${TRAIN_DIR[$I]} $CHCKPOINT \
                 --render_mode no_render \
                 --seed_dir $FLOW_DIR \
-                --to_probability \
+                --horizon 8000 \
                 --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-                --profile_cell_fd 10 \
-                --profile_cell_fd_file $FD_PATH
-
+                >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}.txt &
+                #--profile_cell_fd 1 \
+                #--profile_cell_fd_file $FD_PATH \
+                #--profile_before_merge $PWD/throughput.txt
             done
         done
     done
 done
+
+wait
+
+source ~/notification_zyl.sh
