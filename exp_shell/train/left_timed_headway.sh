@@ -31,7 +31,7 @@ do
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_time_headway.py \
 		--exp_folder_mark yulin_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW} \
 		--lateral_resolution 3.2 \
-		--cpu 2 \
+		--cpu 55 \
 		--to_probability \
 		--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 		--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \

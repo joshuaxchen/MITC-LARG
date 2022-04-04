@@ -4,8 +4,13 @@ from flow.core.rewards import desired_velocity, average_velocity
 import numpy as np
 from gym.spaces.box import Box
 from statistics import mean
+from IPython.core.debugger import set_trace
 
 class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
+    #def __init__(self, env_params, sim_params, network, simulator='traci'):
+    #    super().__init__(env_params, sim_params, network, simulator)
+    #    set_trace()
+
     @property
     def observation_space(self):
         #See class definition
@@ -28,7 +33,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         BEFORE_MERGE = 588
         LOOK_AHEAD = 120
         MAX_SPEED = 30
-        print("rl_ids", self.k.vehicle.get_rl_ids())
+        # print("rl_ids", self.k.vehicle.get_rl_ids())
         for rl_id in self.k.vehicle.get_rl_ids():
             veh_ahead_on_the_right = list()
             self_veh_x = self.k.vehicle.get_x_by_id(rl_id)
@@ -43,7 +48,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
             else:
                 mean_vel = mean(veh_ahead_on_the_right)
             states[rl_id] = np.array(list(states[rl_id]) + [mean_vel])
-        print("states", states)
+        # print("states", states)
         return states
 
     def compute_reward(self, rl_actions, **kwargs):
@@ -62,7 +67,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         reward = reward1 * eta1 + reward2 * eta2
         for rl_id in self.k.vehicle.get_rl_ids():
             rewards[rl_id] = reward
-        print(rewards)
+        # print(rewards)
         return rewards
 
     def idm_headway_to_accel(self, 
@@ -100,7 +105,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
             s_star = s0 + max(
                 0, v * T + v * (v - lead_vel) /
                 (2 * np.sqrt(a * b)))
-        output_accel = self.a * (1 - (v / v0)**delta - (s_star / h)**2)
+        output_accel = a * (1 - (v / v0)**delta - (s_star / h)**2)
         return output_accel
 
     def _apply_rl_actions(self, rl_actions):
