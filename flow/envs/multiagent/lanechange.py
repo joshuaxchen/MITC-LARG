@@ -34,7 +34,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         LOOK_AHEAD = 120
         MAX_SPEED = 30
         # print("rl_ids", self.k.vehicle.get_rl_ids())
-        for rl_id in self.k.vehicle.get_rl_ids():
+        for rl_id in states:
             veh_ahead_on_the_right = list()
             self_veh_x = self.k.vehicle.get_x_by_id(rl_id)
             for other_veh_id in self.k.vehicle.get_ids():
@@ -81,11 +81,18 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         time_delay=0.0, 
         dt=0.1):
 
+        # self.k.vehicle.update_leader_if_near_junction(veh_id, junc_dist_threshold=1000)#150)
         v = self.k.vehicle.get_speed(veh_id)
 
         lane_id=self.k.vehicle.get_lane(veh_id)
         # Fix the leader to be the leader on the same lane
-        lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+        # set_trace()
+        try:
+            lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+        except:
+            print("rl_ids", self.k.vehicle.get_rl_ids()) 
+            print("veh_id", veh_id) 
+            print("lane_id", lane_id)
         lead_id = lead_ids[lane_id]
 
         #h = env.k.vehicle.get_headway(self.veh_id)
@@ -113,6 +120,8 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         # in the warmup steps, rl_actions is None
         if rl_actions:
             for rl_id, actions in rl_actions.items():
+                if rl_id not in self.k.vehicle.get_rl_ids():
+                    continue
                 desired_time_headway= actions[0]
 
                 # lane_change_softmax = np.exp(actions[1:4])

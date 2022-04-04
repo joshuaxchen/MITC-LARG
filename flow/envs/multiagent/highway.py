@@ -145,7 +145,7 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             else:
                 lead_speed = self.k.vehicle.get_speed(lead_id)
                 # lead_head = self.k.vehicle.get_headway(rl_id)
-                lead_head=h
+                lead_head = h
 
             if follower in ["", None]:
                 # in case follower is not visible
