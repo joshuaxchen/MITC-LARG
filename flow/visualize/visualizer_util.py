@@ -131,9 +131,9 @@ def set_argument(evaluate=False):
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None
     if "rl" in veh_type:
-        #controller=IDMRLController
+        controller=IDMRLController
         #controller=IDMController
-        controller=RLController
+        #controller=RLController
     elif "human" in veh_type:
         controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
