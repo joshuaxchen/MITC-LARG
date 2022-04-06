@@ -235,6 +235,15 @@ class MultiAgentHighwayPOEnv(MultiEnv):
         if follower_id:
             self.k.vehicle.set_observed(follower_id)
 
+    def freeze_the_vehicle_near_junction(self, veh_id):
+        veh_x = self.k.vehicle.get_x_by_id(veh_id) 
+        center_x_at_junction = self.k.network.total_edgestarts_dict["center"]
+        if abs(veh_x - center_x_at_junction) <= 100:
+            lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)
+            self.k.vehicle.center_veh_at_lane(veh_id)
+            if lc_controller is not None:
+               lc_controller.freeze_lane_change=True
+            
     def set_speed_and_lane_change_modes(self):
         # update the speed mode for each vehicle in a lane
         # the vehicles on lane 0 (right lane) is set to 9
@@ -251,7 +260,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
                 self.k.vehicle.set_speed_mode(veh_id, 15)
             else:
                 self.k.vehicle.set_speed_mode(veh_id, 7)
-
+            
+            # freeze the lane change of vehicles near junction
+            self.freeze_the_vehicle_near_junction(veh_id)
             # human drivers
             #if veh_id not in rl_ids and "human_speed_modes" in ADDITIONAL_ENV_PARAMS.keys():
             #    human_speed_modes=ADDITIONAL_ENV_PARAMS["human_speed_modes"]

@@ -79,10 +79,10 @@ class StochasticLaneChangeController(BaseLaneChangeController):
 
         self.prev_decision=lane_change_switch
         if lane_change_switch:
-            #print("lc", self.veh_id, "lane", lane_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
+            # print("lc", self.veh_id, "lane", lane_id, "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             return None
         else:
-            #print("no lc", self.veh_id, "lane", lane_id,  "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
+            # print("no lc", self.veh_id, "lane", lane_id,  "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             #print(self.veh_id, "lc 0")
             return 0
 

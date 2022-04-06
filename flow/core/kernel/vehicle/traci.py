@@ -268,6 +268,9 @@ class TraCIVehicle(KernelVehicle):
                 prev_lane = self.get_lane(veh_id)
                 if vehicle_obs[veh_id][tc.VAR_LANE_INDEX] != prev_lane:
                     self.__change_lane_human_ids.append(veh_id)
+                    # set the vehicle to center if it just changed lane
+                    self.center_veh_at_lane(veh_id)
+                    
 
             # update the "last_lc" variable
             for veh_id in self.__rl_ids:
@@ -1072,6 +1075,10 @@ class TraCIVehicle(KernelVehicle):
                 from IPython import embed
                 embed()
             '''
+    def center_veh_at_lane(self, veh_id):
+        veh_y = self.get_lateral_lane_pos(veh_id)
+        lane_id = self.get_lane(veh_id)
+        self.kernel_api.vehicle.changeSublane(veh_id, -veh_y)
 
     def apply_lane_change(self, veh_ids, direction):
         """See parent class."""
@@ -1097,6 +1104,7 @@ class TraCIVehicle(KernelVehicle):
             if direction[i] == 0:
                 # TODO: set the lane change mode to 0
                 self.set_lane_change_mode(veh_id, 512) # do not change lane
+                # self.center_veh_at_lane(veh_id)
                 #continue
                 pass
 
@@ -1110,8 +1118,10 @@ class TraCIVehicle(KernelVehicle):
 
             # perform the requested lane action action in TraCI
             if target_lane != this_lane:
+                #self.kernel_api.vehicle.changeLane(
+                #    veh_id, int(target_lane), 100000.0)
                 self.kernel_api.vehicle.changeLane(
-                    veh_id, int(target_lane), 100000.0)
+                    veh_id, int(target_lane), 1.0)
 
                 if veh_id in self.get_rl_ids():
                     self.prev_last_lc[veh_id] = \

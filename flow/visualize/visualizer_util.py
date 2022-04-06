@@ -170,6 +170,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
                 lc_pushy_gap=0.6, #default
                 lc_impatience=1e-8, #1e-8,
                 lc_time_to_impatience=1e12,
+                lc_accel_lat=2,
                 ), 
             num_vehicles=num_vehicles
             )
