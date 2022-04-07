@@ -1,5 +1,5 @@
 from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4Collaborate
-from flow.envs.multiagent import MultiAgentHighwayPOEnv
+from flow.envs.multiagent import MultiAgentHighwayPOEnv, MultiAgentHighwayPOEnvMerge4
 from flow.core.rewards import desired_velocity, average_velocity
 import numpy as np
 from gym.spaces.box import Box
@@ -7,6 +7,84 @@ from statistics import mean
 from IPython.core.debugger import set_trace
 from collections import defaultdict
 
+class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
+    def __init__(self, env_params, sim_params, network, simulator='traci'):
+        super().__init__(env_params, sim_params, network, simulator)
+        self.right_before_rls = defaultdict(lambda: set())
+        # print("left lane headway controlled")
+
+    @property
+    def observation_space(self):
+        #See class definition
+        # basic 5 states + average speed of the vehicles on the right lane
+        # leader and follower at the other lane
+        # number of vehicles on the right lane that are about to move
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
+
+    def get_state(self):
+        states = super().get_state()
+        BEFORE_MERGE = 588
+        LOOK_AHEAD = 120
+        MAX_SPEED = 30
+        # print("rl_ids", self.k.vehicle.get_rl_ids())
+        for rl_id in states:
+            veh_ahead_on_the_right = list()
+            self_veh_x = self.k.vehicle.get_x_by_id(rl_id)
+            for other_veh_id in self.k.vehicle.get_ids():
+                lane_id = self.k.vehicle.get_lane(other_veh_id)
+                other_veh_x = self.k.vehicle.get_x_by_id(other_veh_id)
+                if lane_id == 0 and self_veh_x < other_veh_x and other_veh_x < BEFORE_MERGE and other_veh_x < self_veh_x + LOOK_AHEAD:  # 120
+                    other_veh_vel = self.k.vehicle.get_speed(other_veh_id)
+                    veh_ahead_on_the_right.append(other_veh_vel)
+            if len(veh_ahead_on_the_right) == 0:
+                mean_vel = MAX_SPEED
+            else:
+                mean_vel = mean(veh_ahead_on_the_right)
+            states[rl_id] = np.array(list(states[rl_id]) + [mean_vel])
+        # print("states", states)
+        return states
+
+    def compute_reward(self, rl_actions, **kwargs):
+        # print("compute reward")
+        if rl_actions is None:
+            return {}
+
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+
+        reward1 = -0.1
+        reward2 = average_velocity(self)/300
+        reward = reward1 * eta1 + reward2 * eta2
+        lane_change_human_ids = self.k.vehicle.get_lane_change_human_ids()
+        for rl_id in self.k.vehicle.get_rl_ids():
+            veh_id = rl_id
+            # compute the number of lane change vehicles as reward
+            lane_id = self.k.vehicle.get_lane(rl_id)
+            lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+            lead_id = lead_ids[lane_id]
+            additional_cutting_in = set()
+            # print("check heads of rl_id ", rl_id)
+            while lead_id in lane_change_human_ids:
+                if lead_id not in self.right_before_rls[rl_id]:
+                    additional_cutting_in.add(lead_id)
+                    #self.right_before_rls[rl_id].add(lead_id)
+                veh_id = lead_id
+                lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+                lead_id = lead_ids[lane_id]
+            lane_change_reward = len(additional_cutting_in)
+            self.right_before_rls[rl_id] |= additional_cutting_in
+            # set_trace()
+            # print("num of lane change", lane_change_reward)
+            rewards[rl_id] = reward + 0.03 * lane_change_reward 
+        # print(rewards)
+        return rewards
+
+    
 class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
