@@ -26,7 +26,7 @@ from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
 from flow.envs import multiagent
-from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv
+from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv, LeftLaneHeadwayControlledMerge4
 
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
@@ -82,7 +82,7 @@ mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='multiagent'+mark+'_lanechange_left_av_time_headway_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+exp_tag_str='multiagent'+mark+'_lanechange_left_av_accel_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
 
 lateral_resolution=3.2
 if args.lateral_resolution:
@@ -90,7 +90,7 @@ if args.lateral_resolution:
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=LeftLaneHeadwayControlledMultiAgentEnv,
+    env_name=LeftLaneHeadwayControlledMerge4, #LeftLaneHeadwayControlledMultiAgentEnv
     network=MergeNetwork,
     simulator='traci',
 

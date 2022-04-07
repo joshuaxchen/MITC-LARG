@@ -37,9 +37,9 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
                     other_veh_vel = self.k.vehicle.get_speed(other_veh_id)
                     veh_ahead_on_the_right.append(other_veh_vel)
             if len(veh_ahead_on_the_right) == 0:
-                mean_vel = MAX_SPEED
+                mean_vel = 1 
             else:
-                mean_vel = mean(veh_ahead_on_the_right)
+                mean_vel = mean(veh_ahead_on_the_right) / MAX_SPEED
             states[rl_id] = np.array(list(states[rl_id]) + [mean_vel])
         # print("states", states)
         return states
@@ -80,7 +80,7 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
             self.right_before_rls[rl_id] |= additional_cutting_in
             # set_trace()
             # print("num of lane change", lane_change_reward)
-            rewards[rl_id] = reward + 0.03 * lane_change_reward 
+            rewards[rl_id] = reward + 0.09 * lane_change_reward 
         # print(rewards)
         return rewards
 
