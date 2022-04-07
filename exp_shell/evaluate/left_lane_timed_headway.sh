@@ -26,6 +26,7 @@ RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_et
 
 RL_LEFT_TIMED_HEADWAY=${HOME}/ray_results/multiagent_yulin_2000_1400_lanechange_left_av_time_headway_eta1_0.9_eta2_0.1/PPO_LeftLaneHeadwayControlledMultiAgentEnv-v0_3e0ea_00000_0_2022-04-03_14-07-01
 
+RL_LEFT_ACCEL_STATE_10=${HOME}/ray_results/multiagent_yulin_1800_1200_30_lanechange_left_av_accel_eta1_0.9_eta2_0.1/PPO_LeftLaneHeadwayControlledMerge4-v0_6f0b5_00000_0_2022-04-06_19-19-48
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
@@ -50,14 +51,14 @@ mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
 human_or_av=1
-render='no_render'
+render='sumo_gui'
 horizon=14000
 
-for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
+for horizon in 2000 #14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
-for RIGHT_MAIN_INFLOW in 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1800 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1200 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -73,7 +74,7 @@ do
 
 			for SPEED_GAIN in 1 #0.2 0.4 0.6 0.8 1
 			do
-			    for ASSERTIVE in 5 #0.5 #5 #0.4 0.6 0.8 1
+			    for ASSERTIVE in 100 #0.5 #5 #0.4 0.6 0.8 1
 			    do
 				for LC_PROB in -1
 				do
@@ -82,9 +83,9 @@ do
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
-                            $RL_LEFT_TIMED_HEADWAY \
+                            $RL_LEFT_ACCEL_STATE_10 \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_LEFT_TIMED_HEADWAY \
+                            --agent_action_policy_dir $RL_LEFT_ACCEL_STATE_10 \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --render_mode ${render} \
@@ -132,9 +133,9 @@ do
 
                         # run human baseline 
                         python3 $VISUALIZER \
-                            $RL_LEFT_TIMED_HEADWAY \
+                            $RL_LEFT_ACCEL_STATE_10 \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_MODEL \
+                            --agent_action_policy_dir $RL_LEFT_ACCEL_STATE_10 \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --cpu 10 \
