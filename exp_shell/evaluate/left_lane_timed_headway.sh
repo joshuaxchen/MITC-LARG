@@ -31,7 +31,7 @@ RL_LEFT_ACCEL_STATE_10=${HOME}/ray_results/multiagent_yulin_1800_1200_30_lanecha
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 # VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_14000_8000
+EXP_FOLDER=$FLOW_DIR/exp_results/april_6_lc_14000
 
 
 
@@ -79,7 +79,7 @@ do
 				for LC_PROB in -1
 				do
 				    # run AV policy
-                    #human_or_av=1
+                    # human_or_av=1
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
@@ -101,13 +101,13 @@ do
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} 
-                        # >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                         #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
                     fi
 
-                    #human_or_av=0
+                    # human_or_av=0
                     if [[(human_or_av -eq 0)]]; then
                         echo "run human"
                         # run human baseline
@@ -152,8 +152,8 @@ do
                             --to_probability \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} \
-                            --horizon ${horizon} 
-                            # >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            --horizon ${horizon} \
+                            >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--run_random_seed 0 \
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
