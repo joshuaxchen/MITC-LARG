@@ -11,6 +11,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
         self.right_before_rls = defaultdict(lambda: set())
+        # print("left lane headway controlled")
 
     @property
     def observation_space(self):
@@ -53,6 +54,7 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         return states
 
     def compute_reward(self, rl_actions, **kwargs):
+        # print("compute reward")
         if rl_actions is None:
             return {}
 
@@ -67,20 +69,26 @@ class LeftLaneHeadwayControlledMultiAgentEnv(MultiAgentHighwayPOEnv):
         reward1 = -0.1
         reward2 = average_velocity(self)/300
         reward = reward1 * eta1 + reward2 * eta2
+        lane_change_human_ids = self.k.vehicle.get_lane_change_human_ids()
         for rl_id in self.k.vehicle.get_rl_ids():
-
+            veh_id = rl_id
             # compute the number of lane change vehicles as reward
+            lane_id = self.k.vehicle.get_lane(rl_id)
             lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
             lead_id = lead_ids[lane_id]
             additional_cutting_in = set()
-            while lead_id in self.k.vehicle.get_lane_change_human_ids():
-                if lead_id not in self.right_before_rls(rl_id):
+            # print("check heads of rl_id ", rl_id)
+            while lead_id in lane_change_human_ids:
+                if lead_id not in self.right_before_rls[rl_id]:
                     additional_cutting_in.add(lead_id)
                     #self.right_before_rls[rl_id].add(lead_id)
+                veh_id = lead_id
                 lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
                 lead_id = lead_ids[lane_id]
             lane_change_reward = len(additional_cutting_in)
             self.right_before_rls[rl_id] |= additional_cutting_in
+            # set_trace()
+            # print("num of lane change", lane_change_reward)
             rewards[rl_id] = reward + 0.03 * lane_change_reward 
         # print(rewards)
         return rewards

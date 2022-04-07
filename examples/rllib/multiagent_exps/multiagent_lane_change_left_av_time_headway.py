@@ -25,6 +25,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
+from flow.envs import multiagent
 from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv
 
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
@@ -33,6 +34,7 @@ from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
 from flow.visualize.visualizer_util import reset_inflows, set_argument
 from IPython.core.debugger import set_trace
+import inspect
 
 args=set_argument()
 
@@ -130,7 +132,7 @@ flow_params = dict(
     initial=InitialConfig(),
 )
 reset_inflows(args, flow_params)
-
+print("class path", multiagent.__file__)
 # SET UP EXPERIMENT
 
 def setup_exps(flow_params):

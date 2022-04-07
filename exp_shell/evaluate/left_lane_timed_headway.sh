@@ -30,7 +30,7 @@ RL_LEFT_TIMED_HEADWAY=${HOME}/ray_results/multiagent_yulin_2000_1400_lanechange_
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 # VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
-EXP_FOLDER=$FLOW_DIR/exp_results/lc_14000_8000
+EXP_FOLDER=$FLOW_DIR/exp_results/april_6_lc_14000
 
 
 
@@ -55,9 +55,9 @@ horizon=14000
 
 for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
-for RIGHT_MAIN_INFLOW in 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 1800 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1200 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -78,7 +78,7 @@ do
 				for LC_PROB in -1
 				do
 				    # run AV policy
-                    #human_or_av=1
+                    # human_or_av=1
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
@@ -100,13 +100,13 @@ do
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} 
-                        # >> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                         #>> ${WORKING_DIR}/EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
                     fi
 
-                    #human_or_av=0
+                    # human_or_av=0
                     if [[(human_or_av -eq 0)]]; then
                         echo "run human"
                         # run human baseline
@@ -134,7 +134,7 @@ do
                         python3 $VISUALIZER \
                             $RL_LEFT_TIMED_HEADWAY \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_MODEL \
+                            --agent_action_policy_dir $RL_LEFT_TIMED_HEADWAY \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --cpu 10 \
@@ -151,8 +151,8 @@ do
                             --to_probability \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} \
-                            --horizon ${horizon} 
-                            # >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            --horizon ${horizon} \
+                            >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--run_random_seed 0 \
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
