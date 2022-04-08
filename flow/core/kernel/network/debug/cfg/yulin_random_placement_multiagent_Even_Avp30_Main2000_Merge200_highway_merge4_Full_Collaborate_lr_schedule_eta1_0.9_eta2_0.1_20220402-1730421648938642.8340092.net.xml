@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on Sat Apr  2 17:30:42 2022 by Eclipse SUMO netconvert Version 1.6.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <node-files value="/home/flow/Documents/MITC-yulin_develop/flow/core/kernel/network/debug/net/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1_20220402-1730421648938642.8340092.nod.xml"/>
+        <edge-files value="/home/flow/Documents/MITC-yulin_develop/flow/core/kernel/network/debug/net/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1_20220402-1730421648938642.8340092.edg.xml"/>
+        <type-files value="/home/flow/Documents/MITC-yulin_develop/flow/core/kernel/network/debug/net/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1_20220402-1730421648938642.8340092.typ.xml"/>
+    </input>
+
+    <output>
+        <output-file value="/home/flow/Documents/MITC-yulin_develop/flow/core/kernel/network/debug/cfg/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1_20220402-1730421648938642.8340092.net.xml"/>
+    </output>
+
+    <junctions>
+        <no-internal-links value="false"/>
+        <no-turnarounds value="true"/>
+    </junctions>
+
+    <report>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<net version="1.6" junctionCornerDetail="5" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="100.00,141.42" convBoundary="0.00,0.00,700.00,141.42" origBoundary="-100.00,-141.42,600.00,0.00" projParameter="!"/>
+
+    <type id="highwayType" numLanes="1" speed="30.00"/>
+    <type id="mergeType" numLanes="1" speed="30.00"/>
+
+    <edge id=":bottom_0" function="internal">
+        <lane id=":bottom_0_0" index="0" speed="30.00" length="0.10" shape="530.42,69.58 530.42,69.58"/>
+    </edge>
+    <edge id=":center_0" function="internal">
+        <lane id=":center_0_0" index="0" speed="15.67" length="22.95" shape="590.86,130.02 594.85,133.04 600.54,136.25 606.52,138.79 611.33,139.82"/>
+    </edge>
+    <edge id=":center_1" function="internal">
+        <lane id=":center_1_0" index="0" speed="30.00" length="24.53" shape="586.80,139.82 611.33,139.82"/>
+    </edge>
+    <edge id=":left_0" function="internal">
+        <lane id=":left_0_0" index="0" speed="30.00" length="0.10" shape="100.00,139.82 100.00,139.82"/>
+    </edge>
+
+    <edge id="bottom" from="bottom" to="center" priority="1" type="mergeType" length="100.00">
+        <lane id="bottom_0" index="0" speed="30.00" length="100.00" shape="530.42,69.58 590.86,130.02"/>
+    </edge>
+    <edge id="center" from="center" to="right" priority="-1" type="highwayType" length="100.00">
+        <lane id="center_0" index="0" speed="30.00" length="100.00" shape="611.33,139.82 700.00,139.82"/>
+    </edge>
+    <edge id="inflow_highway" from="inflow_highway" to="left" priority="-1" type="highwayType" length="100.00">
+        <lane id="inflow_highway_0" index="0" speed="30.00" length="100.00" shape="0.00,139.82 100.00,139.82"/>
+    </edge>
+    <edge id="inflow_merge" from="inflow_merge" to="bottom" priority="1" type="mergeType" length="100.00">
+        <lane id="inflow_merge_0" index="0" speed="30.00" length="100.00" shape="459.71,-1.13 530.42,69.58"/>
+    </edge>
+    <edge id="left" from="left" to="center" priority="-1" type="highwayType" length="500.00">
+        <lane id="left_0" index="0" speed="30.00" length="500.00" shape="100.00,139.82 586.80,139.82"/>
+    </edge>
+
+    <junction id="bottom" type="priority" x="529.29" y="70.71" incLanes="inflow_merge_0" intLanes=":bottom_0_0" shape="529.29,70.71 531.55,68.45 529.29,70.71">
+        <request index="0" response="0" foes="0" cont="0"/>
+    </junction>
+    <junction id="center" type="priority" x="600.00" y="141.42" incLanes="bottom_0 left_0" intLanes=":center_0_0 :center_1_0" shape="611.33,141.42 611.33,138.22 608.01,137.96 604.73,137.18 601.49,135.89 598.29,134.07 595.12,131.74 591.99,128.89 589.73,131.15 591.61,133.31 592.55,135.08 592.53,136.45 591.57,137.44 589.66,138.02 586.80,138.22 586.80,141.42" radius="10.00">
+        <request index="0" response="00" foes="10" cont="0"/>
+        <request index="1" response="01" foes="01" cont="0"/>
+    </junction>
+    <junction id="inflow_highway" type="dead_end" x="0.00" y="141.42" incLanes="" intLanes="" shape="0.00,141.42 0.00,138.22"/>
+    <junction id="inflow_merge" type="dead_end" x="458.58" y="0.00" incLanes="" intLanes="" shape="458.58,0.00 460.84,-2.26"/>
+    <junction id="left" type="priority" x="100.00" y="141.42" incLanes="inflow_highway_0" intLanes=":left_0_0" shape="100.00,141.42 100.00,138.22 100.00,141.42">
+        <request index="0" response="0" foes="0" cont="0"/>
+    </junction>
+    <junction id="right" type="dead_end" x="700.00" y="141.42" incLanes="center_0" intLanes="" shape="700.00,138.22 700.00,141.42"/>
+
+    <connection from="bottom" to="center" fromLane="0" toLane="0" via=":center_0_0" dir="r" state="M"/>
+    <connection from="inflow_highway" to="left" fromLane="0" toLane="0" via=":left_0_0" dir="s" state="M"/>
+    <connection from="inflow_merge" to="bottom" fromLane="0" toLane="0" via=":bottom_0_0" dir="s" state="M"/>
+    <connection from="left" to="center" fromLane="0" toLane="0" via=":center_1_0" dir="s" state="m"/>
+
+    <connection from=":bottom_0" to="bottom" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":center_0" to="center" fromLane="0" toLane="0" dir="r" state="M"/>
+    <connection from=":center_1" to="center" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":left_0" to="left" fromLane="0" toLane="0" dir="s" state="M"/>
+
+</net>
