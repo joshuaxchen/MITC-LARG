@@ -63,8 +63,13 @@ RL_PENETRATION = 0.1
 #if args.avp:
 #    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
-ETA_1 = 0.9
-ETA_2 = 0.1
+ETA_1 = 0.9 
+if args.eta1: # default to be 0.9
+    ETA_1 = args.eta1
+ETA_2 = 1 - ETA_1
+ETA_3 = 0
+if args.eta3:
+    ETA_3 = args.eta3
 
 
 # SET UP PARAMETERS FOR THE NETWORK
@@ -82,7 +87,7 @@ mark=""
 if args.exp_folder_mark:
     mark="_"+args.exp_folder_mark
 
-exp_tag_str='multiagent'+mark+'_lanechange_left_av_accel_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
+exp_tag_str='multiagent'+mark+'_lanechange_left_av_accel_eta1_{:.2f}_eta2_{:.2f}_eta3_{:.2f}'.format(ETA_1, ETA_2, ETA_3)
 
 lateral_resolution=3.2
 if args.lateral_resolution:
@@ -120,6 +125,7 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
+            "eta3": ETA_3,
         },
     ),
 

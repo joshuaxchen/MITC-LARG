@@ -53,9 +53,11 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
         if "eta1" in self.env_params.additional_params.keys():
             eta1 = self.env_params.additional_params["eta1"]
             eta2 = self.env_params.additional_params["eta2"]
+            eta3 = self.env_params.additional_params["eta3"]
         else:
             eta1 = 0.9
             eta2 = 0.1
+            eta3 = 0
 
         reward1 = -0.1
         reward2 = average_velocity(self)/300
@@ -80,7 +82,7 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
             self.right_before_rls[rl_id] |= additional_cutting_in
             # set_trace()
             # print("num of lane change", lane_change_reward)
-            rewards[rl_id] = reward + 0.09 * lane_change_reward 
+            rewards[rl_id] = reward + eta3 * lane_change_reward 
         # print(rewards)
         return rewards
 

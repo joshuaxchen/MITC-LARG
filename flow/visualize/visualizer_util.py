@@ -123,6 +123,9 @@ def set_argument(evaluate=False):
     parser.add_argument('--run_random_seed', type=int, default=-1, help="-1 run all random seeds, otherwise, run just the specificed random seed")
     parser.add_argument('--restore', type=str, help="the path to the model that is used for training")
     parser.add_argument('--measurement_rate', type=int, help="the window size (in terms of time steps) to measure the inflow and outflow")
+    parser.add_argument('--eta1', type=float, default=0.9, help="the weight of penality on staying in the network")
+    parser.add_argument('--eta3', type=float, default=0, help="the weight of reward on the cutting vehicles")
+
     args = parser.parse_args()
     return args
 
