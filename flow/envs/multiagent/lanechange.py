@@ -53,10 +53,13 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
         if "eta1" in self.env_params.additional_params.keys():
             eta1 = self.env_params.additional_params["eta1"]
             eta2 = self.env_params.additional_params["eta2"]
-            eta3 = self.env_params.additional_params["eta3"]
         else:
             eta1 = 0.9
             eta2 = 0.1
+
+        if "eta3" in self.env_params.additional_params.keys():
+            eta3 = self.env_params.additional_params["eta3"]
+        else:
             eta3 = 0
 
         reward1 = -0.1
