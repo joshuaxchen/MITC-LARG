@@ -617,7 +617,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                             policy_id=policy_map_fn(agent_id), explore=False)
                     else:
                         action[agent_id] = agent.compute_action(
-                            state[agent_id], policy_id=policy_map_fn(agent_id), explore=False)
+                                state[agent_id][:9], policy_id=policy_map_fn(agent_id), explore=False)
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)

@@ -7,7 +7,7 @@ export RAY_MEMORY_MONITOR_ERROR_THRESHOLD=0.8
 # Even vehicle placement
 MERGE_INFLOW=200
 RIGHT_MAIN_INFLOW=2000
-LEFT_MAIN_INFLOW=1100
+LEFT_MAIN_INFLOW=1200
 
 SPEED_GAIN=1.0 #0.2 0.4 0.6 0.8 1
 ASSERTIVE=100 #0.5 #5 #0.4 0.6 0.8 1
@@ -31,7 +31,7 @@ do
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_time_headway.py \
 		--exp_folder_mark yulin_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${AVP_LEFT}_right_to_left_only \
 		--lateral_resolution 3.2 \
-		--cpu 70 \
+		--cpu 80 \
 		--to_probability \
 		--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 		--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
@@ -41,7 +41,7 @@ do
 		--speed_gain ${SPEED_GAIN} \
 		--assertive ${ASSERTIVE} \
 		--lc_probability ${LC_PROB} \
-		--eta1 0.95
+		--eta1 0.91
 done 
 wait
 source ~/notification_zyl.sh
