@@ -791,6 +791,10 @@ if __name__ == '__main__':
     #ray.init(address="127.0.0.1:6379", _redis_password="mitc_flow")
     #ray.init(address='auto', _redis_password='mitc_flow')
 
+    if args.measurement_rate is not None:
+        MEASUREMENT_RATE = args.measurement_rate
+
+
     if args.seed_dir:
         seed_filename = glob.glob(args.seed_dir+"/eval_seeds/*/seeds.pkl")
     else:
