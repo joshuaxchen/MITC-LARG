@@ -715,7 +715,7 @@ def reset_inflows(args, flow_params):
         #vehicles = VehicleParams()
         ## human vehicles
         if "human" not in veh_params.type_parameters.keys():
-            num_vehicles = 0
+            num_vehicles = 5
             add_vehicles(veh_params, "human", NO_LANE_CHANGE_MODE, 9, num_vehicles, 1, 1, -1)
 
             #veh_params.add(
