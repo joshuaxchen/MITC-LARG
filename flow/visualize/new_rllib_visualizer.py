@@ -71,7 +71,8 @@ SUMMARY_PLOTS = False
 REALTIME_PLOTS = False
 # The averge metrics (including inflow, outflow, speed) is measured as an
 # average of the recent 1000 time steps, if MEASUREMENT_RATE=1000
-MEASUREMENT_RATE=4000
+# MEASUREMENT_RATE=4000
+MEASUREMENT_RATE=500 
 #MEASUREMENT_RATE=2000
 
 def generateHtmlplots(actions, rewards, states):
@@ -867,6 +868,9 @@ if __name__ == '__main__':
     num_cpus=1,
     num_gpus=0,
     object_store_memory=1024*1024*1024)
+
+    if args.measurement_rate is not None:
+        MEASUREMENT_RATE = args.measurement_rate
 
     if args.seed_dir:
         seed_filename = glob.glob(args.seed_dir+"/eval_seeds/*/seeds.pkl")

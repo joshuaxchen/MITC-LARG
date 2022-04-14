@@ -655,7 +655,9 @@ def reset_inflows(args, flow_params):
     env_name=flow_params['env_name']
 
     #if veh_params is None:
-    veh_params=VehicleParams()
+    flow_params['veh'] = VehicleParams()
+    veh_params=flow_params['veh'] 
+
 
     # Inflows        
     # This is implemented in flow.envs.base or flow.envs.multiagent.base
@@ -668,6 +670,7 @@ def reset_inflows(args, flow_params):
     for inflow in net_params.inflows.get():
         if 'merge' in inflow['edge'] or 'on_ramp' in inflow['edge']:
             merge_names.append(inflow['edge'])
+
     # for training, the net_params may be empty, we add inflow_merge as the default one
     if len(merge_names)==0:
         merge_names.append("inflow_merge")
@@ -712,25 +715,30 @@ def reset_inflows(args, flow_params):
         #vehicles = VehicleParams()
         ## human vehicles
         if "human" not in veh_params.type_parameters.keys():
-            veh_params.add(
-                veh_id="human",
-                acceleration_controller=(SimCarFollowingController, {}),
-                car_following_params=SumoCarFollowingParams(
-                    speed_mode=9,  # for safer behavior at the merges
-                    #tau=1.5  # larger distance between cars
-                ),
-                #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-                num_vehicles=5)
+            num_vehicles = 0
+            add_vehicles(veh_params, "human", NO_LANE_CHANGE_MODE, 9, num_vehicles, 1, 1, -1)
+
+            #veh_params.add(
+            #    veh_id="human",
+            #    acceleration_controller=(IDMController, {}),
+            #    car_following_params=SumoCarFollowingParams(
+            #        speed_mode=9,  # for safer behavior at the merges
+            #        #tau=1.5  # larger distance between cars
+            #    ),
+            #    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+            #    num_vehicles=5)
 
         ## autonomous vehicles
         if "rl" not in veh_params.type_parameters.keys():
-            veh_params.add(
-                veh_id="rl",
-                acceleration_controller=(RLController, {}),
-                car_following_params=SumoCarFollowingParams(
-                    speed_mode=9,
-                ),
-                num_vehicles=0)
+            num_vehicles = 0
+            add_vehicles(veh_params, "rl", NO_LANE_CHANGE_MODE, 9, num_vehicles, 1, 1, -1)
+            #veh_params.add(
+            #    veh_id="rl",
+            #    acceleration_controller=(RLController, {}),
+            #    car_following_params=SumoCarFollowingParams(
+            #        speed_mode=9,
+            #    ),
+            #    num_vehicles=0)
 
         print("handset inflows")
         input_inflows=args.handset_inflow
