@@ -138,7 +138,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         #controller=IDMController
         controller=RLController
     elif "human" in veh_type:
-        controller=IDMController #SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
+        controller=SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
 
     #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
@@ -657,7 +657,7 @@ def reset_inflows(args, flow_params):
     #if veh_params is None:
     flow_params['veh'] = VehicleParams()
     veh_params=flow_params['veh'] 
-
+    # set_trace()
 
     # Inflows        
     # This is implemented in flow.envs.base or flow.envs.multiagent.base
@@ -740,6 +740,7 @@ def reset_inflows(args, flow_params):
             #    ),
             #    num_vehicles=0)
 
+        #set_trace()
         print("handset inflows")
         input_inflows=args.handset_inflow
         main_human_inflow_rate=input_inflows[0] 
