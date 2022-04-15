@@ -28,54 +28,9 @@ from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
-from flow.visualize.visualizer_util import reset_inflows
+from flow.visualize.visualizer_util import reset_inflows, set_argument
 
-EXAMPLE_USAGE = """
-example usage:
-    python xxxx.py --attr value
-"""
-parser = argparse.ArgumentParser(
-    formatter_class=argparse.RawDescriptionHelpFormatter,
-    description="[Flow] Evaluates a Flow Garden solution on a benchmark.",
-    epilog=EXAMPLE_USAGE)
-# optional input parameters
-parser.add_argument(
-    '--avp',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument(
-    '--num_rl',
-    type=int,
-    default=10,
-    help="The percentage of autonomous vehicles. value between 0-100")
-parser.add_argument('--handset_inflow', type=int, nargs="+",help="Manually set inflow configurations, notice the order of inflows when they were added to the configuration")
-parser.add_argument('--exp_folder_mark', type=str, help="Attach a string to the experiment folder name for easier identification")
-parser.add_argument('--preset_inflow', type=int, help="Program inflow to different lane (check visualizer code (add_preset_inflows() in flow/visualize/visualizer_util.py) for the value (0,1,2...).\n \t 0: rl vehicles on the right lane, and no lane change.\n \t 1: rl vehicles on the right lane, and only lane change for human drivers on the left lane. \n\t 2: rl vehicles on the left lane, and only lane change for human drivers on the right lane.")
-parser.add_argument('--lateral_resolution', type=float, help='input laterial resolution for lane changing.') 
-parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
-#parser.add_argument('--exp_prefix', type=str, help="To name the experiment folder under ray_results with a prefix")
-parser.add_argument('--random_inflow', action='store_true')
-parser.add_argument(
-        '--main_merge_human_inflows',
-        type=int,
-        nargs="+",
-        help="This is often used for evaluating human baseline")
-
-parser.add_argument('--cpu', type=int, help='set the number of cpus used for training')
-
-parser.add_argument('--human_inflows', type=int, nargs="+", help='the human inflows for both lanes.') 
-parser.add_argument('--rl_inflows', type=int, nargs="+", help='the rl inflows for both lanes.') 
-parser.add_argument('--human_lane_change', type=int, nargs="+", help='the rl inflows for both lanes.') 
-parser.add_argument('--rl_lane_change', type=int, nargs="+", help='the rl lane change for right and left lanes.') 
-parser.add_argument('--merge_inflow', type=int, help='merge inflow used for multilane highway.') 
-parser.add_argument('--aggressive', type=float, help='float value from 0 to 1 to indicate how aggressive the vehicle is.') 
-parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
-parser.add_argument('--lc_probability', type=float, help='float value from 0 to 1 to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
-parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
-parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
-
-args=parser.parse_args()
+args=set_argument()
 
 # SET UP PARAMETERS FOR THE SIMULATION
 
@@ -91,8 +46,8 @@ if args.cpu:
     N_CPUS=args.cpu
 
 NUM_RL = 10
-if args.num_rl:
-    NUM_RL=args.num_rl
+#if args.num_rl:
+#    NUM_RL=args.num_rl
 
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
@@ -105,11 +60,14 @@ if args.handset_inflow:
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
 RL_PENETRATION = 0.1 
-if args.avp:
-    RL_PENETRATION = (args.avp/100.0) 
+#if args.avp:
+#    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9
 ETA_2 = 0.1
+if args.eta1 is not None:
+    ETA_1 = args.eta1
+    ETA_2 = 1 - ETA_1
 
 
 # SET UP PARAMETERS FOR THE NETWORK
