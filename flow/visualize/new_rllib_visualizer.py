@@ -224,6 +224,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     # hack for old pkl files
     # TODO(ev) remove eventually
     sim_params = flow_params['sim']
+    
+    if args.sim_step is not None:
+        sim_params.sim_step = args.sim_step
+
     setattr(sim_params, 'num_clients', 1)
     if seed_tmp:
         #setattr(sim_params, 'seed', seed_tmp['sumo_seed'])

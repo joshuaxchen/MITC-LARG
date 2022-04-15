@@ -10,6 +10,7 @@ import warnings
 from flow.controllers.car_following_models import SimCarFollowingController, IDMRLController
 from flow.controllers.rlcontroller import RLController
 from flow.controllers.lane_change_controllers import SimLaneChangeController
+from collections import defaultdict
 from bisect import bisect_left
 import itertools
 from copy import deepcopy
@@ -70,7 +71,7 @@ class TraCIVehicle(KernelVehicle):
         self._arrived_ids = []
         self._arrived_rl_ids = []
 
-        self._delays = {}
+        self._delays = defaultdict(lambda: 0) 
 
         # whether or not to automatically color vehicles
         try:
@@ -1097,7 +1098,7 @@ class TraCIVehicle(KernelVehicle):
             if direction[i] is None:
                 # TODO: set the lane change mode to 0
                 self.set_lane_change_mode(veh_id, 1621) # allow this vehicle to change lane
-                #direction[i]=0 # change to current lane
+                # direction[i]=0 # change to current lane
                 continue
 
 

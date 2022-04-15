@@ -40,13 +40,15 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         self.prev_lane=None
         self.prev_decision=None
         self.prev_dist=None
+
     def do_interrupt(self, env, lane_id, current_dist_center_line):
         #if self.prev_lane!=lane_id: # finished lane changing
         #    return True # please do 
         #if current_dist_center_line>=self.prev_dist: # moving further away from current lane
         #    return False # I am in the middle of lane changing, please do not
         #return True # I moved back the the current lane, please interrupt
-        if current_dist_center_line>1:
+        # if current_dist_center_line>1:
+        if current_dist_center_line != 0:
             return False 
         
         #if self.prev_decision and self.prev_lane==lane_id and current_dist_center_line>=self.prev_dist: # if previously do lane change and this lane change has not yet finished, then do again by ignoring lane_change_switch
@@ -57,6 +59,7 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         """See parent class."""
         #print("lane changing in stochastic")
         if self.freeze_lane_change: # if freezed, then do not change lane
+            #env.k.vehicle.center_veh_at_lane(self.veh_id)
             self.prev_decision=False
             return 0
         lane_change_probability=0.2
@@ -84,6 +87,7 @@ class StochasticLaneChangeController(BaseLaneChangeController):
         else:
             # print("no lc", self.veh_id, "lane", lane_id,  "lateral lane pos", env.k.vehicle.get_lateral_lane_pos(self.veh_id))
             #print(self.veh_id, "lc 0")
+            #env.k.vehicle.center_veh_at_lane(self.veh_id)
             return 0
 
 

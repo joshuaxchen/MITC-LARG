@@ -125,6 +125,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--measurement_rate', type=int, help="the window size (in terms of time steps) to measure the inflow and outflow")
     parser.add_argument('--eta1', type=float, default=0.9, help="the weight of penality on staying in the network")
     parser.add_argument('--eta3', type=float, default=0, help="the weight of reward on the cutting vehicles")
+    parser.add_argument('--sim_step', type=float, help="the simulation step, 0.5 means that SUMO proceeds 2 steps, and flow proceeds 1 step")
 
     args = parser.parse_args()
     return args
