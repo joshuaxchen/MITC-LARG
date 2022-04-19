@@ -272,13 +272,14 @@ class MultiAgentHighwayPOEnv(MultiEnv):
             #    rl_speed_modes=ADDITIONAL_ENV_PARAMS["rl_speed_modes"]
             #    speed_mode=rl_speed_modes[lane_index] 
             #    self.k.vehicle.set_speed_mode(veh_id, speed_mode)
-
-            if veh_id not in rl_ids and "human_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                human_lane_change_modes=ADDITIONAL_ENV_PARAMS["human_lane_change_modes"]
+            #print(ADDITIONAL_ENV_PARAMS.keys())
+            if veh_id not in rl_ids and "human_lane_change_modes" in self.env_params.additional_params.keys():
+                #print("human_lane_change_modes")
+                human_lane_change_modes=self.env_params.additional_params["human_lane_change_modes"]
                 lc_mode=human_lane_change_modes[lane_index]
                 self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
-            elif veh_id in rl_ids and "rl_lane_change_modes" in ADDITIONAL_ENV_PARAMS.keys():
-                rl_lane_change_modes=ADDITIONAL_ENV_PARAMS["rl_lane_change_modes"]
+            elif veh_id in rl_ids and "rl_lane_change_modes" in self.env_params.additional_params.keys():
+                rl_lane_change_modes=self.env_params.additional_params["rl_lane_change_modes"]
                 lc_mode=rl_lane_change_modes[lane_index]
                 self.k.vehicle.set_lane_change_mode(veh_id, lc_mode)
 
