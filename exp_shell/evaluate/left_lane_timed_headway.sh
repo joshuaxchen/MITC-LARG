@@ -60,7 +60,7 @@ mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
 human_or_av=1
-render='sumo_gui'
+render='no_render'
 horizon=14000
 
 for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
@@ -162,8 +162,8 @@ do
                             --to_probability \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} \
-                            --horizon ${horizon} \
-                            >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt 
+                            --horizon ${horizon} 
+                            # >> ${WORKING_DIR}/EVAL_human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt 
                             #--run_random_seed 0 \
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/human_vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/human_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
