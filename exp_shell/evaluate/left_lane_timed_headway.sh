@@ -33,9 +33,13 @@ RL_LEFT_ACCEL_STATE_10=${HOME}/ray_results/multiagent_yulin_1800_1200_30_lanecha
 
 RL_LEFT_ACCEL_STATE_30=/projects/agents6/yulin/flow/ray_results/multiagent_yulin_1800_1100_30_0_extra_normalized_right_to_left_only_lanechange_left_av_accel_eta1_0.9_eta2_0.1/PPO_LeftLaneHeadwayControlledMerge4-v0_d85e5_00000_0_2022-04-08_13-29-37
 
+RL_LEFT_ACCEL_STATE_30=${HOME}/april14_models/multiagent_yulin_IDM_left_policy_2000_1200_30_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_c2dd7_00000_0_2022-04-18_22-56-58
 
-# VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
+RL_RIGHT_IJCAI_IDM=${HOME}/april14_models/Random_placement_IDMAAMASreward_Avp30_Main2000_Merge200_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.09999999999999998/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_cdbdb_00000_0_2022-04-15_21-13-27
+
+
+VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+# VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/april_12_afternoon_lc_14000
 
 
@@ -56,21 +60,21 @@ mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
 human_or_av=1
-render='no_render'
+render='sumo_gui'
 horizon=14000
 
 for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
-for RIGHT_MAIN_INFLOW in 2000 1800 1600 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+for RIGHT_MAIN_INFLOW in 2000 #1800 1600 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 900 1000 1100 1200 1300 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1000 # 900 1000 1100 1200 1300 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
-		for AVP_LEFT in 10 20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		for AVP_LEFT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
 		    let RL_INFLOW_LEFT=LEFT_MAIN_INFLOW*${AVP_LEFT}/100
 		    let HUMAN_INFLOW_LEFT=LEFT_MAIN_INFLOW-RL_INFLOW_LEFT
 
-		    for AVP_RIGHT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
+		    for AVP_RIGHT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		    do
 			let RL_INFLOW_RIGHT=RIGHT_MAIN_INFLOW*${AVP_RIGHT}/100
 			let HUMAN_INFLOW_RIGHT=RIGHT_MAIN_INFLOW-RL_INFLOW_RIGHT
@@ -90,7 +94,7 @@ do
                         python3 $VISUALIZER \
                             $RL_LEFT_ACCEL_STATE_30 \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_MODEL \
+                            --agent_action_policy_dir $RL_RIGHT_IJCAI_IDM \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --render_mode ${render} \
@@ -98,6 +102,7 @@ do
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 0 \
                             --cpu 80 \
+                            --policy_observation_size 9 \
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
@@ -105,8 +110,8 @@ do
                             --to_probability \
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
-                            --lc_probability ${LC_PROB} \
-                         >> ${WORKING_DIR}/RL_EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
+                            --lc_probability ${LC_PROB} 
+                         #>> ${WORKING_DIR}/RL_EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_inflow_outflow_var_in_file ${PWD}/log/${horizon} \
