@@ -61,14 +61,20 @@ TRAIN_DIR[15]=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp100_
 MARK[15]='2000_200_100'
 # dr-light 
 
+# the model trained under IDM human driver
+TRAIN_DIR[16]=${HOME}/ray_results/Random_placement_IDMAAMAS_Avp30_Main2000_Merge200_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_af511_00000_0_2022-04-14_14-04-18
+
+# the model trained under IDM human driver, AV with no change in reward
+
+TRAIN_DIR[17]=${HOME}/april14_models/Random_placement_IDMAAMASreward_Avp30_Main2000_Merge200_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.09999999999999998/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_cdbdb_00000_0_2022-04-15_21-13-27
 
 #echo "curious: ${TRAIN_DIR[1]}"
 
 CHCKPOINT=500
 
 FLOW_DIR=${PWD}/../..
-# VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
+VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+# VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
 WORKING_DIR=$EXP_FOLDER/april_14_single_lane_human/
 
@@ -89,16 +95,16 @@ MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
 J=0
-for I in 6 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
+for I in 17 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
 
 	for MERGE_INFLOW in 200 #400 600 800 #180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 500 600 700 800 900 1000 
 	do
-		for MAIN_INFLOW in 1200 1300 1400 1500 1600 #1700 1800 1900 2000 #1650 #2000 #1850 1650
+		for MAIN_INFLOW in 2000 #1700 1800 1900 2000 #1650 #2000 #1850 1650
 		do
-			for AVP in 0 #2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40
+			for AVP in 10 #2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40
 			do
 				let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 				let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -109,12 +115,12 @@ do
 					$CHCKPOINT \
 					--render_mode no_render \
 					--seed_dir $FLOW_DIR \
+				    --cpu 16 \
 					--to_probability \
-				        --cpu 10 \
 					--measurement_rate 5000 \
 					--horizon 2000 \
-					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-					>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
+					 #>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
 				let J=J+1
 				if ((J == 30)); then
 					wait
