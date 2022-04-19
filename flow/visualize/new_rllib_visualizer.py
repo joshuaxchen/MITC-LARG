@@ -314,7 +314,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         print("reset inflows")
         reset_inflows(args, flow_params)
     #print(flow_params['net'].inflows.get())
-    
+    #print(flow_params['env'].additional_params.keys())
 
     # AV Penetration
     if args.handset_avp:
@@ -383,7 +383,6 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     else:
         env = gym.make(env_name)
 
-       
     if multiagent:
         rets = {}
         # map the agent id to its policy

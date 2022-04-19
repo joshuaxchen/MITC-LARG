@@ -140,7 +140,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         #controller=IDMController
         controller=RLController
     elif "human" in veh_type:
-        controller=IDMController #SimCarFollowingController
+        controller=IDMController #IDMController #SimCarFollowingController
 
     #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
