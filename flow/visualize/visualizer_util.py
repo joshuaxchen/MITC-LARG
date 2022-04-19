@@ -126,6 +126,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--eta1', type=float, default=0.9, help="the weight of penality on staying in the network")
     parser.add_argument('--eta3', type=float, default=0, help="the weight of reward on the cutting vehicles")
     parser.add_argument('--sim_step', type=float, help="the simulation step, 0.5 means that SUMO proceeds 2 steps, and flow proceeds 1 step")
+    parser.add_argument('--policy_observation_size', type=int, help="the number of observations for the policy")
 
     args = parser.parse_args()
     return args
