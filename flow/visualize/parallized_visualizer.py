@@ -611,13 +611,24 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                 action = {}
                 for agent_id in state.keys():
                     if use_lstm:
-                        action[agent_id], state_init[agent_id], logits = \
-                            agent.compute_action(
-                            state[agent_id], state=state_init[agent_id],
-                            policy_id=policy_map_fn(agent_id), explore=False)
+                        if args.policy_observation_size:
+                            truncated_state = state[agent_id][0:args.policy_observation_size]
+                            action[agent_id], state_init[agent_id], logits = \
+                                agent.compute_action(
+                                truncated_state, state=state_init[agent_id],
+                                policy_id=policy_map_fn(agent_id), explore=False)
+                        else:
+                            action[agent_id], state_init[agent_id], logits = \
+                                agent.compute_action(
+                                state[agent_id], state=state_init[agent_id],
+                                policy_id=policy_map_fn(agent_id), explore=False)
                     else:
-                        action[agent_id] = agent.compute_action(
-                                state[agent_id], policy_id=policy_map_fn(agent_id), explore=False)
+                        if args.policy_observation_size:
+                            truncated_state = state[agent_id][0:args.policy_observation_size]
+                            action[agent_id] = agent.compute_action(truncated_state, policy_id=policy_map_fn(agent_id), explore=False)
+                        else:
+
+                            action[agent_id] = agent.compute_action(truncated_state, policy_id=policy_map_fn(agent_id), explore=False)
             else:
                 action = agent.compute_action(state)
             state, reward, done, infos = env.step(action)
