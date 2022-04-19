@@ -24,6 +24,13 @@ RL_LEFT_OVAL_MERGER=${HOME}/ray_results/multiagent_yulin_lanechange_left_oval_wi
 
 RL_LEFT_BASIC=${HOME}/ray_results/multiagent_yulin_lanechange_left_basic_five_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvCollaborate-v0_98fef_00000_0_2021-11-14_20-49-05/
 
+RL_LEFT_1400_KRAUSS=${HOME}/april14_models/multiagent_yulin_left_policy_2000_1400_30_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_bc8b7_00000_0_2022-04-15_20-15-43
+
+RL_LEFT_1400_IDM=${HOME}/april14_models/multiagent_yulin_IDM_left_policy_2000_1400_30_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_187d4_00000_0_2022-04-18_22-30-44
+
+RL_LEFT_1200_IDM=${HOME}/april14_models/multiagent_yulin_IDM_left_policy_2000_1200_30_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_c2dd7_00000_0_2022-04-18_22-56-58
+
+RL_RIGHT_1200_IDM=${HOME}/april14_models/multiagent_yulin_IDM_right_policy_2000_1200_0_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_3f51b_00000_0_2022-04-19_00-47-49
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
@@ -47,7 +54,7 @@ WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
 CHCKPOINT=500
-human_or_av=0
+human_or_av=1
 render='sumo_gui'
 horizon=14000
 
@@ -55,7 +62,7 @@ for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
 for RIGHT_MAIN_INFLOW in 2000 #1800 2000 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1400 #1200 1400 1600 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1200 #1200 1400 1600 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 10 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -80,9 +87,9 @@ do
                     if [[(human_or_av -eq 1)]]; then
                         echo "run AV"
                         python3 $VISUALIZER \
-                            $RL_LEFT_MODEL \
+                            $RL_LEFT_1400_IDM \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_MODEL \
+                            --agent_action_policy_dir $RL_LEFT_1400_IDM \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --render_mode ${render} \
@@ -130,9 +137,9 @@ do
 
                         # run human baseline 
                         python3 $VISUALIZER \
-                            $RL_LEFT_MODEL \
+                            $RL_LEFT_1200_IDM \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_MODEL \
+                            --agent_action_policy_dir $RL_LEFT_1200_IDM \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --cpu 10 \
