@@ -139,7 +139,7 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         #controller=IDMController
         controller=RLController
     elif "human" in veh_type:
-        controller=SimCarFollowingController #IDMController #SimCarFollowingController#IDMController #
+        controller=IDMController #SimCarFollowingController
 
     #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
@@ -308,7 +308,7 @@ def add_specified_vehicles(vehicle_params, veh_prefix, veh_right_left_or_both, v
         speed_mode=7
         #veh_num=5
         veh_num=0
-        if "human" in veh_name and i==0: # the right most lane and human
+        if "human" in veh_name: # the right most lane and human
             speed_mode=15
             veh_num=1
         elif "rl" in veh_name:
