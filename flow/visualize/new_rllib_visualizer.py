@@ -532,8 +532,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
                             truncated_state = state[agent_id][0:args.policy_observation_size]
                             action[agent_id] = agent.compute_action(truncated_state, policy_id=policy_map_fn(agent_id), explore=False)
                         else:
-
-                            action[agent_id] = agent.compute_action(truncated_state, policy_id=policy_map_fn(agent_id), explore=False)
+                            action[agent_id] = agent.compute_action(state[agent_id], policy_id=policy_map_fn(agent_id), explore=False)
 
             else:
                 action = agent.compute_action(state)
