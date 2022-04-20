@@ -29,7 +29,7 @@ do
 	echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_time_headway.py \
-		--exp_folder_mark left_policy_horizon_4000_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${AVP_LEFT} \
+		--exp_folder_mark left_double_lane_controller_horizon_4000_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${AVP_LEFT} \
 		--lateral_resolution 3.2 \
 		--cpu 60 \
 		--to_probability \

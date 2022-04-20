@@ -7,6 +7,112 @@ from statistics import mean
 from IPython.core.debugger import set_trace
 from collections import defaultdict
 
+class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
+    def __init__(self, env_params, sim_params, network, simulator='traci'):
+        super().__init__(env_params, sim_params, network, simulator)
+    
+    @property
+    def observation_space(self):
+        #See class definition
+        # 9 states: basic 5 states + average speed of the vehicles on the right lane
+        # average speed ahead on the right lane
+        return Box(-float('inf'), float('inf'), shape=(10,), dtype=np.float32)
+
+    def get_state(self):
+        states = super().get_state()
+        BEFORE_MERGE = 588
+        LOOK_AHEAD = 120
+        MAX_SPEED = 30
+        # print("rl_ids", self.k.vehicle.get_rl_ids())
+        for rl_id in states:
+            veh_ahead_on_the_right = list()
+            self_veh_x = self.k.vehicle.get_x_by_id(rl_id)
+            for other_veh_id in self.k.vehicle.get_ids():
+                lane_id = self.k.vehicle.get_lane(other_veh_id)
+                other_veh_x = self.k.vehicle.get_x_by_id(other_veh_id)
+                if lane_id == 0 and self_veh_x < other_veh_x and other_veh_x < BEFORE_MERGE and other_veh_x < self_veh_x + LOOK_AHEAD:  # 120
+                    other_veh_vel = self.k.vehicle.get_speed(other_veh_id)
+                    veh_ahead_on_the_right.append(other_veh_vel)
+            if len(veh_ahead_on_the_right) == 0:
+                mean_vel = 1 
+            else:
+                mean_vel = mean(veh_ahead_on_the_right) / MAX_SPEED
+            states[rl_id] = np.array(list(states[rl_id]) + [mean_vel])
+        # print("states", states)
+
+        return states
+
+    def avg_velocity_behind_and_ahead(self):
+        # print("rl_ids", self.k.vehicle.get_rl_ids())
+        result = dict()
+        MAX_SPEED = 30
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rl_lane_id = self.k.vehicle.get_lane(rl_id)
+            rl_veh_x = self.k.vehicle.get_x_by_id(rl_id)
+            veh_ahead_same_lane = list()
+            veh_behind_same_lane = list()
+            for other_veh_id in self.k.vehicle.get_ids():
+                if other_veh_id == rl_id:
+                    continue
+                other_veh_lane_id = self.k.vehicle.get_lane(other_veh_id)
+                other_veh_x = self.k.vehicle.get_x_by_id(other_veh_id)
+                other_veh_vel = self.k.vehicle.get_speed(other_veh_id)
+                # print(rl_id, rl_veh_x, rl_lane_id, other_veh_id, other_veh_x, other_veh_lane_id)
+                if rl_veh_x < other_veh_x:  # the other veh is ahead 
+                    if rl_lane_id == other_veh_lane_id: # same lane
+                        veh_ahead_same_lane.append(other_veh_vel)
+                    else: # different lane
+                        pass 
+                else: # the other veh is behind
+                    if rl_lane_id == other_veh_lane_id:
+                        veh_behind_same_lane.append(other_veh_vel)
+
+            mean_vel_behind = 0            
+            if len(veh_behind_same_lane) == 0:
+                mean_vel_behind = 0 # 0 means this is undesired, since no vehicles are behind and the rl must have blocked the traffic. 
+            else:
+                mean_vel_behind = mean(veh_behind_same_lane) / MAX_SPEED
+
+            mean_vel_ahead = 0            
+            if len(veh_ahead_same_lane) == 0:
+                mean_veh_ahead = 1 # 1 means that this is desired, since the congested traffic ahead has exited the network
+            else:
+                mean_vel_ahead = mean(veh_ahead_same_lane) / MAX_SPEED
+                 
+            result[rl_id] = [mean_vel_behind, mean_vel_ahead]
+        return result 
+
+    def compute_reward(self, rl_actions, **kwargs):
+        # print("compute reward")
+        if rl_actions is None:
+            return {}
+
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+
+        if "eta3" in self.env_params.additional_params.keys():
+            eta3 = self.env_params.additional_params["eta3"]
+        else:
+            eta3 = 0
+
+        reward1 = -0.1
+        # reward2 = average_velocity(self)/300
+        reward = reward1 * eta1 
+        avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
+        # print(avg_velocity_behind_ahead_dict)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
+            reward2 = avg_vel_behind * eta2 + avg_vel_ahead * eta2
+            rewards[rl_id] = reward + reward2
+
+        return rewards
+
+  
 class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
@@ -67,7 +173,6 @@ class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
         reward = reward1 * eta1 + reward2 * eta2
         for rl_id in self.k.vehicle.get_rl_ids():
             rewards[rl_id] = reward
-        return rewards
 
         #lane_change_human_ids = self.k.vehicle.get_lane_change_human_ids()
         #for rl_id in self.k.vehicle.get_rl_ids():
