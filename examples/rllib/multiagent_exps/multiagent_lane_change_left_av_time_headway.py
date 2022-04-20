@@ -46,6 +46,11 @@ N_TRAINING_ITERATIONS = 500
 N_ROLLOUTS = 30 
 # number of steps per rollout
 HORIZON = 2000
+if args.horizon:
+    discount = args.horizon / HORIZON
+    HORIZON = args.horizon
+    N_TRAINING_ITERATIONS = N_TRAINING_ITERATIONS / discount
+
 # number of parallel workers
 N_CPUS = 40
 if args.cpu:
