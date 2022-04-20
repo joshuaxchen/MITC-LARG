@@ -112,7 +112,23 @@ class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
 
         return rewards
 
-  
+class SingleLaneController(DoubleLaneController):
+    
+    @property
+    def observation_space(self):
+        #See class definition
+        # 9 states: basic 5 states + average speed of the vehicles on the right lane
+        # average speed ahead on the right lane
+        return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
+
+    def get_state(self):
+        states = super().get_state()
+        for rl_id in states:
+            states[rl_id] = states[rl_id][0:9]
+        # print("states", states)
+
+        return states
+
 class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)

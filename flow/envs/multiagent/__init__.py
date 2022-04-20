@@ -33,7 +33,7 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvMerge4ModifyDistCollaborate
 from flow.envs.multiagent.highway_normalization import MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToDistance, MultiAgentHighwayPOEnvMerge4CollaborateNormalizedToTime 
 
-from flow.envs.multiagent.lanechange import LeftLaneOvalHighwayPOEnvMerge4Collaborate,LeftLaneOvalAboutToMergeHighwayPOEnvMerge4Collaborate, LeftLaneHeadwayControlledMultiAgentEnv, LeftLaneHeadwayControlledMerge4, DoubleLaneController
+from flow.envs.multiagent.lanechange import LeftLaneOvalHighwayPOEnvMerge4Collaborate,LeftLaneOvalAboutToMergeHighwayPOEnvMerge4Collaborate, LeftLaneHeadwayControlledMultiAgentEnv, LeftLaneHeadwayControlledMerge4, DoubleLaneController, SingleLaneController
 
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
                         MultiAgentHighwayPOEnvWindowFullCollaborate
