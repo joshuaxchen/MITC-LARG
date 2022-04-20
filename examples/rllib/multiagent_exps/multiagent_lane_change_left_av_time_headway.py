@@ -50,6 +50,8 @@ if args.horizon:
     discount = args.horizon / HORIZON
     HORIZON = args.horizon
     N_TRAINING_ITERATIONS = N_TRAINING_ITERATIONS / discount
+    if args.num_training_iterations:
+        N_TRAINING_ITERATIONS = min(N_TRAINING_ITERATIONS, args.num_training_iterations)
 
 # number of parallel workers
 N_CPUS = 40
