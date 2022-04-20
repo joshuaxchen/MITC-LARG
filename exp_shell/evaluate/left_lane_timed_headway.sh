@@ -37,6 +37,9 @@ RL_LEFT_ACCEL_STATE_30=${HOME}/april14_models/multiagent_yulin_IDM_left_policy_2
 
 RL_RIGHT_IJCAI_IDM=${HOME}/april14_models/Random_placement_IDMAAMASreward_Avp30_Main2000_Merge200_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.09999999999999998/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_cdbdb_00000_0_2022-04-15_21-13-27
 
+RL_LEFT_PARTIAL=${HOME}/april14_models/multiagent_yulin_2000_1200_30_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_6f6e8_00000_0_2022-04-19_20-30-17
+
+RL_RIGHT_PARTIAL=${HOME}/april14_models/multiagent_yulin_IDM_right_policy_2000_1200_0_right_to_left_only_lanechange_left_av_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_LeftLaneHeadwayControlledMerge4-v0_1d76e_00000_0_2022-04-19_20-35-09
 
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
 # VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
@@ -58,16 +61,16 @@ RIGHT_MAIN_INFLOW=2000
 WORKING_DIR=$EXP_FOLDER
 mkdir ${WORKING_DIR}
 
-CHCKPOINT=500
+CHCKPOINT=125
 human_or_av=1
-render='no_render'
+render='sumo_gui'
 horizon=14000
 
 for horizon in 14000 #2000 3000 4000 5000 6000 7000 8000 9000 10000 12000 14000
 do
 for RIGHT_MAIN_INFLOW in 2000 #1800 1600 #1400 1600 1800 1900 2000 #2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 do
-	for LEFT_MAIN_INFLOW in 1000 # 900 1000 1100 1200 1300 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
+	for LEFT_MAIN_INFLOW in 1200 # 900 1000 1100 1200 1300 1400 #1000 1200 1400 1600 #1200 1400 1600 # 1800 #1900 2000 2100 2200 # 1800 1900 2000 2100 2200 #1800 1900 #
 	do
 		for AVP_LEFT in 0 #20 30 40 #10 20 30 40 #200 400 600 800 # 200 400 600 800 # 200 400 600 800
 		do
@@ -94,7 +97,7 @@ do
                         python3 $VISUALIZER \
                             $RL_LEFT_ACCEL_STATE_30 \
                             $CHCKPOINT \
-                            --agent_action_policy_dir $RL_RIGHT_IJCAI_IDM \
+                            --agent_action_policy_dir $RL_RIGHT_PARTIAL \
                             --seed_dir $FLOW_DIR \
                             --lateral_resolution 3.2 \
                             --render_mode ${render} \
@@ -102,7 +105,6 @@ do
                             --rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
                             --human_lane_change 1 0 \
                             --cpu 80 \
-                            --policy_observation_size 9 \
                             --rl_lane_change 0 0 \
                             --merge_inflow ${MERGE_INFLOW} \
                             --speed_gain ${SPEED_GAIN} \
@@ -111,6 +113,7 @@ do
                             --horizon ${horizon} \
                             --assertive ${ASSERTIVE} \
                             --lc_probability ${LC_PROB} 
+                            #--policy_observation_size 9 \
                          #>> ${WORKING_DIR}/RL_EVAL_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE}.txt &
                             #--print_vehicles_per_time_step_in_file ${PWD}/figure/vehicles_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
                             #--print_metric_per_time_step_in_file  ${PWD}/figure/AV_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${MERGE_INFLOW}_${AVP_RIGHT}_${AVP_LEFT}_${SPEED_GAIN}_${ASSERTIVE} \
