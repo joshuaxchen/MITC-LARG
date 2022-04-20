@@ -29,9 +29,9 @@ do
 	echo ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}
 
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/multiagent_lane_change_left_av_time_headway.py \
-		--exp_folder_mark yulin_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${AVP_LEFT}_right_to_left_only \
+		--exp_folder_mark left_policy_horizon_4000_${RIGHT_MAIN_INFLOW}_${LEFT_MAIN_INFLOW}_${AVP_LEFT} \
 		--lateral_resolution 3.2 \
-		--cpu 80 \
+		--cpu 60 \
 		--to_probability \
 		--human_inflows ${HUMAN_INFLOW_RIGHT} ${HUMAN_INFLOW_LEFT}\
 		--rl_inflows ${RL_INFLOW_RIGHT} ${RL_INFLOW_LEFT} \
@@ -41,7 +41,9 @@ do
 		--speed_gain ${SPEED_GAIN} \
 		--assertive ${ASSERTIVE} \
 		--lc_probability ${LC_PROB} \
-		--eta1 0.91
+        --horizon 4000 \
+        --num_training_iterations 250 \
+		--eta1 0.9
 done 
 wait
 source ~/notification_zyl.sh
