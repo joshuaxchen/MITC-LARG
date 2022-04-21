@@ -82,7 +82,7 @@ if args.eta3:
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
-additional_net_params["highway_lanes"] = 2
+additional_net_params["highway_lanes"] = 1
 additional_net_params["pre_merge_length"] = 500
 
 # SET UP PARAMETERS FOR THE ENVIRONMENT
