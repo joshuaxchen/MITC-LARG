@@ -129,6 +129,37 @@ class SingleLaneController(DoubleLaneController):
 
         return states
 
+    def compute_reward(self, rl_actions, **kwargs):
+        # print("compute reward")
+        if rl_actions is None:
+            return {}
+
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+
+        if "eta3" in self.env_params.additional_params.keys():
+            eta3 = self.env_params.additional_params["eta3"]
+        else:
+            eta3 = 0
+
+        reward1 = -0.8
+        # reward2 = average_velocity(self)/300
+        reward = reward1 * eta1 
+        avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
+        # print(avg_velocity_behind_ahead_dict)
+        for rl_id in self.k.vehicle.get_rl_ids():
+            avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
+            reward2 = avg_vel_behind * eta2 + avg_vel_ahead * eta2
+            rewards[rl_id] = reward + reward2
+
+        return rewards
+
+
 class LeftLaneHeadwayControlledMerge4(MultiAgentHighwayPOEnvMerge4):
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         super().__init__(env_params, sim_params, network, simulator)
