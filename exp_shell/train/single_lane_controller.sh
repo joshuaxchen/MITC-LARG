@@ -22,9 +22,9 @@ do
 		--to_probability \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--horizon 2000 \
-		--num_training_iterations 200 \
+		--num_training_iterations 150 \
 		--eta1 0.9 \
-        --eta3 0.6 \
+        --eta3 0.6 
 done 
 wait
 source ~/notification_zyl.sh
