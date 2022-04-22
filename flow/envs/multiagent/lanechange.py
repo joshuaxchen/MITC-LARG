@@ -147,14 +147,14 @@ class SingleLaneController(DoubleLaneController):
         else:
             eta3 = 0
 
-        reward1 = -0.8
+        reward1 = -0.9
         # reward2 = average_velocity(self)/300
         reward = reward1 * eta1 
         avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
         # print(avg_velocity_behind_ahead_dict)
         for rl_id in self.k.vehicle.get_rl_ids():
             avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
-            reward2 = avg_vel_behind * eta2 + avg_vel_ahead * eta2
+            reward2 = avg_vel_behind * eta3 + avg_vel_ahead * eta2
             rewards[rl_id] = reward + reward2
 
         return rewards

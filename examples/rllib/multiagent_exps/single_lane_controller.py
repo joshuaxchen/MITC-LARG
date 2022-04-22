@@ -94,7 +94,7 @@ mark=""
 if args.exp_folder_mark:
     mark = args.exp_folder_mark + "_"
 
-exp_tag_str = 'multiagent_single_lane_' + mark + 'accel_eta1_{:.2f}_eta2_{:.2f}'.format(ETA_1, ETA_2)
+exp_tag_str = 'multiagent_single_lane_' + mark + 'accel_eta1_{:.2f}_eta2_{:.2f}_eta3_{:.2f}'.format(ETA_1, ETA_2, ETA_3)
 
 lateral_resolution=3.2
 if args.lateral_resolution:

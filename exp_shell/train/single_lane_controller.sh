@@ -17,13 +17,14 @@ do
 
 
 	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/single_lane_controller.py \
-		--exp_folder_mark single_lane_controller_horizon_2000_penality0.8_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
-		--cpu 48 \
+		--exp_folder_mark single_lane_controller_horizon_2000_penality0.9_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
+		--cpu 60 \
 		--to_probability \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--horizon 2000 \
-		--num_training_iterations 250 \
-		--eta1 0.9
+		--num_training_iterations 200 \
+		--eta1 0.9 \
+        --eta3 0.6 \
 done 
 wait
 source ~/notification_zyl.sh
