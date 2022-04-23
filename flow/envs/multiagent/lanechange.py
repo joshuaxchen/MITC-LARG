@@ -45,7 +45,6 @@ class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
     def avg_velocity_behind_and_ahead(self):
         # print("rl_ids", self.k.vehicle.get_rl_ids())
         result = dict()
-        MAX_SPEED = 30
         for rl_id in self.k.vehicle.get_rl_ids():
             rl_lane_id = self.k.vehicle.get_lane(rl_id)
             rl_veh_x = self.k.vehicle.get_x_by_id(rl_id)
@@ -71,13 +70,13 @@ class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
             if len(veh_behind_same_lane) == 0:
                 mean_vel_behind = 0 # 0 means this is undesired, since no vehicles are behind and the rl must have blocked the traffic. 
             else:
-                mean_vel_behind = mean(veh_behind_same_lane) / MAX_SPEED
+                mean_vel_behind = mean(veh_behind_same_lane) 
 
             mean_vel_ahead = 0            
             if len(veh_ahead_same_lane) == 0:
                 mean_veh_ahead = 1 # 1 means that this is desired, since the congested traffic ahead has exited the network
             else:
-                mean_vel_ahead = mean(veh_ahead_same_lane) / MAX_SPEED
+                mean_vel_ahead = mean(veh_ahead_same_lane) 
                  
             result[rl_id] = [mean_vel_behind, mean_vel_ahead]
         return result 
@@ -152,9 +151,12 @@ class SingleLaneController(DoubleLaneController):
         reward = reward1 * eta1 
         avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
         # print(avg_velocity_behind_ahead_dict)
+
+        MAX_SPEED = 30
         for rl_id in self.k.vehicle.get_rl_ids():
             avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
-            reward2 = avg_vel_behind * eta3 + avg_vel_ahead * eta2
+            rl_veh_vel = self.k.vehicle.get_speed(rl_id)
+            reward2 = avg_vel_behind/MAX_SPEED * eta3 + avg_vel_ahead/MAX_SPEED * eta2 + rl_veh_vel/MAX_SPEED * eta3
             rewards[rl_id] = reward + reward2
 
         return rewards
