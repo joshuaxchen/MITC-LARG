@@ -23,8 +23,8 @@ do
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--horizon 2000 \
 		--num_training_iterations 150 \
-		--eta1 0.9 
-        --eta3 0 
+		--eta1 0.9 \
+		--eta3 0 
 done 
 
 wait
