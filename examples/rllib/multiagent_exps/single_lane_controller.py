@@ -71,11 +71,11 @@ RL_PENETRATION = 0.1
 #    RL_PENETRATION = (args.avp/100.0) 
 # Selfishness constant
 ETA_1 = 0.9 
-if args.eta1: # default to be 0.9
+if args.eta1 is not None: # default to be 0.9
     ETA_1 = args.eta1
 ETA_2 = 1 - ETA_1
 ETA_3 = 0
-if args.eta3:
+if args.eta3 is not None:
     ETA_3 = args.eta3
 
 
