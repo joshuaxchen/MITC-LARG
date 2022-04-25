@@ -153,11 +153,10 @@ class SingleLaneController(DoubleLaneController):
         avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
         # print(avg_velocity_behind_ahead_dict)
 
-        MAX_SPEED = 30
         for rl_id in self.k.vehicle.get_rl_ids():
             avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
             rl_veh_vel = self.k.vehicle.get_speed(rl_id)
-            reward2 = avg_vel_behind/MAX_SPEED * eta3 + avg_vel_ahead/MAX_SPEED * eta2 + rl_veh_vel/MAX_SPEED * eta3
+            reward2 = avg_vel_behind/300 * eta3 + avg_vel_ahead/300 * eta2 + rl_veh_vel/300 * eta3
             rewards[rl_id] = reward + reward2
 
         return rewards
