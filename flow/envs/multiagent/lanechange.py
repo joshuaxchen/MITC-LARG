@@ -45,6 +45,7 @@ class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
     def avg_velocity_behind_and_ahead(self):
         # print("rl_ids", self.k.vehicle.get_rl_ids())
         result = dict()
+        MAX_SPEED = 30
         for rl_id in self.k.vehicle.get_rl_ids():
             rl_lane_id = self.k.vehicle.get_lane(rl_id)
             rl_veh_x = self.k.vehicle.get_x_by_id(rl_id)
@@ -74,7 +75,7 @@ class DoubleLaneController(MultiAgentHighwayPOEnvMerge4):
 
             mean_vel_ahead = 0            
             if len(veh_ahead_same_lane) == 0:
-                mean_veh_ahead = 1 # 1 means that this is desired, since the congested traffic ahead has exited the network
+                mean_veh_ahead = MAX_SPEED # 1 means that this is desired, since the congested traffic ahead has exited the network
             else:
                 mean_vel_ahead = mean(veh_ahead_same_lane) 
                  
