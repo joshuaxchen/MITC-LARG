@@ -191,7 +191,7 @@ class BehindCurrentAheadSingleLaneController(SingleLaneController):
         for rl_id in self.k.vehicle.get_rl_ids():
             avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
             rl_veh_vel = self.k.vehicle.get_speed(rl_id)
-            rewards[rl_id] =reward1 * eta1 + eta2 * (1.0/3) *(avg_vel_behind + rl_veh_veh + avg_veh_ahead) / 300 
+            rewards[rl_id] =reward1 * eta1 + eta2 * (1.0/3) *(avg_vel_behind + rl_veh_vel + avg_vel_ahead) / 300 
 
         # avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
         # print(avg_velocity_behind_ahead_dict)
