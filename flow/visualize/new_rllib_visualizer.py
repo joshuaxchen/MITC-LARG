@@ -51,7 +51,8 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
 
-from tools.matplotlib_plot import PlotWriter
+#from tools.matplotlib_plot import PlotWriter
+from tools.tikz_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow
@@ -608,14 +609,16 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
 
         # plot the inflows, outflow, avg_speed, reward at each time step
         # handles to print the metrics along the history
-        if args.print_vehicles_per_time_step_in_file is not None:
+        if args.print_metric_per_time_step_in_file is not None:
             title_spec=args.print_metric_per_time_step_in_file
+            print("title spec", title_spec)
             separator_index=title_spec.rfind("/")
             title_spec=title_spec[separator_index+1:]
             title_spec=title_spec.replace("_", "-")
 
         if args.print_vehicles_per_time_step_in_file is not None and i==0:
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
+            title_spec = "Number of vehicles per time step"
             veh_plot.set_title(title_spec) 
             veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
             veh_plot.add_human=False
