@@ -68,9 +68,115 @@ TRAIN_DIR[16]=${HOME}/ray_results/Random_placement_IDMAAMAS_Avp30_Main2000_Merge
 
 TRAIN_DIR[17]=${HOME}/april14_models/Random_placement_IDMAAMASreward_Avp30_Main2000_Merge200_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.09999999999999998/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_cdbdb_00000_0_2022-04-15_21-13-27
 
+TRAIN_DIR[18]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_c0308_00000_0_2022-04-20_21-07-09
+
+TRAIN_DIR[19]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.1_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_c0308_00000_0_2022-04-20_21-07-09/
+
+TRAIN_DIR[20]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.2_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_e8fe6_00000_0_2022-04-21_00-00-05/
+
+TRAIN_DIR[21]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.4_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_85dbf_00000_0_2022-04-21_00-04-29/
+
+TRAIN_DIR[22]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.8_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_22449_00000_0_2022-04-21_00-08-51/
+
+TRAIN_DIR[23]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality2.0_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_3a589_00000_0_2022-04-21_14-07-02/
+
+TRAIN_DIR[24]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality4.0_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_b4a4e_00000_0_2022-04-21_14-10-28/
+
+TRAIN_DIR[25]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality1.6_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_bc713_00000_0_2022-04-21_18-06-54/
+
+TRAIN_DIR[26]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality1.2_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_291e7_00000_0_2022-04-21_18-09-56/
+
+TRAIN_DIR[27]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality1.0_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_0b6a0_00000_0_2022-04-21_21-51-01/
+
+
+TRAIN_DIR[28]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.9_2000_200_30_accel_eta1_0.90_eta2_0.10/PPO_SingleLaneController-v0_46644_00000_0_2022-04-21_21-52-40/
+
+TRAIN_DIR[29]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.9_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.30/PPO_SingleLaneController-v0_911a8_00000_0_2022-04-21_23-34-58/
+
+TRAIN_DIR[30]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.9_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.60/PPO_SingleLaneController-v0_a29f1_00000_0_2022-04-22_18-47-57/
+
+TRAIN_DIR[31]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_penality0.9_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.90/PPO_SingleLaneController-v0_a83d4_00000_0_2022-04-22_18-48-06/
+
+TRAIN_DIR[32]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.05/PPO_SingleLaneController-v0_8b7ff_00000_0_2022-04-23_00-02-16/
+
+TRAIN_DIR[33]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.10/PPO_SingleLaneController-v0_8c008_00000_0_2022-04-22_23-33-39/
+
+TRAIN_DIR[34]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.20/PPO_SingleLaneController-v0_924e7_00000_0_2022-04-22_23-33-49/
+
+TRAIN_DIR[35]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.30/PPO_SingleLaneController-v0_6577c_00000_0_2022-04-23_00-01-12/
+
+TRAIN_DIR[36]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.40/PPO_SingleLaneController-v0_435a9_00000_0_2022-04-24_00-27-41/
+
+TRAIN_DIR[37]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.50/PPO_SingleLaneController-v0_35e55_00000_0_2022-04-24_00-27-19/
+
+TRAIN_DIR[38]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.60/PPO_SingleLaneController-v0_67d10_00000_0_2022-04-24_00-43-02/
+
+TRAIN_DIR[39]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.20/PPO_SingleLaneController-v0_cc97d_00000_0_2022-04-24_21-45-42/
+
+TRAIN_DIR[40]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.30/PPO_SingleLaneController-v0_c84b8_00000_0_2022-04-24_21-45-35/
+ 
+TRAIN_DIR[41]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.40/PPO_SingleLaneController-v0_faf10_00000_0_2022-04-25_03-23-26/
+ 
+TRAIN_DIR[42]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.50/PPO_SingleLaneController-v0_d02e8_00000_0_2022-04-25_00-01-49/
+
+TRAIN_DIR[43]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.60/PPO_SingleLaneController-v0_3cb10_00000_0_2022-04-25_07-42-58/
+
+TRAIN_DIR[44]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.70/PPO_SingleLaneController-v0_29d0c_00000_0_2022-04-25_00-18-38/
+
+TRAIN_DIR[45]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.00_eta2_1.00_eta3_0.80/PPO_SingleLaneController-v0_7f409_00000_0_2022-04-25_03-55-46/
+
+# so far, the best: speed max 30 with penality for the delay
+TRAIN_DIR[45]=${HOME}/april20_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_3c5e6_00000_0_2022-04-25_15-35-25/
+
+# fix the speed issue
+TRAIN_DIR[46]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.10/PPO_SingleLaneController-v0_78df3_00000_0_2022-04-25_12-02-21/
+
+TRAIN_DIR[47]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.30/PPO_SingleLaneController-v0_bf8db_00000_0_2022-04-25_11-42-51/
+
+# normalize the speed as reward
+TRAIN_DIR[48]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.30/PPO_SingleLaneController-v0_bf8db_00000_0_2022-04-25_11-42-51/
+
+TRAIN_DIR[49]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.10/PPO_SingleLaneController-v0_44d24_00000_0_2022-04-25_15-35-39/
+
+TRAIN_DIR[50]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.20/PPO_SingleLaneController-v0_af8ad_00000_0_2022-04-25_16-43-03/
+
+TRAIN_DIR[51]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_03c69_00000_0_2022-04-25_15-33-50/
+
+TRAIN_DIR[53]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.30/PPO_SingleLaneController-v0_3e27e_00000_0_2022-04-25_18-27-16/
+
+# so far the best
+TRAIN_DIR[52]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.70_eta2_0.30_eta3_0.20/PPO_SingleLaneController-v0_00543_00000_0_2022-04-25_18-25-32/
+
+TRAIN_DIR[54]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.50_eta2_0.50_eta3_0.20/PPO_SingleLaneController-v0_308e1_00000_0_2022-04-25_22-30-16/
+
+TRAIN_DIR[55]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.60_eta2_0.40_eta3_0.20/PPO_SingleLaneController-v0_f508b_00000_0_2022-04-25_22-14-17/
+
+# 
+TRAIN_DIR[56]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.70_eta2_0.30_eta3_0.20/PPO_SingleLaneController-v0_00543_00000_0_2022-04-25_18-25-32/
+
+
+# so far the best 1551
+TRAIN_DIR[57]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.60_eta2_0.40_eta3_0.20/PPO_SingleLaneController-v0_f508b_00000_0_2022-04-25_22-14-17/
+
+
+TRAIN_DIR[58]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.80_eta2_0.20_eta3_0.10/PPO_SingleLaneController-v0_45294_00000_0_2022-04-26_02-41-23/
+
+TRAIN_DIR[59]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.80_eta2_0.20_eta3_0.20/PPO_SingleLaneController-v0_39ef4_00000_0_2022-04-26_00-03-35/
+
+TRAIN_DIR[60]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_normalization_2000_200_30_accel_eta1_0.80_eta2_0.20_eta3_0.30/PPO_SingleLaneController-v0_a3135_00000_0_2022-04-26_00-20-50/
+
+TRAIN_DIR[61]=${HOME}/april25_models/multiagent_single_lane_single_lane_controller_horizon_2000_speed_max30_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_c88d3_00000_0_2022-04-25_22-13-02/
+
+# go back to original reward
+TRAIN_DIR[62]=${HOME}/april26_models/multiagent_single_lane_single_lane_controller_horizon_2000_original_krauss_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_6a66d_00000_0_2022-04-26_12-22-14/
+
+TRAIN_DIR[63]=${HOME}/april26_models/multiagent_single_lane_single_lane_controller_horizon_2000_Original_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_7cfb8_00000_0_2022-04-26_11-54-08/
+
+TRAIN_DIR[64]=${HOME}/april26_models/multiagent_single_lane_single_lane_controller_horizon_2000_avg_3_speeds_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_BehindCurrentAheadSingleLaneController-v0_91b4f_00000_0_2022-04-26_13-27-46/
 #echo "curious: ${TRAIN_DIR[1]}"
 
-CHCKPOINT=500
+
+CHCKPOINT=150
 
 FLOW_DIR=${PWD}/../..
 VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
@@ -95,7 +201,7 @@ MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
 J=0
-for I in 17 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
+for I in 64 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
 	mkdir ${WORKING_DIR}/${MARK[$I]}
@@ -113,13 +219,14 @@ do
 				python3 $VISUALIZER \
 					${TRAIN_DIR[$I]} \
 					$CHCKPOINT \
-					--render_mode no_render \
+					--render_mode sumo_gui \
 					--seed_dir $FLOW_DIR \
 				    --cpu 16 \
-					--to_probability \
 					--measurement_rate 5000 \
 					--horizon 2000 \
+                    --print_vehicles_per_time_step_in_file april26_avg_3_speeds_krauss_idm_even \
 					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
+					#--to_probability \
 					 #>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
 				let J=J+1
 				if ((J == 30)); then
