@@ -147,6 +147,59 @@ class SingleLaneController(DoubleLaneController):
         else:
             eta3 = 0
 
+        reward1 = -0.1
+        reward2 = average_velocity(self)/300
+        reward = reward1 * eta1 + reward2 * eta2
+        for rl_id in self.k.vehicle.get_rl_ids():
+            rewards[rl_id] = reward
+
+        # avg_velocity_behind_ahead_dict = self.avg_velocity_behind_and_ahead()
+        # print(avg_velocity_behind_ahead_dict)
+
+        #for rl_id in self.k.vehicle.get_rl_ids():
+        #    avg_vel_behind, avg_vel_ahead = avg_velocity_behind_ahead_dict[rl_id][0], avg_velocity_behind_ahead_dict[rl_id][1]
+        #    rl_veh_vel = self.k.vehicle.get_speed(rl_id)
+        #    reward2 = avg_vel_behind/300 * eta3 + avg_vel_ahead/300 * eta2 + rl_veh_vel/300 * eta3
+        #    rewards[rl_id] = reward + reward2
+
+        return rewards
+
+# new one 
+class NewSingleLaneController(DoubleLaneController):
+    
+    @property
+    def observation_space(self):
+        #See class definition
+        # 9 states: basic 5 states + average speed of the vehicles on the right lane
+        # average speed ahead on the right lane
+        return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
+
+    def get_state(self):
+        states = super().get_state()
+        for rl_id in states:
+            states[rl_id] = states[rl_id][0:9]
+        # print("states", states)
+
+        return states
+
+    def compute_reward(self, rl_actions, **kwargs):
+        # print("compute reward")
+        if rl_actions is None:
+            return {}
+
+        rewards = {}
+        if "eta1" in self.env_params.additional_params.keys():
+            eta1 = self.env_params.additional_params["eta1"]
+            eta2 = self.env_params.additional_params["eta2"]
+        else:
+            eta1 = 0.9
+            eta2 = 0.1
+
+        if "eta3" in self.env_params.additional_params.keys():
+            eta3 = self.env_params.additional_params["eta3"]
+        else:
+            eta3 = 0
+
         reward1 = -0.9
         # reward2 = average_velocity(self)/300
         reward = reward1 * eta1 
