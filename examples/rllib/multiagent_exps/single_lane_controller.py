@@ -26,7 +26,7 @@ from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
 from flow.envs import multiagent
-from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv, SingleLaneController
+from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv, SingleLaneController, BehindCurrentAheadSingleLaneController
 
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
@@ -102,7 +102,7 @@ if args.lateral_resolution:
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=SingleLaneController, #LeftLaneHeadwayControlledMultiAgentEnv #DoubleLaneController
+    env_name=BehindCurrentAheadSingleLaneController, # SingleLaneController, #LeftLaneHeadwayControlledMultiAgentEnv #DoubleLaneController
     network=MergeNetwork,
     simulator='traci',
 
