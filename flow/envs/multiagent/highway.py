@@ -237,6 +237,9 @@ class MultiAgentHighwayPOEnv(MultiEnv):
 
     def freeze_the_vehicle_near_junction(self, veh_id):
         veh_x = self.k.vehicle.get_x_by_id(veh_id) 
+        if "center" not in self.k.network.total_edgestarts_dict:
+            # this is not simple merge scenario
+            return
         center_x_at_junction = self.k.network.total_edgestarts_dict["center"]
         if abs(veh_x - center_x_at_junction) <= 100:
             lc_controller=self.k.vehicle.get_lane_changing_controller(veh_id)

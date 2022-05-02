@@ -308,7 +308,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
         net_params.additional_params['on_ramps_pos']=args.on_ramps
 
     # handset inflows, reset main merge inflows for human baseline, or convert inflows to probabaility depending on user input 
-    if args.i696 is True:
+    if args.use_trained_inflow is True:
+        print("use the original trained inflow")
+        pass
+    elif args.i696 is True:
         print("reset inflows for i696")
         reset_inflows_i696(args, flow_params)
     else:

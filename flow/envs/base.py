@@ -635,43 +635,45 @@ class Env(gym.Env):
             assert len(inflows_set) == len(total_inflows)
             for i in range(len(total_inflows)):
                 total_inflows[i]['vehsPerHour'] = inflows_set[i]
-        print(self.network.net_params.inflows.get())
-        print(self.original_inflow)
-        self._main_inflow = 0.0
-        self._merge_inflow = 0.0
-        total_inflows = self.network.net_params.inflows.get()
-        for tf in total_inflows:
-            if tf['departSpeed'] <= 7.5:
-                self._merge_inflow += tf['vehsPerHour']
-            else:
-                self._main_inflow += tf['vehsPerHour']
+            # begin of adding a tab
+            print(self.network.net_params.inflows.get())
+            print(self.original_inflow)
+            self._main_inflow = 0.0
+            self._merge_inflow = 0.0
+            total_inflows = self.network.net_params.inflows.get()
+            for tf in total_inflows:
+                if tf['departSpeed'] <= 7.5:
+                    self._merge_inflow += tf['vehsPerHour']
+                else:
+                    self._main_inflow += tf['vehsPerHour']
 
-        if additional_params.get("handset_avp"):
-            self.network.net_params.inflows= InFlows()
-            MERGE_RATE=200
-            FLOW_RATE=2000
-            avp=additional_params.get("handset_avp")
-            if 1-avp>0:
+            if additional_params.get("handset_avp"):
+                self.network.net_params.inflows= InFlows()
+                MERGE_RATE=200
+                FLOW_RATE=2000
+                avp=additional_params.get("handset_avp")
+                if 1-avp>0:
+                    self.network.net_params.inflows.add(
+                        veh_type="human",
+                        edge="inflow_highway",
+                        vehs_per_hour=(1 - avp) * FLOW_RATE,
+                        depart_lane="free",
+                        depart_speed=10)
+                if avp>0:
+                    self.network.net_params.inflows.add(
+                        veh_type="rl",
+                        edge="inflow_highway",
+                        vehs_per_hour=avp * FLOW_RATE,
+                        depart_lane="free",
+                        depart_speed=10)
                 self.network.net_params.inflows.add(
                     veh_type="human",
-                    edge="inflow_highway",
-                    vehs_per_hour=(1 - avp) * FLOW_RATE,
+                    edge="inflow_merge",
+                    vehs_per_hour=MERGE_RATE,
                     depart_lane="free",
-                    depart_speed=10)
-            if avp>0:
-                self.network.net_params.inflows.add(
-                    veh_type="rl",
-                    edge="inflow_highway",
-                    vehs_per_hour=avp * FLOW_RATE,
-                    depart_lane="free",
-                    depart_speed=10)
-            self.network.net_params.inflows.add(
-                veh_type="human",
-                edge="inflow_merge",
-                vehs_per_hour=MERGE_RATE,
-                depart_lane="free",
-                depart_speed=7.5)
+                    depart_speed=7.5)
 
+            # end of adding a tab
         # reset the time counter
         self.time_counter = 0
         self.time_with_no_vehicles = 0

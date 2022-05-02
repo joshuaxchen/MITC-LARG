@@ -128,6 +128,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--sim_step', type=float, help="the simulation step, 0.5 means that SUMO proceeds 2 steps, and flow proceeds 1 step")
     parser.add_argument('--policy_observation_size', type=int, help="the number of observations for the policy")
     parser.add_argument('--num_training_iterations', type=int, help="the number of training iterations")
+    parser.add_argument('--use_trained_inflow', action='store_true', help="use the original inflow and vehicle parameters in the trained model")
 
     args = parser.parse_args()
     return args
@@ -575,79 +576,66 @@ def reset_inflows_i696(args, flow_params):
             num_vehicles=0)
 
         flow_params['veh']=vehicles
-
+        merge_entrance_from_right_to_left = ["59440544#0", "8666737", "178253095"]
+        main_left_entrance = "124433709.427"
         inflow = InFlows()
+        for merge_name in merge_entrance_from_right_to_left:
+                inflow.add(
+                    veh_type="human",
+                    edge=merge_name, # flow id se2w1 from xml file
+                    begin=10,#0,
+                    end=90000,
+                    vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                    departSpeed=10,
+                    departLane="free",
+                )
+
         if main_rl_inflow_rate>0:
             if args.to_probability is not None and args.to_probability is True:
-                inflow.add(
-                    veh_type="rl",
-                    edge="59440544#0", # flow id se2w1 from xml file
-                    begin=10,#0,
-                    end=90000,
-                    probability= main_rl_inflow_rate/3600.0, #(1 - RL_PENETRATION)*FLOW_RATE,
-                    departSpeed=10,
-                    departLane="free",
-                    )
+                if main_rl_inflow_rate > 0:
+                    inflow.add(
+                        veh_type="rl",
+                        edge=main_left_entrance, # flow id se2w1 from xml file
+                        begin=10,#0,
+                        end=90000,
+                        probability= main_rl_inflow_rate/3600.0, #(1 - RL_PENETRATION)*FLOW_RATE,
+                        departSpeed=10,
+                        departLane="free",
+                        )
+                if main_human_inflow_rate > 0:
+                    inflow.add(
+                        veh_type="rl",
+                        edge=main_left_entrance, # flow id se2w1 from xml file
+                        begin=10,#0,
+                        end=90000,
+                        probability= main_human_inflow_rate/3600.0, 
+                        departSpeed=10,
+                        departLane="free",
+                        )
+
             else:
-                inflow.add(
-                    veh_type="rl",
-                    edge="59440544#0", # flow id se2w1 from xml file
-                    begin=10,#0,
-                    end=90000,
-                    vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-                    departSpeed=10,
-                    departLane="free",
-                    )
-        if args.to_probability is not None and args.to_probability is True:
-            inflow.add(
-                veh_type="human",
-                edge="59440544#0", # flow id se2w1 from xml file
-                begin=10,#0,
-                end=90000,
-                probability= main_human_inflow_rate/3600.0, #(1 - RL_PENETRATION)*FLOW_RATE,
-                departSpeed=10,
-                departLane="free",
-                )
-        else:
-            inflow.add(
-                veh_type="human",
-                edge="59440544#0", # flow id se2w1 from xml file
-                begin=10,#0,
-                end=90000,
-                vehs_per_hour = main_human_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-                departSpeed=10,
-                departLane="free",
-                )
-
-        inflow.add(
-            veh_type="human",
-            edge="124433709.427", # flow id se2w1 from xml file
-            begin=10,#0,
-            end=90000,
-            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-            departSpeed=10,
-            departLane="free",
-            )
-        inflow.add(
-            veh_type="human",
-            edge="8666737", # flow id se2w1 from xml file
-            begin=10,#0,
-            end=90000,
-            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-            departSpeed=10,
-            departLane="free",
-            )
-
-        inflow.add(
-            veh_type="human",
-            edge="178253095", # flow id se2w1 from xml file
-            begin=10,#0,
-            end=90000,
-            vehs_per_hour = merge_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-            departSpeed=10,
-            departLane="free",
-            )
-
+                if main_rl_inflow_rate > 0:
+                    inflow.add(
+                        veh_type="rl",
+                        edge=main_left_entrance, # flow id se2w1 from xml file
+                        begin=10,#0,
+                        end=90000,
+                        vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                        departSpeed=10,
+                        departLane="free",
+                        )
+                if main_human_inflow_rate > 0:
+                    inflow.add(
+                        veh_type="rl",
+                        edge=main_left_entrance, # flow id se2w1 from xml file
+                        begin=10,#0,
+                        end=90000,
+                        vehs_per_hour = main_human_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                        departSpeed=10,
+                        departLane="free",
+                        )
+                
+        
         net_params=flow_params['net']
         net_params.inflows=inflow
 
