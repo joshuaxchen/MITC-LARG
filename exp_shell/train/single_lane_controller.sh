@@ -8,23 +8,26 @@ MAIN_INFLOW=2000
 # Merge vehicle placement
 MERGE_INFLOW=200
 
-
-for AVP in 30
+for HIGHWAY_LEN in 600 700 800 900 1000 1100 1200
 do
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+    for AVP in 30
+    do
+        let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+        let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+        echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 
 
-	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/single_lane_controller.py \
-		--exp_folder_mark single_lane_controller_horizon_2000_avg_3_speeds_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
-		--cpu 60 \
-		--to_probability \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--horizon 2000 \
-		--num_training_iterations 150 \
-		--eta1 0.9 \
-		--eta3 0.0 
+        python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/single_lane_controller.py \
+            --exp_folder_mark single_lane_controller_highwaylen${HIGHWAY_LEN}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
+            --cpu 60 \
+            --to_probability \
+            --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+            --horizon 2000 \
+            --num_training_iterations 150 \
+            --highway_len $HIGHWAY_LEN \
+            --eta1 0.9 \
+            --eta3 0.0 
+    done 
 done 
 
 wait
