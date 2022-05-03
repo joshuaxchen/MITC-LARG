@@ -9,16 +9,17 @@ TRAIN_DIR_i696=${HOME}/ray_results/yulin_stabilizing_i696/PPO_MergePOEnv-v0_9a4a
 TRAIN_DIR_i696=${HOME}/ray_results/i696_window_size_300_300/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_e3194_00000_0_2022-04-29_22-16-12/
 # single_lane i696
 #TRAIN_DIR_i696=${HOME}/ray_results/i696_window_size_300_300/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_80a69_00000_0_2022-04-30_00-07-58/
-TRAIN_DIR_i696=${HOME}/ray_results/zyl_i696_window_size_300_300/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_25204_00000_0_2022-05-01_20-13-59/
+#TRAIN_DIR_i696=${HOME}/ray_results/zyl_i696_window_size_300_300/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_fc465_00000_0_2022-05-01_22-14-32/
+TRAIN_DIR_i696=${HOME}/ray_results/zyl_i696_window_size_300_300/PPO_MultiAgentI696POEnvParameterizedWindowSizeCollaborate-v0_f7bca_00000_0_2022-05-02_16-00-59/
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 CHCKPOINT=1
 
-MAIN_HUMAN=3000
-MAIN_RL=1000
-MERGE=1000
+MAIN_HUMAN=4000
+MAIN_RL=0
+MERGE=300
 python3 $VISUALIZER \
             $TRAIN_DIR_i696 \
             $CHCKPOINT \
@@ -26,6 +27,7 @@ python3 $VISUALIZER \
             --horizon 4000 \
             --render_mode sumo_gui \
             --i696 \
+            --lateral_resolution 0.25 \
             --handset_inflow $MAIN_HUMAN $MAIN_RL $MERGE
 
 wait 

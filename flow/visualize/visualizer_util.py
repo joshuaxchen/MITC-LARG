@@ -555,32 +555,64 @@ def reset_inflows_i696(args, flow_params):
         merge_inflow_rate=input_inflows[2]
 
         vehicles = VehicleParams()
-        # human vehicles
-        vehicles.add(
-            veh_id="human",
-            acceleration_controller=(IDMController, {}), #SimCarFollowingController IDMController 
-            car_following_params=SumoCarFollowingParams(
-                speed_mode=15,  # for safer behavior at the merges
-                #tau=1.5  # larger distance between cars
-            ),
-            #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-            num_vehicles=0)
 
-        # autonomous vehicles
-        vehicles.add(
-            veh_id="rl",
-            acceleration_controller=(RLController, {}),
-            car_following_params=SumoCarFollowingParams(
-                speed_mode=9,
-            ),
-            num_vehicles=0)
+        add_vehicles_with_lane_change(vehicles, "human", 15, 0, 1000000, 100, -1)
+        add_vehicles_with_lane_change(vehicles, "rl", 15, 0, 1000000, 100, -1)
+        # human vehicles
+        #vehicles.add(
+        #    veh_id="human",
+        #    acceleration_controller=(IDMController, {}), #SimCarFollowingController IDMController 
+        #    lane_change_controller=(SimLaneChangeController, {}),
+        #    car_following_params=SumoCarFollowingParams(
+        #        speed_mode=15, #"all_checks", #no_collide",
+        #        #speed_mode=15,  # for safer behavior at the merges
+        #        #tau=1.5  # larger distance between cars
+        #        decel=7.5,  # avoid collisions at emergency stops 
+        #        # desired time-gap from leader
+        #        tau=1.5, #7,
+        #        min_gap=2.5,
+        #        speed_factor=1,
+        #        speed_dev=0.1
+        #    ),
+        #    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+        #    lane_change_params=SumoLaneChangeParams(
+        #        model="SL2015",
+        #        # Define a lane changing mode that will allow lane changes
+        #        # See: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#lane_change_mode_.280xb6.29
+        #        # and: ~/local/flow_2019_07/flow/core/params.py, see LC_MODES = {"aggressive": 0 /*bug, 0 is no lane-changes*/, "no_lat_collide": 512, "strategic": 1621}, where "strategic" is the default behavior
+        #        lane_change_mode=512,#0b011000000001, # (like default 1621 mode, but no lane changes other than strategic to follow route, # 512, #(collision avoidance and safety gap enforcement) # "strategic", 
+        #        lc_speed_gain=1000000,
+        #        lc_assertive=100, #20,
+        #        # the following two replace default values which are not read well by xml parser
+        #        lc_pushy_gap=0.6, #default
+        #        lc_keep_right=0, #was 0
+        #        lc_impatience=1e-8,
+        #        lc_time_to_impatience=1e12
+        #    ),
+        #  num_vehicles=0)
+
+        ## autonomous vehicles
+        #vehicles.add(
+        #    veh_id="rl",
+        #    acceleration_controller=(RLController, {}),
+        #    car_following_params=SumoCarFollowingParams(
+        #      # Define speed mode that will minimize collisions: https://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#speed_mode_.280xb3.29
+        #      speed_mode=7, #"all_checks", #no_collide",
+        #      decel=7.5,  # avoid collisions at emergency stops 
+        #      # desired time-gap from leader
+        #      tau=1.5, #7,
+        #      min_gap=2.5,
+        #      speed_factor=1,
+        #      speed_dev=0.1
+        #    ),
+        #    num_vehicles=0)
 
         flow_params['veh']=vehicles
-        merge_entrance_from_right_to_left = ["59440544#0", "8666737", "178253095"]
-        main_left_entrance = "124433709.427"
+        merge_entrance_from_right_to_left = ["124433709.427", "8666737", "178253095"]
+        main_right_entrance = "59440544#0"
         inflow = InFlows()
         for merge_name in merge_entrance_from_right_to_left:
-                inflow.add(
+            inflow.add(
                     veh_type="human",
                     edge=merge_name, # flow id se2w1 from xml file
                     begin=10,#0,
@@ -590,51 +622,50 @@ def reset_inflows_i696(args, flow_params):
                     departLane="free",
                 )
 
-        if main_rl_inflow_rate>0:
-            if args.to_probability is not None and args.to_probability is True:
-                if main_rl_inflow_rate > 0:
-                    inflow.add(
-                        veh_type="rl",
-                        edge=main_left_entrance, # flow id se2w1 from xml file
-                        begin=10,#0,
-                        end=90000,
-                        probability= main_rl_inflow_rate/3600.0, #(1 - RL_PENETRATION)*FLOW_RATE,
-                        departSpeed=10,
-                        departLane="free",
-                        )
-                if main_human_inflow_rate > 0:
-                    inflow.add(
-                        veh_type="rl",
-                        edge=main_left_entrance, # flow id se2w1 from xml file
-                        begin=10,#0,
-                        end=90000,
-                        probability= main_human_inflow_rate/3600.0, 
-                        departSpeed=10,
-                        departLane="free",
-                        )
+        if args.to_probability is not None and args.to_probability is True:
+            if main_rl_inflow_rate > 0:
+                inflow.add(
+                    veh_type="rl",
+                    edge=main_right_entrance, # flow id se2w1 from xml file
+                    begin=10,#0,
+                    end=90000,
+                    probability= main_rl_inflow_rate/3600.0, #(1 - RL_PENETRATION)*FLOW_RATE,
+                    departSpeed=10,
+                    departLane="free",
+                    )
+            if main_human_inflow_rate > 0:
+                inflow.add(
+                    veh_type="human",
+                    edge=main_right_entrance, # flow id se2w1 from xml file
+                    begin=10,#0,
+                    end=90000,
+                    probability= main_human_inflow_rate/3600.0, 
+                    departSpeed=10,
+                    departLane="free",
+                    )
 
-            else:
-                if main_rl_inflow_rate > 0:
-                    inflow.add(
-                        veh_type="rl",
-                        edge=main_left_entrance, # flow id se2w1 from xml file
-                        begin=10,#0,
-                        end=90000,
-                        vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-                        departSpeed=10,
-                        departLane="free",
-                        )
-                if main_human_inflow_rate > 0:
-                    inflow.add(
-                        veh_type="rl",
-                        edge=main_left_entrance, # flow id se2w1 from xml file
-                        begin=10,#0,
-                        end=90000,
-                        vehs_per_hour = main_human_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
-                        departSpeed=10,
-                        departLane="free",
-                        )
-                
+        else:
+            if main_rl_inflow_rate > 0:
+                inflow.add(
+                    veh_type="rl",
+                    edge=main_right_entrance, # flow id se2w1 from xml file
+                    begin=10,#0,
+                    end=90000,
+                    vehs_per_hour = main_rl_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                    departSpeed=10,
+                    departLane="free",
+                    )
+            if main_human_inflow_rate > 0:
+                inflow.add(
+                    veh_type="human",
+                    edge=main_right_entrance, # flow id se2w1 from xml file
+                    begin=10,#0,
+                    end=90000,
+                    vehs_per_hour = main_human_inflow_rate, #(1 - RL_PENETRATION)*FLOW_RATE,
+                    departSpeed=10,
+                    departLane="free",
+                    )
+            
         
         net_params=flow_params['net']
         net_params.inflows=inflow

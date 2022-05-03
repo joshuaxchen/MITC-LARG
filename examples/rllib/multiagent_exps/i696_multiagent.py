@@ -30,7 +30,7 @@ from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
 from flow.controllers import IDMController
-from flow.visualize.visualizer_util import reset_inflows, set_argument
+from flow.visualize.visualizer_util import reset_inflows, set_argument, reset_inflows_i696
 
 # SET UP PARAMETERS FOR THE SIMULATION
 args=set_argument()
@@ -63,8 +63,10 @@ RL_PENETRATION = 0.1
 ETA_1 = 0.9
 ETA_2 = 0.1
 
-
-window_size=tuple(args.window_size)
+if args.window_size is not None:
+    window_size=tuple(args.window_size)
+else:
+    window_size = [300, 300]
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
@@ -73,7 +75,8 @@ scenarios_dir = scenario_dir_path
 #from flow.scenarios import scenario_dir_path
 scenarios_dir = scenario_dir_path
 scenario_road_data = {"name" : "I696_ONE_LANE",
-            "net" : os.path.join(scenarios_dir, 'i696', 'i696-three-merges.net.xml'), 
+            #"net" : os.path.join(scenarios_dir, 'i696', 'i696-three-merges.net.xml'), 
+            "net" : os.path.join(scenarios_dir, 'i696', 'multilane-i696-three-merges.net.xml'), 
             #"net" : os.path.join(scenarios_dir, 'i696', 'osm.net.i696_onelane.xml'), 
             #"rou" : [os.path.join(scenarios_dir, 'i696', 'i696.rou.xml')],
             "rou" : [os.path.join(scenarios_dir, 'i696', 'i696.three.merges.rou.xml')],
@@ -92,108 +95,107 @@ additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 
 # CREATE VEHICLE TYPES AND INFLOWS
 
-vehicles = VehicleParams()
-# human vehicles
-vehicles.add(
-    veh_id="human",
-    acceleration_controller=(IDMController, {}), #SimCarFollowingController
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=15,  # for safer behavior at the merges
-        #tau=1.5  # larger distance between cars
-    ),
-    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
-    num_vehicles=0)
-
-# autonomous vehicles
-vehicles.add(
-    veh_id="rl",
-    acceleration_controller=(RLController, {}),
-    car_following_params=SumoCarFollowingParams(
-        speed_mode=9,
-    ),
-    num_vehicles=0)
-
-
-# Vehicles are introduced from both sides of merge, with RL vehicles entering
-# from the highway portion as well
-inflow = InFlows()
-
-if args.to_probability:
-    inflow.add(
-        veh_type="rl",
-        edge="59440544#0", # flow id sw2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        #vehs_per_hour = RL_PENETRATION * FLOW_RATE,
-        probability=(RL_PENETRATION * FLOW_RATE)/3600.0,
-        departSpeed=7.5,
-        depart_lane="free",
-        )
-    #"404969345#0", "124433709.427", "8666737", "178253095"
-    inflow.add(
-        veh_type="human",
-        edge="59440544#0", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        #vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
-        probability= (1 - RL_PENETRATION)*FLOW_RATE/3600.0,
-        departSpeed=10,
-        departLane="free",
-        )
-else:
-    inflow.add(
-        veh_type="rl",
-        edge="59440544#0", # flow id sw2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = RL_PENETRATION * FLOW_RATE,
-        departSpeed=7.5,
-        depart_lane="free",
-        )
-    #"404969345#0", "124433709.427", "8666737", "178253095"
-    inflow.add(
-        veh_type="human",
-        edge="59440544#0", # flow id se2w1 from xml file
-        begin=10,#0,
-        end=90000,
-        vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
-        departSpeed=10,
-        departLane="free",
-        )
-inflow.add(
-    veh_type="human",
-    edge="8666737", # flow id se2w1 from xml file
-    begin=10,#0,
-    end=90000,
-    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
-    departSpeed=10,
-    departLane="free",
-    )
-inflow.add(
-    veh_type="human",
-    edge="178253095", # flow id se2w1 from xml file
-    begin=10,#0,
-    end=90000,
-    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
-    departSpeed=10,
-    departLane="free",
-    )
-inflow.add(
-    veh_type="human",
-    edge="124433709.427", # flow id se2w1 from xml file
-    begin=10,#0,
-    end=90000,
-    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
-    departSpeed=10,
-    departLane="free",
-    )
+#vehicles = VehicleParams()
+## human vehicles
+#vehicles.add(
+#    veh_id="human",
+#    acceleration_controller=(IDMController, {}), #SimCarFollowingController
+#    car_following_params=SumoCarFollowingParams(
+#        speed_mode=15,  # for safer behavior at the merges
+#        #tau=1.5  # larger distance between cars
+#    ),
+#    #lane_change_params=SumoLaneChangeParams(lane_change_mode=1621)
+#    num_vehicles=0)
+#
+## autonomous vehicles
+#vehicles.add(
+#    veh_id="rl",
+#    acceleration_controller=(RLController, {}),
+#    car_following_params=SumoCarFollowingParams(
+#        speed_mode=9,
+#    ),
+#    num_vehicles=0)
+#
+#
+## Vehicles are introduced from both sides of merge, with RL vehicles entering
+## from the highway portion as well
+#inflow = InFlows()
+#
+#if args.to_probability:
+#    inflow.add(
+#        veh_type="rl",
+#        edge="59440544#0", # flow id sw2w1 from xml file
+#        begin=10,#0,
+#        end=90000,
+#        #vehs_per_hour = RL_PENETRATION * FLOW_RATE,
+#        probability=(RL_PENETRATION * FLOW_RATE)/3600.0,
+#        departSpeed=7.5,
+#        depart_lane="free",
+#        )
+#    #"404969345#0", "124433709.427", "8666737", "178253095"
+#    inflow.add(
+#        veh_type="human",
+#        edge="59440544#0", # flow id se2w1 from xml file
+#        begin=10,#0,
+#        end=90000,
+#        #vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
+#        probability= (1 - RL_PENETRATION)*FLOW_RATE/3600.0,
+#        departSpeed=10,
+#        departLane="free",
+#        )
+#else:
+#    inflow.add(
+#        veh_type="rl",
+#        edge="59440544#0", # flow id sw2w1 from xml file
+#        begin=10,#0,
+#        end=90000,
+#        vehs_per_hour = RL_PENETRATION * FLOW_RATE,
+#        departSpeed=7.5,
+#        depart_lane="free",
+#        )
+#    #"404969345#0", "124433709.427", "8666737", "178253095"
+#    inflow.add(
+#        veh_type="human",
+#        edge="59440544#0", # flow id se2w1 from xml file
+#        begin=10,#0,
+#        end=90000,
+#        vehs_per_hour = (1 - RL_PENETRATION)*FLOW_RATE,
+#        departSpeed=10,
+#        departLane="free",
+#        )
+#inflow.add(
+#    veh_type="human",
+#    edge="8666737", # flow id se2w1 from xml file
+#    begin=10,#0,
+#    end=90000,
+#    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
+#    departSpeed=10,
+#    departLane="free",
+#    )
+#inflow.add(
+#    veh_type="human",
+#    edge="178253095", # flow id se2w1 from xml file
+#    begin=10,#0,
+#    end=90000,
+#    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
+#    departSpeed=10,
+#    departLane="free",
+#    )
+#inflow.add(
+#    veh_type="human",
+#    edge="124433709.427", # flow id se2w1 from xml file
+#    begin=10,#0,
+#    end=90000,
+#    vehs_per_hour = 200, #(1 - RL_PENETRATION)*FLOW_RATE,
+#    departSpeed=10,
+#    departLane="free",
+#    )
 
 mark=""
 if args.exp_folder_mark:
-    mark="_"+args.exp_folder_mark
+    mark=args.exp_folder_mark + "_"
 
-exp_tag_str='multiagent'+mark+'_i696_Full_Collaborate_lr_schedule_eta1_{}_eta2_{}'.format(ETA_1, ETA_2)
-
+exp_tag_str = mark+'i696_window_size_{}_{}'.format(window_size[0], window_size[1])
 
 flow_params = dict(
     exp_tag=exp_tag_str, #'multiagent_highway_i696_1merge_Collaborate_lrschedule'
@@ -211,6 +213,7 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
+        lateral_resolution=0.25, # determines lateral discretization of lanes
         render=False,
     ),
 
@@ -231,7 +234,7 @@ flow_params = dict(
         },
     ),
     net=NetParams(
-        inflows=inflow,
+        #inflows=inflow,
         #no_internal_links=False,
         additional_params=additional_net_params,
         template={
@@ -241,7 +244,7 @@ flow_params = dict(
     ),
 
 
-    veh=vehicles,
+    #veh=vehicles,
     initial=InitialConfig(
       # Distributing only at the beginning of routes
       scenario_road_data["edges_distribution"]
@@ -249,6 +252,7 @@ flow_params = dict(
 
 )
 
+reset_inflows_i696(args, flow_params)
 
 # SET UP EXPERIMENT 
 def setup_exps(flow_params):
