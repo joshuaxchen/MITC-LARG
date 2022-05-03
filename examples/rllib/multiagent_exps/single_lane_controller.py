@@ -85,6 +85,10 @@ additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
 additional_net_params["pre_merge_length"] = 500
 
+if args.highway_len is not None:
+    pre_merge_len = args.highway_len - 200
+    additional_net_params["pre_merge_length"] = pre_merge_len
+    
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
@@ -102,7 +106,7 @@ if args.lateral_resolution:
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=BehindCurrentAheadSingleLaneController, # SingleLaneController, #LeftLaneHeadwayControlledMultiAgentEnv #DoubleLaneController
+    env_name=SingleLaneController, # SingleLaneController, #LeftLaneHeadwayControlledMultiAgentEnv #DoubleLaneController
     network=MergeNetwork,
     simulator='traci',
 
