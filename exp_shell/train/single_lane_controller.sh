@@ -8,7 +8,7 @@ MAIN_INFLOW=2000
 # Merge vehicle placement
 MERGE_INFLOW=200
 
-for HIGHWAY_LEN in 600 700 800 900 1000 1100 1200
+for HIGHWAY_LEN in 600 700 800 900 #700 800 900 1000 1100 1200
 do
     for AVP in 30
     do
@@ -23,6 +23,7 @@ do
             --to_probability \
             --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
             --horizon 2000 \
+            --krauss_controller \
             --num_training_iterations 150 \
             --highway_len $HIGHWAY_LEN \
             --eta1 0.9 \

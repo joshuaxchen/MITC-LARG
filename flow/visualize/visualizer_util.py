@@ -19,6 +19,7 @@ NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK=512
 LANE_CHANGE_MODE=LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_REPECT_COLLISION_AVOID#LANE_CHANGE_REPECT_COLLISION_AVOID_AND_SAFETY_GAP #LANE_CHANGE_NO_REPECT_OTHERS##LANE_CHANGE_NO_REPECT_OTHERS
 NO_LANE_CHANGE_MODE=NO_LANE_CHANGE_COLLISION_AVOID_SAFETY_GAP_CHECK
 
+Human_Driven_Vehicle_Controller = IDMController
 
 def set_argument(evaluate=False):
     EXAMPLE_USAGE = """
@@ -129,6 +130,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--policy_observation_size', type=int, help="the number of observations for the policy")
     parser.add_argument('--num_training_iterations', type=int, help="the number of training iterations")
     parser.add_argument('--use_trained_inflow', action='store_true', help="use the original inflow and vehicle parameters in the trained model")
+    parser.add_argument('--krauss_controller', action='store_true', help="use the Default Krauss model in SUMO; otherwise, use the idm controller")
 
     args = parser.parse_args()
     return args
@@ -142,7 +144,11 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
         #controller=IDMController
         controller=RLController
     elif "human" in veh_type:
-        controller=IDMController #SimCarFollowingController
+        controller=Human_Driven_Vehicle_Controller #IDMController #SimCarFollowingController
+        if controller == IDMController:
+            print("*****IDM Controller****")
+        else:
+            print("*****Krauss Controller**")
 
     #my_lane_change_controller=(SimLaneChangeController, {})
     #my_lane_change_controller=(StaticLaneChanger, {})
@@ -546,6 +552,10 @@ def add_preset_inflows(inflow_type, flow_params):
 
     
 def reset_inflows_i696(args, flow_params):
+
+    if args.krauss_controller:
+        Human_Driven_Vehicle_Controller = SimCarFollowingController
+
     if args.handset_inflow:
         print("handset inflows")
 
