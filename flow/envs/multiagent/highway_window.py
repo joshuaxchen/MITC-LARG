@@ -2,7 +2,7 @@ import numpy as np
 from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
-from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighwayPOEnvMerge4
+from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv 
 import collections
 import os
 ADDITIONAL_ENV_PARAMS = {
@@ -19,7 +19,12 @@ ADDITIONAL_ENV_PARAMS = {
 }
 
 
-class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(MultiAgentHighwayPOEnvMerge4):
+class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(MultiAgentHighwayPOEnv):
+
+    @property
+    def observation_space(self):
+        #See class definition
+        return Box(-float('inf'), float('inf'), shape=(9,), dtype=np.float32)
 
     def __init__(self, env_params, sim_params, network, simulator='traci'):
         if "window_size" not in env_params.additional_params and len(env_params.additional_params['window_size']) != 3:
@@ -29,6 +34,7 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
         self.junction_left, self.junction_right, self.junction_above=env_params.additional_params['window_size']
 
         super().__init__(env_params, sim_params, network, simulator)
+
     def get_state(self):
         states = super().get_state()
         junctions = set(self.k.network.get_junction_list())
