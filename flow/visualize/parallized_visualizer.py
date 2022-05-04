@@ -442,8 +442,13 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     net_params=flow_params['net']
 
 
-    if args.highway_len and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
-        net_params.additional_params['highway_length']=args.highway_len
+    if args.highway_len:
+        if flow_params['env_name'] == MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+            net_params.additional_params['highway_length'] = args.highway_len
+        else:
+            pre_merge_len = args.highway_len - 200
+            net_params.additional_params["pre_merge_length"] = pre_merge_len
+
     if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
         net_params.additional_params['on_ramps_pos']=args.on_ramps
 
@@ -780,7 +785,7 @@ def get_pid(name):
 if __name__ == '__main__':
     args= create_parser()
     if args.window_size is not None:
-        if len(args.window_size)!=2:
+        if len(args.window_size)!=3:
             print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
             exit(-1)
     if args.measurement_rate is not None:

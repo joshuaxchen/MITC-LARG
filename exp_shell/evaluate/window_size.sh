@@ -40,7 +40,7 @@ TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Coll
 CHCKPOINT=501
 
 # environment for window test
-ENV_DIR=${HOME}/ray_results/zyl_window_size_test/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_f86a2_00000_0_2022-05-04_17-17-22/
+ENV_DIR=${HOME}/may4/zyl_window_size_test/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_f86a2_00000_0_2022-05-04_17-17-22/
 
 # controller trained under different road length
 POLICY_DIR_1=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen600_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_14c1a_00000_0_2022-05-03_21-01-15/
@@ -72,7 +72,7 @@ render='sumo_gui'
 
 for WINDOW_LEFT in 400 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 do
-	AVP=0 
+	AVP=10 
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
