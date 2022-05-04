@@ -681,6 +681,10 @@ def reset_inflows_i696(args, flow_params):
         net_params.inflows=inflow
 
 def reset_inflows(args, flow_params):
+
+    if args.krauss_controller:
+        Human_Driven_Vehicle_Controller = SimCarFollowingController
+
     env_params = flow_params['env']
     net_params=flow_params['net']
     veh_params=flow_params['veh'] 
