@@ -19,7 +19,7 @@ do
 
         python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/single_lane_controller.py \
             --exp_folder_mark single_lane_controller_highwaylen${HIGHWAY_LEN}_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP} \
-            --cpu 60 \
+            --cpu 1 \
             --to_probability \
             --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
             --horizon 2000 \

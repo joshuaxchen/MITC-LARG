@@ -142,9 +142,9 @@ def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles,
     if "rl" in veh_type:
         # controller=IDMRLController
         #controller=IDMController
-        controller=RLController
+        controller = RLController
     elif "human" in veh_type:
-        controller=Human_Driven_Vehicle_Controller #IDMController #SimCarFollowingController
+        controller = Human_Driven_Vehicle_Controller #IDMController #SimCarFollowingController
         if controller == IDMController:
             print("*****IDM Controller****")
         else:
@@ -554,6 +554,7 @@ def add_preset_inflows(inflow_type, flow_params):
 def reset_inflows_i696(args, flow_params):
 
     if args.krauss_controller:
+        global Human_Driven_Vehicle_Controller
         Human_Driven_Vehicle_Controller = SimCarFollowingController
 
     if args.handset_inflow:
@@ -683,6 +684,7 @@ def reset_inflows_i696(args, flow_params):
 def reset_inflows(args, flow_params):
 
     if args.krauss_controller:
+        global Human_Driven_Vehicle_Controller
         Human_Driven_Vehicle_Controller = SimCarFollowingController
 
     env_params = flow_params['env']
