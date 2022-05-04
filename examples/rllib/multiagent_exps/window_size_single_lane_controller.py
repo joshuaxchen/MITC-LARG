@@ -5,8 +5,7 @@ highway with ramps network.
 """
 import json
 import ray
-import argparse
-import sys
+import os
 try:
     from ray.rllib.agents.agent import get_agent_class
 except ImportError:
@@ -15,9 +14,9 @@ from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
 from ray import tune
 from ray.tune.registry import register_env
 from ray.tune import run_experiments
+from flow.networks import Network
+from flow.controllers import SimCarFollowingController,IDMController, RLController, SimLaneChangeController, ContinuousRouter
 
-from flow.controllers import IDMController, RLController, SimCarFollowingController
-from flow.controllers import SimLaneChangeController
 from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
@@ -25,91 +24,77 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 from flow.utils.registry import make_create_env
 from flow.utils.rllib import FlowParamsEncoder
 
-from flow.envs import multiagent
-from flow.envs.multiagent import LeftLaneHeadwayControlledMultiAgentEnv, SingleLaneController, BehindCurrentAheadSingleLaneController
-
+from flow.envs.multiagent import MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate #MultiAgentHighwayPOEnvWindowFullCollaborate
 from flow.envs.ring.accel import ADDITIONAL_ENV_PARAMS
 from flow.networks import MergeNetwork
 from flow.networks.merge import ADDITIONAL_NET_PARAMS
 from copy import deepcopy
+#from argparse import ArgumentParser
 from flow.visualize.visualizer_util import reset_inflows, set_argument
-from IPython.core.debugger import set_trace
-import inspect
-
-args=set_argument()
 
 # SET UP PARAMETERS FOR THE SIMULATION
+args=set_argument()
 
+if args.window_size is not None:
+    if len(args.window_size)!=3:
+        print("The window size has to be three elements: the left distance to the junction, and the right distance to the junction, the distance to the junction from the merge road")
+        exit(-1)
 # number of training iterations
-N_TRAINING_ITERATIONS = 500
+N_TRAINING_ITERATIONS = 1 
 # number of rollouts per training iteration
-N_ROLLOUTS = 30 
+N_ROLLOUTS = 1 
 # number of steps per rollout
 HORIZON = 2000
-if args.horizon:
-    discount = args.horizon / HORIZON
-    HORIZON = args.horizon
-    N_TRAINING_ITERATIONS = N_TRAINING_ITERATIONS / discount
-    if args.num_training_iterations:
-        N_TRAINING_ITERATIONS = min(N_TRAINING_ITERATIONS, args.num_training_iterations)
-
 # number of parallel workers
-N_CPUS = 40
+N_CPUS = 10
 if args.cpu:
     N_CPUS=args.cpu
 
-NUM_RL = 10
-#if args.num_rl:
-#    NUM_RL=args.num_rl
+NUM_RL = 10 
+
 # inflow rate on the highway in vehicles per hour
 FLOW_RATE = 2000
 # inflow rate on each on-ramp in vehicles per hour
 MERGE_RATE = 200
 # percentage of autonomous vehicles compared to human vehicles on highway
-RL_PENETRATION = 0.1 
-#if args.avp:
-#    RL_PENETRATION = (args.avp/100.0) 
-# Selfishness constant
-ETA_1 = 0.9 
-if args.eta1 is not None: # default to be 0.9
-    ETA_1 = args.eta1
-ETA_2 = 1 - ETA_1
-ETA_3 = 0
-if args.eta3 is not None:
-    ETA_3 = args.eta3
+RL_PENETRATION = 0.1
+# selfishness constant
+ETA_1 = 0.9
+ETA_2 = 0.1
 
+window_size=tuple(args.window_size)
 
 # SET UP PARAMETERS FOR THE NETWORK
 additional_net_params = deepcopy(ADDITIONAL_NET_PARAMS)
 additional_net_params["merge_lanes"] = 1
 additional_net_params["highway_lanes"] = 1
-additional_net_params["pre_merge_length"] = 500
-
-
-
+#additional_net_params["pre_merge_length"] = 500
+#additional_net_params["pre_merge_length"] = 3031
+additional_net_params["pre_merge_length"] = 3031
+#additional_net_params["post_merge_length"] = 5077 #1878
+#additional_net_params["post_merge_length"] = 100 #1878
+#additional_net_params["merge_length"] = 1778
 if args.highway_len is not None:
     pre_merge_len = args.highway_len - 200
     additional_net_params["pre_merge_length"] = pre_merge_len
-    
+
 # SET UP PARAMETERS FOR THE ENVIRONMENT
 
 additional_env_params = ADDITIONAL_ENV_PARAMS.copy()
 
-
 mark=""
 if args.exp_folder_mark:
-    mark = args.exp_folder_mark + "_"
+    mark=args.exp_folder_mark + "_"
 
-exp_tag_str = 'multiagent_single_lane_' + mark + 'accel_eta1_{:.2f}_eta2_{:.2f}_eta3_{:.2f}'.format(ETA_1, ETA_2, ETA_3)
-
-lateral_resolution=3.2
-if args.lateral_resolution:
-        lateral_resolution=args.lateral_resolution
+exp_tag_str=mark+'_window_size_test'.format(window_size)
 
 flow_params = dict(
     exp_tag=exp_tag_str,
-    env_name=SingleLaneController, # SingleLaneController, #LeftLaneHeadwayControlledMultiAgentEnv #DoubleLaneController
+
+    env_name=MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate, #MultiAgentHighwayPOEnvMerge4WindowSizeCollaborate,
+
     network=MergeNetwork,
+
     simulator='traci',
 
     #env=EnvParams(
@@ -122,7 +107,6 @@ flow_params = dict(
     sim=SumoParams(
         restart_instance=True,
         sim_step=0.5,
-        lateral_resolution=lateral_resolution, # determines lateral discretization of lanes
         render=False,
     ),
 
@@ -138,20 +122,21 @@ flow_params = dict(
             "num_rl": NUM_RL,
             "eta1": ETA_1,
             "eta2": ETA_2,
-            "eta3": ETA_3,
+            "window_size": window_size,
         },
     ),
 
     net=NetParams(
-        inflows=None,
+        #inflows=inflow,
         additional_params=additional_net_params,
     ),
 
     veh=None,
     initial=InitialConfig(),
 )
+
 reset_inflows(args, flow_params)
-print("class path", multiagent.__file__)
+
 # SET UP EXPERIMENT
 
 def setup_exps(flow_params):
@@ -176,16 +161,11 @@ def setup_exps(flow_params):
     config = agent_cls._default_config.copy()
     config['num_workers'] = N_CPUS
     config['train_batch_size'] = HORIZON * N_ROLLOUTS
-    config['sgd_minibatch_size'] = 4096
+    config['sgd_minibatch_size'] = 128
     #config['simple_optimizer'] = True
     config['gamma'] = 0.998  # discount rate
     config['model'].update({'fcnet_hiddens': [100, 50, 25]})
-    #config['lr'] = tune.grid_search([5e-4, 1e-4])
-    config['lr_schedule'] = [
-            [0, 5e-4],
-            [1000000, 1e-4],
-            [4000000, 1e-5],
-            [8000000, 1e-6]]
+    config['lr'] = 0.0
     config['horizon'] = HORIZON
     config['clip_actions'] = False
     config['observation_filter'] = 'NoFilter'
@@ -246,13 +226,13 @@ if __name__ == '__main__':
         flow_params['exp_tag']: {
             'run': alg_run,
             'env': env_name,
-            'checkpoint_freq': 5,
-            'max_failures': 999,
+            'checkpoint_freq': 1,
             'checkpoint_at_end': True,
             'stop': {
-                'training_iteration': N_TRAINING_ITERATIONS
+                'training_iteration': 1
             },
             'config': config,
             'num_samples':1,
+            'restore':args.restore,
         },
     })

@@ -21,13 +21,10 @@ from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv, MultiAgentHighw
                         MultiAgentHighwayPOEnvAblationConjestionArrive,\
                         MultiAgentHighwayPOEnvAblationMergeInfo,\
                         MultiAgentHighwayPOEnvAblationMergeInfoCollaborate,\
-                        MultiAgentHighwayPOEnvWindow,\
-                        MultiAgentHighwayPOEnvWindowCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestionDistance,\
                         MultiAgentHighwayPOEnvAblationConjestionDistanceCollaborate,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfo,\
                         MultiAgentHighwayPOEnvAblationConjestionMergeInfoCollaborate,\
-                        MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate,\
                         MultiAgentHighwayPOEnvMerge4RandomMergeCollaborate,\
                         MultiAgentHighwayPOEnvMerge4RandomMergeModifyDistCollaborate,\
                         MultiAgentHighwayPOEnvMerge4ModifyDistCollaborate
@@ -36,7 +33,9 @@ from flow.envs.multiagent.highway_normalization import MultiAgentHighwayPOEnvMer
 from flow.envs.multiagent.lanechange import LeftLaneOvalHighwayPOEnvMerge4Collaborate,LeftLaneOvalAboutToMergeHighwayPOEnvMerge4Collaborate, LeftLaneHeadwayControlledMultiAgentEnv, LeftLaneHeadwayControlledMerge4, DoubleLaneController, SingleLaneController, BehindCurrentAheadSingleLaneController
 
 from flow.envs.multiagent.highway_window import MultiAgentHighwayPOEnvWindowFull, \
-                        MultiAgentHighwayPOEnvWindowFullCollaborate
+    MultiAgentHighwayPOEnvWindowFullCollaborate, MultiAgentHighwayPOEnvWindow, MultiAgentHighwayPOEnvWindowCollaborate, \
+    MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate
+
 from flow.envs.multiagent.i696 import MultiAgentI696POEnvParameterizedWindowSizeCollaborate
 from flow.envs.multiagent.CChighway import CCMultiAgentHighwayPOEnvMerge4Arrive
 from flow.envs.multiagent.adaptive_headway import MultiAgentHighwayPOEnvMerge4AdaptiveHeadway, MultiAgentHighwayPOEnvMerge4AdaptiveHeadwayCountAhead

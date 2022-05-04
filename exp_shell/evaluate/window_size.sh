@@ -39,6 +39,17 @@ TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Coll
 TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_7e284_00000_0_2021-10-18_16-36-45
 CHCKPOINT=501
 
+# environment for window test
+ENV_DIR=${HOME}/ray_results/zyl_window_size_test/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_f86a2_00000_0_2022-05-04_17-17-22/
+
+# controller trained under different road length
+POLICY_DIR_1=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen600_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_14c1a_00000_0_2022-05-03_21-01-15/
+POLICY_DIR_2=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen700_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_771ea_00000_0_2022-05-03_22-01-16/
+POLICY_DIR_3=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen800_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_cc339_00000_0_2022-05-03_23-00-55/
+POLICY_DIR_4=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen900_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_32694_00000_0_2022-05-04_00-08-12/
+POLICY_DIR_5=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1000_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_7bc42_00000_0_2022-05-03_21-04-08/
+POLICY_DIR_6=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1100_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_6246b_00000_0_2022-05-03_22-22-10/
+POLICY_DIR_7=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1200_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_342d7_00000_0_2022-05-03_23-32-27/
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
@@ -52,9 +63,12 @@ J=0
 
 MERGE_INFLOW=200
 MAIN_INFLOW=2000
-CHCKPOINT=501
+CHCKPOINT=1
 
-WINDOW_RIGHT=0
+WINDOW_RIGHT=100
+WINDOW_ABOVE=200
+
+render='sumo_gui'
 
 for WINDOW_LEFT in 1200 1400 1600 2000 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 do
@@ -63,34 +77,19 @@ do
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 	python3 $VISUALIZER \
-		$TRAIN_DIR \
+		$ENV_DIR \
 		$CHCKPOINT \
+        --agent_action_policy_dir $RL_LEFT_1400_IDM \
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
-		--horizon 4000 \
-		--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
-	 	--print_metric_per_time_step_in_file ${PWD}/longmerge_human \
-		--render_mode no_render \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+		--horizon 3000 \
+        --cpu 10 \
+		--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
+		--render_mode ${render} 
+		# >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
 
-	AVP=10 
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-	python3 $VISUALIZER \
-		$TRAIN_DIR \
-		$CHCKPOINT \
-		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--to_probability \
-		--horizon 4000 \
-		--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} \
-	 	--print_metric_per_time_step_in_file ${PWD}/longmerge \
-		--render_mode no_render \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
 done
-
 
 wait 
 source ~/notification_zyl.sh
