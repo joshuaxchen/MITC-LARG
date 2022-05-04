@@ -70,7 +70,7 @@ WINDOW_ABOVE=200
 
 render='sumo_gui'
 
-for WINDOW_LEFT in 1200 1400 1600 2000 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+for WINDOW_LEFT in 400 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 do
 	AVP=0 
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
@@ -79,11 +79,12 @@ do
 	python3 $VISUALIZER \
 		$ENV_DIR \
 		$CHCKPOINT \
-        --agent_action_policy_dir $RL_LEFT_1400_IDM \
+        --agent_action_policy_dir $POLICY_DIR_1 \
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
 		--horizon 3000 \
+		--highway_len 600 \
         --cpu 10 \
 		--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
 		--render_mode ${render} 

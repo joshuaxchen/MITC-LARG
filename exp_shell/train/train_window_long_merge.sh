@@ -17,15 +17,17 @@ let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
 
-WINDOW_RIGHT=0
+WINDOW_RIGHT=100
+WINDOW_ABOVE=200
+
 for WINDOW_LEFT in 622 #500 600 700 
 do 
 	#python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/window_size_long_merge_4_multiagent_i696_1merge_Window_Full_ZeroShot_Transfer.py \
-	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/i696_multiagent.py \
-	--exp_folder_mark yulin_random \
+	python3 ${FLOW_DIR}/examples/rllib/multiagent_exps/window_size_single_lane_controller.py \
+	--exp_folder_mark zyl \
 	--cpu 10 \
 	--to_probability \
-	--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} 
+	--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} ${WINDOW_ABOVE}
 	#--restore ${TRAIN_DIR}/checkpoint_500/checkpoint-500 \
 	#--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
 	#--to_probability 
