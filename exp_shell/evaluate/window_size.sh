@@ -40,16 +40,25 @@ TRAIN_DIR=${HOME}/ray_results/multiagent_yulin_window_size_long_merge4_Full_Coll
 CHCKPOINT=501
 
 # environment for window test
-ENV_DIR=${HOME}/may4/zyl_window_size_test/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_f86a2_00000_0_2022-05-04_17-17-22/
+ENV_DIR=${HOME}/may4/zyl_window_size_test/PPO_MultiAgentHighwayPOEnvMerge4ParameterizedWindowSizeCollaborate-v0_1a367_00000_0_2022-05-04_18-22-44/
 
 # controller trained under different road length
-POLICY_DIR_1=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen600_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_14c1a_00000_0_2022-05-03_21-01-15/
-POLICY_DIR_2=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen700_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_771ea_00000_0_2022-05-03_22-01-16/
-POLICY_DIR_3=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen800_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_cc339_00000_0_2022-05-03_23-00-55/
-POLICY_DIR_4=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen900_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_32694_00000_0_2022-05-04_00-08-12/
-POLICY_DIR_5=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1000_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_7bc42_00000_0_2022-05-03_21-04-08/
-POLICY_DIR_6=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1100_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_6246b_00000_0_2022-05-03_22-22-10/
-POLICY_DIR_7=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1200_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_342d7_00000_0_2022-05-03_23-32-27/
+declare -A WINDOW_LEFT 
+declare -A POLICY 
+POLICY[1]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen600_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_14c1a_00000_0_2022-05-03_21-01-15/
+WINDOW_LEFT[1]=522.6
+POLICY[2]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen700_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_771ea_00000_0_2022-05-03_22-01-16/
+WINDOW_LEFT[2]=522.6
+POLICY[3]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen800_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_cc339_00000_0_2022-05-03_23-00-55/
+WINDOW_LEFT[3]=522.6
+POLICY[4]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen900_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_32694_00000_0_2022-05-04_00-08-12/
+WINDOW_LEFT[4]=522.6
+POLICY[5]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1000_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_7bc42_00000_0_2022-05-03_21-04-08/
+WINDOW_LEFT[5]=522.6
+POLICY[6]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1100_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_6246b_00000_0_2022-05-03_22-22-10/
+WINDOW_LEFT[6]=522.6
+POLICY[7]=${HOME}/may4/multiagent_single_lane_single_lane_controller_highwaylen1200_2000_200_30_accel_eta1_0.90_eta2_0.10_eta3_0.00/PPO_SingleLaneController-v0_342d7_00000_0_2022-05-03_23-32-27/
+WINDOW_LEFT[7]=522.6
 
 echo "*************add python path to current direction***********"
 export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
@@ -68,9 +77,10 @@ CHCKPOINT=1
 WINDOW_RIGHT=100
 WINDOW_ABOVE=200
 
-render='sumo_gui'
+render='no_render'
 
-for WINDOW_LEFT in 400 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+#for WINDOW_LEFT in 522.6 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
+for I in 3 # 1 2 3 4 5 6 7 
 do
 	AVP=10 
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
@@ -79,16 +89,36 @@ do
 	python3 $VISUALIZER \
 		$ENV_DIR \
 		$CHCKPOINT \
-        --agent_action_policy_dir $POLICY_DIR_1 \
+        --agent_action_policy_dir ${POLICY[$I]} \
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
 		--horizon 3000 \
 		--highway_len 600 \
+        --krauss_controller \
         --cpu 10 \
-		--window_size ${WINDOW_LEFT} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
+		--window_size ${WINDOW_LEFT[$I]} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
 		--render_mode ${render} 
 		# >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+        # --krauss_controller \
+
+    AVP=10 
+	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+	python3 $VISUALIZER \
+		${POLICY[$I]} \
+		150 \
+		--seed_dir $FLOW_DIR \
+		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+		--to_probability \
+        --krauss_controller \
+		--horizon 3000 \
+        --cpu 10 \
+		--render_mode ${render} 
+		# >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+        # --krauss_controller \
+
 
 done
 

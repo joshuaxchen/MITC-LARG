@@ -3,6 +3,8 @@ from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
 from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv 
+from flow.visualize.visualizer_util import Human_Driven_Vehicle_Controller
+
 import collections
 import os
 ADDITIONAL_ENV_PARAMS = {
@@ -30,10 +32,56 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
         if "window_size" not in env_params.additional_params and len(env_params.additional_params['window_size']) != 3:
                 raise KeyError(
                     'Environment parameter "{}" not supplied'.format("window_size"))
+        if "human_controller" in env_params.additional_params:
+            self.krauss_controller = True
+            print("krauss controller")
+        else:
+            self.krauss_controller = False
+            print("IDM controller")
 
         self.junction_left, self.junction_right, self.junction_above=env_params.additional_params['window_size']
-
+        # self.junction_left = 522.6
         super().__init__(env_params, sim_params, network, simulator)
+
+    def idm_accel(self, veh_id):
+    
+        """See parent class."""
+        # solve leader issues near junctions using get_lane_leaders()
+        # add from Daniel
+        self.k.vehicle.update_leader_if_near_junction(veh_id, junc_dist_threshold=1000)#150)
+        v0=30
+        T=1
+        a=1
+        b=1.5
+        delta=4
+        s0=2
+
+        v = self.k.vehicle.get_speed(veh_id)
+
+        lane_id=self.k.vehicle.get_lane(veh_id)
+        #lead_id = env.k.vehicle.get_leader(self.veh_id)
+        # Fix the leader to be the leader on the same lane
+        lead_ids = self.k.vehicle.get_lane_leaders(veh_id)
+        lead_id=lead_ids[lane_id]
+
+        #h = env.k.vehicle.get_headway(self.veh_id)
+        # Fix the heaway to be the headway on the same lane accordingly
+        headways=self.k.vehicle.get_lane_headways(veh_id)
+        h=headways[lane_id] 
+
+        # in order to deal with ZeroDivisionError
+        if abs(h) < 1e-3:
+            h = 1e-3
+
+        if lead_id is None or lead_id == '':  # no car ahead
+            s_star = 0
+        else:
+            lead_vel = self.k.vehicle.get_speed(lead_id)
+            s_star = s0 + max(
+                0, v * T + v * (v - lead_vel) /
+                (2 * np.sqrt(a * b)))
+        output_accel = a * (1 - (v / v0) ** delta - (s_star / h) ** 2)
+        return output_accel
 
     def get_state(self):
         states = super().get_state()
@@ -59,11 +107,13 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
                     merge_vel = self.k.vehicle.get_speed(veh)/max_speed
                 
         
+        center_x = self.k.network.total_edgestarts_dict["center"]
+        print("***********center_x", center_x, "junction_left", self.junction_left)
         for rl_id in states:
             edge_id = self.k.vehicle.get_edge(rl_id)
-            lane = self.k.vehicle.get_lane(rl_id)
-            edge_len = self.k.network.edge_length(edge_id)
-            rl_position = self.k.vehicle.get_position(rl_id)
+            # lane = self.k.vehicle.get_lane(rl_id)
+            # edge_len = self.k.network.edge_length(edge_id)
+            # rl_position = self.k.vehicle.get_position(rl_id)
             rl_x = self.k.vehicle.get_x_by_id(rl_id)
             #rl_dist = max(edge_len-rl_position, 0) / max_length
             veh_vel = []
@@ -71,8 +121,7 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
             #calculate RL distance to the center junction
             veh_x = self.k.vehicle.get_x_by_id(rl_id)
             edge = self.k.vehicle.get_edge(rl_id)
-            length = self.k.network.edge_length(edge)
-            center_x = self.k.network.total_edgestarts_dict["center"]
+            # length = self.k.network.edge_length(edge)
             rl_dist = 1
             if edge in ["inflow_highway","left","center"]:
                 #rl_dist = (veh_x - center_x)/(center_x)
@@ -148,7 +197,10 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
                 if junction_start_x-veh_x>self.junction_left or veh_x-junction_start_x>self.junction_right:
                     rl_outside_window.append(rl_id)
                     if rl_id in rl_actions.keys():
-                        del rl_actions[rl_id]
+                        if not self.krauss_controller: 
+                            del rl_actions[rl_id]
+                        else:
+                            rl_actions[rl_id] = self.idm_accel(rl_id)
             
             # perform acceleration actions for rl vehicles that are not inside the window
             accel=[]

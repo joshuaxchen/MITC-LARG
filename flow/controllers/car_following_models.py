@@ -502,8 +502,8 @@ class IDMController(BaseController):
                 0, v * self.T + v * (v - lead_vel) /
                 (2 * np.sqrt(self.a * self.b)))
         output_accel=self.a * (1 - (v / self.v0)**self.delta - (s_star / h)**2)
-        current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
-        current_edge=env.k.vehicle.get_edge(self.veh_id)
+        # current_loc=env.k.vehicle.get_x_by_id(self.veh_id)
+        # current_edge=env.k.vehicle.get_edge(self.veh_id)
 
         # 124433730#2-AddedOnRampEdge
         #if self.track:

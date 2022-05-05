@@ -115,7 +115,7 @@ def set_argument(evaluate=False):
     parser.add_argument('--speed_gain', type=float, help='speed gain (see SUMO doc)') 
     parser.add_argument('--assertive', type=float, help='float value from 0 to 1 to indicate how assertive the vehicle is (lc_assertive in SUMO). Is that between 0 and 1?') 
     parser.add_argument('--lc_probability', type=float, help='float value -1 indicating using SUMO embeded 2015 lane change model, or [0,1] to indicate the percentage of human drivers to change lanes in simple merge lane changer') 
-    parser.add_argument('--window_size', type=int, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
+    parser.add_argument('--window_size', type=float, nargs="+", help='trigger the multiagent window merge 4 environment, and set the window_size')
     parser.add_argument('--merge_random_inflow_percentage', type=int, help='the percenage of merge inflows out of even merge inflows')
     parser.add_argument('--main_random_inflow_percentage', type=int, help='the percenage of random human main inflows out of even ones')
     parser.add_argument('--i696', action='store_true', help='input an avp and we will convert it to probability automatically')
@@ -556,6 +556,7 @@ def reset_inflows_i696(args, flow_params):
     if args.krauss_controller:
         global Human_Driven_Vehicle_Controller
         Human_Driven_Vehicle_Controller = SimCarFollowingController
+        flow_params['env'].additional_params['human_controller'] = 'krauss'
 
     if args.handset_inflow:
         print("handset inflows")
@@ -686,6 +687,7 @@ def reset_inflows(args, flow_params):
     if args.krauss_controller:
         global Human_Driven_Vehicle_Controller
         Human_Driven_Vehicle_Controller = SimCarFollowingController
+        flow_params['env'].additional_params['human_controller'] = 'krauss'
 
     env_params = flow_params['env']
     net_params=flow_params['net']
