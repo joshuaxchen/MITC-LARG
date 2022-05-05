@@ -3,7 +3,6 @@ from gym.spaces.box import Box
 from flow.core.rewards import desired_velocity, average_velocity
 from flow.envs.multiagent.base import MultiEnv
 from flow.envs.multiagent.highway import MultiAgentHighwayPOEnv 
-from flow.visualize.visualizer_util import Human_Driven_Vehicle_Controller
 
 import collections
 import os
