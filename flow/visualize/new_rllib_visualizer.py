@@ -881,6 +881,10 @@ if __name__ == '__main__':
         if len(args.window_size)!=3:
             print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
             exit(-1)
+    if args.measurement_rate is not None:
+        MEASUREMENT_RATE=args.measurement_rate*0.5 # TODO: here we assume that thte simulation step is 0.5
+        print("measurement_rate", MEASUREMENT_RATE) 
+
 
     Speed = []
     Inflow = []

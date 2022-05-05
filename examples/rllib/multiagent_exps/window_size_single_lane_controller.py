@@ -74,6 +74,7 @@ additional_net_params["pre_merge_length"] = 3031
 #additional_net_params["post_merge_length"] = 5077 #1878
 #additional_net_params["post_merge_length"] = 100 #1878
 #additional_net_params["merge_length"] = 1778
+
 if args.highway_len is not None:
     pre_merge_len = args.highway_len - 200
     additional_net_params["pre_merge_length"] = pre_merge_len
@@ -86,7 +87,7 @@ mark=""
 if args.exp_folder_mark:
     mark=args.exp_folder_mark + "_"
 
-exp_tag_str=mark+'_window_size_test'.format(window_size)
+exp_tag_str=mark+'window_size_test'.format(window_size)
 
 flow_params = dict(
     exp_tag=exp_tag_str,

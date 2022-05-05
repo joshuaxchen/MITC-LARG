@@ -34,10 +34,10 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
                     'Environment parameter "{}" not supplied'.format("window_size"))
         if "human_controller" in env_params.additional_params:
             self.krauss_controller = True
-            print("krauss controller")
+            # print("krauss controller")
         else:
             self.krauss_controller = False
-            print("IDM controller")
+            # print("IDM controller")
 
         self.junction_left, self.junction_right, self.junction_above=env_params.additional_params['window_size']
         # self.junction_left = 522.6
@@ -108,7 +108,7 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
                 
         
         center_x = self.k.network.total_edgestarts_dict["center"]
-        print("***********center_x", center_x, "junction_left", self.junction_left)
+        # print("***********center_x", center_x, "junction_left", self.junction_left)
         for rl_id in states:
             edge_id = self.k.vehicle.get_edge(rl_id)
             # lane = self.k.vehicle.get_lane(rl_id)
