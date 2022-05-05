@@ -270,6 +270,9 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
             self.render()
 
         states = self.get_state() # TODO-zyl
+
+
+
         # compute the rl vehicles outside the network
         rl_outside_window=list()
         junction_start_x= self.k.network.total_edgestarts_dict["center"]
@@ -300,6 +303,9 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
 
         # compute the info for each agent
         infos = {key: {} for key in states.keys()}
+        from flow.envs import enable_total_num_of_vehicles
+        if enable_total_num_of_vehicles:
+            infos['total_num_cars_per_step']=len(self.k.vehicle.get_ids())
 
         # compute the reward
         if self.env_params.clip_actions:

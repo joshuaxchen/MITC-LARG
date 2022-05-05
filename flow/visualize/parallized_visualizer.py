@@ -51,7 +51,8 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
 
-from tools.matplotlib_plot import PlotWriter
+#from tools.matplotlib_plot import PlotWriter
+from tools.tikz_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow

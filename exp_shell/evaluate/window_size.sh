@@ -74,7 +74,7 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 mkdir ${EXP_FOLDER}
 
-WORKING_DIR=$EXP_FOLDER/may4_window_size
+WORKING_DIR=$EXP_FOLDER/may4_window_size_8000
 mkdir ${WORKING_DIR}
 
 J=0
@@ -91,7 +91,8 @@ render='no_render'
 #for WINDOW_LEFT in 522.6 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 
 AVP=10 
-for I in 7 
+J=0
+for I in 1 2 3 #4 5 6 7 
 do
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -103,13 +104,14 @@ do
 		--seed_dir $FLOW_DIR \
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
-		--horizon 3000 \
+		--horizon 8000 \
 		--highway_len ${HIGHWAY_LEN[7]} \
-        --cpu 10 \
+        --cpu 50 \
 		--window_size ${WINDOW_LEFT[$I]} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
 		--render_mode ${render} \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt 
+		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt  
         # --krauss_controller \
+        #--print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${WINDOW_LEFT[$I]}_${AVP} \
 
     #AVP=10 
 	#let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
