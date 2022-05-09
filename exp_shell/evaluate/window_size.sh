@@ -1,6 +1,6 @@
 FLOW_DIR=${PWD}/../..
-#VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
+VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+#VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/
 
 POLICY_DIR=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_740c0_00000_0_2021-07-04_14-31-39
@@ -90,9 +90,9 @@ render='no_render'
 
 #for WINDOW_LEFT in 522.6 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 
-AVP=10 
+AVP=0 
 J=0
-for I in 1 2 3 #4 5 6 7 
+for I in 1 #2 3 4 5 6 7 
 do
 	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
 	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
@@ -105,13 +105,17 @@ do
 		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
 		--to_probability \
 		--horizon 8000 \
+        --measurement_rate 2000 \
 		--highway_len ${HIGHWAY_LEN[7]} \
-        --cpu 50 \
 		--window_size ${WINDOW_LEFT[$I]} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
-		--render_mode ${render} \
-		>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt  
+        --print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${AVP} \
+        --cpu 50 \
+		--render_mode ${render} 
+		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${HIGHWAY_LEN[7]}.txt  
+		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt  
         # --krauss_controller \
-        #--print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${WINDOW_LEFT[$I]}_${AVP} \
+        #--print_metric_per_time_step_in_file metrics \
+        #--print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${AVP} \
 
     #AVP=10 
 	#let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100

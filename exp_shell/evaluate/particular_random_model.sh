@@ -179,10 +179,10 @@ TRAIN_DIR[64]=${HOME}/april26_models/multiagent_single_lane_single_lane_controll
 CHCKPOINT=150
 
 FLOW_DIR=${PWD}/../..
-VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-# VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
+# VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results
-WORKING_DIR=$EXP_FOLDER/april_14_single_lane_human/
+WORKING_DIR=$EXP_FOLDER/april26_single_lane/
 
 # 1. 1650_200_30 I=4
 # 2. 1850_200_30 I=5
@@ -201,10 +201,10 @@ MERGE_INFLOW=200
 
 mkdir ${WORKING_DIR}
 J=0
-for I in 64 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
+for I in 62 63 64 #3 7 8 9 10 #11 12 13 14 15 1 #7 8 9 10 11 12 13 14 15
 do
 	echo "${TRAIN_DIR[$I]}"
-	mkdir ${WORKING_DIR}/${MARK[$I]}
+	#mkdir ${WORKING_DIR}/${MARK[$I]}
 
 	for MERGE_INFLOW in 200 #400 600 800 #180 190 200 210 220 230 240 250 260 270 280 290 300 310 320 330 340 350 360 370 380 390 400 500 600 700 800 900 1000 
 	do
@@ -216,18 +216,41 @@ do
 				let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
 				echo "evaluate" ${TRAIN_DIR[$I]} ${MARK[$I]} "on AVP ${AVP}"
 				echo $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW
+
+                if (($I==62)); then
+                    FNAME="IJCAI_Krauss"
+                elif (($I==63)); then
+                    FNAME="IJCAI_IDM"
+                elif (($I==64)); then
+                    FNAME="IJCAI_avg_speed"
+                fi
+                echo "fname" ${FNAME}
+
 				python3 $VISUALIZER \
 					${TRAIN_DIR[$I]} \
 					$CHCKPOINT \
-					--render_mode sumo_gui \
+					--render_mode no_render \
 					--seed_dir $FLOW_DIR \
-				    --cpu 16 \
+				    --cpu 10 \
 					--measurement_rate 5000 \
 					--horizon 2000 \
-                    --print_vehicles_per_time_step_in_file april26_avg_3_speeds_krauss_idm_even \
-					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW 
+					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+					>> ${WORKING_DIR}/${FNAME}_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_even.txt &
+
+                python3 $VISUALIZER \
+					${TRAIN_DIR[$I]} \
+					$CHCKPOINT \
+					--render_mode no_render \
+					--seed_dir $FLOW_DIR \
+				    --cpu 10 \
+                    --to_probability \
+					--measurement_rate 5000 \
+					--horizon 2000 \
+					--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+					>> ${WORKING_DIR}/${FNAME}_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_random.txt &
+
 					#--to_probability \
-					 #>> ${WORKING_DIR}/${MARK[$I]}/merge4_EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}.txt &
+                    #--print_vehicles_per_time_step_in_file april26_avg_3_speeds_krauss_idm_even \
 				let J=J+1
 				if ((J == 30)); then
 					wait
