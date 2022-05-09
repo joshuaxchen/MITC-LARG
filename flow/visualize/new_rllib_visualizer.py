@@ -51,8 +51,8 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
 
 from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
 
-#from tools.matplotlib_plot import PlotWriter
-from tools.tikz_plot import PlotWriter
+from tools.matplotlib_plot import PlotWriter
+# from tools.tikz_plot import PlotWriter
 import tensorflow as tf
 from IPython.core.debugger import set_trace
 import flow
@@ -312,6 +312,10 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
         net_params.additional_params['on_ramps_pos']=args.on_ramps
 
+    if args.measurement_rate is not None:
+        MEASUREMENT_RATE=args.measurement_rate*0.5 # TODO: here we assume that thte simulation step is 0.5
+        print("measurement_rate", MEASUREMENT_RATE) 
+
     # handset inflows, reset main merge inflows for human baseline, or convert inflows to probabaility depending on user input 
     if args.use_trained_inflow is True:
         print("use the original trained inflow")
@@ -549,7 +553,6 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             # update the number of vehicles in the network
             if args.print_vehicles_per_time_step_in_file is not None and i==0:
                 total_num_cars_per_step.append((i_k, infos['total_num_cars_per_step'], 0))
-
             inflow = vehicles.get_inflow_rate(MEASUREMENT_RATE) 
             if inflow_per_time_step is not None:
                 inflow_per_time_step.append((i_k, inflow, 0)) 
@@ -628,10 +631,11 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             veh_plot=PlotWriter("Time steps", "Number of vehicles") 
             title_spec = "Number of vehicles per time step"
             veh_plot.set_title(title_spec) 
-            veh_plot.set_plot_range(0, env_params.horizon, 0, 100) 
+            veh_plot.set_plot_range(0, env_params.horizon, 0, 150) 
             veh_plot.add_human=False
             veh_plot.add_plot("model", total_num_cars_per_step)
             veh_plot.write_plot(args.print_vehicles_per_time_step_in_file+"_veh.tex", 1)
+            exit(0)
 
         inflow_plot=None
         outflow_plot=None
@@ -727,13 +731,14 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
             speed_plot.add_plot("Speed", avg_speed_per_time_step)
             #reward_plot.add_plot("Reward", reward_per_time_step)
 
-            inflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_inflow.tex", 1)
-            outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_outflow.tex", 1)
+            # inflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_inflow.tex", 1)
+            # outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_outflow.tex", 1)
             speed_plot.write_plot(args.print_metric_per_time_step_in_file+"_speed.tex", 1)
-            reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
+            # reward_plot.write_plot(args.print_metric_per_time_step_in_file+"_reward.tex", 1)
             inflow_outflow_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow.tex", 1)
             inflow_outflow_mean_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow_mean.tex", 1)
             inflow_outflow_var_plot.write_plot(args.print_metric_per_time_step_in_file+"_ioflow_var.tex", 1)
+            exit(0)
 
         if multiagent:
             for agent_id, rew in rets.items():
@@ -881,9 +886,7 @@ if __name__ == '__main__':
         if len(args.window_size)!=3:
             print("The window size has to be two elements: the left distance to the junction, and the right distance to the junction")
             exit(-1)
-    if args.measurement_rate is not None:
-        MEASUREMENT_RATE=args.measurement_rate*0.5 # TODO: here we assume that thte simulation step is 0.5
-        print("measurement_rate", MEASUREMENT_RATE) 
+ 
 
 
     Speed = []
