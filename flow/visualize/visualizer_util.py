@@ -101,7 +101,7 @@ def set_argument(evaluate=False):
 
     parser.add_argument('--policy_checkpoint', type=str, help="path to the trained policy")
     parser.add_argument('--to_probability', action='store_true', help='input an avp and we will convert it to probability automatically')
-    parser.add_argument('--highway_len', type=int, help='input the length of the highway')
+    parser.add_argument('--highway_len', type=int, nargs="+", help='input the length of the highway')
     parser.add_argument('--on_ramps', type=int, nargs="+", help='input the position of the on_ramps') 
     parser.add_argument('--print_metric_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
     parser.add_argument('--print_vehicles_per_time_step_in_file', type=str, help='the prefix of the file path that print the metrics including inflow, outflow, avg speed, reward of the first rollout of the first seed at every time step.') 
@@ -135,7 +135,23 @@ def set_argument(evaluate=False):
     args = parser.parse_args()
     return args
 
+def set_network(args, flow_params):
 
+    net_params=flow_params['net']
+    if args.highway_len is not None:
+        if flow_params['env_name'] == MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+            net_params.additional_params['highway_length'] = args.highway_len
+        else:
+            if len(args.highway_len) != 2:
+                print("Please input both the length of the main road and the length of the merge road")
+                exit(0)
+            pre_merge_len = args.highway_len[0] - 200 # 100 for begining and 100 for the very end in the main road
+            net_params.additional_params["pre_merge_length"] = pre_merge_len
+            merge_road_len = args.highway_len[1] - 100 # 100 for the very beginning of the merge road
+            net_params.additional_params["merge_length"] = merge_road_len
+     
+    if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
+        net_params.additional_params['on_ramps_pos']=args.on_ramps
 
 def add_vehicles(vehicles, veh_type, lane_change_mode, speed_mode, num_vehicles, speed_gain, assertive, lc_probability):                
     controller=None

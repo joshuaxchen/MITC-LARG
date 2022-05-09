@@ -95,12 +95,16 @@ class MultiAgentHighwayPOEnvMerge4ParameterizedWindowHorizontalVerticalSize(Mult
         len_merge = self.k.network.edge_length("bottom") + self.k.network.edge_length("inflow_merge")
         # print("len_merge", len_merge, "junction_above", self.junction_above)
         # add junction above
-        len_merge = self.junction_above
+        #len_merge = self.junction_above
         start_position = self.k.network.total_edgestarts_dict["inflow_merge"]
         merge_vel = 0
         if len(merge_vehs)>0:
             for veh in merge_vehs:
-                merge_dist = (len_merge - (self.k.vehicle.get_x_by_id(veh) - start_position))/len_merge
+                #dist_to_junction = len_merge - (self.k.vehicle.get_x_by_id(veh) - start_position)
+                dist_to_junction = len_merge - (self.k.vehicle.get_x_by_id(veh) - start_position)
+                #print(self.k.vehicle.get_x_by_id(veh), start_position, dist_to_junction)
+                #dist_to_junction = len_merge - (self.k.vehicle.get_position(veh) - start_position)
+                merge_dist =  dist_to_junction / self.junction_above
                 if merge_dist < merge_distance:
                     merge_distance = merge_dist
                     merge_vel = self.k.vehicle.get_speed(veh)/max_speed

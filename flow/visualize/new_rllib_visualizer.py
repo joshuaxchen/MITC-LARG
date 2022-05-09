@@ -49,7 +49,7 @@ from flow.core.params import EnvParams, NetParams, InitialConfig, InFlows, \
                              VehicleParams, SumoParams, \
                              SumoCarFollowingParams, SumoLaneChangeParams
 
-from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument
+from flow.visualize.visualizer_util import add_vehicles, add_vehicles_no_lane_change, add_vehicles_with_lane_change, add_preset_inflows, reset_inflows, reset_inflows_i696, set_argument, set_network
 
 from tools.matplotlib_plot import PlotWriter
 # from tools.tikz_plot import PlotWriter
@@ -301,16 +301,7 @@ def visualizer_rllib(args, do_print_metric_per_time_step=False, seed=None):
     env_params.restart_instance = True
     net_params=flow_params['net']
 
-
-    if args.highway_len:
-        if flow_params['env_name'] == MultiAgentHighwayPOEnvMerge4CollaborateMOR:
-            net_params.additional_params['highway_length'] = args.highway_len
-        else:
-            pre_merge_len = args.highway_len - 200
-            net_params.additional_params["pre_merge_length"] = pre_merge_len
-
-    if args.on_ramps and flow_params['env_name']==MultiAgentHighwayPOEnvMerge4CollaborateMOR:
-        net_params.additional_params['on_ramps_pos']=args.on_ramps
+    set_network(args, flow_params)
 
     if args.measurement_rate is not None:
         MEASUREMENT_RATE=args.measurement_rate*0.5 # TODO: here we assume that thte simulation step is 0.5

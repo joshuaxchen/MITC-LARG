@@ -1,6 +1,6 @@
 FLOW_DIR=${PWD}/../..
-VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
-#VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
+#VISUALIZER=$FLOW_DIR/flow/visualize/new_rllib_visualizer.py
+VISUALIZER=$FLOW_DIR/flow/visualize/parallized_visualizer.py
 EXP_FOLDER=$FLOW_DIR/exp_results/
 
 POLICY_DIR=${HOME}/ray_results/yulin_random_placement_multiagent_Even_Avp30_Main2000_Merge200_highway_merge4_Full_Collaborate_lr_schedule_eta1_0.9_eta2_0.1/PPO_MultiAgentHighwayPOEnvMerge4Collaborate-v0_740c0_00000_0_2021-07-04_14-31-39
@@ -74,8 +74,6 @@ export PYTHONPATH="${PYTHONPATH}:${PWD}/../../"
 
 mkdir ${EXP_FOLDER}
 
-WORKING_DIR=$EXP_FOLDER/may4_window_size_8000
-mkdir ${WORKING_DIR}
 
 J=0
 
@@ -90,51 +88,62 @@ render='no_render'
 
 #for WINDOW_LEFT in 522.6 #200 400 600 800 1000 #100 200 300 400 500 600 700 800 900 1000
 
-AVP=0 
+AVP=10 
 J=0
-for I in 1 #2 3 4 5 6 7 
+for horizon in 8000
 do
-	let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-	python3 $VISUALIZER \
-		$ENV_DIR \
-		$CHCKPOINT \
-        --agent_action_policy_dir ${POLICY[$I]} \
-		--seed_dir $FLOW_DIR \
-		--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-		--to_probability \
-		--horizon 8000 \
-        --measurement_rate 2000 \
-		--highway_len ${HIGHWAY_LEN[7]} \
-		--window_size ${WINDOW_LEFT[$I]} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
-        --print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${AVP} \
-        --cpu 50 \
-		--render_mode ${render} 
-		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${HIGHWAY_LEN[7]}.txt  
-		#>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt  
-        # --krauss_controller \
-        #--print_metric_per_time_step_in_file metrics \
-        #--print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${AVP} \
+    for measurement in 2000
+    do
+        WORKING_DIR=$EXP_FOLDER/may10_window_size_${horizon}_${measurement}
+        mkdir ${WORKING_DIR}
+        for MERGE_LEN in 200 300 400 500 
+        do 
+            for I in 1 3 #2 3 4 5 6 7 
+            do
+                let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+                let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+                echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+                python3 $VISUALIZER \
+                    $ENV_DIR \
+                    $CHCKPOINT \
+                    --agent_action_policy_dir ${POLICY[$I]} \
+                    --seed_dir $FLOW_DIR \
+                    --handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+                    --to_probability \
+                    --horizon ${horizon} \
+                    --measurement_rate ${measurement} \
+                    --highway_len ${HIGHWAY_LEN[7]} ${MERGE_LEN} \
+                    --window_size ${WINDOW_LEFT[$I]} ${WINDOW_RIGHT} ${WINDOW_ABOVE} \
+                    --print_metric_per_time_step_in_file metrics \
+                    --cpu 50 \
+                    --render_mode ${render} \
+                    >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${HIGHWAY_LEN[7]}_${MERGE_LEN}.txt  
+                    #>> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT[$I]}_${HIGHWAY_LEN[7]}.txt  
+                    # --krauss_controller \
+                    #--print_metric_per_time_step_in_file metrics \
+                    #--print_vehicles_per_time_step_in_file ${HIGHWAY_LEN[7]}_${AVP} \
 
-    #AVP=10 
-	#let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
-	#let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
-	#echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
-	#python3 $VISUALIZER \
-	#	${POLICY[$I]} \
-	#	150 \
-	#	--seed_dir $FLOW_DIR \
-	#	--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
-	#	--to_probability \
-	#	--highway_len ${HIGHWAY_LEN[7]} \
-    #    --krauss_controller \
-	#	--horizon 3000 \
-    #    --cpu 10 \
-	#	--render_mode ${render} 
-	#	# >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
-    #    # --krauss_controller \
+                #AVP=10 
+                #let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
+                #let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
+                #echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
+                #python3 $VISUALIZER \
+                #	${POLICY[$I]} \
+                #	150 \
+                #	--seed_dir $FLOW_DIR \
+                #	--handset_inflow $MAIN_HUMAN_INFLOW $MAIN_RL_INFLOW $MERGE_INFLOW \
+                #	--to_probability \
+                #	--highway_len ${HIGHWAY_LEN[7]} \
+                #    --krauss_controller \
+                #	--horizon 3000 \
+                #    --cpu 10 \
+                #	--render_mode ${render} 
+                #	# >> ${WORKING_DIR}/EVAL_${MAIN_INFLOW}_${MERGE_INFLOW}_${AVP}_${WINDOW_LEFT}.txt &
+                #    # --krauss_controller \
 
+            done
+        done
+    done
 done
 
 wait 
