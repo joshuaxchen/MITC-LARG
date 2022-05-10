@@ -94,7 +94,7 @@ for horizon in 8000
 do
     for measurement in 2000
     do
-        for I in 3 #3 #2 3 4 5 6 7 
+        for I in 1 3 #3 #2 3 4 5 6 7 
         do
             WORKING_DIR=$EXP_FOLDER/may10_window_size_${horizon}_${measurement}_${WINDOW_LEFT[$I]}
             mkdir ${WORKING_DIR}
