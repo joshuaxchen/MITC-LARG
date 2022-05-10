@@ -94,12 +94,12 @@ for horizon in 8000
 do
     for measurement in 2000
     do
-        WORKING_DIR=$EXP_FOLDER/may10_window_size_${horizon}_${measurement}
-        mkdir ${WORKING_DIR}
-        for MERGE_LEN in 200 300 400 500 
-        do 
-            for I in 1 3 #2 3 4 5 6 7 
-            do
+        for I in 3 #3 #2 3 4 5 6 7 
+        do
+            WORKING_DIR=$EXP_FOLDER/may10_window_size_${horizon}_${measurement}_${WINDOW_LEFT[$I]}
+            mkdir ${WORKING_DIR}
+            for MERGE_LEN in 200 300 400 500 
+            do 
                 let MAIN_RL_INFLOW=MAIN_INFLOW*${AVP}/100
                 let MAIN_HUMAN_INFLOW=MAIN_INFLOW-MAIN_RL_INFLOW
                 echo "Avp:${AVP}, Inflows:${MAIN_HUMAN_INFLOW} ${MAIN_RL_INFLOW} ${MERGE_INFLOW}"
